@@ -8,10 +8,11 @@ export interface IScrollViewProps {
 }
 
 export function ScrollView (props: IScrollViewProps) {
-  const direction = props.direction || '.vertical'
+  const { children, direction, ...rest } = props
+  const direct = direction || '.vertical'
   return (
-    <div className={`sw-scrollview ${direction}`}>
-      {props.children}
+    <div {...rest} className={`sw-scrollview ${direct}`}>
+      {children}
     </div>
   )
 }

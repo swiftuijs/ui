@@ -1,29 +1,29 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react'
-import * as sw from '../index'
+import { ScrollView, Spacer, Text} from '../index'
 
 export default {
-  title: 'Example/ScrollView',
-  component: sw.ScrollView
+  title: 'SwiftUI/ScrollView',
+  component: ScrollView
 } as Meta
 
 export function ScrollViewVertical () {
   return (
-    <sw.ScrollView>
+    <ScrollView>
       {Array(200).fill(0).map((v, i) => {
-        return <sw.Text>index {i}</sw.Text>
+        return <Text>index {i}</Text>
       })}
-    </sw.ScrollView>
+    </ScrollView>
   )
 }
 
 export function ScrollViewHorizontal () {
   return (
-    <sw.ScrollView direction="horizontal">
-      <sw.Spacer />
+    <ScrollView direction="horizontal">
+      <Spacer />
       {Array(200).fill(0).map((v, i) => {
-        return <sw.Text>index {i}</sw.Text>
+        return <Text>index {i}</Text>
       })}
-    </sw.ScrollView>
+    </ScrollView>
   )
 }

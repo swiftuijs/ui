@@ -30,9 +30,10 @@ export interface IHStackProps {
 }
 
 export function HStack(props: IHStackProps) {
+  const { children, ...rest } = props
   return (
-    <div className="sw-hstack">
-      {props.children}
+    <div {...rest}className="sw-hstack">
+      {children}
     </div>
   )
 }

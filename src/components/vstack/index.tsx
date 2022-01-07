@@ -4,9 +4,10 @@ import './style.scss'
 
 
 export function VStack (props: any) {
+  const { children, ...rest } = props
   return (
-    <div className="sw-vstack">
-      {props.children}
+    <div {...rest} className="sw-vstack">
+      {children}
     </div>
   )
 }

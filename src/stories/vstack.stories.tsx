@@ -1,27 +1,27 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react'
-import * as sw from '../index'
+import { VStack, Text, Spacer } from '../index'
 
 export default {
-  title: 'Example/VStack',
-  component: sw.VStack
+  title: 'SwiftUI/VStack',
+  component: VStack
 } as Meta
 
-export function VStack () {
+export function VStackNormal () {
   return (
-    <sw.VStack>
-      <sw.Text>SSSS</sw.Text>
-      <sw.Text>SSSS</sw.Text>
-    </sw.VStack>
+    <VStack>
+      <Text>SSSS</Text>
+      <Text>SSSS</Text>
+    </VStack>
   )
 }
 
 export function VStackWithSpacer () {
   return (
-    <sw.VStack>
-      <sw.Spacer />
-      <sw.Text>SSSS</sw.Text>
-      <sw.Text>SSSS</sw.Text>
-    </sw.VStack>
+    <VStack>
+      <Spacer />
+      <Text>SSSS</Text>
+      <Text>SSSS</Text>
+    </VStack>
   )
 }
