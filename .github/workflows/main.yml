@@ -33,7 +33,8 @@ jobs:
       run: yarn build
 
     - name: build docs
-      run: yarn build-sb
+      run: |
+        export NODE_OPTIONS=--openssl-legacy-provider && yarn build-sb
     
     - name: Deploy to GitHub Pages
       uses: Cecilapp/GitHub-Pages-deploy@3.1.0
