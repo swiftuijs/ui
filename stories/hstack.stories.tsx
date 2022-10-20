@@ -1,6 +1,6 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react'
-import { HStack, Text, Spacer } from '../index'
+import { HStack, Text, Spacer } from '../src'
 
 export default {
   title: 'SwiftUI/HStack',

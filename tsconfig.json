@@ -28,7 +28,7 @@
   "include": [
     "example/**/*", // *** The files TypeScript should type check ***
     "src/**/*" // *** The files TypeScript should type check ***
-, "example"  ],
+, "example", "stories"  ],
   "exclude": [
     "node_modules",
     "build"

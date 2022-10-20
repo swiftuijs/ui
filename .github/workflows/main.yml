@@ -24,10 +24,13 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '18.x'
 
     - name: install deps
       run: yarn
+    
+    - name: build lib
+      run: yarn build
 
     - name: build docs
       run: yarn build-sb

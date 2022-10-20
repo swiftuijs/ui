@@ -1,0 +1,16 @@
+@import '~style/base.scss';
+
+.#{clsName('hstack')} {
+  position: relative;
+  @include centerBlock;
+  flex-direction: row;
+  width: 100%;
+
+  > .#{clsName('text')} + .#{clsName('text')} {
+    margin-left: 4px;
+  }
+
+  > .#{clsName('spacer')} {
+    min-width: var(--min-length);
+  }
+}

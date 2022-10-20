@@ -1,6 +1,6 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react'
-import { ScrollView, Spacer, Text} from '../index'
+import { ScrollView, Spacer, Text} from '../src'
 
 export default {
   title: 'SwiftUI/ScrollView',

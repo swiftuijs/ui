@@ -2,14 +2,22 @@
   "name": "@swiftuijs/ui",
   "version": "0.0.1",
   "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "start-storybook -p 6006",
     "prebuild-sb": "rimraf story-docs",
     "build-sb": "build-storybook -o story-docs",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "clean": "rimraf dist",
+    "prebuild": "yarn clean",
+    "build": "parcel build src/index.tsx --no-source-maps"
   },
   "devDependencies": {
+    "@parcel/packager-ts": "2.7.0",
+    "@parcel/transformer-sass": "2.7.0",
+    "@parcel/transformer-typescript-types": "2.7.0",
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-links": "^6.5.12",
@@ -20,6 +28,7 @@
     "babel-loader": "^8.2.5",
     "css-loader": "5.2.6",
     "lerna-ci": "^2.0.0-alpha.3",
+    "parcel": "^2.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
@@ -35,6 +44,7 @@
   "alias": {
     "style": "./src/style"
   },
+  "source": "src/index.tsx",
   "repository": "https://github.com/swiftuijs/ui.git",
   "author": "Saiya",
   "license": "MIT",

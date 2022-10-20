@@ -33,6 +33,8 @@ bower_components
 
 # node-waf configuration
 .lock-wscript
+# vscode confgiuration
+.vscode
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
@@ -58,6 +60,7 @@ typings/
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
+.parcel-cache
 
 # Optional REPL history
 .node_repl_history
