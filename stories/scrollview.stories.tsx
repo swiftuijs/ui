@@ -11,7 +11,10 @@ export function ScrollViewVertical () {
   return (
     <ScrollView>
       {Array(200).fill(0).map((v, i) => {
-        return <Text>index {i}</Text>
+        return <>
+          <Text>index {i}</Text>
+          <Spacer minLength={4} />
+        </>
       })}
     </ScrollView>
   )
@@ -22,7 +25,10 @@ export function ScrollViewHorizontal () {
     <ScrollView direction="horizontal">
       <Spacer />
       {Array(200).fill(0).map((v, i) => {
-        return <Text>index {i}</Text>
+        return <>
+          <Text>index {i}</Text>
+          <Spacer minLength={4} />
+        </>
       })}
     </ScrollView>
   )
