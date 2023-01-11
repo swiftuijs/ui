@@ -9,7 +9,7 @@ export enum EVerticalAlignment {
   /** A guide marking the bottom edge of the view. */
   bottom = 'bottom',
   /** A guide marking the vertical center of the view. */
-  center = 'center',
+  center = 'middle',
   /** A guide marking the top edge of the view. */
   top = 'top',
   // firstTextBaseline,
@@ -30,9 +30,16 @@ export interface IHStackProps {
 }
 
 export function HStack(props: IHStackProps) {
-  const { children, ...rest } = props
+  const { children, alignment = 'top', spacing } = props
+  const className = `sw-hstack align-${alignment}`
+  const rest: Record<string, any> = {}
+  if (spacing) {
+    rest.style = {
+      '--spacing': `${spacing}px`
+    }
+  }
   return (
-    <div {...rest}className="sw-hstack">
+    <div {...rest} className={className}>
       {children}
     </div>
   )

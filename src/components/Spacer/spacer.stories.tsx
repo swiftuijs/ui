@@ -1,6 +1,6 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react'
-import { HStack, VStack, Text, Spacer } from '../src'
+import { HStack, VStack, Text, Spacer } from '../'
 
 export default {
   title: 'SwiftUI/Spacer',

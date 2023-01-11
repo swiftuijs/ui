@@ -1,6 +1,6 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react'
-import { ZStack, VStack, Text } from '../src'
+import { ZStack, VStack, Text } from '../'
 
 export default {
   title: 'SwiftUI/ZStack',

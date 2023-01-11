@@ -5,6 +5,19 @@
   @include centerBlock;
   flex-direction: row;
   width: 100%;
+  row-gap: var(--spacing, 0px);
+
+  &.align-top {
+    align-items: flex-start;
+  }
+
+  &.align-middle {
+    align-items: center;
+  }
+
+  &.align-bottom {
+    align-items: flex-end;
+  }
 
   > .#{clsName('text')} + .#{clsName('text')} {
     margin-left: 4px;
