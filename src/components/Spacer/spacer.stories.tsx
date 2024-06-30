@@ -1,11 +1,11 @@
 import React from 'react'
-import { Story, Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import { HStack, VStack, Text, Spacer } from '../'
 
 export default {
   title: 'SwiftUI/Spacer',
   component: Spacer
-} as Meta
+} satisfies Meta
 
 export function SpacerBetween () {
   return (

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Story, Meta } from '@storybook/react'
+import type {  Meta } from '@storybook/react'
 import { VStack, Text, Spacer } from '../'
 
 export default {
   title: 'SwiftUI/VStack',
   component: VStack
-} as Meta
+} satisfies Meta
 
 export function VStackNormal () {
   return (

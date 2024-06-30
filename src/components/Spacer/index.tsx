@@ -8,10 +8,10 @@ export interface ISpacerProps {
 
 export function Spacer (props: ISpacerProps) {
   const minLength = props.minLength || 0
-  // @ts-ignore
-  const style = {'--min-length': `${isNaN(minLength) ? minLength : minLength + 'px'}`};
+  
+  const style = {'--min-length': `${typeof minLength === 'string' ? minLength : minLength + 'px'}`};
   return (
-    // @ts-ignore
+    // @ts-expect-error css variable
     <div className="sw-spacer" style={style}></div>
   )
 }

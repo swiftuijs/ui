@@ -1,16 +1,17 @@
 import React from 'react'
-import { Story, Meta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import { ScrollView, Spacer, Text} from '../'
 
 export default {
   title: 'SwiftUI/ScrollView',
   component: ScrollView
-} as Meta
+} satisfies Meta
+
 
 export function ScrollViewVertical () {
   return (
     <ScrollView>
-      {Array(200).fill(0).map((v, i) => {
+      {Array(200).fill(0).map((_, i) => {
         return <>
           <Text>index {i}</Text>
           <Spacer minLength={4} />
@@ -24,7 +25,7 @@ export function ScrollViewHorizontal () {
   return (
     <ScrollView direction="horizontal">
       <Spacer />
-      {Array(200).fill(0).map((v, i) => {
+      {Array(200).fill(0).map((_, i) => {
         return <>
           <Text>index {i}</Text>
           <Spacer minLength={4} />

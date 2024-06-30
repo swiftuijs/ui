@@ -1,11 +1,11 @@
 import React from 'react'
-import { ComponentMeta } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 import { HStack, Text, Spacer, IHStackProps } from '../'
 
 export default {
   title: 'SwiftUI/HStack',
   component: HStack,
-} as ComponentMeta<typeof HStack>
+} satisfies Meta<typeof HStack>
 
 export function HStackSpaceInMiddle(props: IHStackProps) {
   return (
