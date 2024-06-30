@@ -43,5 +43,5 @@ jobs:
       with:
         email: okarl@outlook.com
         branch: gh-pages   # optional
-        build_dir: story-docs # folder the action should deploy.
+        build_dir: docs # folder the action should deploy.
         jekyll: no
