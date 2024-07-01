@@ -1,17 +1,23 @@
-import React from 'react'
+import type { IBaseComponent } from 'src/types'
+import { mergeStyle, standardizeUnit } from 'src/common'
 
 import './style.scss'
 
-export interface ISpacerProps {
+export interface ISpacerProps extends Omit<IBaseComponent, 'children'>{
   minLength?: number | string
 }
 
 export function Spacer (props: ISpacerProps) {
-  const minLength = props.minLength || 0
+  const { minLength, ...styleProps } = props
+
+  const combinedStyle = mergeStyle(styleProps, {
+    style: {
+      '--min-length': standardizeUnit(minLength || 0),
+    },
+    className: 'sw-spacer'
+  })
   
-  const style = {'--min-length': `${typeof minLength === 'string' ? minLength : minLength + 'px'}`};
   return (
-    // @ts-expect-error css variable
-    <div className="sw-spacer" style={style}></div>
+    <div {...combinedStyle}></div>
   )
 }

@@ -1,4 +1,5 @@
-import React from 'react'
+import type { IBaseComponent } from 'src/types'
+import { mergeStyle, standardizeUnit } from 'src/common'
 
 import './style.scss'
 
@@ -15,7 +16,7 @@ export enum EVerticalAlignment {
   // firstTextBaseline,
 }
 
-export interface IHStackProps {
+export interface IHStackProps extends IBaseComponent {
   /**
    * The guide for aligning the subviews in this stack.
    *  This guide has the same vertical screen coordinate for every child view.
@@ -26,20 +27,20 @@ export interface IHStackProps {
    *  or nil if you want the stack to choose a default distance for each pair of subviews.
    */
   spacing?: number
-  children?: any
 }
 
 export function HStack(props: IHStackProps) {
-  const { children, alignment = 'top', spacing } = props
-  const className = `sw-hstack align-${alignment}`
-  const rest: Record<string, any> = {}
-  if (spacing) {
-    rest.style = {
-      '--spacing': `${spacing}px`
+  const { children, alignment = 'top', spacing, ...styleProps } = props
+  const className = ['sw-hstack', `align-${alignment}`]
+
+  const combinedStyle = mergeStyle(styleProps, {
+    className,
+    style: {
+      '--spacing': standardizeUnit(spacing || 0)
     }
-  }
+  })
   return (
-    <div {...rest} className={className}>
+    <div {...combinedStyle}>
       {children}
     </div>
   )

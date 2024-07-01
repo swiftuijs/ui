@@ -1,12 +1,16 @@
-import React from 'react'
+import type { IBaseComponent } from 'src/types'
+import { mergeStyle } from 'src/common'
 
 import './style.scss'
 
-export function ZStack (props: any) {
-  const { children, ...rest } = props
+export function ZStack(props: IBaseComponent) {
+  const { children, ...styleProps } = props
+  const mergedStyle = mergeStyle(styleProps, {
+    className: 'sw-zstack'
+  })
   return (
-    <div {...rest} className="sw-zstack">
-      {props.children}
+    <div {...mergedStyle}>
+      {children}
     </div>
   )
 }

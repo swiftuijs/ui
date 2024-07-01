@@ -1,17 +1,22 @@
-import React from 'react'
+import type { IBaseComponent } from 'src/types'
+import { mergeStyle } from 'src/common'
 
 import './style.scss'
 
-export interface IScrollViewProps {
+export interface IScrollViewProps extends IBaseComponent {
   direction?: 'horizontal' | 'vertical'
-  children?: any
 }
 
 export function ScrollView (props: IScrollViewProps) {
-  const { children, direction, ...rest } = props
-  const direct = direction || '.vertical'
+  const { children, direction, ...styleProps } = props
+
+  const mergedStyle = mergeStyle(styleProps, {
+    className: ['sw-scrollview', direction || 'vertical']
+  })
+
+  
   return (
-    <div {...rest} className={`sw-scrollview ${direct}`}>
+    <div {...mergedStyle}>
       {children}
     </div>
   )

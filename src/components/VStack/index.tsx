@@ -1,12 +1,16 @@
-import React from 'react'
+import type { IBaseComponent } from 'src/types'
+import { mergeStyle } from 'src/common'
 
 import './style.scss'
 
 
-export function VStack (props: any) {
-  const { children, ...rest } = props
+export function VStack(props: IBaseComponent) {
+  const { children, ...styleProps } = props
+  const mergedStyle = mergeStyle(styleProps, {
+    className: 'sw-vstack'
+  })
   return (
-    <div {...rest} className="sw-vstack">
+    <div {...mergedStyle}>
       {children}
     </div>
   )
