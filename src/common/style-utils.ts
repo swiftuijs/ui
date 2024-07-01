@@ -1,6 +1,5 @@
 import type { IBaseComponent, IClsxArgs, IClsObj } from 'src/types'
 
-
 /**
  * clsx is a tiny (228B) utility for constructing className strings conditionally.
  * @param args

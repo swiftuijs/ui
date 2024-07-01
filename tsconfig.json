@@ -29,7 +29,7 @@
     "paths": {
       "src/*": ["src/*"],
       "~style/*": ["src/style/*"],
-    },
+    }
   },
   "include": [
     "example/**/*", // *** The files TypeScript should type check ***
