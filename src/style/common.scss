@@ -1,7 +1,7 @@
 *,*::after, *::before { box-sizing: border-box; }
 
 html {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans(', 'Helvetica Neue', sans-serif;
 }
 
 input,
@@ -17,7 +17,7 @@ html, body {
   width: 100%;
   height: 100%;
 }
-.#{clsName('page')} {
+.#{ns('page')} {
   position: relative;
   @include centerBlock;
   // display: flex;
@@ -25,15 +25,5 @@ html, body {
   // align-items: center;
   width: 100%;
   height: 100%;
-}
-
-/* ======================= style for storybook ================================= */
-#root,
-[id^=story--example] {
-  position: relative;
-  @include centerBlock;
-  width: 100%;
-  height: 300px;
-  outline: 1px dashed #ccc;
 }
 

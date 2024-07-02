@@ -1,35 +1,35 @@
 import type { Meta } from '@storybook/react'
-import { HStack, VStack, Text, Spacer } from '../'
+import { HStack, VStack, Text, Divider } from '../'
 
 export default {
-  title: 'SwiftUI/Spacer',
-  component: Spacer
+  title: 'SwiftUI/Divider',
+  component: Divider
 } satisfies Meta
 
-export function SpacerBetween () {
+export function DividerBetween () {
   return (
     <HStack>
       <Text>Left</Text>
-      <Spacer />
+      <Divider />
       <Text>Right</Text>
     </HStack>
   )
 }
 
-export function SpacerWithVStackBetween() {
+export function DividerWithVStackBetween() {
   return (
     <VStack>
       <Text>Left</Text>
-      <Spacer minLength={20}/>
+      <Divider />
       <Text>Right</Text>
     </VStack>
   )
 }
 
-export function SpacerLeading () {
+export function DividerLeading () {
   return (
     <HStack>
-      <Spacer />
+      <Divider />
       <Text>Text</Text>
     </HStack>
   )

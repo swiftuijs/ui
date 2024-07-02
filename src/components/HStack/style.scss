@@ -1,9 +1,10 @@
 @import '~style/base.scss';
 
-.#{clsName('hstack')} {
+.#{ns('hstack')} {
   position: relative;
   @include centerBlock;
   flex-direction: row;
+  height: fit-content;
   width: 100%;
   row-gap: var(--spacing, 0px);
 
@@ -19,11 +20,11 @@
     align-items: flex-end;
   }
 
-  > .#{clsName('text')} + .#{clsName('text')} {
+  > .#{ns('text')} + .#{ns('text')} {
     margin-left: 4px;
   }
 
-  > .#{clsName('spacer')} {
+  > .#{ns('spacer')} {
     min-width: var(--min-length);
   }
 }

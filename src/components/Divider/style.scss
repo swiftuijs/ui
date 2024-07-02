@@ -1,5 +1,7 @@
 @import '~style/vars.scss';
 
-.#{clsName('divider')} {
-  flex: 1;
+.#{ns('divider')} {
+  width: 1px;
+  background-color: grey;
+  height: 100%;
 }

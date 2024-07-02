@@ -1,0 +1,23 @@
+import type { IBaseComponent } from 'src/types'
+import { mergeStyle, standardizeUnit } from 'src/common'
+
+import './style.scss'
+
+export interface I{{ pascalCase name }}Props extends Omit<IBaseComponent, 'children'>{
+  minLength?: number | string
+}
+
+export function {{ pascalCase name }} (props: I{{ pascalCase name }}Props) {
+  const { minLength, ...styleProps } = props
+
+  const combinedStyle = mergeStyle(styleProps, {
+    style: {
+      '--min-length': standardizeUnit(minLength || 0),
+    },
+    className: 'sw-{{ lowerCase name }}'
+  })
+  
+  return (
+    <div {...combinedStyle}></div>
+  )
+}

@@ -1,0 +1,36 @@
+import type { Meta } from '@storybook/react'
+import { HStack, VStack, Text, {{ pascalCase name }} } from '../'
+
+export default {
+  title: 'SwiftUI/Spacer',
+  component: {{ pascalCase name }}
+} satisfies Meta
+
+export function {{ pascalCase name }}Between () {
+  return (
+    <HStack>
+      <Text>Left</Text>
+      <{{ pascalCase name }} />
+      <Text>Right</Text>
+    </HStack>
+  )
+}
+
+export function {{ pascalCase name }}WithVStackBetween() {
+  return (
+    <VStack>
+      <Text>Left</Text>
+      <{{ pascalCase name }} minLength={20}/>
+      <Text>Right</Text>
+    </VStack>
+  )
+}
+
+export function {{ pascalCase name }}Leading () {
+  return (
+    <HStack>
+      <{{ pascalCase name }} />
+      <Text>Text</Text>
+    </HStack>
+  )
+}

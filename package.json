@@ -8,11 +8,12 @@
     "dist"
   ],
   "scripts": {
-    "dev": "yarn storybook",
+    "dev": "vite dev",
     "prebuild-sb": "rimraf docs",
     "storybook": "storybook dev -p 6006",
     "build-sb": "storybook build -o docs",
     "build": "tsc -b && vite build",
+    "gen": "cross-env NODE_OPTIONS='--import tsx' plop --plopfile=scripts/gen-component.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "build-all": "yarn build && yarn build-sb"
   },
@@ -36,6 +37,7 @@
     "eslint-plugin-react-refresh": "^0.4.7",
     "eslint-plugin-storybook": "^0.8.0",
     "lerna-ci": "^2.0.0-alpha.3",
+    "plop": "^4.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sass": "^1.55.0",
@@ -52,5 +54,8 @@
   "repository": "https://github.com/swiftuijs/ui.git",
   "author": "Saiya",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "tsx": "^4.16.0"
+  }
 }

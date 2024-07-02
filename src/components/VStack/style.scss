@@ -1,12 +1,12 @@
 @import '~style/base.scss';
 
-.#{clsName('vstack')} {
+.#{ns('vstack')} {
   position: relative;
   height: 100%;
   @include centerBlock;
   flex-direction: column;
 
-  > .#{clsName('spacer')} {
+  > .#{ns('spacer')} {
     min-height: var(--min-length);
   }
 }

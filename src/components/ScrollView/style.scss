@@ -1,12 +1,12 @@
 @import '~style/base.scss';
 
-.#{clsName('scrollview')} {
+.#{ns('scrollview')} {
   position: relative;
   height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  >.#{clsName('spacer')} {
+  >.#{ns('spacer')} {
     min-height: var(--min-length);
   }
 
@@ -17,7 +17,7 @@
     overflow-x: auto;
     width: 100%;
     flex-direction: row;
-    >.#{clsName('spacer')} {
+    >.#{ns('spacer')} {
       min-width: var(--min-length);
     }
   }

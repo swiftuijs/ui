@@ -2,21 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 
-// https://vitejs.dev/config/
-export default defineConfig({
+const commonConfig = {
   resolve: {
     alias: {
       src: '/src',
       '~style': '/src/style',
-    },
-  },
-  build: {
-    outDir: 'dist',
-    lib: {
-      entry: 'src/index.tsx',
-      name: 'swiftui',
-      formats: ['es', 'umd'],
-      fileName: (format) => `index.${format}.js`,
     },
   },
   plugins: [
@@ -25,4 +15,37 @@ export default defineConfig({
       rollupTypes: true
     }),
   ],
+}
+
+// https://vitejs.dev/config/
+export default defineConfig((env) => {
+  if (env.mode === 'build') {
+    return {
+      ...commonConfig,
+      build: {
+        outDir: 'dist',
+        lib: {
+          entry: 'src/index.tsx',
+          name: 'swiftui',
+          formats: ['es', 'umd'],
+          fileName: (format) => `index.${format}.js`,
+        },
+      },
+    }
+  }
+
+  return {
+    ...commonConfig,
+    root: './',
+    server: {
+      open: 'demo/index.html'
+    },
+    build: {
+      rollupOptions: {
+        input: {
+          main: 'demo/index.html',
+        },
+      }
+    }
+  }
 })

@@ -1,5 +1,5 @@
 $prefix: 'sw';
 
-@function clsName($name) {
+@function ns($name) {
   @return $prefix + '-' + $name;
 }
