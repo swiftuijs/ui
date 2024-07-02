@@ -1,10 +1,6 @@
+import { EEdge } from '../../../../../../../../src/types';
 import { IBaseComponent } from '../../../../../../../../src/types';
-import { IChildren } from './types';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
-
-export declare function Container(props: {
-    children: IChildren;
-}): JSX_2.Element;
 
 export declare function Divider(props: IDividerProps): JSX_2.Element;
 
@@ -38,6 +34,10 @@ export declare interface IHStackProps extends IBaseComponent {
     spacing?: number;
 }
 
+export declare interface INavigationStackProps extends IBaseComponent {
+    ignoreSafeArea?: boolean | EEdge[];
+}
+
 export declare interface IScrollViewProps extends IBaseComponent {
     direction?: 'horizontal' | 'vertical';
 }
@@ -45,6 +45,8 @@ export declare interface IScrollViewProps extends IBaseComponent {
 export declare interface ISpacerProps extends Omit<IBaseComponent, 'children'> {
     minLength?: number | string;
 }
+
+export declare function NavigationStack(props: INavigationStackProps): JSX_2.Element;
 
 export declare function ScrollView(props: IScrollViewProps): JSX_2.Element;
 
