@@ -5,3 +5,4 @@ export * from './Spacer';
 export * from './Text';
 export * from './ScrollView';
 export * from './Divider';
+export * from './NavigationStack';

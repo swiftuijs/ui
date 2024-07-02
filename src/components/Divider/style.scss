@@ -2,6 +2,11 @@
 
 .#{ns('divider')} {
   width: 1px;
-  background-color: grey;
   height: 100%;
+  background-color: grey;
+
+  &.column {
+    width: 100%;
+    height: 1px;
+  }
 }

@@ -1,5 +1,5 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { mergeStyle, StyleContext } from 'src/common'
 
 import './style.scss'
 
@@ -10,8 +10,10 @@ export function VStack(props: IBaseComponent) {
     className: 'sw-vstack'
   })
   return (
-    <div {...mergedStyle}>
-      {children}
-    </div>
+    <StyleContext.Provider value={{ boxDirection: 'column' }}>
+      <div {...mergedStyle}>
+        {children}
+      </div>
+    </StyleContext.Provider>
   )
 }

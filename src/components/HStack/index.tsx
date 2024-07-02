@@ -1,5 +1,5 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle, standardizeUnit } from 'src/common'
+import { mergeStyle, standardizeUnit, StyleContext } from 'src/common'
 
 import './style.scss'
 
@@ -40,8 +40,10 @@ export function HStack(props: IHStackProps) {
     }
   })
   return (
+    <StyleContext.Provider value={{ boxDirection: 'row' }}>
     <div {...combinedStyle}>
       {children}
     </div>
+    </StyleContext.Provider>
   )
 }

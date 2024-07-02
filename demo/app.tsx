@@ -1,15 +1,20 @@
 import ReactDom from 'react-dom/client';
-import { HStack, Text, Divider, Container } from 'src/index'
+import { VStack, HStack, Text, Divider, NavigationStack } from 'src/index'
 
 const App = () => {
   return (
-    <Container>
-      <HStack>
+    <NavigationStack ignoreSafeArea>
+      <VStack>
         <Text>1</Text>
         <Divider />
         <Text>3</Text>
-      </HStack>
-    </Container>
+        <HStack>
+          <Text>4</Text>
+          <Divider />
+          <Text>5</Text>
+        </HStack>
+      </VStack>
+    </NavigationStack>
   );
 }
 

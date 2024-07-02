@@ -8,7 +8,7 @@ export default function (plop: NodePlopAPI) {
 		prompts: [{
 			type: 'input',
 			name: 'name',
-			message: 'component name please, in PascalCase'
+			message: 'Component name please, in PascalCase:'
 		}],
 		actions: [
       {

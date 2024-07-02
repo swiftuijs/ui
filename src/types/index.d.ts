@@ -35,3 +35,9 @@ export interface IBaseComponent {
   children?: IChildren
 }
 
+export const enum EEdge {
+  TOP = 'top',
+  RIGHT = 'right',
+  BOTTOM = 'bottom',
+  LEFT = 'left',
+}

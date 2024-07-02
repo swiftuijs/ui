@@ -20,7 +20,9 @@ export function {{ pascalCase name }}WithVStackBetween() {
   return (
     <VStack>
       <Text>Left</Text>
-      <{{ pascalCase name }} minLength={20}/>
+      <{{ pascalCase name }}/>
+        <Text>Right</Text>
+      </{{ pascalCase name }}>
       <Text>Right</Text>
     </VStack>
   )

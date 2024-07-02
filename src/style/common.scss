@@ -17,13 +17,4 @@ html, body {
   width: 100%;
   height: 100%;
 }
-.#{ns('page')} {
-  position: relative;
-  @include centerBlock;
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
-  width: 100%;
-  height: 100%;
-}
 
