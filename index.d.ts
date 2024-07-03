@@ -1,13 +1,17 @@
+import { ComponentType } from 'react';
 import { EEdge } from '../../../../../../../../src/types';
 import { IBaseComponent } from '../../../../../../../../src/types';
+import { IBaseElementComponent } from '../../../../../../../../src/types';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
+
+export declare function Button(props: IButtonProps): JSX_2.Element;
 
 export declare function Divider(props: IDividerProps): JSX_2.Element;
 
 /**
  * An alignment position along the vertical axis.
  */
-export declare enum EVerticalAlignment {
+export declare const enum EVerticalAlignment {
     /** A guide marking the bottom edge of the view. */
     bottom = "bottom",
     /** A guide marking the vertical center of the view. */
@@ -17,6 +21,9 @@ export declare enum EVerticalAlignment {
 }
 
 export declare function HStack(props: IHStackProps): JSX_2.Element;
+
+export declare interface IButtonProps extends IBaseElementComponent<'button'> {
+}
 
 export declare interface IDividerProps extends Omit<IBaseComponent, 'children'> {
 }
@@ -34,8 +41,26 @@ export declare interface IHStackProps extends IBaseComponent {
     spacing?: number;
 }
 
+export declare interface IImageProps extends Omit<IBaseElementComponent<'img'>, 'children'> {
+}
+
+declare function Image_2(props: IImageProps): JSX_2.Element;
+export { Image_2 as Image }
+
+export declare interface INavigationLinkProps extends IBaseComponent {
+    /**
+     * next page component or url
+     */
+    destination?: string | ComponentType;
+    /**
+     * dismiss current page (back to previous page)
+     */
+    dismiss?: boolean;
+}
+
 export declare interface INavigationStackProps extends IBaseComponent {
     ignoreSafeArea?: boolean | EEdge[];
+    navigationDestination?: string;
 }
 
 export declare interface IScrollViewProps extends IBaseComponent {
@@ -45,6 +70,8 @@ export declare interface IScrollViewProps extends IBaseComponent {
 export declare interface ISpacerProps extends Omit<IBaseComponent, 'children'> {
     minLength?: number | string;
 }
+
+export declare function NavigationLink(props: INavigationLinkProps): JSX_2.Element;
 
 export declare function NavigationStack(props: INavigationStackProps): JSX_2.Element;
 
