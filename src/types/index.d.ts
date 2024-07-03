@@ -1,4 +1,4 @@
-import type { ReactNode, CSSProperties } from 'react'
+import type { ReactNode, CSSProperties, ComponentProps } from 'react'
 
 export type IClsString = string | number | null | undefined;
 export type IClsObj = Record<string, unknown>;
@@ -34,6 +34,8 @@ export interface IBaseComponent {
    */
   children?: IChildren
 }
+
+export type IBaseElementComponent<T> = IBaseComponent & ComponentProps<T>
 
 export const enum EEdge {
   TOP = 'top',

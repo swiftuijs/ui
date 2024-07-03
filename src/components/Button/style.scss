@@ -1,0 +1,25 @@
+@import '~style/base.scss';
+
+.#{ns('button')} {
+  appearance: none;
+  border: 1px solid var(--sw-accent-color, '#007aff');
+  background: none;
+  color: var(--sw-accent-color, '#007aff');
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s;
+
+  &:hover:not([disabled]) {
+    background-color: color(from var(--sw-accent-color, '#007aff') srgb r g b / 0.5);
+  }
+  &:active:not([disabled]) {
+    background-color: var(--sw-accent-color, '#007aff');
+    color: white;
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

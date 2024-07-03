@@ -1,5 +1,5 @@
 // plopfile.ts
-import type { NodePlopAPI } from 'plop';
+import type { NodePlopAPI } from 'plop'
 
 export default function (plop: NodePlopAPI) {
  // controller generator
@@ -32,5 +32,5 @@ export default function (plop: NodePlopAPI) {
         template: 'export * from \'./{{pascalCase name}}\';'
       }
     ]
-	});
+	})
 }

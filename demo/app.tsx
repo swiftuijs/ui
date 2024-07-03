@@ -1,21 +1,40 @@
-import ReactDom from 'react-dom/client';
-import { VStack, HStack, Text, Divider, NavigationStack } from 'src/index'
+import ReactDom from 'react-dom/client'
+import { VStack, Button, HStack,
+  Text, Divider, NavigationLink,
+  NavigationStack, Spacer } from 'src/index'
 
-const App = () => {
+const About = () => {
   return (
-    <NavigationStack ignoreSafeArea>
+    <VStack>
+      <Text>About</Text>
+      <NavigationLink dismiss>Home</NavigationLink>
+    </VStack>
+  )
+}
+
+
+export const App = () => {
+  return (
+    <NavigationStack style={{
+      '--safe-area-top': '40px',
+      '--safe-area-bottom': '40px',
+    }}>
       <VStack>
+        <Spacer />
         <Text>1</Text>
         <Divider />
         <Text>3</Text>
         <HStack>
           <Text>4</Text>
-          <Divider />
+          <Spacer />
           <Text>5</Text>
         </HStack>
+        <Spacer />
+        <NavigationLink destination={About}>About</NavigationLink>
+        <Button>6</Button>
       </VStack>
     </NavigationStack>
-  );
+  )
 }
 
-ReactDom.createRoot(document.getElementById('root')!).render(<App />);
+ReactDom.createRoot(document.getElementById('root')!).render(<App />)

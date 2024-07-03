@@ -15,6 +15,7 @@ body {
     outline: 4px solid #999;
     position: relative;
     background: #fff;
+    overflow: hidden;
 
     // iphone notch
     &::before {

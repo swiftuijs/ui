@@ -1,18 +1,19 @@
 import type { IBaseComponent } from 'src/types'
 import { useContext } from 'react'
-import { mergeStyle, StyleContext } from 'src/common'
+import { mergeStyle } from 'src/common'
+import { LayoutContext } from 'src/contexts'
 
 import './style.scss'
 
 export interface IDividerProps extends Omit<IBaseComponent, 'children'>{}
 
 export function Divider (props: IDividerProps) {
-  const styleContext = useContext(StyleContext)
+  const layoutContext = useContext(LayoutContext)
 
   const { ...styleProps } = props
 
   const combinedStyle = mergeStyle(styleProps, {
-    className: `sw-divider ${styleContext.boxDirection}`
+    className: `sw-divider ${layoutContext.boxDirection}`
   })
   
   return <div {...combinedStyle} />

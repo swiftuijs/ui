@@ -1,0 +1,12 @@
+@import '~style/base.scss';
+
+.#{ns('navigationlink')} {
+  color: var(--sw-accent-color, '#007aff');
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}

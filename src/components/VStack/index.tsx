@@ -1,19 +1,19 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle, StyleContext } from 'src/common'
+import { mergeStyle } from 'src/common'
+import { LayoutContext } from 'src/contexts'
 
 import './style.scss'
-
 
 export function VStack(props: IBaseComponent) {
   const { children, ...styleProps } = props
   const mergedStyle = mergeStyle(styleProps, {
-    className: 'sw-vstack'
+    className: ['sw-vstack', 'sw-container']
   })
   return (
-    <StyleContext.Provider value={{ boxDirection: 'column' }}>
+    <LayoutContext.Provider value={{ boxDirection: 'column' }}>
       <div {...mergedStyle}>
         {children}
       </div>
-    </StyleContext.Provider>
+    </LayoutContext.Provider>
   )
 }

@@ -1,12 +1,13 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle, standardizeUnit, StyleContext } from 'src/common'
+import { mergeStyle, standardizeUnit } from 'src/common'
+import { LayoutContext } from 'src/contexts'
 
 import './style.scss'
 
 /**
  * An alignment position along the vertical axis.
  */
-export enum EVerticalAlignment {
+export const enum EVerticalAlignment {
   /** A guide marking the bottom edge of the view. */
   bottom = 'bottom',
   /** A guide marking the vertical center of the view. */
@@ -30,8 +31,8 @@ export interface IHStackProps extends IBaseComponent {
 }
 
 export function HStack(props: IHStackProps) {
-  const { children, alignment = 'top', spacing, ...styleProps } = props
-  const className = ['sw-hstack', `align-${alignment}`]
+  const { children, alignment = 'center', spacing, ...styleProps } = props
+  const className = ['sw-hstack', 'sw-container', `align-${alignment}`]
 
   const combinedStyle = mergeStyle(styleProps, {
     className,
@@ -40,10 +41,10 @@ export function HStack(props: IHStackProps) {
     }
   })
   return (
-    <StyleContext.Provider value={{ boxDirection: 'row' }}>
+    <LayoutContext.Provider value={{ boxDirection: 'row' }}>
     <div {...combinedStyle}>
       {children}
     </div>
-    </StyleContext.Provider>
+    </LayoutContext.Provider>
   )
 }
