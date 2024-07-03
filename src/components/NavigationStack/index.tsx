@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react'
 import type { IBaseComponent, EEdge } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps } from 'src/common'
 import { Page } from 'src/components/Page'
 import { useNaviPath } from 'src/contexts'
 
@@ -15,7 +15,7 @@ export interface INavigationStackProps extends IBaseComponent{
 export function NavigationStack (props: INavigationStackProps) {
   const navigationPath = useNaviPath()
 
-  const { ignoreSafeArea, ...styleProps } = props
+  const { ignoreSafeArea, ...nProps } = props
   const edgeStyles:Record<string, number | string> = {}
   if (ignoreSafeArea) {
     // @ts-expect-error fix this
@@ -35,7 +35,7 @@ export function NavigationStack (props: INavigationStackProps) {
   }, [navigationPath, HomePage])
 
 
-  const combinedStyle = mergeStyle(styleProps, {
+  const {commonProps, restProps} = standardizeProps(nProps, {
     style: {
       ...edgeStyles,
     },
@@ -43,7 +43,7 @@ export function NavigationStack (props: INavigationStackProps) {
   })
   
   return (
-    <div {...combinedStyle}>
+    <div {...commonProps} {...restProps}>
       {
         pages.map((page, index) => {
           const PageComponent = page.component

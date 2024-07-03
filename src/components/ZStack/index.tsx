@@ -1,15 +1,14 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
 export function ZStack(props: IBaseComponent) {
-  const { children, ...styleProps } = props
-  const mergedStyle = mergeStyle(styleProps, {
+  const { children, commonProps, restProps } = standardizeProps(props, {
     className: 'sw-zstack'
   })
   return (
-    <div {...mergedStyle}>
+    <div {...commonProps} {...restProps}>
       {children}
     </div>
   )

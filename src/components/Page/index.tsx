@@ -1,15 +1,17 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
+const PAGE_TRANSITION_NAME = 'sw-page-transition'
+
 export function Page(props: IBaseComponent) {
-  const { children, ...styleProps } = props
-  const mergedStyle = mergeStyle(styleProps, {
-    className: 'sw-page'
-  })
+  const {commonProps, restProps, children} = standardizeProps(
+    Object.assign({ transitionName: PAGE_TRANSITION_NAME },props),
+    { className: 'sw-page'}
+  )
   return (
-    <div {...mergedStyle}>
+    <div {...commonProps} {...restProps}>
       {children}
     </div>
   )

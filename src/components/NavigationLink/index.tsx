@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import type { ComponentType } from 'react'
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps, startViewTransition } from 'src/common'
 import { useNaviContext } from 'src/contexts'
 
 import './style.scss'
@@ -18,16 +18,18 @@ export interface INavigationLinkProps extends IBaseComponent {
 }
 
 export function NavigationLink (props: INavigationLinkProps) {
-  const { destination, dismiss, children, ...styleProps } = props
+  const { destination, dismiss, ...nProps } = props
   const navi = useNaviContext()
 
-  const combinedStyle = mergeStyle(styleProps, {
+  const {commonProps, restProps, children} = standardizeProps(nProps, {
     className: 'sw-navigationlink'
   })
 
   const onClick = useCallback(() => {
     if (dismiss) {
-      navi.removeLast()
+      startViewTransition(() => {
+        navi.removeLast()
+      })
       return
     }
     if (!destination) {
@@ -39,13 +41,15 @@ export function NavigationLink (props: INavigationLinkProps) {
       return
     }
 
-    navi.append({
-      component: destination,
-      type: 'page'
-    })  
+    startViewTransition(() => {
+      navi.append({
+        component: destination,
+        type: 'page'
+      })
+    })
   }, [destination, navi, dismiss])
   
   return (
-    <div {...combinedStyle} onClick={onClick}>{children}</div>
+    <div {...commonProps} {...restProps} onClick={onClick}>{children}</div>
   )
 }

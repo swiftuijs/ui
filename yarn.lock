@@ -2663,6 +2663,11 @@
   resolved "https://registry.yarnpkg.com/@types/doctrine/-/doctrine-0.0.9.tgz#d86a5f452a15e3e3113b99e39616a9baa0f9863f"
   integrity sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==
 
+"@types/dom-view-transitions@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@types/dom-view-transitions/-/dom-view-transitions-1.0.4.tgz#b4310929488daa6baa8bba657404ea6e05724121"
+  integrity sha512-oDuagM6G+xPLrLU4KeCKlr1oalMF5mJqV5pDPMDVIEaa8AkUW00i6u+5P02XCjdEEUQJC9dpnxqSLsZeAciSLQ==
+
 "@types/ejs@^3.1.1":
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.1.5.tgz#49d738257cc73bafe45c13cb8ff240683b4d5117"

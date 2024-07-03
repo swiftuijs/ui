@@ -1,3 +1,4 @@
+@import './base.scss';
 *,*::after, *::before { box-sizing: border-box; }
 
 html {
@@ -21,3 +22,7 @@ html, body {
 body {
   --sw-accent-color: #2997ff;
 }
+
+// [class^="#{$prefix}-"][data-transition-name] {
+//   view-transition-name: attr(data-transition-name);
+// }

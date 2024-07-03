@@ -1,5 +1,5 @@
 import type { IBaseElementComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
@@ -8,13 +8,12 @@ export interface IImageProps extends Omit<IBaseElementComponent<'img'>, 'childre
 }
 
 export function Image (props: IImageProps) {
-  const { ...styleProps } = props
 
-  const combinedStyle = mergeStyle(styleProps, {
+  const { commonProps, restProps } = standardizeProps(props, {
     className: 'sw-image'
   })
   
   return (
-    <img {...combinedStyle} />
+    <img {...commonProps} {...restProps} />
   )
 }

@@ -1,5 +1,5 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle, standardizeUnit } from 'src/common'
+import { standardizeProps, standardizeUnit } from 'src/common'
 
 import './style.scss'
 
@@ -8,9 +8,9 @@ export interface ISpacerProps extends Omit<IBaseComponent, 'children'>{
 }
 
 export function Spacer (props: ISpacerProps) {
-  const { minLength, ...styleProps } = props
+  const { minLength, ...sProps } = props
 
-  const combinedStyle = mergeStyle(styleProps, {
+  const {commonProps, restProps} = standardizeProps(sProps, {
     style: {
       '--min-length': standardizeUnit(minLength || 0),
     },
@@ -18,6 +18,6 @@ export function Spacer (props: ISpacerProps) {
   })
   
   return (
-    <div {...combinedStyle}></div>
+    <div {...commonProps} {...restProps}/>
   )
 }

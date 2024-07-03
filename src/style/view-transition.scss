@@ -1,0 +1,21 @@
+/* Animation styles for forwards type only */
+html:active-view-transition-type(forwards) {
+  &::view-transition-old(sw-page-transition) {
+    animation-name: slide-out-to-left;
+  }
+
+  &::view-transition-new(sw-page-transition) {
+    animation-name: slide-in-from-right;
+  }
+}
+
+/* Animation styles for backwards type only */
+html:active-view-transition-type(backwards) {
+  &::view-transition-old(sw-page-transition) {
+    animation-name: slide-out-to-right;
+  }
+
+  &::view-transition-new(sw-page-transition) {
+    animation-name: slide-in-from-left;
+  }
+}

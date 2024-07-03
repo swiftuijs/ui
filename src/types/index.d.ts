@@ -33,6 +33,11 @@ export interface IBaseComponent {
    * The children of the component.
    */
   children?: IChildren
+
+  /**
+   * view transition name
+   */
+  transitionName?: string
 }
 
 export type IBaseElementComponent<T> = IBaseComponent & ComponentProps<T>

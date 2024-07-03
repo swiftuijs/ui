@@ -27,6 +27,7 @@
     "@storybook/react": "^8.1.11",
     "@storybook/react-vite": "^8.1.11",
     "@storybook/test": "^8.1.11",
+    "@types/dom-view-transitions": "^1.0.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",

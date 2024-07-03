@@ -1,17 +1,15 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
 export function Text(props: IBaseComponent) {
-  const { children, ...styleProps } = props
-
-  const combinedStyle = mergeStyle(styleProps, {
+  const {commonProps, restProps, children} = standardizeProps(props, {
     className: 'sw-text'
   })
 
   return (
-    <div {...combinedStyle}>
+    <div {...commonProps} {...restProps}>
       {children}
     </div>
   )

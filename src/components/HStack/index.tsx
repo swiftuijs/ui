@@ -1,5 +1,5 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle, standardizeUnit } from 'src/common'
+import { standardizeProps, standardizeUnit } from 'src/common'
 import { LayoutContext } from 'src/contexts'
 
 import './style.scss'
@@ -31,18 +31,17 @@ export interface IHStackProps extends IBaseComponent {
 }
 
 export function HStack(props: IHStackProps) {
-  const { children, alignment = 'center', spacing, ...styleProps } = props
-  const className = ['sw-hstack', 'sw-container', `align-${alignment}`]
+  const { alignment = 'center', spacing, ...hProps } = props
 
-  const combinedStyle = mergeStyle(styleProps, {
-    className,
+  const {commonProps, restProps, children} = standardizeProps(hProps, {
+    className: ['sw-hstack', 'sw-container', `align-${alignment}`],
     style: {
       '--spacing': standardizeUnit(spacing || 0)
     }
   })
   return (
     <LayoutContext.Provider value={{ boxDirection: 'row' }}>
-    <div {...combinedStyle}>
+      <div {...commonProps} {...restProps}>
       {children}
     </div>
     </LayoutContext.Provider>

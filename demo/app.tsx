@@ -7,7 +7,7 @@ const About = () => {
   return (
     <VStack>
       <Text>About</Text>
-      <NavigationLink dismiss>Home</NavigationLink>
+      <NavigationLink dismiss transitionName='home'>Home</NavigationLink>
     </VStack>
   )
 }
@@ -30,7 +30,7 @@ export const App = () => {
           <Text>5</Text>
         </HStack>
         <Spacer />
-        <NavigationLink destination={About}>About</NavigationLink>
+        <NavigationLink destination={About} transitionName='home'>About</NavigationLink>
         <Button>6</Button>
       </VStack>
     </NavigationStack>

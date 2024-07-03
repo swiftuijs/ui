@@ -1,5 +1,5 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
@@ -8,13 +8,13 @@ export interface I{{ pascalCase name }}Props extends IBaseComponent {
 }
 
 export function {{ pascalCase name }} (props: I{{ pascalCase name }}Props) {
-  const { ...styleProps } = props
+  const { ...cProps } = props
 
-  const combinedStyle = mergeStyle(styleProps, {
+  const {commonProps, restProps, children} = standardizeProps(cProps, {
     className: 'sw-{{ lowerCase name }}'
   })
   
   return (
-    <div {...combinedStyle}>{props.children}</div>
+    <div {...commonProps} {...restProps}>{children}</div>
   )
 }

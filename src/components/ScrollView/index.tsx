@@ -1,5 +1,5 @@
 import type { IBaseComponent } from 'src/types'
-import { mergeStyle } from 'src/common'
+import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
@@ -8,15 +8,15 @@ export interface IScrollViewProps extends IBaseComponent {
 }
 
 export function ScrollView (props: IScrollViewProps) {
-  const { children, direction, ...styleProps } = props
+  const { direction, ...sProps } = props
 
-  const mergedStyle = mergeStyle(styleProps, {
+  const {commonProps, restProps, children} = standardizeProps(sProps, {
     className: ['sw-scrollview', direction || 'vertical']
   })
 
   
   return (
-    <div {...mergedStyle}>
+    <div {...commonProps} {...restProps}>
       {children}
     </div>
   )
