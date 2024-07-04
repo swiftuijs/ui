@@ -1,12 +1,10 @@
 /**
  * router related context
  */
-import type { ComponentType } from 'react'
+import type { IPageIem } from 'src/types'
 import { createStore } from 'plain-store'
-export interface IPageIem {
-  component: ComponentType
-  type: 'page' | 'modal'
-}
+
+
 
 export const naviStore = createStore<IPageIem[]>([])
 
@@ -43,7 +41,15 @@ export function useNaviContext(): INaviContext {
   return naviStore.useSelector((path) => ({
     path,
     append: (page: IPageIem) => {
-      naviStore.setStore(p => [...p, page])
+      naviStore.setStore(p => {
+        const index = p.findIndex((item) => item.id === page.id)
+        if (index === -1) {
+          return [...p, page]
+        }
+        if (index === p.length - 1) return p
+        const item = p[index]
+        return [...p.slice(index, 1), item]
+      })
     },
     removeLast: (count = 1) => {
       naviStore.setStore(p => p.slice(0, -count))

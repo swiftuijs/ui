@@ -1,6 +1,7 @@
 import type { IBaseComponent } from 'src/types'
 import { standardizeProps, standardizeUnit } from 'src/common'
 import { LayoutContext } from 'src/contexts'
+import { useOverflow } from 'src/hooks'
 
 import './style.scss'
 
@@ -32,6 +33,7 @@ export interface IHStackProps extends IBaseComponent {
 
 export function HStack(props: IHStackProps) {
   const { alignment = 'center', spacing, ...hProps } = props
+  const containerRef = useOverflow(props, { direction: 'horizontal' })
 
   const {commonProps, restProps, children} = standardizeProps(hProps, {
     className: ['sw-hstack', 'sw-container', `align-${alignment}`],
@@ -41,7 +43,7 @@ export function HStack(props: IHStackProps) {
   })
   return (
     <LayoutContext.Provider value={{ boxDirection: 'row' }}>
-      <div {...commonProps} {...restProps}>
+      <div {...commonProps} {...restProps} ref={containerRef}>
       {children}
     </div>
     </LayoutContext.Provider>

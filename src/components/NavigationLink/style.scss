@@ -6,6 +6,10 @@
   transition: all 0.3s;
   text-decoration: none;
   
+  &:visited {
+    color: var(--sw-accent-color, '#007aff');
+  }
+
   &:active {
     opacity: 0.8;
   }

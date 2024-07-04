@@ -1,10 +1,12 @@
-import { useMemo, useCallback } from 'react'
-import type { IBaseComponent, EEdge } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { useMemo } from 'react'
+import type { IBaseComponent, EEdge, IPageIem } from 'src/types'
+import { standardizeProps, generatePageId } from 'src/common'
 import { Page } from 'src/components/Page'
 import { useNaviPath } from 'src/contexts'
 
 import './style.scss'
+
+const HOME_PAGE_ID = generatePageId('home')
 
 export interface INavigationStackProps extends IBaseComponent{
   // ignore safe area padding
@@ -26,13 +28,23 @@ export function NavigationStack (props: INavigationStackProps) {
     }, edgeStyles)
   }
 
-  const HomePage = useCallback(() => (
-    <>{props.children}</>
-  ), [props.children])
+  const homePage: IPageIem = useMemo(() => ({
+    component: () => (<>{props.children}</>),
+    type: 'page',
+    id: HOME_PAGE_ID
+  }), [props.children])
 
-  const pages = useMemo(() => {
-    return [{ component: HomePage, type: 'page'}, ...navigationPath]
-  }, [navigationPath, HomePage])
+
+  const shownPages: IPageIem[] = useMemo(() => {
+    if (!navigationPath.length) {
+      return [homePage]
+    }
+    const idx = navigationPath.findLastIndex((page) => page.type === 'page')
+    if (idx === -1) {
+      return [homePage, ...navigationPath]
+    }
+    return navigationPath.slice(idx)
+  }, [navigationPath, homePage])
 
 
   const {commonProps, restProps} = standardizeProps(nProps, {
@@ -41,14 +53,15 @@ export function NavigationStack (props: INavigationStackProps) {
     },
     className: 'sw-navigationstack'
   })
+
   
   return (
     <div {...commonProps} {...restProps}>
       {
-        pages.map((page, index) => {
+        shownPages.map((page) => {
           const PageComponent = page.component
           return (
-            <Page key={index}>
+            <Page key={page.id} type={page.type}>
               <PageComponent />
             </Page>
           )

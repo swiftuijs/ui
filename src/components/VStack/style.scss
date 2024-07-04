@@ -2,11 +2,16 @@
 
 .#{ns('vstack')} {
   position: relative;
-  height: 100%;
+  min-height: 100%;
   @include centerBlock;
   flex-direction: column;
+  overflow-y: auto;
 
   > .#{ns('spacer')} {
     min-height: var(--min-length);
+  }
+
+  &.sw-overflowed {
+    justify-content: flex-start;
   }
 }
