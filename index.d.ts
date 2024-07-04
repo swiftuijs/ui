@@ -2,6 +2,7 @@ import { ComponentType } from 'react';
 import { EEdge } from '../../../../../../../../src/types';
 import { IBaseComponent } from '../../../../../../../../src/types';
 import { IBaseElementComponent } from '../../../../../../../../src/types';
+import { IPageType } from '../../../../../../../../src/types';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
 
 export declare function Button(props: IButtonProps): JSX_2.Element;
@@ -52,6 +53,9 @@ export declare interface INavigationLinkProps extends IBaseComponent {
      * next page component or url
      */
     destination?: string | ComponentType;
+    pageOptions?: {
+        type: IPageType;
+    };
     /**
      * dismiss current page (back to previous page)
      */
