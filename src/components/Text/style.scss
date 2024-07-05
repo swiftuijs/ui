@@ -1,12 +1,13 @@
 @import '~style/vars.scss';
 
 .#{ns('text')} {
-  // position: relative;
-  // width: 100%;
-  // height: 100%;
-  // > * {
-  //   position: absolute !important;
-  //   top: 0;
-  //   left: 0;
-  // }
+  hyphens: auto;
+  text-align: justify;
+  
+  &.line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: var(--line-limit, 1);
+  }
 }

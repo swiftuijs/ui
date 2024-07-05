@@ -15,8 +15,12 @@ export function DragBar(props: IDragBarProps) {
     const dragbar = dragRef.current
     const containerBottom = container.getBoundingClientRect().bottom
     const onDrag = (e: MouseEvent | TouchEvent) => {
+      // prevent to trigger pull down to refresh on iOS Safari, or other default behavior
+      e.preventDefault()
       const clientY = isMobile ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY
-      const height = Math.max(containerBottom - Math.max(0, clientY), 200)
+      // 20 is distance from top
+      // 200 is min height
+      const height = Math.max(containerBottom - Math.max(20, clientY), 200)
       container.style.height = `${height}px`
     }
     const onDragEnd = () => {

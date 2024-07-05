@@ -9,6 +9,7 @@
   background-color: #fff;
   @include centerBlock;
   flex-direction: column;
+  overflow: hidden;
 
 
 
@@ -35,6 +36,7 @@
       left: 0;
       right: 0;
       height: 16px;
+      z-index: 999;
       @include centerBlock;
 
       & > .#{ns('dragbar-indicator')} {

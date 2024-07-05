@@ -6,9 +6,8 @@
   flex-direction: row;
   height: fit-content;
   width: 100%;
-  row-gap: var(--spacing, 0px);
-  min-width: 100%;
-  overflow-x: auto;
+  gap: var(--hstack-spacing, 0px);
+
   &.align-top {
     align-items: flex-start;
   }
@@ -19,9 +18,6 @@
 
   &.align-bottom {
     align-items: flex-end;
-  }
-  &.sw-overflowed {
-    justify-content: flex-start !important;
   }
 
   > .#{ns('text')} + .#{ns('text')} {

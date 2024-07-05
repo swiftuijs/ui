@@ -1,18 +1,28 @@
 import type { IBaseComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, standardizeUnit } from 'src/common'
 import { LayoutContext } from 'src/contexts'
-import { useOverflow } from 'src/hooks'
 
 import './style.scss'
 
-export function VStack(props: IBaseComponent) {
-  const {children, commonProps, restProps} = standardizeProps(props, {
-    className: ['sw-vstack', 'sw-container']
+export interface IVStackProps extends IBaseComponent {
+  /**
+   * The distance between adjacent subviews,
+   *  or nil if you want the stack to choose a default distance for each pair of subviews.
+   */
+  spacing?: number
+}
+
+export function VStack(props: IVStackProps) {
+  const { spacing, ...vProps } = props
+  const { children, commonProps, restProps } = standardizeProps(vProps, {
+    className: ['sw-vstack', 'sw-container'],
+    style: {
+      '--vstack-spacing': standardizeUnit(spacing || 0),
+    },
   })
-  const containerRef = useOverflow(props)
   return (
     <LayoutContext.Provider value={{ boxDirection: 'column' }}>
-      <div {...commonProps} {...restProps} ref={containerRef}>
+      <div {...commonProps} {...restProps}>
         {children}
       </div>
     </LayoutContext.Provider>

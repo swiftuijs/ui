@@ -2,23 +2,33 @@
 
 .#{ns('scrollview')} {
   position: relative;
-  height: 100%;
-  overflow-y: auto;
   display: flex;
-  flex-direction: column;
+
   >.#{ns('spacer')} {
     min-height: var(--min-length);
   }
 
+  &.vertical {
+    max-width: 100%;
+    overflow-y: auto;
+    height: 100%;
+    flex-direction: column;
+    >.#{ns('spacer')} {
+      min-height: var(--min-length);
+    }
+  }
+
   &.horizontal {
-    height: unset;
     max-height: 100%;
-    overflow-y: hidden;
     overflow-x: auto;
     width: 100%;
     flex-direction: row;
     >.#{ns('spacer')} {
       min-width: var(--min-length);
     }
+  }
+
+  > .#{ns('container')} {
+    justify-content: flex-start;
   }
 }

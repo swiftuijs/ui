@@ -12,6 +12,8 @@
     background-size: 7.07px 7.07px;
   }
   #root {
+    --safe-area-top: 50px;
+    --safe-area-bottom: 50px;
     width: 393px;
     height: 852px;
     border-radius: 68px;

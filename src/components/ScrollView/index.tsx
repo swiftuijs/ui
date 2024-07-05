@@ -1,5 +1,5 @@
 import type { IBaseComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -11,7 +11,7 @@ export function ScrollView (props: IScrollViewProps) {
   const { direction, ...sProps } = props
 
   const {commonProps, restProps, children} = standardizeProps(sProps, {
-    className: ['sw-scrollview', direction || 'vertical']
+    className: [prefixClass('scrollview'), direction || 'vertical']
   })
 
   

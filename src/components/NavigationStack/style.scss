@@ -4,4 +4,9 @@
   position: relative;
   height: 100%;
   width: 100%;
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #808080cc transparent;
+  }
 }

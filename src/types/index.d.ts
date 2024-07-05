@@ -2,9 +2,10 @@ import type { ReactNode, CSSProperties, ComponentProps } from 'react'
 
 export * from './navi'
 
-export type IClsString = string | number | null | undefined;
+export type IClsString = string | number | null | undefined | false;
 export type IClsObj = Record<string, unknown>;
 export type IClsArr = Array<IClsString | IClsObj | IClsArr>;
+
 /**
  * class name type
  */
