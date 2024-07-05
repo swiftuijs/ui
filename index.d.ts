@@ -75,6 +75,22 @@ export declare interface ISpacerProps extends Omit<IBaseComponent, 'children'> {
     minLength?: number | string;
 }
 
+export declare interface ITextProps extends IBaseComponent {
+    /**
+     * The maximum number of lines to use for rendering text.
+     * default to 0, which means no limit.
+     */
+    lineLimit?: number;
+}
+
+export declare interface IVStackProps extends IBaseComponent {
+    /**
+     * The distance between adjacent subviews,
+     *  or nil if you want the stack to choose a default distance for each pair of subviews.
+     */
+    spacing?: number;
+}
+
 export declare function NavigationLink(props: INavigationLinkProps): JSX_2.Element;
 
 export declare function NavigationStack(props: INavigationStackProps): JSX_2.Element;
@@ -83,10 +99,10 @@ export declare function ScrollView(props: IScrollViewProps): JSX_2.Element;
 
 export declare function Spacer(props: ISpacerProps): JSX_2.Element;
 
-declare function Text_2(props: IBaseComponent): JSX_2.Element;
+declare function Text_2(props: ITextProps): JSX_2.Element;
 export { Text_2 as Text }
 
-export declare function VStack(props: IBaseComponent): JSX_2.Element;
+export declare function VStack(props: IVStackProps): JSX_2.Element;
 
 export declare function ZStack(props: IBaseComponent): JSX_2.Element;
 
