@@ -1,25 +1,15 @@
 import { ComponentType } from 'react';
+import { EAlignment } from '../../../../../../../../src/types';
 import { EEdge } from '../../../../../../../../src/types';
 import { IBaseComponent } from '../../../../../../../../src/types';
 import { IBaseElementComponent } from '../../../../../../../../src/types';
+import { IPageIem } from '../../../../../../../src/types';
 import { IPageType } from '../../../../../../../../src/types';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
 
 export declare function Button(props: IButtonProps): JSX_2.Element;
 
 export declare function Divider(props: IDividerProps): JSX_2.Element;
-
-/**
- * An alignment position along the vertical axis.
- */
-export declare const enum EVerticalAlignment {
-    /** A guide marking the bottom edge of the view. */
-    bottom = "bottom",
-    /** A guide marking the vertical center of the view. */
-    center = "middle",
-    /** A guide marking the top edge of the view. */
-    top = "top"
-}
 
 export declare function HStack(props: IHStackProps): JSX_2.Element;
 
@@ -34,7 +24,7 @@ export declare interface IHStackProps extends IBaseComponent {
      * The guide for aligning the subviews in this stack.
      *  This guide has the same vertical screen coordinate for every child view.
      */
-    alignment?: EVerticalAlignment;
+    alignment?: EAlignment;
     /**
      * The distance between adjacent subviews,
      *  or nil if you want the stack to choose a default distance for each pair of subviews.
@@ -47,6 +37,35 @@ export declare interface IImageProps extends Omit<IBaseElementComponent<'img'>, 
 
 declare function Image_2(props: IImageProps): JSX_2.Element;
 export { Image_2 as Image }
+
+declare interface INaviContext {
+    /**
+     * current path
+     */
+    path: IPageIem[];
+    /**
+     * append a page to path
+     * @param page page item
+     */
+    append: (page: IPageIem) => void;
+    /**
+     * remove last count pages
+     * @param count page count to remove, default is 1
+     */
+    removeLast: (count?: number) => void;
+    /**
+     * whether path is empty
+     */
+    isEmpty: boolean;
+    /**
+     * current page count(home page is 0)
+     */
+    count: number;
+    /**
+     * dismiss current page (back to previous page)
+     */
+    dismiss: () => void;
+}
 
 export declare interface INavigationLinkProps extends IBaseComponent {
     /**
@@ -68,7 +87,14 @@ export declare interface INavigationStackProps extends IBaseComponent {
 }
 
 export declare interface IScrollViewProps extends IBaseComponent {
+    /**
+     * The direction of the scroll view, default to vertical.
+     */
     direction?: 'horizontal' | 'vertical';
+    /**
+     * Whether to show the scroll bar, default to true.
+     */
+    showsIndicators?: boolean;
 }
 
 export declare interface ISpacerProps extends Omit<IBaseComponent, 'children'> {
@@ -84,11 +110,16 @@ export declare interface ITextProps extends IBaseComponent {
 }
 
 export declare interface IVStackProps extends IBaseComponent {
+    alignment?: EAlignment;
     /**
      * The distance between adjacent subviews,
      *  or nil if you want the stack to choose a default distance for each pair of subviews.
      */
     spacing?: number;
+}
+
+export declare interface IZStackProps extends IBaseComponent {
+    alignment?: EAlignment;
 }
 
 export declare function NavigationLink(props: INavigationLinkProps): JSX_2.Element;
@@ -102,8 +133,10 @@ export declare function Spacer(props: ISpacerProps): JSX_2.Element;
 declare function Text_2(props: ITextProps): JSX_2.Element;
 export { Text_2 as Text }
 
+export declare function useNaviContext(): INaviContext;
+
 export declare function VStack(props: IVStackProps): JSX_2.Element;
 
-export declare function ZStack(props: IBaseComponent): JSX_2.Element;
+export declare function ZStack(props: IZStackProps): JSX_2.Element;
 
 export { }
