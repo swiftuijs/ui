@@ -5,42 +5,43 @@
   inset: 0;
   height: 100%;
   width: 100%;
-  
-  > .page-inner {
-    background-color: #fff;
-    position: absolute;
-    inset: 0;
-    @include centerBlock;
-    flex-direction: column;
+  padding: var(--safe-area-top, env(safe-area-inset-top)) var(--safe-area-right, env(safe-area-inset-right)) var(--safe-area-bottom, env(safe-area-inset-bottom)) var(--safe-area-left, env(safe-area-inset-bottom));
+  background-color: #fff;
+  @include centerBlock;
+  flex-direction: column;
+
+
+
+  > .#{ns('container')} {
     width: 100%;
     height: 100%;
-    overflow: auto;
-    padding:
-      var(--safe-area-top, env(safe-area-inset-top))
-      var(--safe-area-right, env(safe-area-inset-right, 20px))
-      var(--safe-area-bottom, env(safe-area-inset-bottom))
-      var(--safe-area-left, env(safe-area-inset-bottom, 20px));
-
-
-    > .#{ns('container')} {
-      width: 100%;
-      height: 100%;
-    }
   }
 
-
   &.swp-actionsheet {
+    top: auto;
+    height: 50%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 10px;
 
-    > .page-inner {
-      top: auto;
-      height: 50%;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(25px);
+    > .#{ns('dragbar')} {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 16px;
+      @include centerBlock;
 
-      &:not(.full) {
-        padding-top: 0;
+      & > .#{ns('dragbar-indicator')} {
+        width: 36px;
+        height: 5px;
+        background: rgba(60, 60, 67, 0.3);
+        border-radius: 999px;
       }
     }
   }

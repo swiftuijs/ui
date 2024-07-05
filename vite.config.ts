@@ -38,6 +38,7 @@ export default defineConfig((env) => {
     ...commonConfig,
     root: './',
     server: {
+      host: true,
       open: 'demo/index.html'
     },
     build: {

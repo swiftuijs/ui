@@ -1,7 +1,7 @@
-import { useCallback, type MouseEvent } from 'react'
 import type { IBaseComponent, IPageType } from 'src/types'
-import { standardizeProps, startViewTransition } from 'src/common'
-import { useNaviContext } from 'src/contexts'
+import { useRef } from 'react'
+import { standardizeProps } from 'src/common'
+import { DragBar } from './dragbar'
 
 import './style.scss'
 
@@ -15,8 +15,7 @@ export interface IPageProps extends IBaseComponent {
 // const PAGE_TRANSITION_NAME = 'sw-page-transition'
 
 export function Page(props: IPageProps) {
-  const navi = useNaviContext()
-
+  const containerRef = useRef<HTMLDivElement>(null)
   const { type = 'page', ...pProps } = props
   const { commonProps, restProps, children} = standardizeProps(
     Object.assign({
@@ -25,21 +24,11 @@ export function Page(props: IPageProps) {
     { className: ['sw-page', `swp-${type}`]}
   )
 
-  const onClick = useCallback((e: MouseEvent<HTMLElement>) => {
-    // @ts-expect-error target should be a htm element
-    if (props.type === 'page' || !e.target || e.target.closest('.page-inner')) return
-    startViewTransition({
-      update: () => navi.removeLast(),
-      type: 'backwards',
-    })
-    return
-  }, [props.type, navi])
-
   return (
-    <div {...commonProps} {...restProps} onClick={onClick}>
-      <div className="page-inner">
-        {children}
-      </div>
+    <div {...commonProps} {...restProps} ref={containerRef}>
+      {type === 'actionsheet' && <DragBar container={containerRef} /> }
+
+      {children}
     </div>
   )
 }

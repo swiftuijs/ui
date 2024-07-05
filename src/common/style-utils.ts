@@ -1,5 +1,16 @@
 import type { IBaseComponent, IClsxArgs, IClsObj } from 'src/types'
 
+const CLSX_PREFIX = 'sw-'
+
+/**
+ * prefix class name with namespace(prefix)
+ * @param className custom class name
+ * @returns string with prefix
+ */
+export function prefixClass(className: string) {
+  return `${CLSX_PREFIX}${className}`
+}
+
 /**
  * clsx is a tiny (228B) utility for constructing className strings conditionally.
  * @param args
