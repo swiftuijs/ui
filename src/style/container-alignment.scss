@@ -1,0 +1,60 @@
+@import './base.scss';
+
+// ref: https: //developer.apple.com/documentation/swiftui/alignment
+.#{ns('container')} {
+  &[data-alignment='leading'] {
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  &[data-alignment='center'] {
+    justify-content: center;
+    align-items: center;
+  }
+
+  &[data-alignment='trailing'] {
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &[data-alignment='top'] {
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  &[data-alignment='bottom'] {
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  &[data-alignment='top-leading'] {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  &[data-alignment='top-trailing'] {
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  &[data-alignment='bottom-leading'] {
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+
+  &[data-alignment='bottom-trailing'] {
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  &[data-alignment='trailing-first-text-baseline'] {
+    justify-content: flex-end;
+    align-items: baseline;
+  }
+
+  &[data-alignment='leading-last-text-baseline'] {
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+
+}

@@ -25,7 +25,7 @@ export interface INavigationLinkProps extends IBaseComponent {
 export function NavigationLink (props: INavigationLinkProps) {
   const { destination, dismiss, pageOptions, ...nProps } = props
   const navi = useNaviContext()
-  const ref = useRef(generatePageId('page'))
+  const pageIdRef = useRef(generatePageId('page'))
 
   const {commonProps, restProps, children} = standardizeProps(nProps, {
     className: 'sw-navigationlink'
@@ -53,7 +53,7 @@ export function NavigationLink (props: INavigationLinkProps) {
         navi.append({
           component: destination,
           type: pageOptions?.type,
-          id: ref.current
+          id: pageIdRef.current
         })
       },
       type: 'forwards',

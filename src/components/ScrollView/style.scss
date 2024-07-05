@@ -18,6 +18,10 @@
     }
   }
 
+  &.no-scroll-bar {
+    scrollbar-width: none;
+  }
+
   &.horizontal {
     max-height: 100%;
     overflow-x: auto;

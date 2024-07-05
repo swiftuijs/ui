@@ -41,10 +41,12 @@ export function useNaviContext(): INaviContext {
   return naviStore.useSelector((path) => ({
     path,
     append: (page: IPageIem) => {
+      const pageType = page.type || 'page'
+      // const inner
       naviStore.setStore(p => {
-        const index = p.findIndex((item) => item.id === page.id)
+        const index = p.findIndex((item) => item.id === page.id && item.type === pageType)
         if (index === -1) {
-          return [...p, page]
+          return [...p, Object.assign({}, page, { type: pageType })]
         }
         if (index === p.length - 1) return p
         const item = p[index]

@@ -5,7 +5,7 @@
   // height: 100%;
   @include centerBlock;
   flex-direction: column;
-  gap: var(--vstack-spacing, 0);
+  gap: var(--vstack-spacing, 4px);
 
   > .#{ns('spacer')} {
     min-height: var(--min-length);

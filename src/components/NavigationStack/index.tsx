@@ -61,7 +61,7 @@ export function NavigationStack (props: INavigationStackProps) {
         shownPages.map((page) => {
           const PageComponent = page.component
           return (
-            <Page key={page.id} type={page.type}>
+            <Page key={`${page.type}$$${page.id}`} type={page.type}>
               <PageComponent />
             </Page>
           )

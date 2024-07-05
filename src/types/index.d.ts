@@ -51,3 +51,25 @@ export const enum EEdge {
   BOTTOM = 'bottom',
   LEFT = 'left',
 }
+
+/**
+ * An alignment position along the horizontal axis.
+ * ref: https://developer.apple.com/documentation/swiftui/alignment
+ */
+export type EAlignment =
+  /** A guide marking the leading edge of the view. */
+  'leading' |
+  /** A guide marking the horizontal center of the view. */
+  'center' |
+  /** A guide marking the trailing edge of the view. */
+  'trailing' |
+
+  'top' |
+  'top-leading' |
+  'top-trailing' |
+
+  'bottom' |
+  'bottom-leading' |
+  'bottom-trailing' |
+  'trailing-first-text-baseline' |
+  'leading-last-text-baseline'

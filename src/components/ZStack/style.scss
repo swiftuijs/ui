@@ -1,11 +1,15 @@
-@import '~style/vars.scss';
+@import '~style/base.scss';
 
 .#{ns('zstack')} {
   position: relative;
   width: 100%;
   height: 100%;
+  @include centerBlock;
+
   > * {
     position: absolute !important;
+  }
+  > .#{ns('container')} {
     top: 0;
     left: 0;
     width: 100%;
