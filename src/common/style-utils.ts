@@ -57,9 +57,30 @@ export function clsx(...args: IClsxArgs): string {
 }
 
 
+export interface IDataAttributes {
+  /**
+   * custom data-* attribute
+   */
+  [k: `data-${string}`]: string
+}
 
 
-export type IStyleProps = Pick<IBaseComponent, 'style' | 'className'>
+export type IStyleDataProps = Pick<IBaseComponent, 'style' | 'className'> & IDataAttributes
+
+/**
+ * get data-* attributes from props
+ * @param props props from component props
+ * @returns data-* attributes
+ */
+export function getDataAttributes<T extends IDataAttributes>(props: T) {
+  return Object.keys(props).reduce((acc, key) => {
+    if (key.startsWith('data-')) {
+      // @ts-expect-error fix this
+      acc[key] = props[key]
+    }
+    return acc
+  }, {} as IDataAttributes)
+}
 
 /**
  * merge style and className
@@ -67,8 +88,12 @@ export type IStyleProps = Pick<IBaseComponent, 'style' | 'className'>
  * @param computedOptions props computed from context
  * @returns `{ style, className }`
  */
-export function mergeStyle(options: IStyleProps,  computedOptions: IStyleProps) {
-  const result: { style?: React.CSSProperties, className?: string } = {}
+export function mergeStyleData(options: IStyleDataProps,  computedOptions: IStyleDataProps) {
+  const result: {
+    style?: React.CSSProperties,
+    className?: string,
+    [k: `data-${string}`]: string
+  } = {}
 
   if (options.style || computedOptions.style) {
     result.style = {...options.style, ...computedOptions.style}
@@ -76,8 +101,7 @@ export function mergeStyle(options: IStyleProps,  computedOptions: IStyleProps) 
   if (options.className || computedOptions.className) {
     result.className = clsx(options.className, computedOptions.className)
   }
-
-  return result
+  return Object.assign(result, getDataAttributes(options), getDataAttributes(computedOptions))
 }
 /**
  * standardize style amount(length, width, height, etc.)

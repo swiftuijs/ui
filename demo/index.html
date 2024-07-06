@@ -7,7 +7,28 @@
   <link rel="stylesheet" href="./style.scss">
 </head>
 <body>
-  <div id="root"></div>
-  <script type="module" src="./app.tsx"></script>
+  <div id="device">
+    <iframe src="./app.html" frameborder="no" style="width: 100%; height: 100%;"></iframe>
+  </div>
+
+  <script>
+    // add safe area for iPhone X
+    const device = document.getElementById('device');
+    const iframe = device.querySelector('iframe');
+    function resize() {
+      const shouldInsertCssVar =  window.screen.availWidth >= 500
+      if (shouldInsertCssVar) {
+        iframe.contentDocument.documentElement.style.setProperty('--safe-area-top', '50px');
+        iframe.contentDocument.documentElement.style.setProperty('--safe-area-bottom', '50px');
+      } else {
+        iframe.contentDocument.documentElement.style.removeProperty('--safe-area-top');
+        iframe.contentDocument.documentElement.style.removeProperty('--safe-area-bottom');
+      }
+    }
+    window.addEventListener('resize', resize);
+    setTimeout(() => {
+      resize();
+    }, 200);
+  </script>
 </body>
 </html>

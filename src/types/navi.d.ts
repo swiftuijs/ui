@@ -5,7 +5,7 @@ import type { ComponentType } from 'react'
  * * modal: modal page
  * * actionsheet: action sheet page
  */
-export type IPageType = 'page' | 'modal' | 'actionsheet'
+export type IPageType = 'page' | 'actionsheet'
 
 export interface IPageIem {
   /**

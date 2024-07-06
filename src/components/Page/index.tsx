@@ -1,34 +1,57 @@
-import type { IBaseComponent, IPageType } from 'src/types'
-import { useRef } from 'react'
-import { standardizeProps } from 'src/common'
-import { DragBar } from './dragbar'
+import { StandardPage, type IStandardProps } from './standard-page'
+import { ActionSheet, type IActionSheetProps } from './action-sheet'
 
 import './style.scss'
 
-export interface IPageProps extends IBaseComponent {
-  /**
-   * page type, default to 'page'
-   */
-  type?: IPageType
-}
+export type IPageProps = IActionSheetProps | IStandardProps
 
-// const PAGE_TRANSITION_NAME = 'sw-page-transition'
+import React, { Component } from 'react'
+import { IPageType } from 'src/types'
 
-export function Page(props: IPageProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { type = 'page', ...pProps } = props
-  const { commonProps, restProps, children} = standardizeProps(
-    Object.assign({
-      // transitionName: PAGE_TRANSITION_NAME
-    }, pProps),
-    { className: ['sw-page', `swp-${type}`]}
-  )
+export class Page extends Component<IPageProps> {
+  // ref 
+  containerRef = React.createRef<HTMLDivElement>()
+  pageType: IPageType
+  onPageExited?: () => void
+  constructor(props: IPageProps) {
+    super(props)
+    this.pageType = props.type || 'page'
+    this.onPageExited = props.onPageExited
+  }
 
-  return (
-    <div {...commonProps} {...restProps} ref={containerRef}>
-      {type === 'actionsheet' && <DragBar container={containerRef} /> }
+  componentDidMount(): void {
+    if (this.containerRef.current) {
+      this.containerRef.current.setAttribute('date-page-status', 'entering')
+    }
+  }
 
-      {children}
-    </div>
-  )
+  render() {
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    const { onPageExited, ...restProps } = this.props
+    switch (this.pageType) {
+      case 'actionsheet':
+        return <ActionSheet {...restProps} type='actionsheet' ref={this.containerRef} />
+    
+      default:
+        return <StandardPage {...restProps} type='page' ref={this.containerRef} />
+    }
+  }
+
+  // componentWillUnmount(): void {
+  //   if (this.containerRef.current) {
+  //     this.containerRef.current.setAttribute('date-page-status', 'exiting')
+  //   }
+  // }
+
+  exitPage() {
+    if (!this.containerRef.current) return
+    const container = this.containerRef.current
+
+    const animationEnd = () => {
+      container.removeEventListener('animationend', animationEnd)
+      this.onPageExited && this.onPageExited()
+    }
+    container.addEventListener('animationend', animationEnd)
+    container.setAttribute('date-page-status', 'exiting')
+  }
 }

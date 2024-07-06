@@ -43,6 +43,14 @@ export interface IBaseComponent {
   transitionName?: string
 }
 
+export interface IPageBaseComponent extends IBaseComponent {
+  /**
+   * callback when page exited
+   */
+  onPageExited?: () => void
+}
+
+
 export type IBaseElementComponent<T> = IBaseComponent & ComponentProps<T>
 
 export const enum EEdge {
@@ -63,13 +71,16 @@ export type EAlignment =
   'center' |
   /** A guide marking the trailing edge of the view. */
   'trailing' |
-
   'top' |
   'top-leading' |
   'top-trailing' |
-
   'bottom' |
   'bottom-leading' |
   'bottom-trailing' |
   'trailing-first-text-baseline' |
   'leading-last-text-baseline'
+
+/**
+ * A detent is a stopping point in the presentation of a view, used by action sheets and other view controllers.
+ */
+export type IPresentationDetent = 'medium' | 'large' | `${number}%` | number

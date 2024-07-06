@@ -42,13 +42,15 @@ export function useNaviContext(): INaviContext {
     path,
     append: (page: IPageIem) => {
       const pageType = page.type || 'page'
-      // const inner
       naviStore.setStore(p => {
         const index = p.findIndex((item) => item.id === page.id && item.type === pageType)
+        // not in path, append it
         if (index === -1) {
           return [...p, Object.assign({}, page, { type: pageType })]
         }
+        // already at the end
         if (index === p.length - 1) return p
+        // if page already in path, move it to the end
         const item = p[index]
         return [...p.slice(index, 1), item]
       })
