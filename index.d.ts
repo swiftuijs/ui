@@ -1,9 +1,8 @@
 import { ComponentType } from 'react';
 import { EAlignment } from '../../../../../../../../src/types';
-import { EEdge } from '../../../../../../../../src/types';
 import { IBaseComponent } from '../../../../../../../../src/types';
 import { IBaseElementComponent } from '../../../../../../../../src/types';
-import { IPageIem } from '../../../../../../../src/types';
+import { ILoosePageItem } from '../../../../../../../src/types';
 import { IPageType } from '../../../../../../../../src/types';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
 
@@ -40,27 +39,23 @@ export { Image_2 as Image }
 
 declare interface INaviContext {
     /**
-     * current path
+     * event prefix for navi context
      */
-    path: IPageIem[];
+    eventPrefix: string;
     /**
      * append a page to path
      * @param page page item
      */
-    append: (page: IPageIem) => void;
+    append: (page: ILoosePageItem) => void;
     /**
      * remove last count pages
      * @param count page count to remove, default is 1
      */
     removeLast: (count?: number) => void;
     /**
-     * whether path is empty
-     */
-    isEmpty: boolean;
-    /**
      * current page count(home page is 0)
      */
-    count: number;
+    count: () => number;
     /**
      * dismiss current page (back to previous page)
      */
@@ -82,8 +77,6 @@ export declare interface INavigationLinkProps extends IBaseComponent {
 }
 
 export declare interface INavigationStackProps extends IBaseComponent {
-    ignoreSafeArea?: boolean | EEdge[];
-    navigationDestination?: string;
 }
 
 export declare interface IScrollViewProps extends IBaseComponent {
