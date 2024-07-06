@@ -8,7 +8,6 @@ export interface IZStackProps extends IBaseComponent {
 }
 
 export function ZStack(props: IZStackProps) {
-  console.log('ZStack', props.alignment)
   const { children, commonProps, restProps } = standardizeProps(props, {
     className: [prefixClass('zstack'), prefixClass('container')]
   })

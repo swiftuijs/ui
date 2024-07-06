@@ -7,7 +7,7 @@ import type { ComponentType } from 'react'
  */
 export type IPageType = 'page' | 'actionsheet'
 
-export interface IPageIem {
+export interface IPageItem {
   /**
    * page component
    */
@@ -18,9 +18,17 @@ export interface IPageIem {
    * * modal: modal page
    * * actionsheet: action sheet page
    */
-  type?: IPageType
+  type: IPageType
   /**
    * page id, used to identify page
    */
   id: string
+  /**
+   * inner id, prefixed with type
+   */
+  _id: string
 }
+/**
+ * loose page item, used by NavigationLink
+ */
+export type ILoosePageItem = PartialOptional<IPageItem, 'type' | '_id'>

@@ -1,12 +1,14 @@
 import {
-  ZStack,
+  ZStack, Button,
   VStack, HStack, 
   Text, NavigationLink,
-  Spacer
+  Spacer, useNaviContext,
 } from 'src/index'
 
 
 export function News() {
+  const navi = useNaviContext()
+  const gotoHome = () => navi.removeLast(999)
   return (
     <ZStack alignment='bottom-trailing'>
       <VStack spacing={20}>
@@ -21,7 +23,8 @@ export function News() {
       <HStack>
         <Text>2</Text>
         <Spacer />
-        <NavigationLink dismiss>Back</NavigationLink>
+        <NavigationLink dismiss>Go Back</NavigationLink>
+        <Button onClick={gotoHome}>Back to Home</Button>
         <Spacer />
         <Text>2</Text>
       </HStack>

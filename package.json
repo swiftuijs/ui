@@ -33,6 +33,7 @@
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
@@ -43,6 +44,7 @@
     "react-dom": "^18.3.1",
     "sass": "^1.55.0",
     "storybook": "^8.1.11",
+    "tsx": "^4.16.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.2",
     "vite-plugin-dts": "^3.9.1"
@@ -56,8 +58,6 @@
   "author": "Saiya",
   "license": "MIT",
   "dependencies": {
-    "cross-env": "^7.0.3",
-    "plain-store": "^0.2.1",
-    "tsx": "^4.16.0"
+    "plain-store": "^0.2.2"
   }
 }

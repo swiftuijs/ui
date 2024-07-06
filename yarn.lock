@@ -6760,10 +6760,10 @@ pkg-types@^1.1.1:
     mlly "^1.7.0"
     pathe "^1.1.2"
 
-plain-store@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/plain-store/-/plain-store-0.2.1.tgz#6884df66c8da4d7f92f64753bc5bf02bbc0b5a66"
-  integrity sha512-QFMGrgktoiCE0SJdZN3eTYjWAQ96mFqJuJaUYF/BN6HheV9fGHOkQtliqj6aJqgs2fHrQzJwFVdqw8EvwOtanQ==
+plain-store@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/plain-store/-/plain-store-0.2.2.tgz#40aede91d28d52c6a9080f33b7304347580377c9"
+  integrity sha512-L4YPggT/f2+0x9zJLAVhi72AhD19ule7L5ArsTSMz56+Ahg+uThWibsROOhQPK+y6dvCT6C+LU6j0DTNu1zv1w==
 
 plop@^4.0.1:
   version "4.0.1"

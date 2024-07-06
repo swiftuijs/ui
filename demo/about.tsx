@@ -4,6 +4,7 @@ import {
   Spacer
 } from 'src/index'
 
+import { News } from './news'
 
 export const About = () => {
   return (
@@ -16,6 +17,7 @@ export const About = () => {
         </div>
         <Spacer />
         <Button>Some button</Button>
+        <NavigationLink destination={News} >Go to News</NavigationLink>
         <Text lineLimit={3}>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam inventore fugit ducimus labore qui culpa sint magnam, eligendi rerum doloribus rem maxime, dignissimos repudiandae voluptatem non adipisci iusto eaque voluptatum!
         </Text>

@@ -1,73 +1,35 @@
-import { useMemo } from 'react'
-import type { IBaseComponent, EEdge, IPageIem } from 'src/types'
-import { standardizeProps, generatePageId } from 'src/common'
 import { Page } from 'src/components/Page'
-import { useNaviPath } from 'src/contexts'
+import { NaviContext } from 'src/contexts'
 
+import { useViewModel, INavigationStackProps } from './view-model'
 import './style.scss'
 
-const HOME_PAGE_ID = generatePageId('home')
 
-export interface INavigationStackProps extends IBaseComponent{
-  // ignore safe area padding
-  ignoreSafeArea?: boolean | EEdge[]
-  navigationDestination?: string
-}
+export type { INavigationStackProps } from './view-model'
 
 export function NavigationStack (props: INavigationStackProps) {
-  const navigationPath = useNaviPath()
+  const { commonProps, restProps, shownPages, contextValue, pageInstances } = useViewModel(props)
 
-  const { ignoreSafeArea, ...nProps } = props
-  const edgeStyles:Record<string, number | string> = {}
-  if (ignoreSafeArea) {
-    // @ts-expect-error fix this
-    const edgeVariables: EEdge[] = ignoreSafeArea === true ? ['top', 'right', 'bottom', 'left'] : ignoreSafeArea
-    edgeVariables.reduce((acc, edge) => {
-      acc[`--safe-area-${edge}`] = 0
-      return acc
-    }, edgeStyles)
-  }
-
-  const homePage: IPageIem = useMemo(() => ({
-    component: () => (<>{props.children}</>),
-    type: 'page',
-    id: HOME_PAGE_ID
-  }), [props.children])
-
-
-  const shownPages: IPageIem[] = useMemo(() => {
-    if (!navigationPath.length) {
-      return [homePage]
-    }
-    const idx = navigationPath.findLastIndex((page) => page.type === 'page')
-    if (idx === -1) {
-      return [homePage, ...navigationPath]
-    }
-    return navigationPath.slice(idx)
-  }, [navigationPath, homePage])
-
-
-  const {commonProps, restProps} = standardizeProps(nProps, {
-    style: {
-      ...edgeStyles,
-    },
-    className: 'sw-navigationstack'
-  })
-
-  
   return (
-    <div {...commonProps} {...restProps}>
-      {
-        shownPages.map((page) => {
-          const PageComponent = page.component
-          return (
-            <Page key={`${page.type}$$${page.id}`} type={page.type}>
-              <PageComponent />
-            </Page>
-          )
-        })
-      }
-    </div>
+    <NaviContext.Provider value={contextValue.current}>
+      <div {...commonProps} {...restProps}>
+        {
+          shownPages.map((page, index) => {
+            const PageComponent = page.component
+            // home page or none top most page should not have entering animation
+            return (
+              <Page
+                noEnteringAnimation={index === 0 || index < (shownPages.length - 1)}
+                id={page._id}
+                ref={(instance) => pageInstances.current[page._id] = instance}
+                key={page._id} type={page.type}>
+                <PageComponent />
+              </Page>
+            )
+          })
+        }
+      </div>
+    </NaviContext.Provider>
   )
 }
 

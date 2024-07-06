@@ -1,69 +1,48 @@
 /**
  * router related context
  */
-import type { IPageIem } from 'src/types'
-import { createStore } from 'plain-store'
+import { createContext, useContext } from 'react'
+import type { IPageItem, ILoosePageItem } from 'src/types'
 
+export interface IWillChangeData {
+  changedPage: IPageItem
+  intent: 'forwards' | 'backwards'
+}
 
-
-export const naviStore = createStore<IPageIem[]>([])
 
 export interface INaviContext {
   /**
-   * current path
+   * event prefix for navi context
    */
-  path: IPageIem[]
+  eventPrefix: string
   /**
    * append a page to path
    * @param page page item
    */
-  append: (page: IPageIem) => void
+  append: (page: ILoosePageItem) => void
   /**
    * remove last count pages
    * @param count page count to remove, default is 1
    */
   removeLast: (count?: number) => void
   /**
-   * whether path is empty
-   */
-  isEmpty: boolean
-  /**
    * current page count(home page is 0)
    */
-  count: number
+  count: () => number
   /**
    * dismiss current page (back to previous page)
    */
   dismiss: () => void
 }
 
-export function useNaviContext(): INaviContext {
-  return naviStore.useSelector((path) => ({
-    path,
-    append: (page: IPageIem) => {
-      const pageType = page.type || 'page'
-      naviStore.setStore(p => {
-        const index = p.findIndex((item) => item.id === page.id && item.type === pageType)
-        // not in path, append it
-        if (index === -1) {
-          return [...p, Object.assign({}, page, { type: pageType })]
-        }
-        // already at the end
-        if (index === p.length - 1) return p
-        // if page already in path, move it to the end
-        const item = p[index]
-        return [...p.slice(index, 1), item]
-      })
-    },
-    removeLast: (count = 1) => {
-      naviStore.setStore(p => p.slice(0, -count))
-    },
-    isEmpty: path.length === 0,
-    count: path.length,
-    dismiss: () => {
-      naviStore.setStore(p => p.slice(0, -1))
-    }
-  }))
-}
+export const NaviContext = createContext<INaviContext>({
+  eventPrefix: '',
+  append: () => { },
+  removeLast: () => { },
+  count: () => 0,
+  dismiss: () => { }
+})
 
-export const useNaviPath = naviStore.useStore
+export function useNaviContext(): INaviContext {
+  return useContext(NaviContext)
+}

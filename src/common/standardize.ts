@@ -6,12 +6,10 @@ import { mergeStyleData, IStyleDataProps } from './style-utils'
 export function standardizeProps<T extends Partial<IBaseComponent>>(props: T, extraProps: IStyleDataProps) {
   // @ts-expect-error temporary fix
   // TODO: use more strict type for alignment
-  const { style, className, alignment,  transitionName, children,   ...restProps } = props
+  const { style, className, alignment, children,   ...restProps } = props
 
-  const transitionStyle = transitionName ? { viewTransitionName: transitionName } : {}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const commonProps: any = mergeStyleData({ style: Object.assign({}, style, transitionStyle), className}, extraProps)
-  commonProps['data-transition-name'] = transitionName
+  const commonProps: any = mergeStyleData({ style, className}, extraProps)
   commonProps['data-alignment'] = alignment
   return {
     children,

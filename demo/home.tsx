@@ -34,7 +34,7 @@ export function Home() {
         </HStack>
       </ScrollView>
       <Spacer />
-      <NavigationLink destination={About} transitionName='home' pageOptions={{ type: 'actionsheet' }}>About</NavigationLink>
+      <NavigationLink destination={About} pageOptions={{ type: 'actionsheet' }}>About</NavigationLink>
       <Button onClick={onBack}>Back</Button>
     </VStack>
   )

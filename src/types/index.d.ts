@@ -36,18 +36,17 @@ export interface IBaseComponent {
    * The children of the component.
    */
   children?: IChildren
-
-  /**
-   * view transition name
-   */
-  transitionName?: string
 }
 
 export interface IPageBaseComponent extends IBaseComponent {
   /**
-   * callback when page exited
+   * page id, prefixed with page type
    */
-  onPageExited?: () => void
+  id: string
+  /**
+   * no animation when mounting
+   */
+  noEnteringAnimation?: boolean
 }
 
 

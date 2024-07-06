@@ -24,3 +24,12 @@ export function throttle(fn: IFn, delay = 200) {
     lastTime = now
   }
 }
+
+/**
+ * generate unique id
+ * @param prefix id prefix
+ * @returns string
+ */
+export function generateUniqueId(prefix: string) {
+  return `${prefix}-${Math.random().toString(36).slice(2)}`
+}

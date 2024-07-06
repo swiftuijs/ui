@@ -16,12 +16,10 @@
 @keyframes actionsheet-slide-down {
   0% {
     opacity: 1;
-    transform: translateY(0%);
-  }
-  80% {
-    opacity: 0;
+    transform: translateY(0);
   }
   100% {
+    opacity: 0;
     transform: translateY(100%);
   }
 }
@@ -42,11 +40,13 @@
     will-change: transform, opacity, height;
 
     &[date-page-status='entering'] {
+      
       animation: actionsheet-slide-up 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
 
     &[date-page-status='exiting'] {
-      animation: actionsheet-slide-down 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      opacity: 0;
+      animation: actionsheet-slide-down 0.3s cubic-bezier(0, 0.8, 0.5, 1);
     }
 
     &.animate-height {

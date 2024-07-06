@@ -20,10 +20,7 @@ export const ActionSheet = forwardRef(function ActionSheet(props: IActionSheetPr
   const changeHeightEventName = useRef(`change-height-${Math.random().toString(36).slice(2)}`)
 
   const { type, presentationDetents = DEFAULT_DETENTS, ...pProps } = props
-  const { commonProps, restProps, children } = standardizeProps(
-    Object.assign({
-      // transitionName: PAGE_TRANSITION_NAME
-    }, pProps),
+  const { commonProps, restProps, children } = standardizeProps(pProps,
     {
       className: ['sw-page'],
       'data-page-type': type,

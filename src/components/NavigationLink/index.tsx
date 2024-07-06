@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react'
 import type { ComponentType } from 'react'
 import type { IBaseComponent, IPageType } from 'src/types'
-import { standardizeProps, startViewTransition, generatePageId } from 'src/common'
+import { standardizeProps, generateUniqueId } from 'src/common'
 import { useNaviContext } from 'src/contexts'
 
 import './style.scss'
@@ -25,7 +25,7 @@ export interface INavigationLinkProps extends IBaseComponent {
 export function NavigationLink (props: INavigationLinkProps) {
   const { destination, dismiss, pageOptions, ...nProps } = props
   const navi = useNaviContext()
-  const pageIdRef = useRef(generatePageId('page'))
+  const pageIdRef = useRef(generateUniqueId('page'))
 
   const {commonProps, restProps, children} = standardizeProps(nProps, {
     className: 'sw-navigationlink'
@@ -33,10 +33,7 @@ export function NavigationLink (props: INavigationLinkProps) {
 
   const onClick = useCallback(() => {
     if (dismiss) {
-      startViewTransition({
-        update: () => navi.removeLast(),
-        type: 'backwards',
-      })
+      navi.removeLast()
       return
     }
     if (!destination) {
@@ -47,18 +44,12 @@ export function NavigationLink (props: INavigationLinkProps) {
       window.location.href = destination
       return
     }
-
-    startViewTransition({
-      update: () => {
-        navi.append({
-          component: destination,
-          type: pageOptions?.type,
-          id: pageIdRef.current
-        })
-      },
-      type: 'forwards',
+    navi.append({
+      component: destination,
+      type: pageOptions?.type,
+      id: pageIdRef.current
     })
-  }, [destination, navi, dismiss])
+  }, [destination, navi, dismiss, pageOptions])
   
   return (
     <div {...commonProps} {...restProps} onClick={onClick}>{children}</div>
