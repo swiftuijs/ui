@@ -3,6 +3,13 @@
  */
 
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const globalObject: any = typeof globalThis !== 'undefined'
+  ? globalThis
+  : typeof self !== 'undefined'
+    ? self
+    : typeof global !== 'undefined' ? global : {}
+
 /**
  * throttle
  */
