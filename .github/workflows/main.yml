@@ -26,15 +26,17 @@ jobs:
       with:
         node-version: '18.x'
 
+    - name: install pnpm
+      run: npm install -g pnpm
     - name: install deps
-      run: yarn
-    
+      run: pnpm i
+
     - name: build lib
-      run: yarn build
+      run: pnpm build
 
     - name: build docs
       run: |
-        export NODE_OPTIONS=--openssl-legacy-provider && yarn build-sb
+        export NODE_OPTIONS=--openssl-legacy-provider && pnpm build-sb
     
     - name: Deploy to GitHub Pages
       uses: Cecilapp/GitHub-Pages-deploy@3.1.0
