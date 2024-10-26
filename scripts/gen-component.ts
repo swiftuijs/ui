@@ -23,13 +23,13 @@ export default function (plop: NodePlopAPI) {
       },
       {
         type: 'add',
-        path: '../src/components/{{pascalCase name}}/{{ lowerCase name }}.stories.tsx',
+        path: '../src/components/{{pascalCase name}}/stories.tsx',
         templateFile: 'template/stories.tsx.hbs'
       },
       {
         type: 'append',
         path: '../src/components/index.ts',
-        template: 'export * from \'./{{pascalCase name}}\';'
+        template: 'export * from \'./{{pascalCase name}}\''
       }
     ]
 	})

@@ -1,4 +1,4 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
 .#{ns('page')} {
   position: absolute;

@@ -1,38 +1,21 @@
-import type { Meta } from '@storybook/react'
-import { HStack, VStack, Text, {{ pascalCase name }} } from '../'
+import type { Meta, StoryObj } from '@storybook/react'
+import { useArgs } from '@storybook/preview-api'
+import { {{ pascalCase name }}, type I{{ pascalCase name }}Props } from '.'
 
-export default {
+const meta: Meta<typeof {{ pascalCase name }}> = {
   title: 'SwiftUI/Spacer',
-  component: {{ pascalCase name }}
-} satisfies Meta
-
-export function {{ pascalCase name }}Between () {
-  return (
-    <HStack>
-      <Text>Left</Text>
-      <{{ pascalCase name }} />
-      <Text>Right</Text>
-    </HStack>
-  )
+  component: {{ pascalCase name }},
+  render: function Render (_props) {
+    const [args] = useArgs()
+    return <{{ pascalCase name }} {...args} />
+  }
 }
 
-export function {{ pascalCase name }}WithVStackBetween() {
-  return (
-    <VStack>
-      <Text>Left</Text>
-      <{{ pascalCase name }}>
-        <Text>Right</Text>
-      </{{ pascalCase name }}>
-      <Text>Right</Text>
-    </VStack>
-  )
-}
+export default meta
 
-export function {{ pascalCase name }}Leading () {
-  return (
-    <HStack>
-      <{{ pascalCase name }} />
-      <Text>Text</Text>
-    </HStack>
-  )
+type Story = StoryObj<I{{ pascalCase name }}Props>
+
+export const {{ pascalCase name }}Between: Story = {
+  args: {},
+  argTypes: {},
 }

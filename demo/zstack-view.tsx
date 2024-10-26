@@ -6,7 +6,7 @@ import {
 } from 'src/index'
 
 
-export function News() {
+export function ZStackView() {
   const navi = useNaviContext()
   const gotoHome = () => navi.removeLast(999)
   return (

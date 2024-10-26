@@ -1,0 +1,6 @@
+@use '~style/base.scss' as *;
+
+.#{ns('section')} {
+  width: 100%;
+  padding: 20px;
+}

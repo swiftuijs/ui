@@ -1,6 +1,6 @@
 @use '~style/base.scss' as *;
 
-.#{ns('navigationlink')} {
+.#{ns('Link')} {
   color: var(--sw-accent-color, '#007aff');
   cursor: pointer;
   transition: all 0.3s;

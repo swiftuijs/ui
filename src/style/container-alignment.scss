@@ -1,4 +1,4 @@
-@import './base.scss';
+@use './base.scss' as *;
 
 // ref: https: //developer.apple.com/documentation/swiftui/alignment
 .#{ns('container')} {

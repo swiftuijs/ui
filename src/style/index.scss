@@ -1,4 +1,3 @@
-@import './base.scss';
-@import './common.scss';
-@import './view-transition.scss';
-@import './container-alignment.scss';
+@use './common.scss';
+@use './view-transition.scss';
+@use './container-alignment.scss';

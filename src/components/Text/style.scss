@@ -1,4 +1,4 @@
-@import '~style/vars.scss';
+@use '~style/base.scss' as *;
 
 .#{ns('text')} {
   hyphens: auto;
