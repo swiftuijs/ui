@@ -5,6 +5,7 @@ import { IBaseElementComponent } from '../../../../../../../../src/types';
 import { ILoosePageItem } from '../../../../../../../src/types';
 import { IPageType } from '../../../../../../../../src/types';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
+import { ReactNode } from 'react';
 
 export declare function Button(props: IButtonProps): JSX_2.Element;
 
@@ -32,6 +33,20 @@ export declare interface IHStackProps extends IBaseComponent {
 }
 
 export declare interface IImageProps extends Omit<IBaseElementComponent<'img'>, 'children'> {
+}
+
+export declare interface ILinkProps extends IBaseComponent {
+    /**
+     * next page component or url
+     */
+    destination: string | URL;
+    /**
+     * link target
+     */
+    target?: string;
+}
+
+export declare interface IListProps extends IBaseComponent {
 }
 
 declare function Image_2(props: IImageProps): JSX_2.Element;
@@ -90,6 +105,10 @@ export declare interface IScrollViewProps extends IBaseComponent {
     showsIndicators?: boolean;
 }
 
+export declare interface ISectionProps extends IBaseComponent {
+    header?: ReactNode;
+}
+
 export declare interface ISpacerProps extends Omit<IBaseComponent, 'children'> {
     minLength?: number | string;
 }
@@ -115,11 +134,17 @@ export declare interface IZStackProps extends IBaseComponent {
     alignment?: EAlignment;
 }
 
+export declare function Link(props: ILinkProps): JSX_2.Element;
+
+export declare function List(props: IListProps): JSX_2.Element;
+
 export declare function NavigationLink(props: INavigationLinkProps): JSX_2.Element;
 
 export declare function NavigationStack(props: INavigationStackProps): JSX_2.Element;
 
 export declare function ScrollView(props: IScrollViewProps): JSX_2.Element;
+
+export declare function Section(props: ISectionProps): JSX_2.Element;
 
 export declare function Spacer(props: ISpacerProps): JSX_2.Element;
 
