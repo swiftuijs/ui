@@ -15,7 +15,7 @@
     "build": "tsc -b && vite build",
     "gen": "cross-env NODE_OPTIONS='--import tsx' plop --plopfile=scripts/gen-component.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "build-all": "yarn build && yarn build-sb"
+    "build-all": "pnpm build && pnpm build-sb"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.0",
@@ -43,6 +43,7 @@
     "plop": "^4.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "rimraf": "^6.0.1",
     "sass": "^1.80.4",
     "sass-migrator": "^2.2.1",
     "storybook": "^8.3.6",
