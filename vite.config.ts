@@ -3,6 +3,13 @@ import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 
 const commonConfig = {
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+      },
+    }
+  },
   resolve: {
     alias: {
       src: '/src',

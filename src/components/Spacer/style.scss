@@ -1,4 +1,4 @@
-@use '~style/base.scss' as *;
+@import '~style/base.scss';
 
 .#{ns('spacer')} {
   flex: 1;
