@@ -1,4 +1,4 @@
-import{j as i}from"./jsx-runtime-DEdD30eg.js";import{b as o,V as a,N as t,c,d as l,T as e,S as s,B as r,u as p,Z as g,H as h}from"./index-CE_9KHMq.js";import"./index-RYns6xqu.js";const q={title:"SwiftUI/NavigationStack",component:o},x=`
+import{j as i}from"./jsx-runtime-DEdD30eg.js";import{b as o,V as a,N as t,c,d as l,T as e,S as s,B as r,u as p,Z as g,H as h}from"./index-BIJ_2FcD.js";import"./index-RYns6xqu.js";const q={title:"SwiftUI/NavigationStack",component:o},x=`
   html {
     font-family: system-ui, sans-serif;
     width: 100%;
