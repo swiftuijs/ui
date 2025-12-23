@@ -12,7 +12,7 @@
     "dev": "vite dev",
     "prebuild-sb": "rimraf docs",
     "sb": "storybook dev -p 6006",
-    "build-sb": "storybook build -o docs --no-manager-cache",
+    "build-sb": "storybook build -o docs",
     "postbuild-sb": "node scripts/post-build-sb.js",
     "build": "tsc -b && vite build",
     "gen": "cross-env NODE_OPTIONS='--import tsx' plop --plopfile=scripts/gen-component.ts",
