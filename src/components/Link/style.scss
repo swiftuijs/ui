@@ -1,16 +1,21 @@
 @import '~style/base.scss';
 
-.#{ns('Link')} {
-  color: var(--sw-accent-color, '#007aff');
+.#{ns('link')} {
+  color: var(--sw-accent-color);
   cursor: pointer;
-  transition: all 0.3s;
   text-decoration: none;
+  transition: opacity var(--sw-transition-fast);
+  -webkit-tap-highlight-color: transparent;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
+  &:active {
+    opacity: 0.6;
+  }
   
   &:visited {
-    color: var(--sw-accent-color, '#007aff');
-  }
-
-  &:active {
-    opacity: 0.8;
+    color: var(--sw-accent-color);
   }
 }

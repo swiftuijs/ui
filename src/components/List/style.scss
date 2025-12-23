@@ -2,4 +2,7 @@
 
 .#{ns('list')} {
   flex: 1;
+  background-color: var(--sw-color-background-primary);
+  border-radius: var(--sw-radius-lg);
+  overflow: hidden;
 }

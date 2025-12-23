@@ -1,13 +1,18 @@
 @import '~style/base.scss';
 
 .#{ns('text')} {
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-regular);
+  line-height: var(--sw-line-height-normal);
+  color: var(--sw-color-label-primary);
   hyphens: auto;
-  text-align: justify;
+  word-wrap: break-word;
   
   &.line-clamp {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
     -webkit-line-clamp: var(--line-limit, 1);
+    text-overflow: ellipsis;
   }
 }

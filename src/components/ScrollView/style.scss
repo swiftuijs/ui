@@ -3,6 +3,7 @@
 .#{ns('scrollview')} {
   position: relative;
   display: flex;
+  -webkit-overflow-scrolling: touch;
 
   >.#{ns('spacer')} {
     min-height: var(--min-length);
@@ -20,6 +21,11 @@
 
   &.no-scroll-bar {
     scrollbar-width: none;
+    -ms-overflow-style: none;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &.horizontal {

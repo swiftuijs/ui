@@ -2,24 +2,34 @@
 
 .#{ns('button')} {
   appearance: none;
-  border: 1px solid var(--sw-accent-color, '#007aff');
-  background: none;
-  color: var(--sw-accent-color, '#007aff');
+  border: 1px solid var(--sw-accent-color);
+  background: transparent;
+  color: var(--sw-accent-color);
   cursor: pointer;
-  padding: 10px 20px;
-  border-radius: 8px;
-  transition: all 0.3s;
+  padding: var(--sw-spacing-sm) var(--sw-spacing-lg);
+  border-radius: var(--sw-radius-md);
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-medium);
+  line-height: var(--sw-line-height-normal);
+  transition: background-color var(--sw-transition-fast), 
+              color var(--sw-transition-fast),
+              transform var(--sw-transition-fast);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 
   &:hover:not([disabled]) {
-    background-color: color(from var(--sw-accent-color, '#007aff') srgb r g b / 0.5);
+    background-color: color(from var(--sw-accent-color) srgb r g b / 0.1);
   }
+  
   &:active:not([disabled]) {
-    background-color: var(--sw-accent-color, '#007aff');
-    color: white;
+    background-color: var(--sw-accent-color);
+    color: var(--sw-color-background-primary);
+    transform: scale(0.98);
   }
 
   &[disabled] {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
+    pointer-events: none;
   }
 }
