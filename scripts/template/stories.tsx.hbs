@@ -1,14 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { useArgs } from '@storybook/preview-api'
 import { {{ pascalCase name }}, type I{{ pascalCase name }}Props } from '.'
 
 const meta: Meta<typeof {{ pascalCase name }}> = {
-  title: 'SwiftUI/Spacer',
-  component: {{ pascalCase name }},
-  render: function Render (_props) {
-    const [args] = useArgs()
-    return <{{ pascalCase name }} {...args} />
-  }
+  title: 'SwiftUI/{{ pascalCase name }}',
+  component: {{ pascalCase name }}
 }
 
 export default meta

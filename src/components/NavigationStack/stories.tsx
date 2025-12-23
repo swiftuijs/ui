@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { NavigationLink, VStack, Section, HStack, ScrollView, Text, Spacer, Button, ZStack  } from '../'
 import { useNaviContext } from '../../contexts'
 import { NavigationStack, INavigationStackProps } from '.'

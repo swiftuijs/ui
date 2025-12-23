@@ -54,8 +54,7 @@ export class Page extends Component<IPageProps> {
 
   render() {
     console.log('[page] render', this.pageType, this.props.id)
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    const { noEnteringAnimation, ...restProps } = this.props
+    const { noEnteringAnimation: _, ...restProps } = this.props
     switch (this.pageType) {
       case 'actionsheet':
         return <ActionSheet {...restProps} type='actionsheet' ref={this.containerRef} />
@@ -76,7 +75,7 @@ export class Page extends Component<IPageProps> {
     const container = this.containerRef.current
     const animationEnd = () => {
       container.removeEventListener('animationend', animationEnd)
-      callback && callback()
+      if (callback) callback()
     }
     container.addEventListener('animationend', animationEnd)
     container.setAttribute('date-page-status', 'exiting')

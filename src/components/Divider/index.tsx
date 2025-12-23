@@ -5,7 +5,7 @@ import { LayoutContext } from 'src/contexts'
 
 import './style.scss'
 
-export interface IDividerProps extends Omit<IBaseComponent, 'children'>{}
+export type IDividerProps = Omit<IBaseComponent, 'children'>
 
 export function Divider (props: IDividerProps) {
   const layoutContext = useContext(LayoutContext)

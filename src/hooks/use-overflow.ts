@@ -10,7 +10,7 @@ export interface IOverflowOptions {
 }
 
 export function useOverflow(props: unknown, options?: IOverflowOptions) {
-  const containerRef = useRef<HTMLElement>()
+  const containerRef = useRef<HTMLElement | undefined>(undefined)
 
   useEffect(() => {
     if (!containerRef.current) return

@@ -3,9 +3,7 @@ import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
-export interface IImageProps extends Omit<IBaseElementComponent<'img'>, 'children'> {
-  // your custom props here
-}
+export type IImageProps = Omit<IBaseElementComponent<'img'>, 'children'>
 
 export function Image (props: IImageProps) {
 

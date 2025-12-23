@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { useArgs } from '@storybook/preview-api'
 import { HStack, VStack, Text } from '../'
 import { Button, type IButtonProps } from '.'
 
@@ -13,31 +12,25 @@ export default meta
 type Story = StoryObj<IButtonProps>
 
 export const ButtonBetween: Story = {
-  render: function Render(_props) {
-    const [args] = useArgs()
-    return (
-      <HStack>
-        <Text>Left</Text>
-        <Button {...args} />
-        <Text>Right</Text>
-      </HStack>
-    )
-  }
+  render: (args) => (
+    <HStack>
+      <Text>Left</Text>
+      <Button {...args} />
+      <Text>Right</Text>
+    </HStack>
+  )
 }
 
 export const ButtonWithVStackBetween: Story = {
-  render: function Render (_props) {
-    const [args] = useArgs()
-    return (
-      <VStack>
-        <Text>Left</Text>
-        <Button {...args}>
-          <Text>Right</Text>
-        </Button>
+  render: (args) => (
+    <VStack>
+      <Text>Left</Text>
+      <Button {...args}>
         <Text>Right</Text>
-      </VStack>
-    )
-  }
+      </Button>
+      <Text>Right</Text>
+    </VStack>
+  )
 }
 
 export function ButtonLeading () {

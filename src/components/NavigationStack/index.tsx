@@ -21,7 +21,7 @@ export function NavigationStack (props: INavigationStackProps) {
               <Page
                 noEnteringAnimation={index === 0 || index < (shownPages.length - 1)}
                 id={page._id}
-                ref={(instance) => pageInstances.current[page._id] = instance}
+                ref={(instance) => { pageInstances.current[page._id] = instance }}
                 key={page._id} type={page.type}>
                 <PageComponent />
               </Page>

@@ -16,7 +16,7 @@ export interface IActionSheetProps extends IPageBaseComponent {
 const DEFAULT_DETENTS: IPresentationDetent[] = ['medium', 'large']
 
 export const ActionSheet = forwardRef(function ActionSheet(props: IActionSheetProps, ref) {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement | undefined>(undefined)
   const changeHeightEventName = useRef(`change-height-${Math.random().toString(36).slice(2)}`)
 
   const { type, presentationDetents = DEFAULT_DETENTS, ...pProps } = props
@@ -34,7 +34,7 @@ export const ActionSheet = forwardRef(function ActionSheet(props: IActionSheetPr
   })
 
   // forward ref
-  useImperativeHandle(ref, () => containerRef.current, [])
+  useImperativeHandle(ref, () => containerRef.current ?? undefined, [])
 
   return (
     <div {...commonProps} {...restProps} ref={containerRef}>

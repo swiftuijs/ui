@@ -3,9 +3,7 @@ import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
-export interface IButtonProps extends IBaseElementComponent<'button'> {
-  
-}
+export type IButtonProps = IBaseElementComponent<'button'>
 
 export function Button (props: IButtonProps) {
   const { commonProps, restProps, children } = standardizeProps(props, {

@@ -6,10 +6,7 @@ import type { Page } from 'src/components/Page'
 
 const HOME_PAGE_ID = generateUniqueId('_index_')
 
-export interface INavigationStackProps extends IBaseComponent{
-  // ignore safe area padding
-  // ignoreSafeArea?: boolean | EEdge[]
-}
+export type INavigationStackProps = IBaseComponent
 
 export function useViewModel(props: INavigationStackProps) {
   const paths = useRef<IPageItem[]>([])

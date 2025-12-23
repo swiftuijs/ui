@@ -3,9 +3,7 @@ import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
-export interface IListProps extends IBaseComponent {
-  // your custom props here
-}
+export type IListProps = IBaseComponent
 
 export function List (props: IListProps) {
   const { ...cProps } = props

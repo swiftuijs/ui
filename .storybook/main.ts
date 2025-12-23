@@ -1,4 +1,4 @@
-import type { StorybookConfig } from "@storybook/react-vite";
+import type { StorybookConfig } from "@storybook/react-vite"
 
 const config: StorybookConfig = {
   stories: [
@@ -9,9 +9,8 @@ const config: StorybookConfig = {
   addons: [
     "@storybook/addon-onboarding",
     "@storybook/addon-links",
-    "@storybook/addon-essentials",
     "@chromatic-com/storybook",
-    "@storybook/addon-interactions",
+    "@storybook/addon-docs"
   ],
   framework: {
     name: "@storybook/react-vite",
@@ -23,5 +22,5 @@ const config: StorybookConfig = {
   //   config.build.outDir = "docs";
   //   return config;
   // }
-};
-export default config;
+}
+export default config
