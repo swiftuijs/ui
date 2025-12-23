@@ -23,11 +23,11 @@ describe('standardizeProps', () => {
 
   it('should pass through rest props', () => {
     const result = standardizeProps(
-      { 'data-testid': 'test', onClick: () => {} },
+      { 'data-testid': 'test', onClick: () => {} } as any,
       {}
     )
-    expect(result.restProps['data-testid']).toBe('test')
-    expect(result.restProps.onClick).toBeDefined()
+    expect((result.restProps as any)['data-testid']).toBe('test')
+    expect((result.restProps as any).onClick).toBeDefined()
   })
 
   it('should merge extra props', () => {
