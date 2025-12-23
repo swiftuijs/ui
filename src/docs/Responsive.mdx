@@ -1,0 +1,262 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Responsive Design" />
+
+# Responsive Design
+
+SwiftUI.js provides powerful responsive design capabilities to help you create user interfaces that adapt to different screen sizes.
+
+## SizeClass System
+
+SwiftUI.js implements a SizeClass system similar to SwiftUI's, used to adjust layouts based on screen size.
+
+### What is SizeClass?
+
+SizeClass categorizes screen sizes into two types:
+- **Compact**: Compact size (typically small screens)
+- **Regular**: Regular size (typically large screens)
+
+SizeClass has two dimensions:
+- **Horizontal**: Horizontal SizeClass
+- **Vertical**: Vertical SizeClass
+
+### Using SizeClass
+
+```tsx
+import { useSizeClass } from '@swiftuijs/ui'
+
+function ResponsiveLayout() {
+  const sizeClass = useSizeClass()
+  
+  if (!sizeClass) {
+    return <div>Loading...</div>
+  }
+  
+  // Adjust layout based on SizeClass
+  if (sizeClass.horizontal === 'compact') {
+    return <VStack>...</VStack>
+  }
+  
+  return <HStack>...</HStack>
+}
+```
+
+### SizeClass Rules
+
+By default:
+- **Horizontal Compact**: width < 375px
+- **Horizontal Regular**: width >= 375px
+- **Vertical Compact**: height < 667px
+- **Vertical Regular**: height >= 667px
+
+## Responsive Layout Patterns
+
+### Orientation Switching
+
+Switch layout direction based on screen size:
+
+```tsx
+import { useSizeClass } from '@swiftuijs/ui'
+
+function AdaptiveStack() {
+  const sizeClass = useSizeClass()
+  
+  const Stack = sizeClass?.horizontal === 'compact' ? VStack : HStack
+  
+  return (
+    <Stack spacing={16}>
+      <Text>Item 1</Text>
+      <Text>Item 2</Text>
+    </Stack>
+  )
+}
+```
+
+### Conditional Rendering
+
+Display different content based on screen size:
+
+```tsx
+import { useSizeClass } from '@swiftuijs/ui'
+
+function ResponsiveContent() {
+  const sizeClass = useSizeClass()
+  
+  return (
+    <VStack>
+      {sizeClass?.horizontal === 'regular' && (
+        <Sidebar />
+      )}
+      <MainContent />
+    </VStack>
+  )
+}
+```
+
+## GeometryReader
+
+`GeometryReader` allows you to get container dimension information for creating more precise responsive layouts.
+
+### Basic Usage
+
+```tsx
+import { GeometryReader } from '@swiftuijs/ui'
+
+<GeometryReader>
+  {(geometry) => (
+    <VStack>
+      <Text>Width: {geometry.width}px</Text>
+      <Text>Height: {geometry.height}px</Text>
+    </VStack>
+  )}
+</GeometryReader>
+```
+
+### Size-Based Layout
+
+```tsx
+import { GeometryReader } from '@swiftuijs/ui'
+
+<GeometryReader>
+  {(geometry) => {
+    const isWide = geometry.width > 600
+    
+    return isWide ? (
+      <HStack>
+        <Sidebar />
+        <MainContent />
+      </HStack>
+    ) : (
+      <VStack>
+        <MainContent />
+        <Sidebar />
+      </VStack>
+    )
+  }}
+</GeometryReader>
+```
+
+## Responsive Components
+
+### Responsive Grid
+
+`LazyVGrid` and `LazyHGrid` support responsive column counts:
+
+```tsx
+import { LazyVGrid, useSizeClass } from '@swiftuijs/ui'
+
+function ResponsiveGrid() {
+  const sizeClass = useSizeClass()
+  const columns = sizeClass?.horizontal === 'compact' ? 2 : 4
+  
+  return (
+    <LazyVGrid columns={columns} spacing={16}>
+      {items.map(item => <Item key={item.id} {...item} />)}
+    </LazyVGrid>
+  )
+}
+```
+
+### Responsive Navigation
+
+`NavigationStack` can adjust navigation style based on screen size:
+
+```tsx
+import { NavigationStack, useSizeClass } from '@swiftuijs/ui'
+
+function App() {
+  const sizeClass = useSizeClass()
+  const navigationStyle = sizeClass?.horizontal === 'compact' 
+    ? 'stack' 
+    : 'split'
+  
+  return (
+    <NavigationStack 
+      root={HomePage} 
+      style={navigationStyle}
+    />
+  )
+}
+```
+
+## Media Queries
+
+In addition to SizeClass, you can also use CSS media queries:
+
+```css
+.responsive-component {
+  padding: 12px;
+}
+
+@media (min-width: 768px) {
+  .responsive-component {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-component {
+    padding: 32px;
+  }
+}
+```
+
+## Responsive Best Practices
+
+### 1. Mobile First
+
+Start designing from mobile, then progressively enhance:
+
+```tsx
+function ResponsiveComponent() {
+  const sizeClass = useSizeClass()
+  
+  // Mobile base layout
+  let layout = <VStack>...</VStack>
+  
+  // Tablet and desktop enhancements
+  if (sizeClass?.horizontal === 'regular') {
+    layout = <HStack>...</HStack>
+  }
+  
+  return layout
+}
+```
+
+### 2. Use Breakpoints
+
+Define clear breakpoints:
+
+```tsx
+const breakpoints = {
+  mobile: 375,
+  tablet: 768,
+  desktop: 1024
+}
+
+function useBreakpoint() {
+  const sizeClass = useSizeClass()
+  const width = sizeClass?.width || 0
+  
+  return {
+    isMobile: width < breakpoints.tablet,
+    isTablet: width >= breakpoints.tablet && width < breakpoints.desktop,
+    isDesktop: width >= breakpoints.desktop
+  }
+}
+```
+
+### 3. Test Different Sizes
+
+Make sure to test your application at different screen sizes:
+
+- Mobile: 375px × 667px
+- Tablet: 768px × 1024px
+- Desktop: 1024px × 768px
+- Large Screen: 1920px × 1080px
+
+## Next Steps
+
+- 📐 Check out the [Layout System](/docs/Layout) to learn more layout options
+- 🎨 Learn about [Theming](/docs/Theming) to customize styles
+- 🧩 Browse [Component Documentation](/docs/Components) to learn more about components

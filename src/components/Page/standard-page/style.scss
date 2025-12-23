@@ -28,6 +28,10 @@
 .#{ns('page')} {
   &[data-page-type='page'] {
     will-change: transform, opacity;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
 
     &[date-page-status='entering'] {
       animation: page-slide-left 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -38,4 +42,11 @@
       animation: page-slide-right 0.3s ease-out;
     }
   }
+}
+
+.#{ns('page-content')} {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
 }

@@ -1,0 +1,78 @@
+@use '../../style/vars.scss' as *;
+
+.#{ns('sheet-backdrop')} {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: var(--sw-z-modal-backdrop, 1040);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade-in var(--sw-transition-normal, 0.25s ease-out);
+}
+
+.#{ns('sheet')} {
+  background-color: var(--sw-color-background-primary, #FFFFFF);
+  border-radius: var(--sw-radius-lg, 12px) var(--sw-radius-lg, 12px) 0 0;
+  max-height: 90vh;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: var(--sw-z-modal, 1050);
+  animation: slide-up var(--sw-transition-normal, 0.25s ease-out);
+  overflow: hidden;
+}
+
+.#{ns('sheet-pageSheet')} {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.#{ns('sheet-formSheet')} {
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.#{ns('sheet-fullScreen')} {
+  max-height: 100vh;
+  border-radius: 0;
+  height: 100%;
+}
+
+.#{ns('sheet-drag-indicator')} {
+  width: 36px;
+  height: 5px;
+  background-color: var(--sw-color-gray-light, #C7C7CC);
+  border-radius: var(--sw-radius-full, 9999px);
+  margin: 8px auto;
+  flex-shrink: 0;
+}
+
+.#{ns('sheet-content')} {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sw-spacing-lg, 16px);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+

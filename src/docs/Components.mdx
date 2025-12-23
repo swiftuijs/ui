@@ -1,0 +1,512 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components" />
+
+# Component Overview
+
+SwiftUI.js provides a rich collection of components to help you quickly build modern user interfaces.
+
+## Layout Components
+
+### Stack Components
+
+Used to create flexible layout structures.
+
+#### HStack
+
+Horizontal stacking layout that arranges child components in a row.
+
+```tsx
+import { HStack, Text } from '@swiftuijs/ui'
+
+<HStack spacing={10} alignment="center">
+  <Text>Left</Text>
+  <Text>Center</Text>
+  <Text>Right</Text>
+</HStack>
+```
+
+#### VStack
+
+Vertical stacking layout that arranges child components in a column.
+
+```tsx
+import { VStack, Text } from '@swiftuijs/ui'
+
+<VStack spacing={10} alignment="center">
+  <Text>Top</Text>
+  <Text>Middle</Text>
+  <Text>Bottom</Text>
+</VStack>
+```
+
+#### ZStack
+
+Overlay layout that stacks child components on top of each other.
+
+```tsx
+import { ZStack, Text, Image } from '@swiftuijs/ui'
+
+<ZStack>
+  <Image src="/bg.jpg" alt="Background" />
+  <Text style={{ color: 'white' }}>Overlay</Text>
+</ZStack>
+```
+
+### Lazy Stack Components
+
+Used for performance optimization, only rendering components in the visible area.
+
+#### LazyVStack
+
+Lazy-loaded vertical stacking layout.
+
+```tsx
+import { LazyVStack } from '@swiftuijs/ui'
+
+<LazyVStack>
+  {items.map(item => <Item key={item.id} {...item} />)}
+</LazyVStack>
+```
+
+#### LazyHStack
+
+Lazy-loaded horizontal stacking layout.
+
+### Grid Components
+
+#### LazyVGrid
+
+Vertical grid layout with customizable columns and spacing.
+
+```tsx
+import { LazyVGrid } from '@swiftuijs/ui'
+
+<LazyVGrid columns={3} spacing={10}>
+  {items.map(item => <Item key={item.id} {...item} />)}
+</LazyVGrid>
+```
+
+#### LazyHGrid
+
+Horizontal grid layout.
+
+### Spacer
+
+Used to create flexible space in layouts.
+
+```tsx
+import { HStack, Spacer, Text } from '@swiftuijs/ui'
+
+<HStack>
+  <Text>Left</Text>
+  <Spacer />
+  <Text>Right</Text>
+</HStack>
+```
+
+## Text and Images
+
+### Text
+
+Display text content.
+
+```tsx
+import { Text } from '@swiftuijs/ui'
+
+<Text>Hello World</Text>
+<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Bold Text</Text>
+```
+
+### Image
+
+Display images.
+
+```tsx
+import { Image } from '@swiftuijs/ui'
+
+<Image src="/image.jpg" alt="Description" />
+<Image src="/image.jpg" alt="Description" style={{ width: 200, height: 200 }} />
+```
+
+### Link
+
+Create links.
+
+```tsx
+import { Link } from '@swiftuijs/ui'
+
+<Link href="https://example.com">Visit Example</Link>
+```
+
+## Input Controls
+
+### Button
+
+Button control.
+
+```tsx
+import { Button } from '@swiftuijs/ui'
+
+<Button onClick={() => console.log('Clicked')}>
+  Click Me
+</Button>
+```
+
+### TextField
+
+Single-line text input field.
+
+```tsx
+import { TextField } from '@swiftuijs/ui'
+import { useState } from 'react'
+
+function MyForm() {
+  const [value, setValue] = useState('')
+  
+  return (
+    <TextField
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder="Enter text"
+    />
+  )
+}
+```
+
+### SecureField
+
+Secure text input field (for passwords and other sensitive information).
+
+```tsx
+import { SecureField } from '@swiftuijs/ui'
+
+<SecureField
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  placeholder="Password"
+/>
+```
+
+### Toggle
+
+Toggle control.
+
+```tsx
+import { Toggle } from '@swiftuijs/ui'
+
+<Toggle
+  value={isOn}
+  onChange={setIsOn}
+/>
+```
+
+### Picker
+
+Picker control.
+
+```tsx
+import { Picker } from '@swiftuijs/ui'
+
+<Picker
+  selectedValue={selected}
+  onValueChange={setSelected}
+  options={[
+    { label: 'Option 1', value: '1' },
+    { label: 'Option 2', value: '2' }
+  ]}
+/>
+```
+
+### Stepper
+
+Stepper control.
+
+```tsx
+import { Stepper } from '@swiftuijs/ui'
+
+<Stepper
+  value={count}
+  onValueChange={setCount}
+  min={0}
+  max={10}
+/>
+```
+
+### Slider
+
+Slider control.
+
+```tsx
+import { Slider } from '@swiftuijs/ui'
+
+<Slider
+  value={value}
+  onValueChange={setValue}
+  min={0}
+  max={100}
+/>
+```
+
+### DatePicker
+
+Date picker.
+
+```tsx
+import { DatePicker } from '@swiftuijs/ui'
+
+<DatePicker
+  value={date}
+  onChange={setDate}
+/>
+```
+
+## Lists and Scrolling
+
+### List
+
+List view.
+
+```tsx
+import { List, Section, Text } from '@swiftuijs/ui'
+
+<List>
+  <Section header={<Text>Section 1</Text>}>
+    <Text>Item 1</Text>
+    <Text>Item 2</Text>
+  </Section>
+</List>
+```
+
+### ScrollView
+
+Scrollable view.
+
+```tsx
+import { ScrollView, VStack, Text } from '@swiftuijs/ui'
+
+<ScrollView>
+  <VStack>
+    {items.map(item => <Text key={item.id}>{item.text}</Text>)}
+  </VStack>
+</ScrollView>
+```
+
+### Section
+
+List grouping.
+
+```tsx
+import { List, Section, Text } from '@swiftuijs/ui'
+
+<List>
+  <Section header={<Text>Header</Text>} footer={<Text>Footer</Text>}>
+    <Text>Item</Text>
+  </Section>
+</List>
+```
+
+## Navigation
+
+### NavigationStack
+
+Navigation stack container.
+
+```tsx
+import { NavigationStack, NavigationLink, Text } from '@swiftuijs/ui'
+
+function HomePage() {
+  return (
+    <VStack>
+      <Text>Home</Text>
+      <NavigationLink destination={AboutPage}>
+        <Text>About</Text>
+      </NavigationLink>
+    </VStack>
+  )
+}
+
+function App() {
+  return <NavigationStack root={HomePage} />
+}
+```
+
+### NavigationLink
+
+Navigation link.
+
+```tsx
+import { NavigationLink } from '@swiftuijs/ui'
+
+<NavigationLink destination={TargetPage}>
+  <Text>Navigate</Text>
+</NavigationLink>
+```
+
+## Display Components
+
+### Card
+
+Card component.
+
+```tsx
+import { Card, VStack, Text } from '@swiftuijs/ui'
+
+<Card>
+  <VStack>
+    <Text>Card Title</Text>
+    <Text>Card Content</Text>
+  </VStack>
+</Card>
+```
+
+### Alert
+
+Alert dialog.
+
+```tsx
+import { Alert } from '@swiftuijs/ui'
+
+<Alert
+  isPresented={showAlert}
+  title="Alert"
+  message="This is an alert"
+  buttons={[
+    { label: 'OK', action: () => setShowAlert(false) }
+  ]}
+/>
+```
+
+### ProgressView
+
+Progress view.
+
+```tsx
+import { ProgressView } from '@swiftuijs/ui'
+
+<ProgressView progress={0.5} />
+```
+
+### ActivityIndicator
+
+Activity indicator (loading animation).
+
+```tsx
+import { ActivityIndicator } from '@swiftuijs/ui'
+
+<ActivityIndicator />
+```
+
+## Other Components
+
+### Divider
+
+Divider line.
+
+```tsx
+import { Divider } from '@swiftuijs/ui'
+
+<VStack>
+  <Text>Item 1</Text>
+  <Divider />
+  <Text>Item 2</Text>
+</VStack>
+```
+
+### Group
+
+Logical grouping container (does not affect layout).
+
+```tsx
+import { Group, VStack } from '@swiftuijs/ui'
+
+<Group>
+  <VStack>
+    <Text>Grouped Content</Text>
+  </VStack>
+</Group>
+```
+
+### GroupBox
+
+Grouping container with border.
+
+```tsx
+import { GroupBox, VStack, Text } from '@swiftuijs/ui'
+
+<GroupBox label="Settings">
+  <VStack>
+    <Text>Setting 1</Text>
+    <Text>Setting 2</Text>
+  </VStack>
+</GroupBox>
+```
+
+### DisclosureGroup
+
+Expandable/collapsible group.
+
+```tsx
+import { DisclosureGroup, Text } from '@swiftuijs/ui'
+
+<DisclosureGroup label="More Info">
+  <Text>Hidden content</Text>
+</DisclosureGroup>
+```
+
+### ForEach
+
+Loop rendering component.
+
+```tsx
+import { ForEach, Text } from '@swiftuijs/ui'
+
+<ForEach items={items} keyExtractor={(item) => item.id}>
+  {(item) => <Text>{item.name}</Text>}
+</ForEach>
+```
+
+## Component Categories
+
+### Layout Containers (12)
+- HStack, VStack, ZStack
+- LazyVStack, LazyHStack
+- LazyVGrid, LazyHGrid
+- ScrollView, Spacer
+- Form, TabView, GeometryReader
+
+### Basic Views (5)
+- Text, Image, Link
+- Label, Color
+
+### Input Controls (8)
+- Button, TextField, SecureField
+- Toggle, Picker, Stepper
+- Slider, DatePicker
+
+### Navigation (3)
+- NavigationStack, NavigationLink, Page
+
+### Lists and Scrolling (6)
+- List, Section, ForEach
+- LazyVStack, LazyHStack, ScrollView
+
+### Display Components (6)
+- Card, Alert, ProgressView
+- ActivityIndicator, Badge, TextEditor
+
+### Other (5)
+- Divider, Group, GroupBox
+- DisclosureGroup, SafeArea
+
+## View Detailed Documentation
+
+Each component has detailed documentation and examples. Please check the component documentation in the left navigation bar.
+
+## Component Status
+
+- ✅ Implemented
+- 🚧 In Development
+- 📋 Planned
+
+See [Component Index](/docs/ComponentIndex) for the complete component list and status.

@@ -1,0 +1,9 @@
+@use '../../style/vars.scss' as *;
+
+.#{ns('form')} {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--sw-spacing-md, 12px);
+}
+

@@ -1,0 +1,150 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# SwiftUI.js - SwiftUI in JavaScript
+
+Welcome to **SwiftUI.js**, a component library that brings SwiftUI's design philosophy and API to the JavaScript/React ecosystem.
+
+## What is SwiftUI.js?
+
+SwiftUI.js is a React component library that aims to bring SwiftUI's declarative UI programming experience to web development. It provides APIs and components similar to SwiftUI, allowing developers familiar with SwiftUI to get started quickly, while also providing web developers with an elegant and modern UI component set.
+
+## Core Features
+
+### 🎨 Declarative UI
+
+Build user interfaces using declarative syntax for cleaner, more maintainable code:
+
+```tsx
+import { VStack, Text, Button } from '@swiftuijs/ui'
+
+function App() {
+  return (
+    <VStack spacing={16}>
+      <Text>Hello, SwiftUI.js!</Text>
+      <Button onClick={() => alert('Clicked!')}>
+        Click Me
+      </Button>
+    </VStack>
+  )
+}
+```
+
+### 📱 iOS-Style Design
+
+Components follow iOS Human Interface Guidelines, providing a native iOS visual experience.
+
+### 🔄 Responsive Layout
+
+Supports adaptive layouts with components that automatically adjust based on screen size, similar to SwiftUI's SizeClass system.
+
+### 🧩 Rich Components
+
+Provides 50+ components covering layout, input, navigation, display, and more.
+
+### 📚 Complete Documentation
+
+Each component has detailed documentation and examples to help you get started quickly.
+
+## SwiftUI Correspondence
+
+SwiftUI.js component design stays as consistent as possible with SwiftUI:
+
+| SwiftUI | SwiftUI.js | Description |
+|--------|-----------|-------------|
+| `HStack` | `HStack` | Horizontal stacking layout |
+| `VStack` | `VStack` | Vertical stacking layout |
+| `ZStack` | `ZStack` | Overlay layout |
+| `Text` | `Text` | Text display |
+| `Button` | `Button` | Button control |
+| `List` | `List` | List view |
+| `NavigationStack` | `NavigationStack` | Navigation stack |
+| `TextField` | `TextField` | Text input field |
+| ... | ... | ... |
+
+See [Component Index](/docs/ComponentIndex) for more component correspondences.
+
+## Quick Start
+
+### Installation
+
+Install using npm, yarn, or pnpm:
+
+```bash
+# npm
+npm install @swiftuijs/ui
+
+# yarn
+yarn add @swiftuijs/ui
+
+# pnpm
+pnpm add @swiftuijs/ui
+```
+
+### Basic Usage
+
+```tsx
+import { VStack, HStack, Text, Button } from '@swiftuijs/ui'
+import '@swiftuijs/ui/dist/ui.css'
+
+function MyApp() {
+  return (
+    <VStack spacing={20}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+        Welcome to SwiftUI.js
+      </Text>
+      <HStack spacing={10}>
+        <Button onClick={() => console.log('Primary')}>
+          Primary
+        </Button>
+        <Button onClick={() => console.log('Secondary')}>
+          Secondary
+        </Button>
+      </HStack>
+    </VStack>
+  )
+}
+```
+
+## Design Philosophy
+
+### 1. Declarative Programming
+
+Use declarative syntax to describe UI instead of imperatively manipulating the DOM.
+
+### 2. Componentization
+
+Each component is independent and reusable, following the Single Responsibility Principle.
+
+### 3. Type Safety
+
+Full TypeScript support provides complete type definitions, reducing runtime errors.
+
+### 4. Performance Optimization
+
+Uses React best practices, including memo, lazy loading, and other optimization techniques.
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Next Steps
+
+- 📖 Check out the [Getting Started Guide](/docs/GettingStarted) to learn how to install and configure
+- 🧩 Browse the [Component Overview](/docs/Components) to see all available components
+- 📐 Learn about the [Layout System](/docs/Layout) to understand how to build responsive layouts
+- 🎨 Read about [Theming](/docs/Theming) to learn how to customize styles
+
+## Contributing
+
+SwiftUI.js is an open-source project. Contributions, bug reports, and suggestions are welcome.
+
+GitHub: [https://github.com/swiftuijs/ui](https://github.com/swiftuijs/ui)
+
+## License
+
+MIT License

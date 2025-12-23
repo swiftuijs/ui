@@ -3,6 +3,7 @@
  */
 import { createStore } from 'plain-store'
 import { isInBrowser, throttle } from 'src/common'
+import { eventBus } from 'src/common/event-bus'
 
 
 export interface IViewportInfo {
@@ -33,6 +34,8 @@ if (isInBrowser) {
       landscape,
     }
     viewportStore.setStore(info)
+    // Emit event for other stores to listen
+    eventBus.emit('viewport:change', info)
   }
   window.addEventListener('resize', throttle(updateViewport), {
     passive: true,

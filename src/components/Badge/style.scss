@@ -1,0 +1,37 @@
+@use '../../style/vars.scss' as *;
+
+.#{ns('badge')} {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: var(--sw-radius-full, 9999px);
+  font-size: var(--sw-font-size-caption-2, 11px);
+  font-weight: var(--sw-font-weight-semibold, 600);
+  line-height: 1;
+  min-width: 18px;
+  height: 18px;
+  background-color: var(--sw-color-gray, #8E8E93);
+  color: #FFFFFF;
+}
+
+.#{ns('badge-default')} {
+  background-color: var(--sw-color-gray, #8E8E93);
+}
+
+.#{ns('badge-primary')} {
+  background-color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
+}
+
+.#{ns('badge-success')} {
+  background-color: #34C759;
+}
+
+.#{ns('badge-warning')} {
+  background-color: #FF9500;
+}
+
+.#{ns('badge-error')} {
+  background-color: #FF3B30;
+}
+

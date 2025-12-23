@@ -1,49 +1,23 @@
-#device, body, html {
+@import '../src/style/index.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+body, html {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#device iframe {
+#root {
   width: 100%;
   height: 100%;
-  border: none;
-  padding: 0;
-  display: block;
+  min-height: 100vh;
 }
-
-@media screen and (min-width: 500px) {
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #60a5fa1a;
-    background-image: linear-gradient(135deg, #3b82f680 10%, #0000 0, #0000 50%, #3b82f680 0, #3b82f680 60%, #0000 0, #0000);
-    background-size: 7.07px 7.07px;
-  }
-  #device {
-    width: 393px;
-    height: 852px;
-    border-radius: 68px;
-    outline: 4px solid #999;
-    position: relative;
-    background: #fff;
-    overflow: hidden;
-
-    // iphone notch
-    &::before {
-      content: '';
-      position: absolute;
-      background: #010101;
-      border-radius: 20px;
-      height: 35px;
-      left: 50%;
-      margin-left: -60px;
-      top: 12px;
-      width: 120px;
-      z-index: 999;
-    }
-  }
-}
-

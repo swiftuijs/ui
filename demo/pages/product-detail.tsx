@@ -17,7 +17,7 @@ interface ProductDetailPageProps {
 
 export function ProductDetailPage({ product }: ProductDetailPageProps) {
   return (
-    <StandardPage id={`product-${product.id}`}>
+    <StandardPage id={`product-${product.id}`} navigationTitle={product.name}>
       <ScrollView direction="vertical" showsIndicators={true}>
         <VStack spacing={20} style={{ padding: '16px' }}>
           <VStack spacing={4}>

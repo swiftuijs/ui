@@ -1,0 +1,31 @@
+@use '../../style/vars.scss' as *;
+
+.#{ns('text-editor')} {
+  width: 100%;
+  padding: var(--sw-spacing-md, 12px);
+  border: 1px solid var(--sw-color-separator, #C6C6C8);
+  border-radius: var(--sw-radius-md, 8px);
+  background-color: var(--sw-color-background-primary, #FFFFFF);
+  color: var(--sw-color-label-primary, #000000);
+  font-size: var(--sw-font-size-body, 17px);
+  font-family: inherit;
+  line-height: var(--sw-line-height-normal, 1.4);
+  resize: vertical;
+  min-height: 100px;
+
+  &:focus {
+    outline: none;
+    border-color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
+  }
+
+  &:disabled {
+    background-color: var(--sw-color-background-secondary, #F2F2F7);
+    color: var(--sw-color-label-secondary, #8E8E93);
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: var(--sw-color-label-tertiary, #C7C7CC);
+  }
+}
+

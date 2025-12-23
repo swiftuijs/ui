@@ -1,0 +1,343 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Theming" />
+
+# Theming and Style Customization
+
+SwiftUI.js provides a flexible theming system that allows you to easily customize component appearance.
+
+## CSS Variables
+
+SwiftUI.js uses CSS variables to manage themes. All design tokens are defined through CSS variables.
+
+### Color Variables
+
+```css
+:root {
+  /* Primary colors */
+  --sw-color-blue: #007AFF;
+  --sw-color-blue-dark: #0051D5;
+  --sw-color-blue-light: #5AC8FA;
+  
+  /* Grayscale */
+  --sw-color-gray: #8E8E93;
+  --sw-color-gray-light: #C7C7CC;
+  --sw-color-gray-lighter: #E5E5EA;
+  --sw-color-gray-dark: #636366;
+  
+  /* Text colors */
+  --sw-color-label-primary: #000000;
+  --sw-color-label-secondary: #8E8E93;
+  --sw-color-label-tertiary: #C7C7CC;
+  
+  /* Background colors */
+  --sw-color-background-primary: #FFFFFF;
+  --sw-color-background-secondary: #F2F2F7;
+  --sw-color-background-tertiary: #FFFFFF;
+  
+  /* Separators */
+  --sw-color-separator: #C6C6C8;
+  --sw-color-separator-opaque: #38383A;
+  
+  /* Accent color */
+  --sw-accent-color: var(--sw-color-blue);
+}
+```
+
+### Spacing Variables
+
+```css
+:root {
+  --sw-spacing-xs: 4px;
+  --sw-spacing-sm: 8px;
+  --sw-spacing-md: 12px;
+  --sw-spacing-lg: 16px;
+  --sw-spacing-xl: 20px;
+  --sw-spacing-2xl: 24px;
+  --sw-spacing-3xl: 32px;
+}
+```
+
+### Typography Variables
+
+```css
+:root {
+  /* Font sizes */
+  --sw-font-size-large-title: 34px;
+  --sw-font-size-title-1: 28px;
+  --sw-font-size-title-2: 22px;
+  --sw-font-size-title-3: 20px;
+  --sw-font-size-headline: 17px;
+  --sw-font-size-body: 17px;
+  --sw-font-size-callout: 16px;
+  --sw-font-size-subheadline: 15px;
+  --sw-font-size-footnote: 13px;
+  --sw-font-size-caption-1: 12px;
+  --sw-font-size-caption-2: 11px;
+  
+  /* Font weights */
+  --sw-font-weight-regular: 400;
+  --sw-font-weight-medium: 500;
+  --sw-font-weight-semibold: 600;
+  --sw-font-weight-bold: 700;
+  
+  /* Line heights */
+  --sw-line-height-tight: 1.2;
+  --sw-line-height-normal: 1.4;
+  --sw-line-height-relaxed: 1.6;
+}
+```
+
+### Border Radius Variables
+
+```css
+:root {
+  --sw-radius-xs: 4px;
+  --sw-radius-sm: 6px;
+  --sw-radius-md: 8px;
+  --sw-radius-lg: 12px;
+  --sw-radius-xl: 16px;
+  --sw-radius-full: 9999px;
+}
+```
+
+### Shadow Variables
+
+```css
+:root {
+  --sw-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --sw-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --sw-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+```
+
+### Transition Variables
+
+```css
+:root {
+  --sw-transition-fast: 0.15s ease-out;
+  --sw-transition-normal: 0.25s ease-out;
+  --sw-transition-slow: 0.35s ease-out;
+}
+```
+
+## Custom Themes
+
+### Override CSS Variables
+
+Override variables in your CSS file:
+
+```css
+:root {
+  /* Custom primary color */
+  --sw-color-blue: #FF6B6B;
+  --sw-accent-color: #FF6B6B;
+  
+  /* Custom spacing */
+  --sw-spacing-md: 16px;
+  --sw-spacing-lg: 24px;
+}
+```
+
+### Create Dark Theme
+
+Use media queries to create a dark theme:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sw-color-label-primary: #FFFFFF;
+    --sw-color-label-secondary: #8E8E93;
+    --sw-color-background-primary: #000000;
+    --sw-color-background-secondary: #1C1C1E;
+    --sw-color-separator: #38383A;
+  }
+}
+```
+
+### Switch Themes with Class Names
+
+```css
+.theme-dark {
+  --sw-color-label-primary: #FFFFFF;
+  --sw-color-background-primary: #000000;
+  --sw-color-background-secondary: #1C1C1E;
+}
+
+.theme-light {
+  --sw-color-label-primary: #000000;
+  --sw-color-background-primary: #FFFFFF;
+  --sw-color-background-secondary: #F2F2F7;
+}
+```
+
+```tsx
+function App() {
+  const [theme, setTheme] = useState('light')
+  
+  return (
+    <div className={`theme-${theme}`}>
+      <YourApp />
+    </div>
+  )
+}
+```
+
+## Component Style Customization
+
+### Using style Prop
+
+All components support the `style` prop:
+
+```tsx
+<Text style={{ 
+  color: '#FF6B6B', 
+  fontSize: 24, 
+  fontWeight: 'bold' 
+}}>
+  Custom Text
+</Text>
+```
+
+### Using className
+
+Components also support the `className` prop:
+
+```tsx
+<Button className="my-custom-button">
+  Custom Button
+</Button>
+```
+
+```css
+.my-custom-button {
+  background-color: #FF6B6B;
+  border-radius: 20px;
+  padding: 12px 24px;
+}
+```
+
+### Combining Both
+
+You can use both `style` and `className` together:
+
+```tsx
+<Button 
+  className="my-button"
+  style={{ fontSize: 18 }}
+>
+  Button
+</Button>
+```
+
+## Responsive Themes
+
+### Based on Screen Size
+
+```css
+:root {
+  --sw-spacing-md: 12px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --sw-spacing-md: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --sw-spacing-md: 20px;
+  }
+}
+```
+
+## Theming Best Practices
+
+### 1. Use CSS Variables
+
+Prefer CSS variables over hardcoded values:
+
+```css
+/* ✅ Good */
+.custom-component {
+  color: var(--sw-color-blue);
+  padding: var(--sw-spacing-md);
+}
+
+/* ❌ Bad */
+.custom-component {
+  color: #007AFF;
+  padding: 12px;
+}
+```
+
+### 2. Maintain Consistency
+
+Use the same design tokens throughout your application:
+
+```tsx
+// ✅ Good: Use consistent spacing
+<VStack spacing={16}>
+  <Text>Item 1</Text>
+  <Text>Item 2</Text>
+</VStack>
+
+// ❌ Bad: Mix different spacing values
+<VStack spacing={16}>
+  <Text style={{ marginBottom: 10 }}>Item 1</Text>
+  <Text style={{ marginTop: 20 }}>Item 2</Text>
+</VStack>
+```
+
+### 3. Semantic Naming
+
+Use semantic variable names:
+
+```css
+/* ✅ Good */
+--sw-color-primary: #007AFF;
+--sw-color-success: #34C759;
+--sw-color-error: #FF3B30;
+
+/* ❌ Bad */
+--sw-color-blue: #007AFF;
+--sw-color-green: #34C759;
+--sw-color-red: #FF3B30;
+```
+
+## Create Custom Theme File
+
+Create a theme configuration file:
+
+```css
+/* theme.css */
+:root {
+  /* Custom colors */
+  --sw-color-primary: #007AFF;
+  --sw-color-secondary: #5856D6;
+  --sw-color-success: #34C759;
+  --sw-color-warning: #FF9500;
+  --sw-color-error: #FF3B30;
+  
+  /* Custom spacing */
+  --sw-spacing-base: 8px;
+  --sw-spacing-sm: calc(var(--sw-spacing-base) * 1);
+  --sw-spacing-md: calc(var(--sw-spacing-base) * 2);
+  --sw-spacing-lg: calc(var(--sw-spacing-base) * 3);
+  --sw-spacing-xl: calc(var(--sw-spacing-base) * 4);
+}
+```
+
+Import in your application:
+
+```tsx
+import '@swiftuijs/ui/dist/ui.css'
+import './theme.css'
+```
+
+## Next Steps
+
+- 📱 Learn about [Responsive Design](/docs/Responsive) to create adaptive UIs
+- 📐 Check out the [Layout System](/docs/Layout) to build complex layouts
+- 🧩 Browse [Component Documentation](/docs/Components) to learn more about components

@@ -1,0 +1,85 @@
+@use '../../style/vars.scss' as *;
+
+.#{ns('tab-view')} {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.#{ns('tab-view-top')} {
+  .#{ns('tab-bar')} {
+    order: 1;
+  }
+  .#{ns('tab-content')} {
+    order: 2;
+  }
+}
+
+.#{ns('tab-view-bottom')} {
+  .#{ns('tab-bar')} {
+    order: 2;
+  }
+  .#{ns('tab-content')} {
+    order: 1;
+  }
+}
+
+.#{ns('tab-bar')} {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: var(--sw-color-background-primary, #FFFFFF);
+  border-top: 1px solid var(--sw-color-separator, #C6C6C8);
+  z-index: 10;
+}
+
+.#{ns('tab-item')} {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sw-spacing-sm, 8px) var(--sw-spacing-xs, 4px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--sw-color-label-secondary, #8E8E93);
+  transition: color var(--sw-transition-fast, 0.15s ease-out);
+  min-height: 48px;
+
+  &:hover {
+    color: var(--sw-color-label-primary, #000000);
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.#{ns('tab-item-active')} {
+  color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
+}
+
+.#{ns('tab-icon')} {
+  font-size: 24px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.#{ns('tab-label')} {
+  font-size: var(--sw-font-size-caption-1, 12px);
+  font-weight: var(--sw-font-weight-medium, 500);
+  text-align: center;
+}
+
+.#{ns('tab-content')} {
+  flex: 1;
+  width: 100%;
+  overflow: auto;
+  position: relative;
+}
+

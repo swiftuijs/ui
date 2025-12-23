@@ -1,6 +1,8 @@
-import { forwardRef } from 'react'
+import { forwardRef, type ReactNode } from 'react'
 import type { IPageBaseComponent } from 'src/types'
 import { standardizeProps, prefixClass } from 'src/common'
+import { useNaviContext } from 'src/contexts'
+import { NavigationBar } from 'src/components/NavigationBar'
 
 import './style.scss'
 
@@ -16,10 +18,20 @@ export interface IStandardProps extends IPageBaseComponent {
    * @default 'page'
    */
   type?: 'page'
+  /**
+   * Navigation bar title.
+   * When provided, a navigation bar will be displayed at the top of the page.
+   */
+  navigationTitle?: string
+  /**
+   * Toolbar items to display on the right side of the navigation bar.
+   */
+  toolbarItems?: ReactNode
 }
 
 export const StandardPage = forwardRef<HTMLDivElement, IStandardProps>(function StandardPage(props, ref) {
-  const { type = 'page', ...pProps } = props
+  const { type = 'page', navigationTitle, toolbarItems, ...pProps } = props
+  const naviContext = useNaviContext()
   const { commonProps, restProps, children } = standardizeProps(
     Object.assign({}, pProps),
     {
@@ -28,9 +40,22 @@ export const StandardPage = forwardRef<HTMLDivElement, IStandardProps>(function 
     }
   )
 
+  const showBackButton = naviContext.count() > 0
+  const hasNavigationBar = !!navigationTitle
+
   return (
     <div {...commonProps} {...restProps} ref={ref}>
-      {children}
+      {hasNavigationBar && (
+        <NavigationBar
+          title={navigationTitle}
+          showBackButton={showBackButton}
+          onBack={() => naviContext.dismiss()}
+          toolbarItems={toolbarItems}
+        />
+      )}
+      <div className={hasNavigationBar ? prefixClass('page-content') : undefined}>
+        {children}
+      </div>
     </div>
   )
 })

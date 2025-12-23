@@ -1,0 +1,213 @@
+@use '../vars.scss' as *;
+
+/**
+ * Responsive design mixins
+ * Provides utilities for creating responsive layouts
+ */
+
+/**
+ * Breakpoint definitions
+ */
+$breakpoints: (
+  'small': 375px,
+  'medium': 768px,
+  'large': 1024px,
+  'xlarge': 1440px,
+) !default;
+
+/**
+ * SizeClass breakpoints (iOS standard)
+ */
+$sizeclass-horizontal: 375px;
+$sizeclass-vertical: 667px;
+
+/**
+ * Media query mixin
+ * @param $breakpoint - Breakpoint name or custom value
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   padding: 12px;
+ *   @include respond('medium') {
+ *     padding: 24px;
+ *   }
+ * }
+ * ```
+ */
+@mixin respond($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $value: map-get($breakpoints, $breakpoint);
+    @media (min-width: $value) {
+      @content;
+    }
+  } @else if type-of($breakpoint) == number {
+    @media (min-width: $breakpoint) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+/**
+ * Max-width media query mixin
+ * @param $breakpoint - Breakpoint name or custom value
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   padding: 24px;
+ *   @include respond-max('medium') {
+ *     padding: 12px;
+ *   }
+ * }
+ * ```
+ */
+@mixin respond-max($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    $value: map-get($breakpoints, $breakpoint);
+    @media (max-width: $value - 1px) {
+      @content;
+    }
+  } @else if type-of($breakpoint) == number {
+    @media (max-width: $breakpoint - 1px) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+/**
+ * SizeClass conditional styles
+ * @param $horizontal - Horizontal SizeClass ('compact' or 'regular')
+ * @param $vertical - Vertical SizeClass ('compact' or 'regular')
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   padding: 12px;
+ *   @include size-class('regular', 'regular') {
+ *     padding: 24px;
+ *   }
+ * }
+ * ```
+ */
+@mixin size-class($horizontal: null, $vertical: null) {
+  @if $horizontal == 'compact' {
+    @media (max-width: $sizeclass-horizontal - 1px) {
+      @content;
+    }
+  } @else if $horizontal == 'regular' {
+    @media (min-width: $sizeclass-horizontal) {
+      @content;
+    }
+  }
+  
+  @if $vertical == 'compact' {
+    @media (max-height: $sizeclass-vertical - 1px) {
+      @content;
+    }
+  } @else if $vertical == 'regular' {
+    @media (min-height: $sizeclass-vertical) {
+      @content;
+    }
+  }
+}
+
+/**
+ * Landscape orientation mixin
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   width: 100%;
+ *   @include landscape {
+ *     width: 50%;
+ *   }
+ * }
+ * ```
+ */
+@mixin landscape {
+  @media (orientation: landscape) {
+    @content;
+  }
+}
+
+/**
+ * Portrait orientation mixin
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   width: 100%;
+ *   @include portrait {
+ *     width: 50%;
+ *   }
+ * }
+ * ```
+ */
+@mixin portrait {
+  @media (orientation: portrait) {
+    @content;
+  }
+}
+
+/**
+ * High DPI display mixin
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   background-image: url('image.png');
+ *   @include retina {
+ *     background-image: url('image@2x.png');
+ *   }
+ * }
+ * ```
+ */
+@mixin retina {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @content;
+  }
+}
+
+/**
+ * Dark mode mixin
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   background-color: white;
+ *   @include dark-mode {
+ *     background-color: black;
+ *   }
+ * }
+ * ```
+ */
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+/**
+ * Reduced motion mixin (accessibility)
+ * 
+ * @example
+ * ```scss
+ * .component {
+ *   transition: transform 0.3s;
+ *   @include reduced-motion {
+ *     transition: none;
+ *   }
+ * }
+ * ```
+ */
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+

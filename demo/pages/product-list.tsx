@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { VStack, HStack, Text, List, Section, Image, Button, Divider, Spacer, ScrollView, NavigationLink } from 'src/index'
+import { VStack, HStack, Text, List, Section, Image, Button, Divider, Spacer, ScrollView, NavigationLink, GeometryReader, LazyVGrid } from 'src/index'
 import { StandardPage } from 'src/components/Page/standard-page'
 import { ProductDetailPage } from './product-detail'
 import { CartPage } from './cart'
@@ -119,9 +119,86 @@ interface ProductListPageProps {
   categoryName: string
 }
 
+function ProductCard({ product, onAddToCart, isInCart }: {
+  product: typeof products[string][0]
+  onAddToCart: (id: string) => void
+  isInCart: boolean
+}) {
+  return (
+    <VStack spacing={12} style={{ 
+      padding: '16px', 
+      border: '1px solid #e5e5ea',
+      borderRadius: '12px',
+      backgroundColor: '#ffffff',
+      height: '100%'
+    }}>
+      <Image
+        src={product.image}
+        alt={product.name}
+        style={{
+          width: '100%',
+          height: '200px',
+          objectFit: 'cover',
+          borderRadius: '8px'
+        }}
+      />
+      <VStack spacing={6} alignment="leading">
+        <Text style={{ fontSize: '18px', fontWeight: '600' }}>
+          {product.name}
+        </Text>
+        <Text style={{ fontSize: '14px', color: '#666' }} lineLimit={2}>
+          {product.description}
+        </Text>
+        <HStack spacing={8} alignment="center">
+          <Text style={{ fontSize: '18px', fontWeight: 'bold', color: '#007aff' }}>
+            ${product.price}
+          </Text>
+          <Spacer />
+          <Text style={{ fontSize: '14px', color: '#666' }}>
+            ⭐ {product.rating}
+          </Text>
+        </HStack>
+        {!product.inStock && (
+          <Text style={{ fontSize: '12px', color: '#ff3b30' }}>
+            Out of Stock
+          </Text>
+        )}
+      </VStack>
+      <HStack spacing={12}>
+        <NavigationLink
+          destination={() => <ProductDetailPage product={product} />}
+          pageOptions={{ type: 'page' }}
+        >
+          <Button
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              border: '1px solid #007aff',
+              color: '#007aff'
+            }}
+          >
+            View
+          </Button>
+        </NavigationLink>
+        <Button
+          onClick={() => onAddToCart(product.id)}
+          disabled={!product.inStock || isInCart}
+          style={{
+            flex: 1,
+            backgroundColor: isInCart ? '#34c759' : '#007aff',
+            color: 'white',
+            border: 'none'
+          }}
+        >
+          {isInCart ? '✓' : 'Add'}
+        </Button>
+      </HStack>
+    </VStack>
+  )
+}
+
 export function ProductListPage({ categoryId, categoryName }: ProductListPageProps) {
   const [cart, setCart] = useState<string[]>([])
-
   const categoryProducts = products[categoryId] || []
 
   const addToCart = (productId: string) => {
@@ -131,127 +208,156 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
   const isInCart = (productId: string) => cart.includes(productId)
 
   return (
-    <StandardPage id={`products-${categoryId}`}>
-      <ScrollView direction="vertical" showsIndicators={true}>
-        <VStack spacing={0}>
-          <VStack spacing={8} style={{ padding: '16px', paddingBottom: '8px' }}>
-            <Text style={{ fontSize: '24px', fontWeight: 'bold' }}>
-              {categoryName}
-            </Text>
-          </VStack>
-          <List>
-            {categoryProducts.map((product, index) => (
-              <Section key={product.id}>
-                <VStack spacing={12} style={{ padding: '16px' }}>
-                  <HStack spacing={16}>
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      style={{
-                        width: '100px',
-                        height: '100px',
-                        objectFit: 'cover',
-                        borderRadius: '8px'
-                      }}
-                    />
-                    <VStack spacing={6} alignment="leading" style={{ flex: 1 }}>
-                      <Text style={{ fontSize: '18px', fontWeight: '600' }}>
-                        {product.name}
-                      </Text>
-                      <Text style={{ fontSize: '14px', color: '#666' }} lineLimit={2}>
-                        {product.description}
-                      </Text>
-                      <HStack spacing={8} alignment="center">
-                        <Text style={{ fontSize: '16px', fontWeight: 'bold', color: '#007aff' }}>
-                          ${product.price}
-                        </Text>
-                        <Spacer />
-                        <Text style={{ fontSize: '14px', color: '#666' }}>
-                          ⭐ {product.rating}
-                        </Text>
-                      </HStack>
-                      {!product.inStock && (
-                        <Text style={{ fontSize: '12px', color: '#ff3b30' }}>
-                          Out of Stock
-                        </Text>
-                      )}
-                    </VStack>
-                  </HStack>
+    <StandardPage id={`products-${categoryId}`} navigationTitle={categoryName}>
+      <GeometryReader>
+        {(geometry) => {
+          const containerWidth = geometry.width
+          const isLargeScreen = containerWidth >= 1024
+          const isMediumScreen = containerWidth >= 768
+          const padding = isLargeScreen ? '40px' : isMediumScreen ? '24px' : '16px'
+          const columns = isLargeScreen ? 3 : isMediumScreen ? 2 : 1
 
-                  <HStack spacing={12}>
-                    <NavigationLink
-                      destination={() => <ProductDetailPage product={product} />}
-                      pageOptions={{ type: 'page' }}
-                    >
-                      <Button
-                        style={{
-                          flex: 1,
-                          backgroundColor: 'transparent',
-                          border: '1px solid #007aff',
-                          color: '#007aff'
-                        }}
-                      >
-                        View Details
-                      </Button>
-                    </NavigationLink>
-                    <Button
-                      onClick={() => addToCart(product.id)}
-                      disabled={!product.inStock || isInCart(product.id)}
-                      style={{
-                        flex: 1,
-                        backgroundColor: isInCart(product.id) ? '#34c759' : '#007aff',
-                        color: 'white',
-                        border: 'none'
-                      }}
-                    >
-                      {isInCart(product.id) ? '✓ In Cart' : 'Add to Cart'}
-                    </Button>
-                  </HStack>
+          return (
+            <ScrollView direction="vertical" showsIndicators={true}>
+              <VStack spacing={0}>
+                <VStack spacing={8} style={{ padding, paddingBottom: '16px' }}>
+                  <Text style={{ fontSize: isLargeScreen ? '32px' : '24px', fontWeight: 'bold' }}>
+                    {categoryName}
+                  </Text>
                 </VStack>
-                {index < categoryProducts.length - 1 && <Divider />}
-              </Section>
-            ))}
-          </List>
 
-          {categoryProducts.length === 0 && (
-            <VStack spacing={16} style={{ padding: '40px', alignItems: 'center' }}>
-              <Text style={{ fontSize: '48px' }}>📦</Text>
-              <Text style={{ fontSize: '18px', color: '#666' }}>
-                No products in this category
-              </Text>
-            </VStack>
-          )}
+                {isLargeScreen || isMediumScreen ? (
+                  // Desktop/Tablet: Grid layout
+                  <div style={{ padding, paddingTop: 0 }}>
+                    <LazyVGrid columns={columns} spacing={24}>
+                      {categoryProducts.map((product) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          onAddToCart={addToCart}
+                          isInCart={isInCart(product.id)}
+                        />
+                      ))}
+                    </LazyVGrid>
+                  </div>
+                ) : (
+                  // Mobile: List layout
+                  <List>
+                    {categoryProducts.map((product, index) => (
+                      <Section key={product.id}>
+                        <VStack spacing={12} style={{ padding: '16px' }}>
+                          <HStack spacing={16}>
+                            <Image
+                              src={product.image}
+                              alt={product.name}
+                              style={{
+                                width: '100px',
+                                height: '100px',
+                                objectFit: 'cover',
+                                borderRadius: '8px'
+                              }}
+                            />
+                            <VStack spacing={6} alignment="leading" style={{ flex: 1 }}>
+                              <Text style={{ fontSize: '18px', fontWeight: '600' }}>
+                                {product.name}
+                              </Text>
+                              <Text style={{ fontSize: '14px', color: '#666' }} lineLimit={2}>
+                                {product.description}
+                              </Text>
+                              <HStack spacing={8} alignment="center">
+                                <Text style={{ fontSize: '16px', fontWeight: 'bold', color: '#007aff' }}>
+                                  ${product.price}
+                                </Text>
+                                <Spacer />
+                                <Text style={{ fontSize: '14px', color: '#666' }}>
+                                  ⭐ {product.rating}
+                                </Text>
+                              </HStack>
+                              {!product.inStock && (
+                                <Text style={{ fontSize: '12px', color: '#ff3b30' }}>
+                                  Out of Stock
+                                </Text>
+                              )}
+                            </VStack>
+                          </HStack>
 
-          {cart.length > 0 && (
-            <VStack spacing={12} style={{ 
-              padding: '16px', 
-              backgroundColor: '#f2f2f7',
-              marginTop: '20px'
-            }}>
-              <HStack spacing={8} alignment="center">
-                <Text style={{ fontSize: '16px', fontWeight: '600' }}>
-                  🛒 Cart ({cart.length} items)
-                </Text>
-                <Spacer />
-                <NavigationLink
-                  destination={() => <CartPage cartItems={cart} products={categoryProducts} />}
-                  pageOptions={{ type: 'page' }}
-                >
-                  <Button style={{
-                    backgroundColor: '#007aff',
-                    color: 'white',
-                    border: 'none',
-                    padding: '8px 16px'
+                          <HStack spacing={12}>
+                            <NavigationLink
+                              destination={() => <ProductDetailPage product={product} />}
+                              pageOptions={{ type: 'page' }}
+                            >
+                              <Button
+                                style={{
+                                  flex: 1,
+                                  backgroundColor: 'transparent',
+                                  border: '1px solid #007aff',
+                                  color: '#007aff'
+                                }}
+                              >
+                                View Details
+                              </Button>
+                            </NavigationLink>
+                            <Button
+                              onClick={() => addToCart(product.id)}
+                              disabled={!product.inStock || isInCart(product.id)}
+                              style={{
+                                flex: 1,
+                                backgroundColor: isInCart(product.id) ? '#34c759' : '#007aff',
+                                color: 'white',
+                                border: 'none'
+                              }}
+                            >
+                              {isInCart(product.id) ? '✓ In Cart' : 'Add to Cart'}
+                            </Button>
+                          </HStack>
+                        </VStack>
+                        {index < categoryProducts.length - 1 && <Divider />}
+                      </Section>
+                    ))}
+                  </List>
+                )}
+
+                {categoryProducts.length === 0 && (
+                  <VStack spacing={16} style={{ padding: '40px', alignItems: 'center' }}>
+                    <Text style={{ fontSize: '48px' }}>📦</Text>
+                    <Text style={{ fontSize: '18px', color: '#666' }}>
+                      No products in this category
+                    </Text>
+                  </VStack>
+                )}
+
+                {cart.length > 0 && (
+                  <VStack spacing={12} style={{ 
+                    padding, 
+                    backgroundColor: '#f2f2f7',
+                    marginTop: '20px'
                   }}>
-                    View Cart
-                  </Button>
-                </NavigationLink>
-              </HStack>
-            </VStack>
-          )}
-        </VStack>
-      </ScrollView>
+                    <HStack spacing={8} alignment="center">
+                      <Text style={{ fontSize: '16px', fontWeight: '600' }}>
+                        🛒 Cart ({cart.length} items)
+                      </Text>
+                      <Spacer />
+                      <NavigationLink
+                        destination={() => <CartPage cartItems={cart} products={categoryProducts} />}
+                        pageOptions={{ type: 'page' }}
+                      >
+                        <Button style={{
+                          backgroundColor: '#007aff',
+                          color: 'white',
+                          border: 'none',
+                          padding: '8px 16px'
+                        }}>
+                          View Cart
+                        </Button>
+                      </NavigationLink>
+                    </HStack>
+                  </VStack>
+                )}
+              </VStack>
+            </ScrollView>
+          )
+        }}
+      </GeometryReader>
     </StandardPage>
   )
 }
-

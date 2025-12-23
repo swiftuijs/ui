@@ -1,0 +1,331 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Layout" />
+
+# Layout System
+
+SwiftUI.js provides a powerful layout system to help you create flexible, responsive user interfaces.
+
+## Layout Basics
+
+### Stack Layouts
+
+Stack is the most basic layout component in SwiftUI.js, used to arrange child components.
+
+#### HStack - Horizontal Layout
+
+`HStack` arranges child components horizontally in a row.
+
+```tsx
+import { HStack, Text } from '@swiftuijs/ui'
+
+<HStack spacing={10} alignment="center">
+  <Text>Left</Text>
+  <Text>Center</Text>
+  <Text>Right</Text>
+</HStack>
+```
+
+**Properties**:
+- `spacing`: Spacing between child components (in pixels)
+- `alignment`: Alignment method ('start' | 'center' | 'end' | 'stretch')
+
+#### VStack - Vertical Layout
+
+`VStack` arranges child components vertically in a column.
+
+```tsx
+import { VStack, Text } from '@swiftuijs/ui'
+
+<VStack spacing={10} alignment="center">
+  <Text>Top</Text>
+  <Text>Middle</Text>
+  <Text>Bottom</Text>
+</VStack>
+```
+
+#### ZStack - Overlay Layout
+
+`ZStack` stacks child components on top of each other, with later-rendered components on top.
+
+```tsx
+import { ZStack, Image, Text } from '@swiftuijs/ui'
+
+<ZStack alignment="center">
+  <Image src="/bg.jpg" alt="Background" />
+  <Text style={{ color: 'white' }}>Overlay Text</Text>
+</ZStack>
+```
+
+## Alignment
+
+### HStack Alignment
+
+For `HStack`, `alignment` controls vertical alignment:
+
+- `start`: Top alignment
+- `center`: Center alignment (default)
+- `end`: Bottom alignment
+- `stretch`: Stretch to fill
+
+```tsx
+<HStack alignment="start">
+  <Text>Top Aligned</Text>
+</HStack>
+```
+
+### VStack Alignment
+
+For `VStack`, `alignment` controls horizontal alignment:
+
+- `start`: Left alignment
+- `center`: Center alignment (default)
+- `end`: Right alignment
+- `stretch`: Stretch to fill
+
+```tsx
+<VStack alignment="start">
+  <Text>Left Aligned</Text>
+</VStack>
+```
+
+## Spacer - Flexible Space
+
+`Spacer` is used to create flexible space in layouts, automatically filling available space.
+
+### Using in HStack
+
+```tsx
+import { HStack, Spacer, Text } from '@swiftuijs/ui'
+
+<HStack>
+  <Text>Left</Text>
+  <Spacer />
+  <Text>Right</Text>
+</HStack>
+```
+
+### Using in VStack
+
+```tsx
+import { VStack, Spacer, Text } from '@swiftuijs/ui'
+
+<VStack>
+  <Text>Top</Text>
+  <Spacer />
+  <Text>Bottom</Text>
+</VStack>
+```
+
+### Minimum Size
+
+You can set the minimum size for `Spacer`:
+
+```tsx
+<Spacer minLength={20} />
+```
+
+## Nested Layouts
+
+You can nest different Stack components to create complex layouts:
+
+```tsx
+<VStack spacing={20}>
+  <HStack spacing={10}>
+    <Text>Item 1</Text>
+    <Text>Item 2</Text>
+  </HStack>
+  <HStack spacing={10}>
+    <Text>Item 3</Text>
+    <Text>Item 4</Text>
+  </HStack>
+</VStack>
+```
+
+## Grid Layouts
+
+### LazyVGrid - Vertical Grid
+
+`LazyVGrid` creates a vertical grid layout with customizable columns and spacing.
+
+```tsx
+import { LazyVGrid } from '@swiftuijs/ui'
+
+<LazyVGrid columns={3} spacing={10}>
+  {items.map(item => (
+    <Item key={item.id} {...item} />
+  ))}
+</LazyVGrid>
+```
+
+**Properties**:
+- `columns`: Number of columns
+- `spacing`: Grid spacing (in pixels)
+
+### LazyHGrid - Horizontal Grid
+
+`LazyHGrid` creates a horizontal grid layout.
+
+```tsx
+import { LazyHGrid } from '@swiftuijs/ui'
+
+<LazyHGrid rows={2} spacing={10}>
+  {items.map(item => (
+    <Item key={item.id} {...item} />
+  ))}
+</LazyHGrid>
+```
+
+## Responsive Layouts
+
+### Using SizeClass
+
+Adjust layout based on screen size:
+
+```tsx
+import { useSizeClass } from '@swiftuijs/ui'
+
+function ResponsiveLayout() {
+  const sizeClass = useSizeClass()
+  
+  if (sizeClass?.horizontal === 'compact') {
+    return <VStack>...</VStack>
+  }
+  
+  return <HStack>...</HStack>
+}
+```
+
+### Using GeometryReader
+
+Get container dimensions and adjust layout based on size:
+
+```tsx
+import { GeometryReader } from '@swiftuijs/ui'
+
+<GeometryReader>
+  {(geometry) => (
+    <VStack>
+      <Text>Width: {geometry.width}</Text>
+      <Text>Height: {geometry.height}</Text>
+    </VStack>
+  )}
+</GeometryReader>
+```
+
+## Layout Best Practices
+
+### 1. Use Semantic Layouts
+
+Choose the layout component that best expresses your intent:
+
+```tsx
+// ✅ Good: Use VStack for vertical list
+<VStack>
+  <Item />
+  <Item />
+</VStack>
+
+// ❌ Bad: Use HStack then rotate
+<HStack style={{ transform: 'rotate(90deg)' }}>
+  <Item />
+</HStack>
+```
+
+### 2. Use Spacer Appropriately
+
+`Spacer` should be used to create flexible space, not fixed spacing:
+
+```tsx
+// ✅ Good: Use Spacer for flexible layout
+<HStack>
+  <Text>Left</Text>
+  <Spacer />
+  <Text>Right</Text>
+</HStack>
+
+// ✅ Good: Use spacing for fixed spacing
+<HStack spacing={10}>
+  <Text>Item 1</Text>
+  <Text>Item 2</Text>
+</HStack>
+```
+
+### 3. Avoid Over-Nesting
+
+Over-nesting affects performance and readability:
+
+```tsx
+// ✅ Good: Clean nesting
+<VStack>
+  <HStack>...</HStack>
+  <HStack>...</HStack>
+</VStack>
+
+// ❌ Bad: Over-nesting
+<VStack>
+  <VStack>
+    <VStack>
+      <HStack>...</HStack>
+    </VStack>
+  </VStack>
+</VStack>
+```
+
+### 4. Use Lazy Components for Performance
+
+For long lists, use Lazy components:
+
+```tsx
+// ✅ Good: Use LazyVStack
+<LazyVStack>
+  {items.map(item => <Item key={item.id} {...item} />)}
+</LazyVStack>
+
+// ❌ Bad: Use VStack directly (renders all items)
+<VStack>
+  {items.map(item => <Item key={item.id} {...item} />)}
+</VStack>
+```
+
+## Common Layout Patterns
+
+### Centered Layout
+
+```tsx
+<HStack>
+  <Spacer />
+  <VStack>
+    <Text>Centered Content</Text>
+  </VStack>
+  <Spacer />
+</HStack>
+```
+
+### Three-Column Layout
+
+```tsx
+<HStack>
+  <Sidebar />
+  <Spacer />
+  <MainContent />
+  <Spacer />
+  <Sidebar />
+</HStack>
+```
+
+### Card Layout
+
+```tsx
+<LazyVGrid columns={3} spacing={16}>
+  {cards.map(card => (
+    <Card key={card.id} {...card} />
+  ))}
+</LazyVGrid>
+```
+
+## Next Steps
+
+- 📱 Learn about [Responsive Design](/docs/Responsive) to create adaptive layouts
+- 🎨 Check out [Theming](/docs/Theming) to customize styles
+- 🧩 Browse [Component Documentation](/docs/Components) to learn more about components

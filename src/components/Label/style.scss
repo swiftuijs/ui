@@ -1,0 +1,21 @@
+@use '../../style/vars.scss' as *;
+
+.#{ns('label')} {
+  display: flex;
+  align-items: center;
+  gap: var(--sw-spacing-sm, 8px);
+  color: var(--sw-color-label-primary, #000000);
+}
+
+.#{ns('label-icon')} {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.#{ns('label-title')} {
+  font-size: var(--sw-font-size-body, 17px);
+  line-height: var(--sw-line-height-normal, 1.4);
+}
+

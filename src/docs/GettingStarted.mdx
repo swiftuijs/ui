@@ -1,0 +1,341 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Getting Started" />
+
+# Getting Started
+
+This guide will help you get started with SwiftUI.js quickly.
+
+## Installation
+
+### Using npm
+
+```bash
+npm install @swiftuijs/ui
+```
+
+### Using yarn
+
+```bash
+yarn add @swiftuijs/ui
+```
+
+### Using pnpm
+
+```bash
+pnpm add @swiftuijs/ui
+```
+
+## Basic Setup
+
+### 1. Import Styles
+
+Before using components, you need to import the component styles:
+
+```tsx
+import '@swiftuijs/ui/dist/ui.css'
+```
+
+### 2. Import Components
+
+```tsx
+import { VStack, HStack, Text, Button } from '@swiftuijs/ui'
+```
+
+## First Example
+
+Create a simple application:
+
+```tsx
+import { VStack, Text, Button } from '@swiftuijs/ui'
+import '@swiftuijs/ui/dist/ui.css'
+
+function App() {
+  return (
+    <VStack spacing={20}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+        Hello, SwiftUI.js!
+      </Text>
+      <Button onClick={() => alert('Hello!')}>
+        Click Me
+      </Button>
+    </VStack>
+  )
+}
+
+export default App
+```
+
+## Project Integration
+
+### React Projects
+
+SwiftUI.js is a React component library that can be used in any React project.
+
+#### Create React App
+
+```bash
+npx create-react-app my-app
+cd my-app
+npm install @swiftuijs/ui
+```
+
+#### Vite
+
+```bash
+npm create vite@latest my-app -- --template react
+cd my-app
+npm install @swiftuijs/ui
+```
+
+#### Next.js
+
+```bash
+npx create-next-app@latest my-app
+cd my-app
+npm install @swiftuijs/ui
+```
+
+### Using in Next.js
+
+Import styles in `_app.tsx` or `_app.js`:
+
+```tsx
+import '@swiftuijs/ui/dist/ui.css'
+
+export default function App({ Component, pageProps }) {
+  return <Component {...pageProps} />
+}
+```
+
+## Basic Layout
+
+### Using Stack Components
+
+SwiftUI.js provides three types of stack layouts:
+
+#### HStack - Horizontal Layout
+
+```tsx
+import { HStack, Text } from '@swiftuijs/ui'
+
+<HStack spacing={10}>
+  <Text>Left</Text>
+  <Text>Center</Text>
+  <Text>Right</Text>
+</HStack>
+```
+
+#### VStack - Vertical Layout
+
+```tsx
+import { VStack, Text } from '@swiftuijs/ui'
+
+<VStack spacing={10}>
+  <Text>Top</Text>
+  <Text>Middle</Text>
+  <Text>Bottom</Text>
+</VStack>
+```
+
+#### ZStack - Overlay Layout
+
+```tsx
+import { ZStack, Text, Image } from '@swiftuijs/ui'
+
+<ZStack>
+  <Image src="/background.jpg" alt="Background" />
+  <Text style={{ color: 'white' }}>Overlay Text</Text>
+</ZStack>
+```
+
+## Common Components
+
+### Text
+
+Display text content:
+
+```tsx
+import { Text } from '@swiftuijs/ui'
+
+<Text>Hello World</Text>
+<Text style={{ fontSize: 24, fontWeight: 'bold' }}>Bold Text</Text>
+```
+
+### Button
+
+Create buttons:
+
+```tsx
+import { Button } from '@swiftuijs/ui'
+
+<Button onClick={() => console.log('Clicked')}>
+  Click Me
+</Button>
+```
+
+### Image
+
+Display images:
+
+```tsx
+import { Image } from '@swiftuijs/ui'
+
+<Image src="/image.jpg" alt="Description" />
+```
+
+### TextField
+
+Text input field:
+
+```tsx
+import { TextField } from '@swiftuijs/ui'
+import { useState } from 'react'
+
+function MyForm() {
+  const [value, setValue] = useState('')
+  
+  return (
+    <TextField
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder="Enter text"
+    />
+  )
+}
+```
+
+## Navigation
+
+### NavigationStack
+
+Create navigation structure:
+
+```tsx
+import { NavigationStack, NavigationLink, Text } from '@swiftuijs/ui'
+
+function HomePage() {
+  return (
+    <VStack>
+      <Text>Home</Text>
+      <NavigationLink destination={AboutPage}>
+        <Text>Go to About</Text>
+      </NavigationLink>
+    </VStack>
+  )
+}
+
+function AboutPage() {
+  return <Text>About</Text>
+}
+
+function App() {
+  return (
+    <NavigationStack root={HomePage} />
+  )
+}
+```
+
+## Style Customization
+
+### Using style Prop
+
+All components support the `style` prop:
+
+```tsx
+<Text style={{ color: '#007AFF', fontSize: 18 }}>
+  Custom Styled Text
+</Text>
+```
+
+### Using className
+
+Components also support the `className` prop:
+
+```tsx
+<Button className="my-custom-button">
+  Custom Button
+</Button>
+```
+
+### CSS Variables
+
+SwiftUI.js uses CSS variables to manage themes. You can override these variables:
+
+```css
+:root {
+  --sw-color-blue: #007AFF;
+  --sw-spacing-md: 12px;
+}
+```
+
+For more information about theme customization, see the [Theming Guide](/docs/Theming).
+
+## TypeScript Support
+
+SwiftUI.js is fully written in TypeScript, providing complete type definitions:
+
+```tsx
+import { VStack, type IVStackProps } from '@swiftuijs/ui'
+
+const props: IVStackProps = {
+  spacing: 10,
+  alignment: 'center',
+  children: <Text>Hello</Text>
+}
+```
+
+## Best Practices
+
+### 1. Component Composition
+
+Build complex UIs using composition:
+
+```tsx
+<VStack spacing={20}>
+  <Header />
+  <Content />
+  <Footer />
+</VStack>
+```
+
+### 2. Responsive Design
+
+Use responsive layouts to adapt to different screen sizes:
+
+```tsx
+import { useSizeClass } from '@swiftuijs/ui'
+
+function ResponsiveLayout() {
+  const sizeClass = useSizeClass()
+  
+  return sizeClass.horizontal === 'compact' 
+    ? <VStack>...</VStack>
+    : <HStack>...</HStack>
+}
+```
+
+### 3. Performance Optimization
+
+For long lists, use Lazy components:
+
+```tsx
+import { LazyVStack } from '@swiftuijs/ui'
+
+<LazyVStack>
+  {items.map(item => <Item key={item.id} {...item} />)}
+</LazyVStack>
+```
+
+## Next Steps
+
+- 📖 Check out the [Component Overview](/docs/Components) to see all available components
+- 📐 Learn about the [Layout System](/docs/Layout) to build complex layouts
+- 📱 Read about [Responsive Design](/docs/Responsive) to create adaptive UIs
+- 🎨 Learn about [Theming](/docs/Theming) to customize styles
+
+## Get Help
+
+- 📚 View component documentation and examples
+- 🐛 Report issues: [GitHub Issues](https://github.com/swiftuijs/ui/issues)
+- 💬 Join discussions: [GitHub Discussions](https://github.com/swiftuijs/ui/discussions)
