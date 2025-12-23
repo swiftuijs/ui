@@ -1,0 +1,10 @@
+import{r,j as e}from"../vite-inject-mocker-entry.js";import{s as m,p as i}from"./standardize-umhyi7Fb.js";import{B as p}from"./index-BwVA9Lg1.js";const v=r.memo(function(t){const{size:a="medium",color:s,...c}=t,{commonProps:n,restProps:l}=m(c,{className:[i("activityindicator"),i(`activityindicator-${a}`)]}),d=s?{"--indicator-color":s}:void 0;return e.jsx("div",{...n,...l,style:{...n.style,...d},children:e.jsxs("div",{className:i("activityindicator-spinner"),children:[e.jsx("div",{className:i("activityindicator-circle")}),e.jsx("div",{className:i("activityindicator-circle")}),e.jsx("div",{className:i("activityindicator-circle")}),e.jsx("div",{className:i("activityindicator-circle")}),e.jsx("div",{className:i("activityindicator-circle")}),e.jsx("div",{className:i("activityindicator-circle")}),e.jsx("div",{className:i("activityindicator-circle")}),e.jsx("div",{className:i("activityindicator-circle")})]})})});v.__docgenInfo={description:"",methods:[],displayName:"ActivityIndicator",props:{size:{required:!1,tsType:{name:"union",raw:"'small' | 'medium' | 'large'",elements:[{name:"literal",value:"'small'"},{name:"literal",value:"'medium'"},{name:"literal",value:"'large'"}]},description:`The size of the activity indicator.
+
+@default 'medium'`},color:{required:!1,tsType:{name:"string"},description:`The color of the activity indicator.
+Uses accent color by default.`}},composes:["IBaseComponent"]};const u=r.memo(function(t){const{alignment:a="center",spacing:s,...c}=t;return e.jsx(p,{direction:"row",spacing:s,alignment:a,stackClassName:"hstack",...c})});u.__docgenInfo={description:"",methods:[],displayName:"HStack",props:{alignment:{required:!1,tsType:{name:"EAlignment"},description:`The guide for aligning the subviews in this stack.
+This guide has the same vertical screen coordinate for every child view.
+
+@default 'center'`},spacing:{required:!1,tsType:{name:"number"},description:`The distance between adjacent subviews, in pixels.
+If nil, the stack chooses a default distance for each pair of subviews.
+
+@default 0`}},composes:["IBaseComponent"]};export{v as A,u as H};
