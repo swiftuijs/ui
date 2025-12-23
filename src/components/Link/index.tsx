@@ -20,7 +20,7 @@ export function Link (props: ILinkProps) {
   const href = typeof destination === 'string' ? destination : destination.href
 
   const {commonProps, restProps, children} = standardizeProps(nProps, {
-    className: 'sw-Link'
+    className: 'sw-link'
   })
 
   return (

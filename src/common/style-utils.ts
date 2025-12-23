@@ -96,7 +96,8 @@ export function mergeStyleData(options: IStyleDataProps,  computedOptions: IStyl
   } = {}
 
   if (options.style || computedOptions.style) {
-    result.style = {...options.style, ...computedOptions.style}
+    // User-provided style should override computed style
+    result.style = {...computedOptions.style, ...options.style}
   }
   if (options.className || computedOptions.className) {
     result.className = clsx(options.className, computedOptions.className)

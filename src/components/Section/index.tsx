@@ -10,13 +10,16 @@ export interface ISectionProps extends IBaseComponent {
 }
 
 export function Section (props: ISectionProps) {
-  const { ...cProps } = props
+  const { header, ...cProps } = props
 
   const {commonProps, restProps, children} = standardizeProps(cProps, {
     className: 'sw-section'
   })
   
   return (
-    <div {...commonProps} {...restProps}>{children}</div>
+    <div {...commonProps} {...restProps}>
+      {header && <div className="sw-section-header">{header}</div>}
+      {children}
+    </div>
   )
 }
