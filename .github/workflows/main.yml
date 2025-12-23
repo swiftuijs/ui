@@ -21,15 +21,17 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v4
+    
+    - name: install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        package_json_path: package.json
+    
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18.x'
-
-    - name: install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
+        node-version: '24.x'
+        cache: 'pnpm'
 
     - name: install deps
       run: pnpm install --frozen-lockfile
