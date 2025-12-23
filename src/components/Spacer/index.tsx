@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { IBaseComponent } from 'src/types'
 import { standardizeProps, standardizeUnit } from 'src/common'
 
@@ -29,7 +30,7 @@ export interface ISpacerProps extends Omit<IBaseComponent, 'children'>{
   minLength?: number | string
 }
 
-export function Spacer (props: ISpacerProps) {
+export const Spacer = memo(function Spacer (props: ISpacerProps) {
   const { minLength, ...sProps } = props
 
   const {commonProps, restProps} = standardizeProps(sProps, {
@@ -42,4 +43,4 @@ export function Spacer (props: ISpacerProps) {
   return (
     <div {...commonProps} {...restProps}/>
   )
-}
+})

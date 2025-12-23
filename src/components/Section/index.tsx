@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { memo, type ReactNode } from 'react'
 import type { IBaseComponent } from 'src/types'
 import { standardizeProps } from 'src/common'
 
@@ -28,7 +28,7 @@ export interface ISectionProps extends IBaseComponent {
   header?: ReactNode
 }
 
-export function Section (props: ISectionProps) {
+export const Section = memo(function Section (props: ISectionProps) {
   const { header, ...cProps } = props
 
   const {commonProps, restProps, children} = standardizeProps(cProps, {
@@ -41,4 +41,4 @@ export function Section (props: ISectionProps) {
       {children}
     </div>
   )
-}
+})

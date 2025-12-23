@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { IBaseComponent } from 'src/types'
 import { standardizeProps, prefixClass } from 'src/common'
 
@@ -29,7 +30,7 @@ export interface ITextProps extends IBaseComponent {
   lineLimit?: number
 }
 
-export function Text(props: ITextProps) {
+export const Text = memo(function Text(props: ITextProps) {
   const { lineLimit, ...tProps } = props
   const style = lineLimit ? { '--line-limit': lineLimit } : undefined
 
@@ -44,4 +45,4 @@ export function Text(props: ITextProps) {
       {children}
     </div>
   )
-}
+})
