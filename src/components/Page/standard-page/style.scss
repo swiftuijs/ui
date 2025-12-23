@@ -1,5 +1,6 @@
 @import '~style/base.scss';
 
+// Slide animations (default)
 @keyframes page-slide-left {
   0% {
     opacity: 0;
@@ -24,6 +25,47 @@
   }
 }
 
+// Fade animations
+@keyframes page-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes page-fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+// Scale animations
+@keyframes page-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes page-scale-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
 
 .#{ns('page')} {
   &[data-page-type='page'] {
@@ -33,13 +75,44 @@
     height: 100%;
     width: 100%;
 
+    // Default slide animation
     &[date-page-status='entering'] {
       animation: page-slide-left 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
-    // TODO: better time function for exiting
+    
     &[date-page-status='exiting'] {
       opacity: 0;
       animation: page-slide-right 0.3s ease-out;
+    }
+
+    // Fade transition
+    &[data-transition-type='fade'][date-page-status='entering'] {
+      animation: page-fade-in 0.2s ease-out;
+    }
+    
+    &[data-transition-type='fade'][date-page-status='exiting'] {
+      animation: page-fade-out 0.2s ease-out;
+    }
+
+    // Scale transition
+    &[data-transition-type='scale'][date-page-status='entering'] {
+      animation: page-scale-in 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+    
+    &[data-transition-type='scale'][date-page-status='exiting'] {
+      animation: page-scale-out 0.3s ease-out;
+    }
+
+    // View Transitions API - handled by browser, no CSS animation needed
+    &[data-transition-type='view-transition'] {
+      // View Transitions API handles the animation
+      // CSS is only for fallback or additional styling
+    }
+
+    // No animation
+    &[data-transition-type='none'][date-page-status='entering'],
+    &[data-transition-type='none'][date-page-status='exiting'] {
+      animation: none;
     }
   }
 }

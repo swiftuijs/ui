@@ -1,21 +1,55 @@
-export interface ITransitionOptions {
-  update: () => void
-  type: 'forwards' | 'backwards'
+import type { ITransitionOptions } from './view-transition-types'
+
+export type { ITransitionOptions, TransitionDirection } from './view-transition-types'
+
+export interface IViewTransitionOptions extends ITransitionOptions {
+  /**
+   * View transition name for shared element animations
+   * When provided, coordinates transition between source and target elements
+   */
+  transitionName?: string
 }
 
-export async function startViewTransition(options: ITransitionOptions) {
-  options.update()
-  // if (!document.startViewTransition) {
-  //   options.update()
-  //   return
-  // }
-  // console.log('transition start')
-  // // const transition = document.startViewTransition({
-  // //   // @ts-expect-error fix this
-  // //   update: options.update,
-  // //   types: [options.type]
-  // // })
-  // const transition = document.startViewTransition(options.update)
-  // // await transition.ready
-  // await transition.updateCallbackDone
+/**
+ * Check if View Transitions API is supported
+ */
+export function isViewTransitionSupported(): boolean {
+  return typeof document !== 'undefined' && 'startViewTransition' in document
+}
+
+/**
+ * Start a view transition with optional named transition for shared elements
+ * 
+ * @param options - Transition options including update function, type, and optional transition name
+ * @returns Promise that resolves when transition completes
+ * 
+ * @example
+ * ```tsx
+ * await startViewTransition({
+ *   update: () => setState(newState),
+ *   type: 'forwards',
+ *   transitionName: 'product-image'
+ * })
+ * ```
+ */
+export async function startViewTransition(
+  options: IViewTransitionOptions
+): Promise<void> {
+  if (!isViewTransitionSupported()) {
+    // Fallback: immediate update if View Transitions not supported
+    options.update()
+    return
+  }
+
+  const transition = document.startViewTransition(() => {
+    options.update()
+  })
+
+  // Set transition type for CSS targeting
+  if (transition.types && options.type) {
+    transition.types.add(options.type)
+  }
+
+  // Wait for transition to complete
+  await transition.updateCallbackDone
 }

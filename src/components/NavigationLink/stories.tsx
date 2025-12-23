@@ -2,12 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { VStack, Text, NavigationStack } from '../'
 import { NavigationLink, INavigationLinkProps } from '.'
 
+import NavigationLinkReadme from './README.mdx'
+
 const meta: Meta<typeof NavigationLink> = {
   title: 'SwiftUI/NavigationLink',
   component: NavigationLink,
   tags: ['autodocs'],
   parameters: {
     docs: {
+      page: NavigationLinkReadme,
       description: {
         component: 'A view that controls a navigation presentation.'
       }

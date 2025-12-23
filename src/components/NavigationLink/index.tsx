@@ -1,6 +1,7 @@
 import { memo, useCallback, useRef } from 'react'
 import type { ComponentType } from 'react'
 import type { IBaseComponent, IPageType } from 'src/types'
+import type { ITransitionConfig } from 'src/types/transition'
 import { standardizeProps, generateUniqueId, prefixClass } from 'src/common'
 import { useNaviContext } from 'src/contexts'
 
@@ -16,6 +17,25 @@ import './style.scss'
  * ```tsx
  * <NavigationLink destination={MyPage} pageOptions={{ type: 'page' }}>
  *   Go to Page
+ * </NavigationLink>
+ * ```
+ * 
+ * @example
+ * ```tsx
+ * // With custom transition
+ * <NavigationLink 
+ *   destination={DetailPage}
+ *   pageOptions={{
+ *     type: 'page',
+ *     transition: {
+ *       type: 'view-transition',
+ *       viewTransitionName: 'product-image'
+ *     }
+ *   }}
+ * >
+ *   <div style={{ viewTransitionName: 'product-image' }}>
+ *     <ProductCard />
+ *   </div>
  * </NavigationLink>
  * ```
  * 
@@ -38,7 +58,19 @@ export interface INavigationLinkProps extends IBaseComponent {
     /**
      * The type of page presentation.
      */
-    type: IPageType
+    type?: IPageType
+    /**
+     * Transition configuration for page animation.
+     * 
+     * @example
+     * ```tsx
+     * transition: {
+     *   type: 'view-transition',
+     *   viewTransitionName: 'shared-element'
+     * }
+     * ```
+     */
+    transition?: ITransitionConfig
   }
 
   /**
@@ -75,7 +107,8 @@ export const NavigationLink = memo(function NavigationLink (props: INavigationLi
     navi.append({
       component: destination,
       type: pageOptions?.type,
-      id: pageIdRef.current
+      id: pageIdRef.current,
+      transition: pageOptions?.transition
     })
   }, [destination, navi, dismiss, pageOptions])
   

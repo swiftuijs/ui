@@ -1,7 +1,14 @@
 import type { StorybookConfig } from "@storybook/react-vite"
+import { fileURLToPath } from 'url'
+import { dirname, resolve } from 'path'
+import remarkGfm from 'remark-gfm'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const config: StorybookConfig = {
   stories: [
+    "../docs-source/**/*.mdx",
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     "../src/**/stories.@(js|jsx|mjs|ts|tsx)"
@@ -10,13 +17,38 @@ const config: StorybookConfig = {
     "@storybook/addon-onboarding",
     "@storybook/addon-links",
     "@chromatic-com/storybook",
-    "@storybook/addon-docs"
+    {
+      name: "@storybook/addon-docs",
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    }
   ],
   framework: {
     name: "@storybook/react-vite",
     options: {},
   },
   viteFinal: async (config, { configType }) => {
+    // Ensure proper path resolution for MDX files
+    if (!config.resolve) {
+      config.resolve = {}
+    }
+    
+    if (!config.resolve.alias) {
+      config.resolve.alias = {}
+    }
+    
+    // Ensure src alias is properly configured
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      src: resolve(__dirname, '../src'),
+      '~style': resolve(__dirname, '../src/style'),
+    }
+
     // Modify the Vite config for production builds
     if (configType === 'PRODUCTION') {
       // Ensure proper cache busting for production builds

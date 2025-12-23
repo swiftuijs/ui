@@ -1,0 +1,273 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+# NavigationBar
+
+## Overview
+
+NavigationBar is a component that displays a title, optional back button, and toolbar items. It's automatically used by StandardPage when a `navigationTitle` is provided, following iOS Human Interface Guidelines and SwiftUI's navigation bar design patterns.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `.navigationTitle()` and `.toolbar()` modifiers.
+
+## Basic Usage
+
+NavigationBar is typically used automatically through StandardPage's `navigationTitle` prop:
+
+```tsx
+import { StandardPage } from '@swiftuijs/ui'
+
+function HomePage() {
+  return (
+    <StandardPage id="home" navigationTitle="Home">
+      <VStack>
+        <Text>Welcome to Home</Text>
+      </VStack>
+    </StandardPage>
+  )
+}
+```
+
+## Automatic Back Button
+
+The back button automatically appears when the page is not the root page:
+
+```tsx
+// Root page - no back button
+<StandardPage id="home" navigationTitle="Home">
+  ...
+</StandardPage>
+
+// Detail page - back button appears automatically
+<StandardPage id="detail" navigationTitle="Details">
+  ...
+</StandardPage>
+```
+
+## With Toolbar Items
+
+Add toolbar items on the right side of the navigation bar:
+
+```tsx
+<StandardPage 
+  id="detail" 
+  navigationTitle="Product Details"
+  toolbarItems={
+    <HStack spacing={8}>
+      <Button onClick={handleShare}>Share</Button>
+      <Button onClick={handleEdit}>Edit</Button>
+    </HStack>
+  }
+>
+  <VStack>
+    <Text>Product information...</Text>
+  </VStack>
+</StandardPage>
+```
+
+## Single Toolbar Button
+
+```tsx
+<StandardPage 
+  id="edit" 
+  navigationTitle="Edit Profile"
+  toolbarItems={<Button onClick={handleSave}>Save</Button>}
+>
+  <Form>...</Form>
+</StandardPage>
+```
+
+## Custom Back Button Behavior
+
+The back button automatically calls `dismiss()` from the navigation context. If you need custom behavior, you can access the navigation context:
+
+```tsx
+import { useNaviContext } from '@swiftuijs/ui'
+
+function CustomPage() {
+  const navi = useNaviContext()
+  
+  const handleCustomBack = () => {
+    // Custom logic before going back
+    if (hasUnsavedChanges) {
+      showConfirmDialog(() => navi.dismiss())
+    } else {
+      navi.dismiss()
+    }
+  }
+  
+  return (
+    <StandardPage 
+      id="custom" 
+      navigationTitle="Custom Page"
+      // Note: Back button behavior is handled automatically
+      // For custom behavior, you might need to hide the default
+      // and add a custom button in toolbarItems
+    >
+      ...
+    </StandardPage>
+  )
+}
+```
+
+## Integration with NavigationStack
+
+NavigationBar works seamlessly with NavigationStack:
+
+```tsx
+import { NavigationStack, StandardPage, NavigationLink } from '@swiftuijs/ui'
+
+function App() {
+  return (
+    <NavigationStack>
+      <StandardPage id="home" navigationTitle="Home">
+        <List>
+          <NavigationLink 
+            destination={DetailPage}
+            pageOptions={{ type: 'page' }}
+          >
+            <Text>Go to Detail</Text>
+          </NavigationLink>
+        </List>
+      </StandardPage>
+    </NavigationStack>
+  )
+}
+
+function DetailPage() {
+  return (
+    <StandardPage id="detail" navigationTitle="Details">
+      {/* Back button appears automatically */}
+      <Text>Detail content</Text>
+    </StandardPage>
+  )
+}
+```
+
+## Props Reference
+
+### StandardPage Props (for NavigationBar)
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `navigationTitle` | `string` | - | Title to display in navigation bar. When provided, navigation bar is shown. |
+| `toolbarItems` | `ReactNode` | - | Items to display on the right side of navigation bar. |
+
+### NavigationBar Props (Internal)
+
+NavigationBar is used internally, but you can access it directly if needed:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | - | Navigation bar title |
+| `showBackButton` | `boolean` | `false` | Whether to show back button |
+| `onBack` | `() => void` | - | Callback when back button is clicked |
+| `toolbarItems` | `ReactNode` | - | Toolbar items to display |
+
+## Common Patterns
+
+### Master-Detail Pattern
+
+```tsx
+// Master (List)
+<StandardPage id="products" navigationTitle="Products">
+  <List>
+    {products.map(product => (
+      <NavigationLink 
+        key={product.id}
+        destination={() => <ProductDetail product={product} />}
+        pageOptions={{ type: 'page' }}
+      >
+        <ProductRow product={product} />
+      </NavigationLink>
+    ))}
+  </List>
+</StandardPage>
+
+// Detail
+function ProductDetail({ product }) {
+  return (
+    <StandardPage 
+      id={`product-${product.id}`}
+      navigationTitle={product.name}
+      toolbarItems={<Button>Share</Button>}
+    >
+      <VStack>
+        <Image src={product.image} />
+        <Text>{product.description}</Text>
+      </VStack>
+    </StandardPage>
+  )
+}
+```
+
+### Form with Save Button
+
+```tsx
+<StandardPage 
+  id="edit" 
+  navigationTitle="Edit Profile"
+  toolbarItems={
+    <Button 
+      onClick={handleSave}
+      disabled={!isValid}
+    >
+      Save
+    </Button>
+  }
+>
+  <Form onSubmit={handleSubmit}>
+    <TextField label="Name" value={name} onChange={setName} />
+    <TextField label="Email" value={email} onChange={setEmail} />
+  </Form>
+</StandardPage>
+```
+
+### Multiple Toolbar Actions
+
+```tsx
+<StandardPage 
+  id="article" 
+  navigationTitle="Article"
+  toolbarItems={
+    <HStack spacing={12}>
+      <Button onClick={handleBookmark}>
+        <Text>🔖</Text>
+      </Button>
+      <Button onClick={handleShare}>
+        <Text>Share</Text>
+      </Button>
+    </HStack>
+  }
+>
+  <ScrollView>
+    <Text>{articleContent}</Text>
+  </ScrollView>
+</StandardPage>
+```
+
+## Styling
+
+NavigationBar uses CSS variables for theming. You can customize colors:
+
+```css
+:root {
+  --sw-color-blue: #007AFF; /* Back button color */
+  --sw-color-background-primary: #FFFFFF; /* Navigation bar background */
+  --sw-color-separator: #C6C6C8; /* Bottom border */
+}
+```
+
+## Best Practices
+
+1. **Keep titles concise**: Navigation bar titles should be short and descriptive
+2. **Use toolbar for actions**: Place action buttons in `toolbarItems`, not in page content
+3. **Limit toolbar items**: Too many toolbar items can clutter the navigation bar
+4. **Consistent navigation**: Use navigationTitle consistently across related pages
+5. **Accessibility**: Ensure toolbar buttons have proper labels for screen readers
+
+## Related Components
+
+- [StandardPage](/docs/components-standard-page) - Container that uses NavigationBar
+- [NavigationStack](/docs/components-navigation-stack) - Manages navigation hierarchy
+- [NavigationLink](/docs/components-navigation-link) - Triggers navigation
+- [Button](/docs/components-button) - Used in toolbar items
+

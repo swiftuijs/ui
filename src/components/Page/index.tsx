@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { IPageType } from 'src/types'
+import type { ITransitionConfig } from 'src/types/transition'
 
 import { NaviContext } from 'src/contexts'
 import { eventBus } from 'src/common'
@@ -12,7 +13,12 @@ import './style.scss'
  * Props for Page component.
  * Can be either ActionSheet or StandardPage props.
  */
-export type IPageProps = IActionSheetProps | IStandardProps
+export type IPageProps = (IActionSheetProps | IStandardProps) & {
+  /**
+   * Transition configuration for page animation
+   */
+  transition?: ITransitionConfig
+}
 
 /**
  * A container view that represents a single page in a navigation hierarchy.
@@ -70,13 +76,20 @@ export class Page extends Component<IPageProps> {
 
   render() {
     console.log('[page] render', this.pageType, this.props.id)
-    const { noEnteringAnimation: _, ...restProps } = this.props
+    const { noEnteringAnimation: _, transition, ...restProps } = this.props
     switch (this.pageType) {
       case 'actionsheet':
         return <ActionSheet {...restProps} type='actionsheet' ref={this.containerRef} />
     
       default:
-        return <StandardPage {...restProps} type='page' ref={this.containerRef} />
+        return (
+          <StandardPage 
+            {...restProps} 
+            type='page' 
+            ref={this.containerRef}
+            transition={transition}
+          />
+        )
     }
   }
 

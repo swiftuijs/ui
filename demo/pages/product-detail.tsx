@@ -16,8 +16,17 @@ interface ProductDetailPageProps {
 }
 
 export function ProductDetailPage({ product }: ProductDetailPageProps) {
+  const transitionName = `product-image-${product.id}`
+  
   return (
-    <StandardPage id={`product-${product.id}`} navigationTitle={product.name}>
+    <StandardPage 
+      id={`product-${product.id}`} 
+      navigationTitle={product.name}
+      transition={{
+        type: 'view-transition',
+        viewTransitionName: transitionName
+      }}
+    >
       <ScrollView direction="vertical" showsIndicators={true}>
         <VStack spacing={20} style={{ padding: '16px' }}>
           <VStack spacing={4}>
@@ -39,7 +48,8 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover'
+                objectFit: 'cover',
+                viewTransitionName: transitionName
               }}
             />
             {!product.inStock && (

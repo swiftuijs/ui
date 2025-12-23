@@ -1,4 +1,6 @@
 import type { ComponentType } from 'react'
+import type { ITransitionConfig } from './transition'
+
 /**
  * page type
  * * page: normal page
@@ -27,8 +29,12 @@ export interface IPageItem {
    * inner id, prefixed with type
    */
   _id: string
+  /**
+   * Transition configuration for page animation
+   */
+  transition?: ITransitionConfig
 }
 /**
  * loose page item, used by NavigationLink
  */
-export type ILoosePageItem = PartialOptional<IPageItem, 'type' | '_id'>
+export type ILoosePageItem = PartialOptional<IPageItem, 'type' | '_id' | 'transition'>

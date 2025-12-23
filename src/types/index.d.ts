@@ -1,6 +1,7 @@
 import type { ReactNode, CSSProperties, ComponentProps } from 'react'
 
 export * from './navi'
+export * from './transition'
 
 export type IClsString = string | number | null | undefined | false;
 export type IClsObj = Record<string, unknown>;

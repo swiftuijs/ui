@@ -10,6 +10,22 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    options: {
+      storySort: {
+        order: [
+          // Documentation - in developer reading order
+          'Introduction',
+          'Getting Started',
+          'Components',
+          'Layout',
+          'Responsive',
+          'Theming',
+          'Component Index',
+          // Component stories
+          'SwiftUI',
+        ],
+      },
+    },
   },
 }
 

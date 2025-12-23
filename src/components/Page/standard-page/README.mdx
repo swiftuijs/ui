@@ -1,0 +1,249 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+# StandardPage
+
+## Overview
+
+StandardPage is the default page container used in NavigationStack. It provides a standard page layout and can optionally display a navigation bar with title and toolbar items.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's view containers in NavigationStack.
+
+## Basic Usage
+
+### Simple Page
+
+```tsx
+import { StandardPage, VStack, Text } from '@swiftuijs/ui'
+
+function MyPage() {
+  return (
+    <StandardPage id="my-page">
+      <VStack spacing={16}>
+        <Text>Page Content</Text>
+      </VStack>
+    </StandardPage>
+  )
+}
+```
+
+### Page with Navigation Title
+
+```tsx
+<StandardPage id="home" navigationTitle="Home">
+  <VStack>
+    <Text>Welcome</Text>
+  </VStack>
+</StandardPage>
+```
+
+## Navigation Bar
+
+### Automatic Back Button
+
+When a page is not the root page, the back button appears automatically:
+
+```tsx
+// In NavigationStack
+<NavigationStack>
+  {/* Root page - no back button */}
+  <StandardPage id="home" navigationTitle="Home">
+    <NavigationLink destination={DetailPage}>
+      <Button>Go to Detail</Button>
+    </NavigationLink>
+  </StandardPage>
+</NavigationStack>
+
+// Detail page - back button appears automatically
+function DetailPage() {
+  return (
+    <StandardPage id="detail" navigationTitle="Details">
+      <Text>Detail content</Text>
+    </StandardPage>
+  )
+}
+```
+
+### With Toolbar Items
+
+Add action buttons to the navigation bar:
+
+```tsx
+<StandardPage 
+  id="edit" 
+  navigationTitle="Edit Profile"
+  toolbarItems={<Button onClick={handleSave}>Save</Button>}
+>
+  <Form>...</Form>
+</StandardPage>
+```
+
+### Multiple Toolbar Items
+
+```tsx
+<StandardPage 
+  id="article" 
+  navigationTitle="Article"
+  toolbarItems={
+    <HStack spacing={8}>
+      <Button onClick={handleBookmark}>🔖</Button>
+      <Button onClick={handleShare}>Share</Button>
+    </HStack>
+  }
+>
+  <ScrollView>...</ScrollView>
+</StandardPage>
+```
+
+## Page Content Layout
+
+StandardPage uses flexbox layout. Content automatically fills available space:
+
+```tsx
+<StandardPage id="page" navigationTitle="Page">
+  {/* Content area is scrollable */}
+  <ScrollView>
+    <VStack spacing={20}>
+      <Text>Long content...</Text>
+    </VStack>
+  </ScrollView>
+</StandardPage>
+```
+
+## Props Reference
+
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `id` | `string` | ✅ | - | Unique identifier for the page |
+| `navigationTitle` | `string` | ❌ | - | Title to display in navigation bar. When provided, navigation bar is shown. |
+| `toolbarItems` | `ReactNode` | ❌ | - | Items to display on the right side of navigation bar |
+| `style` | `CSSProperties` | ❌ | - | Custom CSS styles |
+| `className` | `string` | ❌ | - | Custom CSS class name |
+| `children` | `ReactNode` | ❌ | - | Page content |
+
+## Common Patterns
+
+### List Page
+
+```tsx
+<StandardPage id="products" navigationTitle="Products">
+  <List>
+    {products.map(product => (
+      <Section key={product.id}>
+        <ProductRow product={product} />
+      </Section>
+    ))}
+  </List>
+</StandardPage>
+```
+
+### Form Page
+
+```tsx
+<StandardPage 
+  id="edit" 
+  navigationTitle="Edit"
+  toolbarItems={<Button onClick={handleSave}>Save</Button>}
+>
+  <Form onSubmit={handleSubmit}>
+    <TextField label="Name" value={name} onChange={setName} />
+    <TextField label="Email" value={email} onChange={setEmail} />
+  </Form>
+</StandardPage>
+```
+
+### Detail Page
+
+```tsx
+<StandardPage id="detail" navigationTitle="Product Details">
+  <ScrollView>
+    <VStack spacing={20}>
+      <Image src={product.image} />
+      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+        {product.name}
+      </Text>
+      <Text>{product.description}</Text>
+    </VStack>
+  </ScrollView>
+</StandardPage>
+```
+
+### Settings Page
+
+```tsx
+<StandardPage id="settings" navigationTitle="Settings">
+  <List>
+    <Section header={<Text>Account</Text>}>
+      <NavigationLink destination={ProfilePage}>
+        <HStack>
+          <Text>Profile</Text>
+          <Spacer />
+          <Text>›</Text>
+        </HStack>
+      </NavigationLink>
+    </Section>
+    <Section header={<Text>Preferences</Text>}>
+      <Toggle label="Notifications" value={notifications} onChange={setNotifications} />
+    </Section>
+  </List>
+</StandardPage>
+```
+
+## Integration with NavigationStack
+
+StandardPage is designed to work within NavigationStack:
+
+```tsx
+<NavigationStack>
+  <StandardPage id="home" navigationTitle="Home">
+    <VStack>
+      <NavigationLink 
+        destination={DetailPage}
+        pageOptions={{ type: 'page' }}
+      >
+        <Button>Go to Detail</Button>
+      </NavigationLink>
+    </VStack>
+  </StandardPage>
+</NavigationStack>
+```
+
+## Styling
+
+### Custom Page Styles
+
+```tsx
+<StandardPage 
+  id="custom" 
+  navigationTitle="Custom"
+  style={{ backgroundColor: '#f5f5f5' }}
+>
+  <VStack>...</VStack>
+</StandardPage>
+```
+
+### Custom Navigation Bar Styles
+
+Navigation bar styles can be customized via CSS variables:
+
+```css
+:root {
+  --sw-color-background-primary: #FFFFFF;
+  --sw-color-separator: #C6C6C8;
+}
+```
+
+## Best Practices
+
+1. **Always provide an id**: Each page needs a unique identifier
+2. **Use navigationTitle consistently**: Keep titles short and descriptive
+3. **Place actions in toolbar**: Use `toolbarItems` for page-level actions
+4. **Use ScrollView for long content**: Ensure content is scrollable when needed
+5. **Keep pages focused**: Each page should have a single, clear purpose
+
+## Related Components
+
+- [NavigationStack](/docs/components-navigation-stack) - Container for pages
+- [NavigationLink](/docs/components-navigation-link) - Navigate between pages
+- [NavigationBar](/docs/components-navigation-bar) - The navigation bar component
+- [ScrollView](/docs/components-scroll-view) - For scrollable content
+
