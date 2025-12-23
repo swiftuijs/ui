@@ -4,9 +4,16 @@ import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
-export interface IStandardProps extends IPageBaseComponent {  
+/**
+ * Props for StandardPage component.
+ * 
+ * A standard page is the default page type in a NavigationStack.
+ */
+export interface IStandardProps extends IPageBaseComponent {
   /**
-   * page type, default to 'page'
+   * The page type. Must be 'page' for StandardPage component.
+   * 
+   * @default 'page'
    */
   type?: 'page'
 }

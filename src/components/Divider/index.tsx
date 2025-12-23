@@ -5,6 +5,23 @@ import { LayoutContext } from 'src/contexts'
 
 import './style.scss'
 
+/**
+ * A visual element that can be used to separate other content.
+ * 
+ * A Divider draws a line that can be used to separate content in a list or other container.
+ * The divider automatically adapts to the layout direction (horizontal or vertical).
+ * 
+ * @example
+ * ```tsx
+ * <VStack>
+ *   <Text>Above</Text>
+ *   <Divider />
+ *   <Text>Below</Text>
+ * </VStack>
+ * ```
+ * 
+ * @see https://developer.apple.com/documentation/swiftui/divider
+ */
 export type IDividerProps = Omit<IBaseComponent, 'children'>
 
 export function Divider (props: IDividerProps) {

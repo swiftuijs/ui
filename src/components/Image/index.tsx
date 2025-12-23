@@ -3,6 +3,19 @@ import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
+/**
+ * A view that displays an image.
+ * 
+ * Use Image to display images from various sources, including bundled images,
+ * system images, and images from URLs.
+ * 
+ * @example
+ * ```tsx
+ * <Image src="photo.jpg" alt="A photo" />
+ * ```
+ * 
+ * @see https://developer.apple.com/documentation/swiftui/image
+ */
 export type IImageProps = Omit<IBaseElementComponent<'img'>, 'children'>
 
 export function Image (props: IImageProps) {

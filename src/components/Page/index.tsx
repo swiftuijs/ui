@@ -8,9 +8,25 @@ import { ActionSheet, type IActionSheetProps } from './action-sheet'
 
 import './style.scss'
 
+/**
+ * Props for Page component.
+ * Can be either ActionSheet or StandardPage props.
+ */
 export type IPageProps = IActionSheetProps | IStandardProps
 
-
+/**
+ * A container view that represents a single page in a navigation hierarchy.
+ * 
+ * Page is used internally by NavigationStack to manage individual pages.
+ * It handles page transitions and lifecycle events.
+ * 
+ * @example
+ * ```tsx
+ * <Page id="page-1" type="page">
+ *   <Text>Page Content</Text>
+ * </Page>
+ * ```
+ */
 export class Page extends Component<IPageProps> {
   
   static contextType = NaviContext
@@ -66,9 +82,11 @@ export class Page extends Component<IPageProps> {
 
 
   /**
-   * exit page
-   * @param callback callback function executed after page exit animation is done
-   * @returns 
+   * Exits the page with an optional callback.
+   * 
+   * Triggers the exit animation and calls the callback when the animation completes.
+   * 
+   * @param callback - Optional callback function executed after page exit animation is done
    */
   exitPage(callback?: IFn) {
     if (!this.containerRef.current) return

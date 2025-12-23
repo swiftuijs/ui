@@ -6,6 +6,9 @@ import type { Page } from 'src/components/Page'
 
 const HOME_PAGE_ID = generateUniqueId('_index_')
 
+/**
+ * Props for NavigationStack component.
+ */
 export type INavigationStackProps = IBaseComponent
 
 export function useViewModel(props: INavigationStackProps) {

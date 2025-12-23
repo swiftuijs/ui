@@ -4,7 +4,24 @@ import { NaviContext } from 'src/contexts'
 import { useViewModel, INavigationStackProps } from './view-model'
 import './style.scss'
 
-
+/**
+ * A view that presents a stack of views representing a visible path in a navigation hierarchy.
+ * 
+ * Use NavigationStack to present a hierarchy of views. NavigationStack manages the navigation
+ * state and provides methods for pushing and popping views. NavigationLink components within
+ * the stack can navigate to other views.
+ * 
+ * @example
+ * ```tsx
+ * <NavigationStack>
+ *   <VStack>
+ *     <NavigationLink destination={DetailPage}>Go to Detail</NavigationLink>
+ *   </VStack>
+ * </NavigationStack>
+ * ```
+ * 
+ * @see https://developer.apple.com/documentation/swiftui/navigationstack
+ */
 export type { INavigationStackProps } from './view-model'
 
 export function NavigationStack (props: INavigationStackProps) {

@@ -3,13 +3,30 @@ import { standardizeProps } from 'src/common'
 
 import './style.scss'
 
+/**
+ * A control for navigating to a URL.
+ * 
+ * Use Link to create a clickable link that navigates to a URL when activated.
+ * 
+ * @example
+ * ```tsx
+ * <Link destination="https://example.com" target="_blank">
+ *   Visit Example
+ * </Link>
+ * ```
+ * 
+ * @see https://developer.apple.com/documentation/swiftui/link
+ */
 export interface ILinkProps extends IBaseComponent {
   /**
-   * next page component or url
+   * The destination URL for the link.
    */
   destination: string | URL
   /**
-   * link target
+   * The target window or frame for the link.
+   * Common values: '_blank', '_self', '_parent', '_top'
+   * 
+   * @default undefined (uses browser default)
    */
   target?: string
 }
