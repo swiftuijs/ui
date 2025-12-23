@@ -20,16 +20,25 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Use Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
         node-version: '18.x'
 
     - name: install pnpm
-      run: npm install -g pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+
     - name: install deps
-      run: pnpm i
+      run: pnpm install --frozen-lockfile
+
+    - name: lint
+      run: pnpm lint
+
+    - name: test
+      run: pnpm test:run
 
     - name: build lib
       run: pnpm build

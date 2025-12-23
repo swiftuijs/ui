@@ -1,4 +1,4 @@
-import { VStack, HStack, Text, Image, Button, ScrollView, ZStack, Spacer, Divider, Link } from 'src/index'
+import { VStack, HStack, Text, Image, Button, ScrollView, ZStack, Divider, Link } from 'src/index'
 import { StandardPage } from 'src/components/Page/standard-page'
 
 interface Product {
