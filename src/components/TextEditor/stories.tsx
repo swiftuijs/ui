@@ -20,21 +20,23 @@ export default meta
 
 type Story = StoryObj<ITextEditorProps>
 
-export const Default: Story = {
-  render: () => {
-    const [value, setValue] = useState('')
+function DefaultTextEditor() {
+  const [value, setValue] = useState('')
 
-    return (
-      <VStack spacing={10}>
-        <Text>Character count: {value.length}</Text>
-        <TextEditor
-          value={value}
-          onChange={setValue}
-          placeholder="Enter text..."
-        />
-      </VStack>
-    )
-  },
+  return (
+    <VStack spacing={10}>
+      <Text>Character count: {value.length}</Text>
+      <TextEditor
+        value={value}
+        onChange={setValue}
+        placeholder="Enter text..."
+      />
+    </VStack>
+  )
+}
+
+export const Default: Story = {
+  render: () => <DefaultTextEditor />,
 }
 
 export const WithMinMaxLines: Story = {

@@ -22,6 +22,7 @@ export default [
         document: 'readonly',
         window: 'readonly',
         console: 'readonly',
+        alert: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
         setInterval: 'readonly',
@@ -35,6 +36,10 @@ export default [
         HTMLElement: 'readonly',
         HTMLInputElement: 'readonly',
         HTMLSelectElement: 'readonly',
+        HTMLFormElement: 'readonly',
+        HTMLTextAreaElement: 'readonly',
+        ResizeObserver: 'readonly',
+        Node: 'readonly',
         MouseEvent: 'readonly',
         TouchEvent: 'readonly',
         requestIdleCallback: 'readonly',
@@ -77,6 +82,19 @@ export default [
     },
     rules: {
       ...storybook.configs.recommended.rules,
+    },
+  },
+  {
+    files: ['**/*.js', 'scripts/**/*.js'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+      },
     },
   },
   {

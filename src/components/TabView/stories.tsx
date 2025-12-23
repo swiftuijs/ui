@@ -120,23 +120,22 @@ export const TopTabBar: Story = {
   },
 }
 
-export const Controlled: Story = {
-  render: () => {
-    const [selectedIndex, setSelectedIndex] = useState(0)
+function ControlledTabView() {
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
-    return (
-      <div>
-        <div style={{ padding: '10px', marginBottom: '10px' }}>
-          <Button onClick={() => setSelectedIndex((prev) => (prev + 1) % 3)}>
-            Next Tab
-          </Button>
-          <Text style={{ marginLeft: '10px' }}>Selected: {selectedIndex}</Text>
-        </div>
-        <TabView
-          items={[
-            {
-              label: 'Tab 1',
-              content: <VStack style={{ padding: '20px' }}><Text>Tab 1</Text></VStack>,
+  return (
+    <div>
+      <div style={{ padding: '10px', marginBottom: '10px' }}>
+        <Button onClick={() => setSelectedIndex((prev) => (prev + 1) % 3)}>
+          Next Tab
+        </Button>
+        <Text style={{ marginLeft: '10px' }}>Selected: {selectedIndex}</Text>
+      </div>
+      <TabView
+        items={[
+          {
+            label: 'Tab 1',
+            content: <VStack style={{ padding: '20px' }}><Text>Tab 1</Text></VStack>,
             },
             {
               label: 'Tab 2',
@@ -147,11 +146,14 @@ export const Controlled: Story = {
               content: <VStack style={{ padding: '20px' }}><Text>Tab 3</Text></VStack>,
             },
           ]}
-          selectedIndex={selectedIndex}
-          onSelectionChange={setSelectedIndex}
-        />
-      </div>
-    )
-  },
+        selectedIndex={selectedIndex}
+        onSelectionChange={setSelectedIndex}
+      />
+    </div>
+  )
+}
+
+export const Controlled: Story = {
+  render: () => <ControlledTabView />,
 }
 
