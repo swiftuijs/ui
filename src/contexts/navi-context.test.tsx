@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { NaviContext, useNaviContext } from './navi-context'
 import type { ReactNode } from 'react'
-import React from 'react'
 
 describe('navi-context', () => {
   describe('NaviContext', () => {
@@ -30,7 +29,7 @@ describe('navi-context', () => {
     it('should have no-op functions by default', () => {
       const { result } = renderHook(() => useNaviContext())
       expect(() => {
-        result.current.append({ component: () => null })
+        result.current.append({ component: () => null, id: 'test-page' })
         result.current.removeLast()
         result.current.dismiss()
       }).not.toThrow()
