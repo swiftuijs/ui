@@ -5,7 +5,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 const meta: Meta<typeof Slider> = {
-  title: 'Components/Slider',
+  title: 'SwiftUI/Slider',
   component: Slider,
   tags: ['autodocs'],
 }

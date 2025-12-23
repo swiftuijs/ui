@@ -5,7 +5,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 const meta: Meta<typeof DatePicker> = {
-  title: 'Components/DatePicker',
+  title: 'SwiftUI/DatePicker',
   component: DatePicker,
   tags: ['autodocs'],
 }

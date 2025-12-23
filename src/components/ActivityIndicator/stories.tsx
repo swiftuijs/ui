@@ -4,7 +4,7 @@ import { VStack } from '../VStack'
 import { HStack } from '../HStack'
 
 const meta: Meta<typeof ActivityIndicator> = {
-  title: 'Components/ActivityIndicator',
+  title: 'SwiftUI/ActivityIndicator',
   component: ActivityIndicator,
   tags: ['autodocs'],
 }

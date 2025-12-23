@@ -5,7 +5,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 const meta: Meta<typeof Stepper> = {
-  title: 'Components/Stepper',
+  title: 'SwiftUI/Stepper',
   component: Stepper,
   tags: ['autodocs'],
 }

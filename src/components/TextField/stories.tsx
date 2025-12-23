@@ -5,7 +5,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 const meta: Meta<typeof TextField> = {
-  title: 'Components/TextField',
+  title: 'SwiftUI/TextField',
   component: TextField,
   tags: ['autodocs'],
 }

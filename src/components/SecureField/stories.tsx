@@ -3,7 +3,7 @@ import { SecureField } from './index'
 import { VStack } from '../VStack'
 
 const meta: Meta<typeof SecureField> = {
-  title: 'Components/SecureField',
+  title: 'SwiftUI/SecureField',
   component: SecureField,
   tags: ['autodocs'],
 }

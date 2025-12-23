@@ -5,7 +5,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 const meta: Meta<typeof Toggle> = {
-  title: 'Components/Toggle',
+  title: 'SwiftUI/Toggle',
   component: Toggle,
   tags: ['autodocs'],
 }

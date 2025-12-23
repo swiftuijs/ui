@@ -5,7 +5,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 const meta: Meta<typeof Picker> = {
-  title: 'Components/Picker',
+  title: 'SwiftUI/Picker',
   component: Picker,
   tags: ['autodocs'],
 }
