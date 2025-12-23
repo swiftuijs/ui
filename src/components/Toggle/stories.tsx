@@ -13,17 +13,19 @@ const meta: Meta<typeof Toggle> = {
 export default meta
 type Story = StoryObj<typeof Toggle>
 
+const ToggleDemo = () => {
+  const [isOn, setIsOn] = useState(false)
+  return (
+    <VStack spacing={16}>
+      <Text>Toggle is {isOn ? 'on' : 'off'}</Text>
+      <Toggle isOn={isOn} onChange={setIsOn} />
+      <Toggle isOn={true} onChange={() => {}} />
+      <Toggle isOn={false} onChange={() => {}} disabled />
+    </VStack>
+  )
+}
+
 export const Default: Story = {
-  render: () => {
-    const [isOn, setIsOn] = useState(false)
-    return (
-      <VStack spacing={16}>
-        <Text>Toggle is {isOn ? 'on' : 'off'}</Text>
-        <Toggle isOn={isOn} onChange={setIsOn} />
-        <Toggle isOn={true} onChange={() => {}} />
-        <Toggle isOn={false} onChange={() => {}} disabled />
-      </VStack>
-    )
-  },
+  render: () => <ToggleDemo />,
 }
 

@@ -18,7 +18,7 @@ import './style.scss'
  * 
  * @see https://developer.apple.com/documentation/swiftui/card
  */
-export interface ICardProps extends IBaseComponent {}
+export type ICardProps = IBaseComponent
 
 export const Card = memo(function Card(props: ICardProps) {
   const { commonProps, restProps, children } = standardizeProps(props, {

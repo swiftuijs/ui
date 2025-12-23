@@ -1,6 +1,6 @@
-@import '~style/base.scss';
 @use '~style/mixins/flex-container.scss' as *;
 @use '~style/mixins/spacing.scss' as *;
+@import '~style/base.scss';
 
 .#{ns('hstack')} {
   @include flex-container(row, center);

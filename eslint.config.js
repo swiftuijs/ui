@@ -33,6 +33,8 @@ export default [
         URL: 'readonly',
         HTMLDivElement: 'readonly',
         HTMLElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLSelectElement: 'readonly',
         MouseEvent: 'readonly',
         TouchEvent: 'readonly',
         requestIdleCallback: 'readonly',

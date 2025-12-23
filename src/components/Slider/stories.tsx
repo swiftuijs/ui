@@ -13,34 +13,36 @@ const meta: Meta<typeof Slider> = {
 export default meta
 type Story = StoryObj<typeof Slider>
 
+const SliderDemo = () => {
+  const [value, setValue] = useState(50)
+  return (
+    <VStack spacing={16}>
+      <Text>Value: {value}</Text>
+      <Slider
+        value={value}
+        onValueChange={setValue}
+        min={0}
+        max={100}
+      />
+      <Slider
+        value={value}
+        onValueChange={setValue}
+        min={0}
+        max={100}
+        step={5}
+      />
+      <Slider
+        value={value}
+        onValueChange={setValue}
+        min={0}
+        max={100}
+        disabled
+      />
+    </VStack>
+  )
+}
+
 export const Default: Story = {
-  render: () => {
-    const [value, setValue] = useState(50)
-    return (
-      <VStack spacing={16}>
-        <Text>Value: {value}</Text>
-        <Slider
-          value={value}
-          onValueChange={setValue}
-          min={0}
-          max={100}
-        />
-        <Slider
-          value={value}
-          onValueChange={setValue}
-          min={0}
-          max={100}
-          step={5}
-        />
-        <Slider
-          value={value}
-          onValueChange={setValue}
-          min={0}
-          max={100}
-          disabled
-        />
-      </VStack>
-    )
-  },
+  render: () => <SliderDemo />,
 }
 

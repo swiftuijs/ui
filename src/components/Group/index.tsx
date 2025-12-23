@@ -20,7 +20,7 @@ import './style.scss'
  * 
  * @see https://developer.apple.com/documentation/swiftui/group
  */
-export interface IGroupProps extends IBaseComponent {}
+export type IGroupProps = IBaseComponent
 
 export const Group = memo(function Group(props: IGroupProps) {
   const { commonProps, restProps, children } = standardizeProps(props, {

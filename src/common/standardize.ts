@@ -1,9 +1,9 @@
-import type { IBaseComponent } from 'src/types'
+import type { IBaseComponent, EAlignment } from 'src/types'
 
 import { mergeStyleData, IStyleDataProps } from './style-utils'
 
 
-export function standardizeProps<T extends Partial<IBaseComponent>>(props: T, extraProps: IStyleDataProps) {
+export function standardizeProps<T extends Partial<IBaseComponent & { alignment?: EAlignment }>>(props: T, extraProps: IStyleDataProps) {
   const { style, className, alignment, children, ...restProps } = props
 
   const commonProps = mergeStyleData({ style, className }, extraProps)

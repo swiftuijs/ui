@@ -19,7 +19,7 @@ import { TextField } from '../TextField'
  * 
  * @see https://developer.apple.com/documentation/swiftui/securefield
  */
-export interface ISecureFieldProps extends Omit<ITextFieldProps, 'type'> {}
+export type ISecureFieldProps = Omit<ITextFieldProps, 'type'>
 
 export const SecureField = memo(function SecureField(props: ISecureFieldProps) {
   return <TextField {...props} type="password" />

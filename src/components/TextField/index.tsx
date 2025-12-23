@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react'
+import { memo } from 'react'
 import type { IBaseElementComponent } from 'src/types'
 import { standardizeProps, prefixClass } from 'src/common'
 
@@ -45,7 +45,7 @@ export interface ITextFieldProps extends Omit<IBaseElementComponent<'input'>, 't
    * 
    * @default 'text'
    */
-  type?: 'text' | 'email' | 'tel' | 'url' | 'search'
+  type?: 'text' | 'email' | 'tel' | 'url' | 'search' | 'password'
 }
 
 export const TextField = memo(function TextField(props: ITextFieldProps) {

@@ -27,26 +27,28 @@ export const Default: Story = {
   ),
 }
 
+const AnimatedProgressDemo = () => {
+  const [progress, setProgress] = useState(0)
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 1) return 0
+        return prev + 0.1
+      })
+    }, 200)
+    return () => clearInterval(interval)
+  }, [])
+  
+  return (
+    <VStack spacing={16}>
+      <Text>Progress: {Math.round(progress * 100)}%</Text>
+      <ProgressView progress={progress} />
+    </VStack>
+  )
+}
+
 export const Animated: Story = {
-  render: () => {
-    const [progress, setProgress] = useState(0)
-    
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 1) return 0
-          return prev + 0.1
-        })
-      }, 200)
-      return () => clearInterval(interval)
-    }, [])
-    
-    return (
-      <VStack spacing={16}>
-        <Text>Progress: {Math.round(progress * 100)}%</Text>
-        <ProgressView progress={progress} />
-      </VStack>
-    )
-  },
+  render: () => <AnimatedProgressDemo />,
 }
 

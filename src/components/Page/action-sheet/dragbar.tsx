@@ -7,7 +7,7 @@ import { prefixClass, isMobile, eventBus,
 export interface IDragBarProps {
   eventToChangeDetent: string
   presentationDetents: IPresentationDetent[]
-  container: RefObject<HTMLDivElement | undefined>
+  container: RefObject<HTMLDivElement | null>
 }
 
 export function DragBar(props: IDragBarProps) {

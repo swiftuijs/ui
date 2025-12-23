@@ -23,19 +23,21 @@ export const Default: Story = {
   ),
 }
 
+const TextFieldWithValueDemo = () => {
+  const [value, setValue] = useState('Hello World')
+  return (
+    <VStack spacing={16}>
+      <Text>Current value: {value}</Text>
+      <TextField
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Type something..."
+      />
+    </VStack>
+  )
+}
+
 export const WithValue: Story = {
-  render: () => {
-    const [value, setValue] = useState('Hello World')
-    return (
-      <VStack spacing={16}>
-        <Text>Current value: {value}</Text>
-        <TextField
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Type something..."
-        />
-      </VStack>
-    )
-  },
+  render: () => <TextFieldWithValueDemo />,
 }
 

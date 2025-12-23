@@ -18,7 +18,7 @@ export interface IStandardProps extends IPageBaseComponent {
   type?: 'page'
 }
 
-export const StandardPage = forwardRef(function StandardPage(props: IStandardProps, ref) {
+export const StandardPage = forwardRef<HTMLDivElement, IStandardProps>(function StandardPage(props, ref) {
   const { type = 'page', ...pProps } = props
   const { commonProps, restProps, children } = standardizeProps(
     Object.assign({}, pProps),

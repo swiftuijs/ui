@@ -19,26 +19,28 @@ const options = [
   { value: '3', label: 'Option 3' },
 ]
 
+const PickerDemo = () => {
+  const [selected, setSelected] = useState<string | number>()
+  return (
+    <VStack spacing={16}>
+      <Text>Selected: {selected || 'None'}</Text>
+      <Picker
+        selectedValue={selected}
+        onValueChange={setSelected}
+        options={options}
+        placeholder="Choose an option"
+      />
+      <Picker
+        selectedValue={selected}
+        onValueChange={setSelected}
+        options={options}
+        disabled
+      />
+    </VStack>
+  )
+}
+
 export const Default: Story = {
-  render: () => {
-    const [selected, setSelected] = useState<string | number>()
-    return (
-      <VStack spacing={16}>
-        <Text>Selected: {selected || 'None'}</Text>
-        <Picker
-          selectedValue={selected}
-          onValueChange={setSelected}
-          options={options}
-          placeholder="Choose an option"
-        />
-        <Picker
-          selectedValue={selected}
-          onValueChange={setSelected}
-          options={options}
-          disabled
-        />
-      </VStack>
-    )
-  },
+  render: () => <PickerDemo />,
 }
 

@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import type { IBaseComponent, EAlignment } from 'src/types'
 import { standardizeProps, standardizeUnit, prefixClass } from 'src/common'
 import { LayoutContext } from 'src/contexts'
@@ -46,7 +45,10 @@ export function BaseStack(props: IBaseStackProps) {
   } = props
 
   // Build style object with spacing and custom vars
-  const style: Record<string, string> = { ...styleVars }
+  const style: Record<string, string> = {}
+  Object.entries(styleVars).forEach(([key, value]) => {
+    style[key] = String(value)
+  })
   if (spacing !== undefined && direction !== undefined) {
     const spacingVar = direction === 'row' ? '--hstack-spacing' : '--vstack-spacing'
     style[spacingVar] = standardizeUnit(spacing)
@@ -58,10 +60,13 @@ export function BaseStack(props: IBaseStackProps) {
     classNameArray.push(`align-${alignment}`)
   }
 
-  const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
-    className: classNameArray,
-    style,
-  })
+  const { commonProps, restProps: finalRestProps } = standardizeProps(
+    { ...restProps, alignment },
+    {
+      className: classNameArray,
+      style,
+    }
+  )
 
   const content = (
     <div {...commonProps} {...finalRestProps}>

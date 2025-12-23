@@ -6,7 +6,7 @@ import { useDetents } from './use-detents'
 export interface IDragBarProps {
   eventToChangeDetent: string
   presentationDetents: IPresentationDetent[]
-  container: RefObject<HTMLDivElement | undefined>
+  container: RefObject<HTMLDivElement | null>
 }
 
 /**
