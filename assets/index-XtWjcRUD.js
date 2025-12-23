@@ -1,0 +1,1 @@
+import{j as r}from"./jsx-runtime-u17CrQMm.js";import{r as o}from"./iframe-DOh0KEBf.js";import{T as t}from"./index-DfW-ob4V.js";const s=o.memo(function(e){return r.jsx(t,{...e,type:"password"})});s.__docgenInfo={description:"",methods:[],displayName:"SecureField"};export{s as S};
