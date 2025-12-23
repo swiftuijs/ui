@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import type { IBaseComponent } from 'src/types'
 import { standardizeProps } from './standardize'
 
 describe('standardizeProps', () => {
@@ -22,12 +23,13 @@ describe('standardizeProps', () => {
   })
 
   it('should pass through rest props', () => {
+    const props = { 'data-testid': 'test', onClick: () => {} } as Partial<IBaseComponent & { 'data-testid'?: string; onClick?: () => void }>
     const result = standardizeProps(
-      { 'data-testid': 'test', onClick: () => {} } as any,
+      props,
       {}
     )
-    expect((result.restProps as any)['data-testid']).toBe('test')
-    expect((result.restProps as any).onClick).toBeDefined()
+    expect((result.restProps as Record<string, unknown>)['data-testid']).toBe('test')
+    expect((result.restProps as Record<string, unknown>).onClick).toBeDefined()
   })
 
   it('should merge extra props', () => {
