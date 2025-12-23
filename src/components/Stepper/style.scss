@@ -1,0 +1,54 @@
+@import '~style/base.scss';
+
+.#{ns('stepper')} {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sw-spacing-md);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-md);
+  background-color: var(--sw-color-background-primary);
+  padding: var(--sw-spacing-xs);
+}
+
+.#{ns('stepper-button')} {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  border-radius: var(--sw-radius-sm);
+  cursor: pointer;
+  transition: background-color var(--sw-transition-fast);
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover:not(:disabled) {
+    background-color: var(--sw-color-background-secondary);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--sw-color-gray-lighter);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.#{ns('stepper-icon')} {
+  font-size: 20px;
+  font-weight: var(--sw-font-weight-semibold);
+  color: var(--sw-color-label-primary);
+  line-height: 1;
+}
+
+.#{ns('stepper-value')} {
+  min-width: 40px;
+  text-align: center;
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-medium);
+  color: var(--sw-color-label-primary);
+}
+

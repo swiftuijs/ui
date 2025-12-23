@@ -1,5 +1,6 @@
+import { memo } from 'react'
 import type { IBaseComponent, EAlignment } from 'src/types'
-import { standardizeProps, prefixClass } from 'src/common'
+import { BaseStack } from '../Stack/BaseStack'
 
 import './style.scss'
 
@@ -28,13 +29,14 @@ export interface IZStackProps extends IBaseComponent {
   alignment?: EAlignment
 }
 
-export function ZStack(props: IZStackProps) {
-  const { children, commonProps, restProps } = standardizeProps(props, {
-    className: [prefixClass('zstack'), prefixClass('container')]
-  })
+export const ZStack = memo(function ZStack(props: IZStackProps) {
+  const { alignment, ...restProps } = props
+
   return (
-    <div {...commonProps} {...restProps}>
-      {children}
-    </div>
+    <BaseStack
+      alignment={alignment}
+      stackClassName="zstack"
+      {...restProps}
+    />
   )
-}
+})

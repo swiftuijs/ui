@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import type { IBaseComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -28,7 +28,7 @@ export const List = memo(function List (props: IListProps) {
   const { ...cProps } = props
 
   const {commonProps, restProps, children} = standardizeProps(cProps, {
-    className: 'sw-list'
+    className: prefixClass('list')
   })
   
   return (

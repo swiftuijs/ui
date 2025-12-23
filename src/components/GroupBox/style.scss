@@ -1,0 +1,22 @@
+@import '~style/base.scss';
+
+.#{ns('groupbox')} {
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-md);
+  background-color: var(--sw-color-background-primary);
+  padding: var(--sw-spacing-md);
+}
+
+.#{ns('groupbox-label')} {
+  font-size: var(--sw-font-size-subheadline);
+  font-weight: var(--sw-font-weight-semibold);
+  color: var(--sw-color-label-secondary);
+  margin-bottom: var(--sw-spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.#{ns('groupbox-content')} {
+  // Content area
+}
+

@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 import type { IPageBaseComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -23,7 +23,7 @@ export const StandardPage = forwardRef(function StandardPage(props: IStandardPro
   const { commonProps, restProps, children } = standardizeProps(
     Object.assign({}, pProps),
     {
-      className: ['sw-page'],
+      className: [prefixClass('page')],
       'data-page-type': type,
     }
   )

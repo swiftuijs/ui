@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import type { IBaseElementComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -21,7 +21,7 @@ export type IImageProps = Omit<IBaseElementComponent<'img'>, 'children'>
 
 export const Image = memo(function Image (props: IImageProps) {
   const { commonProps, restProps } = standardizeProps(props, {
-    className: 'sw-image'
+    className: prefixClass('image')
   })
   
   return (

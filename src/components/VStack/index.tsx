@@ -1,6 +1,6 @@
+import { memo } from 'react'
 import type { IBaseComponent, EAlignment } from 'src/types'
-import { standardizeProps, standardizeUnit, prefixClass } from 'src/common'
-import { LayoutContext } from 'src/contexts'
+import { BaseStack } from '../Stack/BaseStack'
 
 import './style.scss'
 
@@ -37,19 +37,16 @@ export interface IVStackProps extends IBaseComponent {
   spacing?: number
 }
 
-export function VStack(props: IVStackProps) {
-  const { spacing, ...vProps } = props
-  const { children, commonProps, restProps } = standardizeProps(vProps, {
-    className: [prefixClass('vstack'), prefixClass('container')],
-    style: {
-      '--vstack-spacing': standardizeUnit(spacing || 0),
-    },
-  })
+export const VStack = memo(function VStack(props: IVStackProps) {
+  const { spacing, alignment, ...restProps } = props
+
   return (
-    <LayoutContext.Provider value={{ boxDirection: 'column' }}>
-      <div {...commonProps} {...restProps}>
-        {children}
-      </div>
-    </LayoutContext.Provider>
+    <BaseStack
+      direction="column"
+      spacing={spacing}
+      alignment={alignment}
+      stackClassName="vstack"
+      {...restProps}
+    />
   )
-}
+})

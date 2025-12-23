@@ -144,7 +144,7 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
               <Text style={{ fontSize: '16px', fontWeight: '600', color: '#666' }}>
                 🎨 Style Customization Demo
               </Text>
-              <Text style={{ fontSize: '14px', color: '#999', lineLimit: 3 }}>
+              <Text style={{ fontSize: '14px', color: '#999' }} lineLimit={3}>
                 This page demonstrates component style flexibility. All components support 
                 custom styling via the `style` prop, allowing you to create unique designs 
                 while maintaining SwiftUI's component structure.

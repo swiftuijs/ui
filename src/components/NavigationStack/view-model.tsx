@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import type { IBaseComponent, IPageItem, ILoosePageItem } from 'src/types'
-import { standardizeProps, generateUniqueId, eventBus } from 'src/common'
+import { standardizeProps, generateUniqueId, eventBus, prefixClass } from 'src/common'
 import { INaviContext } from 'src/contexts'
 import type { Page } from 'src/components/Page'
 
@@ -119,7 +119,7 @@ export function useViewModel(props: INavigationStackProps) {
 
   const {commonProps, restProps} = standardizeProps(props, {
     style: {},
-    className: 'sw-navigationstack'
+    className: prefixClass('navigationstack')
   })
   return {
     commonProps, restProps, pageInstances,

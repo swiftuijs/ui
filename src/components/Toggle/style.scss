@@ -1,0 +1,48 @@
+@import '~style/base.scss';
+
+.#{ns('toggle')} {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.#{ns('toggle-track')} {
+  position: relative;
+  width: 51px;
+  height: 31px;
+  background-color: var(--sw-color-gray-lighter);
+  border-radius: var(--sw-radius-full);
+  transition: background-color var(--sw-transition-fast);
+}
+
+.#{ns('toggle-on')} .#{ns('toggle-track')} {
+  background-color: var(--sw-accent-color);
+}
+
+.#{ns('toggle-thumb')} {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  background-color: var(--sw-color-background-primary);
+  border-radius: var(--sw-radius-full);
+  transition: transform var(--sw-transition-fast);
+  box-shadow: var(--sw-shadow-sm);
+}
+
+.#{ns('toggle-on')} .#{ns('toggle-thumb')} {
+  transform: translateX(20px);
+}
+
+.#{ns('toggle')}:active:not([aria-disabled='true']) .#{ns('toggle-thumb')} {
+  transform: scale(0.95);
+}
+

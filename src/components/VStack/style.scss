@@ -1,13 +1,12 @@
 @import '~style/base.scss';
+@use '~style/mixins/flex-container.scss' as *;
+@use '~style/mixins/spacing.scss' as *;
 
 .#{ns('vstack')} {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--vstack-spacing, var(--sw-spacing-xs));
+  @include flex-container(column, stretch);
+  @include stack-spacing('--vstack-spacing');
 
   > .#{ns('spacer')} {
-    min-height: var(--min-length);
+    @include spacer-child(height);
   }
 }

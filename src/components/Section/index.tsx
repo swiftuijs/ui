@@ -1,6 +1,6 @@
 import { memo, type ReactNode } from 'react'
 import type { IBaseComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -32,12 +32,12 @@ export const Section = memo(function Section (props: ISectionProps) {
   const { header, ...cProps } = props
 
   const {commonProps, restProps, children} = standardizeProps(cProps, {
-    className: 'sw-section'
+    className: prefixClass('section')
   })
   
   return (
     <div {...commonProps} {...restProps}>
-      {header && <div className="sw-section-header">{header}</div>}
+      {header && <div className={prefixClass('section-header')}>{header}</div>}
       {children}
     </div>
   )

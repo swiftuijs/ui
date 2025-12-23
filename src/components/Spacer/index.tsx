@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import type { IBaseComponent } from 'src/types'
-import { standardizeProps, standardizeUnit } from 'src/common'
+import { standardizeProps, standardizeUnit, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -37,7 +37,7 @@ export const Spacer = memo(function Spacer (props: ISpacerProps) {
     style: {
       '--min-length': standardizeUnit(minLength || 0),
     },
-    className: 'sw-spacer'
+    className: prefixClass('spacer')
   })
   
   return (

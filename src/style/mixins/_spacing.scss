@@ -1,0 +1,20 @@
+/**
+ * Spacing utilities mixin
+ * Provides consistent spacing patterns
+ */
+@mixin spacing($property: padding, $size: var(--sw-spacing-md)) {
+  #{$property}: $size;
+}
+
+/**
+ * Spacer child styles
+ * Used by Spacer component within stack containers
+ */
+@mixin spacer-child($dimension: width) {
+  @if $dimension == width {
+    min-width: var(--min-length);
+  } @else {
+    min-height: var(--min-length);
+  }
+}
+

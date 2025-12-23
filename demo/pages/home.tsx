@@ -81,7 +81,7 @@ export function HomePage() {
           <Text style={{ fontSize: '14px', fontWeight: '600', color: '#666' }}>
             💡 Component Showcase
           </Text>
-          <Text style={{ fontSize: '12px', color: '#999', lineLimit: 3 }}>
+          <Text style={{ fontSize: '12px', color: '#999' }} lineLimit={3}>
             This demo showcases all SwiftUI components in a real-world shopping app. 
             Notice how components support custom styling via className and style props, 
             maintaining SwiftUI's design principles while offering React flexibility.

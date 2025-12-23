@@ -158,7 +158,7 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
                       <Text style={{ fontSize: '18px', fontWeight: '600' }}>
                         {product.name}
                       </Text>
-                      <Text style={{ fontSize: '14px', color: '#666', lineLimit: 2 }}>
+                      <Text style={{ fontSize: '14px', color: '#666' }} lineLimit={2}>
                         {product.description}
                       </Text>
                       <HStack spacing={8} alignment="center">

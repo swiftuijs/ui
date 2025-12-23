@@ -1,6 +1,6 @@
 import type { IPageBaseComponent, IPresentationDetent } from 'src/types'
 import { useRef, forwardRef, useImperativeHandle } from 'react'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 import { DragBar } from './dragbar'
 import { useTransitionHeight } from './use-transition-height'
 import './style.scss'
@@ -44,7 +44,7 @@ export const ActionSheet = forwardRef(function ActionSheet(props: IActionSheetPr
   const { type, presentationDetents = DEFAULT_DETENTS, ...pProps } = props
   const { commonProps, restProps, children } = standardizeProps(pProps,
     {
-      className: ['sw-page'],
+      className: [prefixClass('page')],
       'data-page-type': type,
     }
   )

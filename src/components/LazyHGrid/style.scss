@@ -1,0 +1,8 @@
+@import '~style/base.scss';
+
+.#{ns('lazyhgrid')} {
+  display: grid;
+  grid-template-rows: repeat(var(--grid-rows, 2), 1fr);
+  gap: var(--grid-spacing, 0);
+}
+

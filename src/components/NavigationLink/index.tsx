@@ -1,7 +1,7 @@
-import { useCallback, useRef } from 'react'
+import { memo, useCallback, useRef } from 'react'
 import type { ComponentType } from 'react'
 import type { IBaseComponent, IPageType } from 'src/types'
-import { standardizeProps, generateUniqueId } from 'src/common'
+import { standardizeProps, generateUniqueId, prefixClass } from 'src/common'
 import { useNaviContext } from 'src/contexts'
 
 import './style.scss'
@@ -50,13 +50,13 @@ export interface INavigationLinkProps extends IBaseComponent {
   dismiss?: boolean
 }
 
-export function NavigationLink (props: INavigationLinkProps) {
+export const NavigationLink = memo(function NavigationLink (props: INavigationLinkProps) {
   const { destination, dismiss, pageOptions, ...nProps } = props
   const navi = useNaviContext()
   const pageIdRef = useRef(generateUniqueId('page'))
 
   const {commonProps, restProps, children} = standardizeProps(nProps, {
-    className: 'sw-navigationlink'
+    className: prefixClass('navigationlink')
   })
 
   const onClick = useCallback(() => {
@@ -82,4 +82,4 @@ export function NavigationLink (props: INavigationLinkProps) {
   return (
     <div {...commonProps} {...restProps} onClick={onClick}>{children}</div>
   )
-}
+})

@@ -1,5 +1,6 @@
+import { memo } from 'react'
 import type { IBaseComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -31,16 +32,16 @@ export interface ILinkProps extends IBaseComponent {
   target?: string
 }
 
-export function Link (props: ILinkProps) {
+export const Link = memo(function Link (props: ILinkProps) {
   const { destination, ...nProps } = props
 
   const href = typeof destination === 'string' ? destination : destination.href
 
   const {commonProps, restProps, children} = standardizeProps(nProps, {
-    className: 'sw-link'
+    className: prefixClass('link')
   })
 
   return (
     <a {...commonProps} {...restProps} href={href}>{children}</a>
   )
-}
+})

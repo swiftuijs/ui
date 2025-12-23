@@ -1,5 +1,6 @@
+import { memo } from 'react'
 import type { IBaseComponent } from 'src/types'
-import { standardizeProps } from 'src/common'
+import { standardizeProps, prefixClass } from 'src/common'
 
 import './style.scss'
 
@@ -7,14 +8,14 @@ export interface I{{ pascalCase name }}Props extends IBaseComponent {
   // your custom props here
 }
 
-export function {{ pascalCase name }} (props: I{{ pascalCase name }}Props) {
+export const {{ pascalCase name }} = memo(function {{ pascalCase name }} (props: I{{ pascalCase name }}Props) {
   const { ...cProps } = props
 
   const {commonProps, restProps, children} = standardizeProps(cProps, {
-    className: 'sw-{{ lowerCase name }}'
+    className: prefixClass('{{ lowerCase name }}')
   })
   
   return (
     <div {...commonProps} {...restProps}>{children}</div>
   )
-}
+})

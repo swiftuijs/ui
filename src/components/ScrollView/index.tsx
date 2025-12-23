@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { IBaseComponent } from 'src/types'
 import { standardizeProps, prefixClass } from 'src/common'
 
@@ -35,7 +36,7 @@ export interface IScrollViewProps extends IBaseComponent {
   showsIndicators?: boolean
 }
 
-export function ScrollView (props: IScrollViewProps) {
+export const ScrollView = memo(function ScrollView (props: IScrollViewProps) {
   const { direction, showsIndicators = true, ...sProps } = props
   const {commonProps, restProps, children} = standardizeProps(sProps, {
     className: [
@@ -51,4 +52,4 @@ export function ScrollView (props: IScrollViewProps) {
       {children}
     </div>
   )
-}
+})

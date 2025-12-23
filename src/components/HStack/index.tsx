@@ -1,6 +1,6 @@
+import { memo } from 'react'
 import type { IBaseComponent, EAlignment } from 'src/types'
-import { standardizeProps, standardizeUnit } from 'src/common'
-import { LayoutContext } from 'src/contexts'
+import { BaseStack } from '../Stack/BaseStack'
 
 import './style.scss'
 
@@ -37,20 +37,16 @@ export interface IHStackProps extends IBaseComponent {
   spacing?: number
 }
 
-export function HStack(props: IHStackProps) {
-  const { alignment = 'center', spacing, ...hProps } = props
+export const HStack = memo(function HStack(props: IHStackProps) {
+  const { alignment = 'center', spacing, ...restProps } = props
 
-  const {commonProps, restProps, children} = standardizeProps(hProps, {
-    className: ['sw-hstack', 'sw-container', `align-${alignment}`],
-    style: {
-      '--hstack-spacing': standardizeUnit(spacing || 0)
-    }
-  })
   return (
-    <LayoutContext.Provider value={{ boxDirection: 'row' }}>
-      <div {...commonProps} {...restProps}>
-      {children}
-    </div>
-    </LayoutContext.Provider>
+    <BaseStack
+      direction="row"
+      spacing={spacing}
+      alignment={alignment}
+      stackClassName="hstack"
+      {...restProps}
+    />
   )
-}
+})

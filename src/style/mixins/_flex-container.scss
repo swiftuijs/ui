@@ -1,0 +1,29 @@
+@use '../vars.scss' as *;
+
+/**
+ * Flex container mixin for stack components
+ * Provides common flex layout styles
+ */
+@mixin flex-container($direction: row, $align-items: center) {
+  position: relative;
+  display: flex;
+  flex-direction: $direction;
+  align-items: $align-items;
+  
+  @if $direction == row {
+    height: fit-content;
+  } @else {
+    align-items: stretch;
+  }
+  
+  width: 100%;
+}
+
+/**
+ * Spacing mixin for stack components
+ * Uses CSS custom properties for dynamic spacing
+ */
+@mixin stack-spacing($spacing-var: '--hstack-spacing') {
+  gap: var(#{$spacing-var}, var(--sw-spacing-xs));
+}
+
