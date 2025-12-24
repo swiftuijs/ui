@@ -4,6 +4,8 @@
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const global: any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const globalObject: any = typeof globalThis !== 'undefined'
   ? globalThis
   : typeof self !== 'undefined'

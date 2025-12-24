@@ -56,7 +56,7 @@ export const WithIndex: Story = {
     <VStack spacing={10}>
       <ForEach
         data={items}
-        keyExtractor={(item, index) => `item-${index}`}
+        keyExtractor={(_item, index) => `item-${index}`}
         renderItem={(item, index) => (
           <HStack spacing={10}>
             <Text style={{ fontWeight: 'bold' }}>{index + 1}.</Text>

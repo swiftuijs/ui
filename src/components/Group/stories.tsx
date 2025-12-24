@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { VStack, HStack, Text, Button } from '../'
+import { VStack, Text, Button } from '../'
 import { Group, type IGroupProps } from '.'
 
 const meta: Meta<typeof Group> = {

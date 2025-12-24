@@ -2,9 +2,34 @@
   "name": "@swiftuijs/ui",
   "version": "0.0.1",
   "type": "module",
-  "main": "dist/index.umd.js",
-  "module": "dist/index.es.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./components/*": {
+      "import": "./dist/components/*/index.js",
+      "types": "./dist/components/*/index.d.ts"
+    },
+    "./common/*": {
+      "import": "./dist/common/*.js",
+      "types": "./dist/common/*.d.ts"
+    },
+    "./contexts/*": {
+      "import": "./dist/contexts/*.js",
+      "types": "./dist/contexts/*.d.ts"
+    },
+    "./hooks/*": {
+      "import": "./dist/hooks/*.js",
+      "types": "./dist/hooks/*.d.ts"
+    },
+    "./style/*": {
+      "import": "./dist/style/*.css"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -14,7 +39,7 @@
     "sb": "storybook dev -p 6006",
     "build-sb": "storybook build -o docs",
     "postbuild-sb": "node scripts/post-build-sb.js",
-    "build": "tsc -b && vite build",
+    "build": "rimraf dist && vite build && node scripts/copy-types.js && tsc -p tsconfig.build.json && node scripts/fix-dts-paths.js",
     "gen": "cross-env NODE_OPTIONS='--import tsx' plop --plopfile=scripts/gen-component.ts",
     "lint": "eslint . --max-warnings 0",
     "build-all": "pnpm build && pnpm build-sb",
