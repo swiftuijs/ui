@@ -44,7 +44,7 @@ export const WithoutLabel: Story = {
 }
 
 export const WithFormControls: Story = {
-  render: () => {
+  render: function WithFormControlsComponent() {
     const [toggle1, setToggle1] = useState(false)
     const [toggle2, setToggle2] = useState(false)
     

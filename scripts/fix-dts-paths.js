@@ -31,7 +31,7 @@ dtsFiles.forEach((file) => {
   // 匹配 import 'xxx.css' 或 import "xxx.scss" 等格式
   let cleanedContent = content.replace(
     /^import\s+['"][^'"]*\.(css|scss|sass|less)['"];?\s*$/gm,
-    (match) => {
+    () => {
       modified = true
       return ''
     }

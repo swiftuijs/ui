@@ -1,7 +1,7 @@
-import { defineConfig, type Plugin } from 'vite'
+import { defineConfig, type Plugin, type UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs'
-import { resolve, join, dirname, relative } from 'path'
+import { resolve, join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -139,7 +139,7 @@ export default defineConfig((env) => {
         // 不提取 CSS 到单独文件，保留在 JS 中
         cssMinify: false,
       },
-    } as any
+    } as UserConfig
   }
 
   return {
@@ -156,5 +156,5 @@ export default defineConfig((env) => {
         },
       }
     }
-  }
+  } as UserConfig
 })
