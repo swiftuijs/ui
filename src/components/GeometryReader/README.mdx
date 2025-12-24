@@ -1,0 +1,51 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as GeometryReaderStories from './stories'
+
+<Meta title="SwiftUI/GeometryReader/Readme" />
+
+# GeometryReader
+
+## Overview
+
+GeometryReader is a view that provides geometry information to its children, allowing you to create responsive layouts based on container size. GeometryReader gives you access to the size and position of the container.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `GeometryReader`.
+
+## Basic Usage
+
+<Canvas of={GeometryReaderStories.Default} />
+
+## Responsive Layout
+
+Create layouts that adapt to container size:
+
+<Canvas of={GeometryReaderStories.ResponsiveLayout} />
+
+## Dynamic Sizing
+
+Size elements based on container dimensions:
+
+<Canvas of={GeometryReaderStories.DynamicSizing} />
+
+## Centered Content
+
+Center content using geometry information:
+
+<Canvas of={GeometryReaderStories.CenteredContent} />
+
+## Notes
+
+- GeometryReader provides a render prop with geometry information
+- Geometry includes `width`, `height`, `x`, and `y` properties
+- GeometryReader fills its parent container
+- Use GeometryReader for responsive layouts and dynamic sizing
+- GeometryReader is useful for complex layout calculations
+
+## Best Practices
+
+1. **Responsive design**: Use GeometryReader for responsive layouts
+2. **Performance**: Avoid excessive calculations in render functions
+3. **Layout calculations**: Use geometry for dynamic sizing and positioning
+4. **Nesting**: Be careful with nested GeometryReaders
+5. **Accessibility**: Ensure responsive layouts remain accessible
+

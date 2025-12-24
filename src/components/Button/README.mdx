@@ -1,0 +1,64 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ButtonStories from './stories'
+
+<Meta title="SwiftUI/Button/Readme" />
+
+# Button
+
+## Overview
+
+Button is a control that performs an action when triggered. A button consists of a label or an icon, or both. The button's action is defined in the `onClick` handler.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Button`.
+
+## Basic Usage
+
+<Canvas of={ButtonStories.Default} />
+
+## Interactive Button
+
+Buttons can handle click events:
+
+<Canvas of={ButtonStories.Interactive} />
+
+## Disabled State
+
+Buttons can be disabled to prevent interaction:
+
+<Canvas of={ButtonStories.Disabled} />
+
+## Custom Styling
+
+Buttons support custom styling through the `style` prop:
+
+<Canvas of={ButtonStories.WithCustomStyle} />
+
+## In Layouts
+
+### In HStack
+
+<Canvas of={ButtonStories.InHStack} />
+
+### In VStack
+
+<Canvas of={ButtonStories.InVStack} />
+
+### Multiple Buttons
+
+<Canvas of={ButtonStories.MultipleButtons} />
+
+## Notes
+
+- Always provide an `onClick` handler for interactive buttons
+- Use the `disabled` prop to prevent user interaction when needed
+- Buttons can contain any React node as children (text, icons, or other components)
+- Custom styles can be applied via the `style` prop or CSS classes
+
+## Best Practices
+
+1. **Clear labels**: Use descriptive text that clearly indicates the button's action
+2. **Consistent styling**: Maintain consistent button styles throughout your application
+3. **Accessibility**: Ensure buttons have proper labels for screen readers
+4. **Disabled state**: Provide visual feedback when buttons are disabled
+5. **Loading states**: Consider showing loading indicators for async actions
+

@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as SafeAreaStories from './stories'
+
+<Meta title="SwiftUI/SafeArea/Readme" />
+
+# SafeArea
+
+## Overview
+
+SafeArea is a view that insets its content to respect safe area boundaries. SafeArea ensures content is not obscured by system UI elements like notches, status bars, and home indicators.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `.safeAreaInset()` modifier.
+
+## Basic Usage
+
+<Canvas of={SafeAreaStories.Default} />
+
+## Specific Edges
+
+Apply safe area insets to specific edges:
+
+<Canvas of={SafeAreaStories.TopOnly} />
+
+## Notes
+
+- SafeArea automatically adjusts for system UI elements
+- SafeArea can be applied to all edges or specific edges
+- SafeArea is essential for mobile devices with notches
+- SafeArea ensures content is visible and accessible
+- Use SafeArea at the root level of your app
+
+## Best Practices
+
+1. **Root level**: Apply SafeArea at the root of your app
+2. **Specific edges**: Use specific edges when you only need certain safe areas
+3. **Testing**: Test on devices with notches and system UI elements
+4. **Content**: Ensure important content is within safe areas
+5. **Consistency**: Use SafeArea consistently throughout your app
+

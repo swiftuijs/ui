@@ -1,0 +1,43 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as FormStories from './stories'
+
+<Meta title="SwiftUI/Form/Readme" />
+
+# Form
+
+## Overview
+
+Form is a container for grouping form controls. Form provides a semantic container for form elements and handles form submission.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Form`.
+
+## Basic Usage
+
+<Canvas of={FormStories.Default} />
+
+## With Validation
+
+Add validation to form fields:
+
+<Canvas of={FormStories.WithValidation} />
+
+## Complex Form
+
+<Canvas of={FormStories.ComplexForm} />
+
+## Notes
+
+- Form provides semantic HTML form element
+- Form handles form submission via `onSubmit` handler
+- Form supports all standard form controls (TextField, Toggle, Picker, etc.)
+- Form prevents default submission behavior automatically
+- Use Form for better accessibility and semantic structure
+
+## Best Practices
+
+1. **Validation**: Always validate form inputs before submission
+2. **Error handling**: Provide clear error messages for invalid inputs
+3. **Accessibility**: Use proper labels and form structure
+4. **User feedback**: Provide visual feedback for form state (loading, success, error)
+5. **Security**: Validate and sanitize all user inputs on the server side
+

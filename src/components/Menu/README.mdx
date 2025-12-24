@@ -1,0 +1,51 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as MenuStories from './stories'
+
+<Meta title="SwiftUI/Menu/Readme" />
+
+# Menu
+
+## Overview
+
+Menu is a view that displays a menu of options. Menu presents a list of actions that can be triggered by the user, typically shown as a dropdown or popover.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Menu`.
+
+## Basic Usage
+
+<Canvas of={MenuStories.Default} />
+
+## With Icons
+
+Add icons to menu items:
+
+<Canvas of={MenuStories.WithIcons} />
+
+## With Disabled Items
+
+Disable specific menu items:
+
+<Canvas of={MenuStories.WithDisabled} />
+
+## Placement
+
+Control menu placement:
+
+<Canvas of={MenuStories.TopPlacement} />
+
+## Notes
+
+- Menu requires a `trigger` element and an array of `items`
+- Each item can have a `label`, optional `icon`, and `action`
+- Items can be disabled with the `disabled` prop
+- Menu supports different placements (top, bottom, left, right)
+- Menu automatically handles positioning and dismissal
+
+## Best Practices
+
+1. **Clear actions**: Use descriptive labels for menu items
+2. **Icons**: Use icons to improve visual recognition
+3. **Grouping**: Group related actions together
+4. **Destructive actions**: Clearly mark destructive actions
+5. **Accessibility**: Ensure menu is keyboard accessible
+

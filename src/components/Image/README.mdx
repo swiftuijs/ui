@@ -1,0 +1,69 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ImageStories from './stories'
+
+<Meta title="SwiftUI/Image/Readme" />
+
+# Image
+
+## Overview
+
+Image is a view that displays an image. Use Image to display images from various sources, including bundled images, system images, and images from URLs.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Image`.
+
+## Basic Usage
+
+<Canvas of={ImageStories.Default} />
+
+## With Alt Text
+
+Always provide alt text for accessibility:
+
+<Canvas of={ImageStories.WithAltText} />
+
+## Custom Styling
+
+Apply custom styles to images:
+
+<Canvas of={ImageStories.WithCustomStyle} />
+
+## In Layouts
+
+### In HStack
+
+<Canvas of={ImageStories.InHStack} />
+
+### In VStack
+
+<Canvas of={ImageStories.InVStack} />
+
+### In ZStack
+
+<Canvas of={ImageStories.InZStack} />
+
+## Responsive Images
+
+Make images responsive to container size:
+
+<Canvas of={ImageStories.Responsive} />
+
+## Multiple Images
+
+<Canvas of={ImageStories.MultipleImages} />
+
+## Notes
+
+- Always provide `alt` text for accessibility
+- Images support all standard HTML img attributes
+- Use `style` prop for custom styling (borderRadius, border, etc.)
+- For responsive images, use `maxWidth: '100%'` and `height: 'auto'`
+- Images can be used in any layout component (HStack, VStack, ZStack, etc.)
+
+## Best Practices
+
+1. **Alt text**: Always provide descriptive alt text for screen readers
+2. **Responsive**: Make images responsive for different screen sizes
+3. **Loading**: Consider lazy loading for images below the fold
+4. **Optimization**: Optimize image sizes for web performance
+5. **Placeholders**: Use placeholders or loading states for async image loading
+

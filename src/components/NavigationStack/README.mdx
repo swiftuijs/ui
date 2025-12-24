@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as NavigationStackStories from './stories'
+
+<Meta title="SwiftUI/NavigationStack/Readme" />
+
+# NavigationStack
+
+## Overview
+
+NavigationStack is a container that manages a stack of views for navigation. NavigationStack provides navigation functionality similar to iOS navigation controllers, allowing users to navigate forward and backward through a hierarchy of views.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `NavigationStack`.
+
+## Basic Usage
+
+<Canvas of={NavigationStackStories.NavigationStackBetween} />
+
+## Notes
+
+- NavigationStack manages the navigation hierarchy
+- Use NavigationLink to navigate between views
+- NavigationStack automatically handles back navigation
+- Pages can be StandardPage or custom components
+- NavigationStack supports different page types (page, actionsheet)
+
+## Best Practices
+
+1. **Page structure**: Use StandardPage for consistent page layouts
+2. **Navigation flow**: Design clear navigation flows that users can understand
+3. **Back navigation**: Back navigation is handled automatically
+4. **Deep linking**: Consider deep linking support for important views
+5. **State management**: Manage navigation state appropriately for your app
+

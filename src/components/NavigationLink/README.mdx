@@ -1,4 +1,7 @@
-import { Meta } from '@storybook/addon-docs/blocks'
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as NavigationLinkStories from './stories'
+
+<Meta title="SwiftUI/NavigationLink/Readme" />
 
 # NavigationLink
 
@@ -12,40 +15,11 @@ NavigationLink is a component that triggers navigation to a destination within a
 
 ### Navigate to a Component
 
-```tsx
-import { NavigationLink, StandardPage, VStack } from '@swiftuijs/ui'
-
-function HomePage() {
-  return (
-    <StandardPage id="home" navigationTitle="Home">
-      <VStack>
-        <NavigationLink 
-          destination={DetailPage}
-          pageOptions={{ type: 'page' }}
-        >
-          <Button>Go to Detail</Button>
-        </NavigationLink>
-      </VStack>
-    </StandardPage>
-  )
-}
-
-function DetailPage() {
-  return (
-    <StandardPage id="detail" navigationTitle="Details">
-      <Text>Detail content</Text>
-    </StandardPage>
-  )
-}
-```
+<Canvas of={NavigationLinkStories.Default} />
 
 ### Navigate to External URL
 
-```tsx
-<NavigationLink destination="https://example.com">
-  <Button>Visit Website</Button>
-</NavigationLink>
-```
+<Canvas of={NavigationLinkStories.ExternalURL} />
 
 ## Page Types
 
@@ -62,14 +36,7 @@ function DetailPage() {
 
 ### Action Sheet
 
-```tsx
-<NavigationLink 
-  destination={SettingsSheet}
-  pageOptions={{ type: 'actionsheet' }}
->
-  <Button>Open Settings</Button>
-</NavigationLink>
-```
+<Canvas of={NavigationLinkStories.ActionSheet} />
 
 ## Transition Animations
 

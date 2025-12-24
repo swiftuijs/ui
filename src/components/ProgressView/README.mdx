@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ProgressViewStories from './stories'
+
+<Meta title="SwiftUI/ProgressView/Readme" />
+
+# ProgressView
+
+## Overview
+
+ProgressView is a view that displays the progress of a task. ProgressView can show determinate progress (with a specific value) or indeterminate progress (spinning indicator).
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `ProgressView`.
+
+## Basic Usage
+
+<Canvas of={ProgressViewStories.Default} />
+
+## Animated Progress
+
+ProgressView can be animated to show progress changes:
+
+<Canvas of={ProgressViewStories.Animated} />
+
+## Notes
+
+- ProgressView supports determinate progress (0-1 or completed/total)
+- ProgressView supports indeterminate progress (spinning indicator)
+- Progress value should be between 0 and 1
+- ProgressView provides visual feedback for task progress
+- Use ProgressView for file uploads, downloads, and other async operations
+
+## Best Practices
+
+1. **Value range**: Keep progress values between 0 and 1
+2. **Feedback**: Update progress regularly for better UX
+3. **Indeterminate**: Use indeterminate style when progress is unknown
+4. **Placement**: Place ProgressView where users expect to see progress
+5. **Accessibility**: Provide text labels indicating progress percentage
+

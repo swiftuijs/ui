@@ -1,0 +1,49 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as LazyHGridStories from './stories'
+
+<Meta title="SwiftUI/LazyHGrid/Readme" />
+
+# LazyHGrid
+
+## Overview
+
+LazyHGrid is a container that arranges its children in a horizontal grid, loading them lazily. LazyHGrid creates a horizontal grid layout with lazy loading for performance.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `LazyHGrid`.
+
+## Basic Usage
+
+<Canvas of={LazyHGridStories.Default} />
+
+## Three Rows
+
+<Canvas of={LazyHGridStories.ThreeRows} />
+
+## Four Rows
+
+<Canvas of={LazyHGridStories.FourRows} />
+
+## With Images
+
+<Canvas of={LazyHGridStories.WithImages} />
+
+## Large Grid
+
+<Canvas of={LazyHGridStories.LargeGrid} />
+
+## Notes
+
+- LazyHGrid requires a `rows` prop to specify the number of rows
+- LazyHGrid supports `spacing` prop for item spacing
+- LazyHGrid only renders visible items for better performance
+- LazyHGrid is ideal for horizontal grid layouts with many items
+- Default rows is 2 if not specified
+
+## Best Practices
+
+1. **Rows**: Choose appropriate number of rows for your layout
+2. **Spacing**: Use consistent spacing between grid items
+3. **Performance**: LazyHGrid improves performance for large grids
+4. **Keys**: Always provide unique keys for grid items
+5. **Responsive**: Consider responsive row counts for different screen sizes
+

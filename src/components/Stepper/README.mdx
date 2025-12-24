@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as StepperStories from './stories'
+
+<Meta title="SwiftUI/Stepper/Readme" />
+
+# Stepper
+
+## Overview
+
+Stepper is a control for incrementing or decrementing a value. Stepper provides increment and decrement buttons for adjusting numeric values.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Stepper`.
+
+## Basic Usage
+
+<Canvas of={StepperStories.Default} />
+
+## Notes
+
+- Stepper requires `value`, `onIncrement`, and `onDecrement` props
+- Stepper supports optional `min` and `max` constraints
+- Stepper can be disabled with the `disabled` prop
+- Stepper automatically disables buttons at min/max values
+- Use Stepper for precise numeric value adjustment
+
+## Best Practices
+
+1. **Constraints**: Set appropriate min and max values
+2. **Increment/decrement**: Implement logic in onIncrement/onDecrement handlers
+3. **Feedback**: Show current value to the user
+4. **Accessibility**: Ensure Stepper is keyboard accessible
+5. **Mobile**: Test stepper interaction on touch devices
+

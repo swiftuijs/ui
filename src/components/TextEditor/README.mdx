@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as TextEditorStories from './stories'
+
+<Meta title="SwiftUI/TextEditor/Readme" />
+
+# TextEditor
+
+## Overview
+
+TextEditor is a view that displays and edits multiline text. TextEditor is used for longer text input that requires multiple lines, such as comments, descriptions, or messages.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `TextEditor`.
+
+## Basic Usage
+
+<Canvas of={TextEditorStories.Default} />
+
+## With Min/Max Lines
+
+Control the minimum and maximum number of lines:
+
+<Canvas of={TextEditorStories.WithMinMaxLines} />
+
+## Disabled State
+
+TextEditor can be disabled:
+
+<Canvas of={TextEditorStories.Disabled} />
+
+## Notes
+
+- TextEditor supports controlled and uncontrolled modes
+- Use `value` and `onChange` for controlled inputs
+- `minLines` and `maxLines` control the editor height
+- TextEditor automatically grows/shrinks within the line limits
+- Use `placeholder` to provide hints about expected input
+
+## Best Practices
+
+1. **Line limits**: Set appropriate min/max lines for your use case
+2. **Placeholders**: Provide clear placeholder text
+3. **Validation**: Validate input length and content
+4. **Accessibility**: Ensure TextEditor is accessible and keyboard navigable
+5. **Mobile**: Test on mobile devices for proper keyboard behavior
+

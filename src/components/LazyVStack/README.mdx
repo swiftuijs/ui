@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as LazyVStackStories from './stories'
+
+<Meta title="SwiftUI/LazyVStack/Readme" />
+
+# LazyVStack
+
+## Overview
+
+LazyVStack is a container that arranges its children vertically, loading them lazily. LazyVStack is similar to VStack but only renders children that are visible in the viewport, improving performance for long lists.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `LazyVStack`.
+
+## Basic Usage
+
+<Canvas of={LazyVStackStories.Default} />
+
+## In ScrollView
+
+<Canvas of={LazyVStackStories.InScrollView} />
+
+## With Estimated Item Height
+
+<Canvas of={LazyVStackStories.WithEstimatedHeight} />
+
+## With Alignment
+
+<Canvas of={LazyVStackStories.WithAlignment} />
+
+## Notes
+
+- LazyVStack supports all VStack props (spacing, alignment, etc.)
+- LazyVStack only renders visible items for better performance
+- Use `estimatedItemHeight` to optimize virtualization
+- LazyVStack is ideal for long lists and scrollable content
+- LazyVStack automatically handles viewport detection
+
+## Best Practices
+
+1. **Long lists**: Use LazyVStack for lists with many items
+2. **Performance**: LazyVStack improves performance for large datasets
+3. **Estimated height**: Provide estimatedItemHeight when possible
+4. **Keys**: Always provide unique keys for list items
+5. **ScrollView**: Use LazyVStack within ScrollView for scrollable lists
+

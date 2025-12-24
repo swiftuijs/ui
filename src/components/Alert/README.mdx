@@ -1,0 +1,51 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as AlertStories from './stories'
+
+<Meta title="SwiftUI/Alert/Readme" />
+
+# Alert
+
+## Overview
+
+Alert is a container that presents an alert dialog. Alert displays a modal dialog with a message and optional action buttons.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `alert()` modifier.
+
+## Basic Usage
+
+<Canvas of={AlertStories.Default} />
+
+## Simple Alert
+
+Alert without a message:
+
+<Canvas of={AlertStories.Simple} />
+
+## With Custom Buttons
+
+<Canvas of={AlertStories.WithCustomButtons} />
+
+## With Multiple Buttons
+
+<Canvas of={AlertStories.WithMultipleButtons} />
+
+## Warning Alert
+
+<Canvas of={AlertStories.Warning} />
+
+## Notes
+
+- Alert requires `isVisible` and `onDismiss` props
+- Alert supports custom buttons with different styles
+- Button styles: 'default', 'cancel', 'destructive'
+- Alert automatically shows a backdrop
+- Alert is modal and blocks interaction with underlying content
+
+## Best Practices
+
+1. **Clear messages**: Use clear, concise messages
+2. **Button labels**: Use descriptive button labels
+3. **Destructive actions**: Use 'destructive' style for dangerous actions
+4. **Dismiss handling**: Always provide onDismiss handler
+5. **Accessibility**: Ensure alerts are accessible and keyboard navigable
+

@@ -1,0 +1,61 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as SectionStories from './stories'
+
+<Meta title="SwiftUI/Section/Readme" />
+
+# Section
+
+## Overview
+
+Section is a container view that groups related content. Sections are commonly used in Lists to organize items into logical groups with optional headers.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Section`.
+
+## Basic Usage
+
+<Canvas of={SectionStories.Default} />
+
+## With Header
+
+Add a header to the section:
+
+<Canvas of={SectionStories.WithHeader} />
+
+## Multiple Sections
+
+Use multiple sections to organize content:
+
+<Canvas of={SectionStories.MultipleSections} />
+
+## With Buttons
+
+Sections can contain interactive elements:
+
+<Canvas of={SectionStories.WithButtons} />
+
+## Complex Content
+
+<Canvas of={SectionStories.ComplexContent} />
+
+## Custom Styling
+
+Apply custom styles to Section:
+
+<Canvas of={SectionStories.CustomStyle} />
+
+## Notes
+
+- Sections are commonly used within List components
+- Headers are optional but recommended for better organization
+- Sections support all standard React children
+- Use sections to group related content logically
+- Sections can be nested, though it's not common
+
+## Best Practices
+
+1. **Clear headers**: Use descriptive headers that clearly indicate section content
+2. **Logical grouping**: Group related items together in sections
+3. **Consistent styling**: Maintain consistent section styling throughout your app
+4. **Accessibility**: Ensure section headers are properly marked up for screen readers
+5. **Spacing**: Use appropriate spacing between sections for visual clarity
+

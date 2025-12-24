@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ActivityIndicatorStories from './stories'
+
+<Meta title="SwiftUI/ActivityIndicator/Readme" />
+
+# ActivityIndicator
+
+## Overview
+
+ActivityIndicator is a view that displays a spinning indicator to show that a task is in progress. ActivityIndicator is commonly used to indicate loading states.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `ProgressView` with indeterminate style.
+
+## Basic Usage
+
+<Canvas of={ActivityIndicatorStories.Default} />
+
+## Notes
+
+- ActivityIndicator displays an animated spinning indicator
+- Use ActivityIndicator to show that a task is in progress
+- ActivityIndicator supports different sizes (small, medium, large)
+- Custom colors can be applied via the `color` prop
+- ActivityIndicator is non-interactive and purely visual
+
+## Best Practices
+
+1. **Loading states**: Use ActivityIndicator to indicate async operations
+2. **Placement**: Place ActivityIndicator where users expect to see content
+3. **Size**: Choose appropriate size based on context
+4. **Accessibility**: Provide text labels for screen readers
+5. **Performance**: ActivityIndicator is lightweight and doesn't impact performance
+

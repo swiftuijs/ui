@@ -1,0 +1,71 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as SpacerStories from './stories'
+
+<Meta title="SwiftUI/Spacer/Readme" />
+
+# Spacer
+
+## Overview
+
+Spacer is a flexible space that expands along the major axis of its parent container. Spacer is used to push content apart and create flexible layouts.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Spacer`.
+
+## Basic Usage
+
+<Canvas of={SpacerStories.Default} />
+
+## In HStack
+
+Use Spacer to push content to edges:
+
+<Canvas of={SpacerStories.InHStack} />
+
+## In VStack
+
+<Canvas of={SpacerStories.InVStack} />
+
+## With Minimum Length
+
+Set a minimum length for the spacer:
+
+<Canvas of={SpacerStories.WithMinLength} />
+
+## Multiple Spacers
+
+Use multiple spacers for complex layouts:
+
+<Canvas of={SpacerStories.MultipleSpacers} />
+
+## Leading Spacer
+
+Push content to the trailing edge:
+
+<Canvas of={SpacerStories.LeadingSpacer} />
+
+## Trailing Spacer
+
+Push content to the leading edge:
+
+<Canvas of={SpacerStories.TrailingSpacer} />
+
+## Complex Layout
+
+<Canvas of={SpacerStories.ComplexLayout} />
+
+## Notes
+
+- Spacer expands to fill available space in its parent container
+- Spacer works in both HStack (horizontal) and VStack (vertical) layouts
+- Use `minLength` to set a minimum size for the spacer
+- Multiple spacers divide available space equally
+- Spacer requires a parent container with defined dimensions
+
+## Best Practices
+
+1. **Parent dimensions**: Ensure parent container has explicit dimensions for Spacer to work
+2. **Multiple spacers**: Use multiple spacers to distribute space evenly
+3. **Min length**: Set appropriate minimum lengths to prevent content from being too close
+4. **Layout structure**: Use Spacer to create flexible, responsive layouts
+5. **Performance**: Spacer is lightweight and doesn't impact performance
+

@@ -1,0 +1,49 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as GroupStories from './stories'
+
+<Meta title="SwiftUI/Group/Readme" />
+
+# Group
+
+## Overview
+
+Group is a container for grouping view content. Group is a transparent container that groups views together without adding visual styling. It's useful for applying modifiers to multiple views at once.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Group`.
+
+## Basic Usage
+
+<Canvas of={GroupStories.Default} />
+
+## With Modifiers
+
+<Canvas of={GroupStories.WithModifiers} />
+
+## Conditional Rendering
+
+<Canvas of={GroupStories.ConditionalRendering} />
+
+## Nested Groups
+
+<Canvas of={GroupStories.NestedGroups} />
+
+## With Buttons
+
+<Canvas of={GroupStories.WithButtons} />
+
+## Notes
+
+- Group is a transparent container with no visual styling
+- Group is useful for applying styles or modifiers to multiple views
+- Group doesn't affect layout (children render normally)
+- Use Group when you need to group views without visual changes
+- Group is commonly used with conditional rendering
+
+## Best Practices
+
+1. **Grouping**: Use Group to logically group related views
+2. **Modifiers**: Apply styles or modifiers to multiple views at once
+3. **Conditional rendering**: Use Group with conditional rendering
+4. **No layout impact**: Remember Group doesn't affect layout
+5. **Semantic grouping**: Use Group for semantic organization
+

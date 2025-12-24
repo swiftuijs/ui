@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as PickerStories from './stories'
+
+<Meta title="SwiftUI/Picker/Readme" />
+
+# Picker
+
+## Overview
+
+Picker is a control for selecting from a set of mutually exclusive values. Picker displays a list of options and allows the user to select one.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Picker`.
+
+## Basic Usage
+
+<Canvas of={PickerStories.Default} />
+
+## Notes
+
+- Picker requires an array of options with `value` and `label`
+- Picker supports controlled mode with `selectedValue` and `onValueChange`
+- Picker can be disabled with the `disabled` prop
+- Use `placeholder` to indicate no selection
+- Picker automatically handles option rendering and selection
+
+## Best Practices
+
+1. **Clear options**: Use descriptive labels for each option
+2. **Default selection**: Consider providing a default selected value
+3. **Validation**: Validate selection when required
+4. **Accessibility**: Ensure Picker is keyboard accessible
+5. **Mobile**: Test picker behavior on mobile devices
+

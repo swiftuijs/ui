@@ -1,4 +1,7 @@
-import { Meta } from '@storybook/addon-docs/blocks'
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as StandardPageStories from './stories'
+
+<Meta title="SwiftUI/StandardPage/Readme" />
 
 # StandardPage
 
@@ -12,29 +15,11 @@ StandardPage is the default page container used in NavigationStack. It provides 
 
 ### Simple Page
 
-```tsx
-import { StandardPage, VStack, Text } from '@swiftuijs/ui'
-
-function MyPage() {
-  return (
-    <StandardPage id="my-page">
-      <VStack spacing={16}>
-        <Text>Page Content</Text>
-      </VStack>
-    </StandardPage>
-  )
-}
-```
+<Canvas of={StandardPageStories.Default} />
 
 ### Page with Navigation Title
 
-```tsx
-<StandardPage id="home" navigationTitle="Home">
-  <VStack>
-    <Text>Welcome</Text>
-  </VStack>
-</StandardPage>
-```
+<Canvas of={StandardPageStories.WithNavigationTitle} />
 
 ## Navigation Bar
 
@@ -67,15 +52,7 @@ function DetailPage() {
 
 Add action buttons to the navigation bar:
 
-```tsx
-<StandardPage 
-  id="edit" 
-  navigationTitle="Edit Profile"
-  toolbarItems={<Button onClick={handleSave}>Save</Button>}
->
-  <Form>...</Form>
-</StandardPage>
-```
+<Canvas of={StandardPageStories.WithToolbarItems} />
 
 ### Multiple Toolbar Items
 
@@ -98,16 +75,7 @@ Add action buttons to the navigation bar:
 
 StandardPage uses flexbox layout. Content automatically fills available space:
 
-```tsx
-<StandardPage id="page" navigationTitle="Page">
-  {/* Content area is scrollable */}
-  <ScrollView>
-    <VStack spacing={20}>
-      <Text>Long content...</Text>
-    </VStack>
-  </ScrollView>
-</StandardPage>
-```
+<Canvas of={StandardPageStories.ScrollableContent} />
 
 ## Props Reference
 

@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ToggleStories from './stories'
+
+<Meta title="SwiftUI/Toggle/Readme" />
+
+# Toggle
+
+## Overview
+
+Toggle is a control that switches between on and off states. Toggle is commonly used for boolean settings and preferences.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Toggle`.
+
+## Basic Usage
+
+<Canvas of={ToggleStories.Default} />
+
+## Notes
+
+- Toggle requires `isOn` and `onChange` props for controlled state
+- Toggle can be disabled with the `disabled` prop
+- Toggle provides visual feedback for state changes
+- Use Toggle for binary choices (on/off, enabled/disabled)
+
+## Best Practices
+
+1. **Clear labels**: Provide clear labels that indicate what the toggle controls
+2. **State management**: Use controlled state for toggle values
+3. **Accessibility**: Ensure toggles are keyboard accessible
+4. **Visual feedback**: Toggle provides built-in visual feedback
+5. **Grouping**: Group related toggles together for better UX
+

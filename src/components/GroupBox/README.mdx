@@ -1,0 +1,49 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as GroupBoxStories from './stories'
+
+<Meta title="SwiftUI/GroupBox/Readme" />
+
+# GroupBox
+
+## Overview
+
+GroupBox is a container that visually groups related content with a border and optional label. GroupBox is similar to Group but adds visual styling with a border and background.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `GroupBox`.
+
+## Basic Usage
+
+<Canvas of={GroupBoxStories.Default} />
+
+## Without Label
+
+<Canvas of={GroupBoxStories.WithoutLabel} />
+
+## With Form Controls
+
+<Canvas of={GroupBoxStories.WithFormControls} />
+
+## Multiple GroupBoxes
+
+<Canvas of={GroupBoxStories.MultipleGroupBoxes} />
+
+## With Buttons
+
+<Canvas of={GroupBoxStories.WithButtons} />
+
+## Notes
+
+- GroupBox provides visual grouping with border and background
+- GroupBox supports an optional `label` prop
+- GroupBox is useful for organizing related content visually
+- Use GroupBox when you need visual separation
+- GroupBox provides consistent styling for grouped content
+
+## Best Practices
+
+1. **Labels**: Use descriptive labels when appropriate
+2. **Content organization**: Group related content together
+3. **Visual hierarchy**: Use GroupBox to create visual hierarchy
+4. **Consistency**: Maintain consistent GroupBox styling
+5. **Accessibility**: Ensure GroupBox content is accessible
+

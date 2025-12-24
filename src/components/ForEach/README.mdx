@@ -1,0 +1,49 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ForEachStories from './stories'
+
+<Meta title="SwiftUI/ForEach/Readme" />
+
+# ForEach
+
+## Overview
+
+ForEach is a utility function for rendering arrays of data. ForEach is a helper function that maps over an array and renders each item.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `ForEach` view.
+
+## Basic Usage
+
+<Canvas of={ForEachStories.Default} />
+
+## In VStack
+
+<Canvas of={ForEachStories.InVStack} />
+
+## With Index
+
+<Canvas of={ForEachStories.WithIndex} />
+
+## With Buttons
+
+<Canvas of={ForEachStories.WithButtons} />
+
+## Complex Items
+
+<Canvas of={ForEachStories.ComplexItems} />
+
+## Notes
+
+- ForEach requires `data`, `keyExtractor`, and `renderItem` props
+- `keyExtractor` must return a unique key for each item
+- `renderItem` receives the item and index as parameters
+- ForEach handles the mapping and key assignment automatically
+- Use ForEach instead of manual map() for better consistency
+
+## Best Practices
+
+1. **Unique keys**: Always provide unique keys via keyExtractor
+2. **Performance**: ForEach is optimized for rendering lists
+3. **Consistency**: Use ForEach consistently for array rendering
+4. **Type safety**: Use TypeScript generics for type safety
+5. **Readability**: ForEach improves code readability over manual mapping
+

@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ColorStories from './stories'
+
+<Meta title="SwiftUI/Color/Readme" />
+
+# Color
+
+## Overview
+
+Color is a view that displays a solid color. Color is used to display color swatches, backgrounds, and visual color indicators.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Color`.
+
+## Basic Usage
+
+<Canvas of={ColorStories.Default} />
+
+## Color Palette
+
+Display multiple colors:
+
+<Canvas of={ColorStories.ColorPalette} />
+
+## Notes
+
+- Color requires a `color` prop (hex, rgb, or named color)
+- Color requires explicit dimensions via `style` prop
+- Color can be used as a background or visual indicator
+- Color supports all CSS color formats
+- Use Color for color swatches and visual indicators
+
+## Best Practices
+
+1. **Dimensions**: Always provide explicit dimensions
+2. **Color formats**: Use consistent color formats (hex recommended)
+3. **Accessibility**: Ensure sufficient contrast when using Color
+4. **Visual indicators**: Use Color for visual feedback and indicators
+5. **Consistency**: Use consistent colors throughout your app
+

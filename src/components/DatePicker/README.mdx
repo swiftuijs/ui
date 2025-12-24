@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as DatePickerStories from './stories'
+
+<Meta title="SwiftUI/DatePicker/Readme" />
+
+# DatePicker
+
+## Overview
+
+DatePicker is a control for selecting dates and times. DatePicker provides a user-friendly interface for date and time selection.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `DatePicker`.
+
+## Basic Usage
+
+<Canvas of={DatePickerStories.Default} />
+
+## Notes
+
+- DatePicker supports different modes: `date`, `time`, `datetime`
+- DatePicker requires `value` and `onValueChange` for controlled mode
+- DatePicker can be disabled with the `disabled` prop
+- DatePicker automatically handles date/time formatting
+- Use DatePicker for date and time input in forms
+
+## Best Practices
+
+1. **Mode selection**: Choose appropriate mode for your use case
+2. **Default values**: Consider providing default dates when appropriate
+3. **Validation**: Validate date ranges and constraints
+4. **Accessibility**: Ensure DatePicker is accessible
+5. **Localization**: Consider localization for date formats
+

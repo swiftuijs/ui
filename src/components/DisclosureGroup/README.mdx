@@ -1,0 +1,49 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as DisclosureGroupStories from './stories'
+
+<Meta title="SwiftUI/DisclosureGroup/Readme" />
+
+# DisclosureGroup
+
+## Overview
+
+DisclosureGroup is a view that shows or hides its content based on a disclosure state. DisclosureGroup creates an expandable/collapsible section with a toggle control.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `DisclosureGroup`.
+
+## Basic Usage
+
+<Canvas of={DisclosureGroupStories.Default} />
+
+## Default Expanded
+
+<Canvas of={DisclosureGroupStories.DefaultExpanded} />
+
+## Controlled Mode
+
+<Canvas of={DisclosureGroupStories.Controlled} />
+
+## Multiple Groups
+
+<Canvas of={DisclosureGroupStories.MultipleGroups} />
+
+## With Complex Content
+
+<Canvas of={DisclosureGroupStories.WithComplexContent} />
+
+## Notes
+
+- DisclosureGroup requires a `label` prop
+- DisclosureGroup supports controlled and uncontrolled modes
+- Use `defaultExpanded` for uncontrolled mode
+- Use `expanded` and `onExpandedChange` for controlled mode
+- DisclosureGroup automatically handles expand/collapse animations
+
+## Best Practices
+
+1. **Clear labels**: Use descriptive labels that indicate what's inside
+2. **Content organization**: Use DisclosureGroup to organize related content
+3. **State management**: Choose controlled or uncontrolled mode based on your needs
+4. **Accessibility**: DisclosureGroup includes proper ARIA attributes
+5. **Performance**: DisclosureGroup only renders content when expanded
+

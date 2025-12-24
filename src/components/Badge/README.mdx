@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as BadgeStories from './stories'
+
+<Meta title="SwiftUI/Badge/Readme" />
+
+# Badge
+
+## Overview
+
+Badge is a view that displays a badge, typically used to show counts, status, or labels. Badges are commonly used in navigation items, buttons, and list items.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `badge()` modifier.
+
+## Basic Usage
+
+<Canvas of={BadgeStories.Default} />
+
+## Variants
+
+Badge supports different visual variants:
+
+<Canvas of={BadgeStories.Styles} />
+
+## Notes
+
+- Badge displays a small label or count
+- Badge supports different variants (primary, success, warning, error)
+- Badge can contain text or numbers
+- Badge is commonly used with navigation items and buttons
+- Custom styles can be applied via the `style` prop
+
+## Best Practices
+
+1. **Counts**: Use badges to display notification counts
+2. **Status**: Use variant colors to indicate status
+3. **Size**: Keep badge content concise
+4. **Placement**: Place badges in consistent locations
+5. **Accessibility**: Provide appropriate labels for screen readers
+

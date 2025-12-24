@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as SheetStories from './stories'
+
+<Meta title="SwiftUI/Sheet/Readme" />
+
+# Sheet
+
+## Overview
+
+Sheet is a view that presents content as a modal sheet. Sheets slide up from the bottom of the screen and are commonly used for presenting forms, settings, or additional content.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `.sheet()` modifier.
+
+## Basic Usage
+
+<Canvas of={SheetStories.Default} />
+
+## Form Sheet
+
+Use form sheet style for forms and input:
+
+<Canvas of={SheetStories.FormSheet} />
+
+## Full Screen
+
+Present content in full screen:
+
+<Canvas of={SheetStories.FullScreen} />
+
+## Notes
+
+- Sheet requires `isPresented` and `onDismiss` props
+- Sheet supports different presentation styles
+- Sheet automatically handles dismiss gestures
+- Use Sheet for modal presentations
+- Sheet can contain any React content
+
+## Best Practices
+
+1. **Dismiss handling**: Always provide `onDismiss` handler
+2. **Presentation style**: Choose appropriate style for your content
+3. **Drag indicator**: Show drag indicator for better UX
+4. **Content**: Keep sheet content focused and concise
+5. **Accessibility**: Ensure sheet content is accessible and keyboard navigable
+

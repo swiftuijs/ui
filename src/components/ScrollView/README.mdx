@@ -1,0 +1,67 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ScrollViewStories from './stories'
+
+<Meta title="SwiftUI/ScrollView/Readme" />
+
+# ScrollView
+
+## Overview
+
+ScrollView is a scrollable view that allows users to scroll through content that exceeds the visible area. ScrollView supports both vertical and horizontal scrolling.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `ScrollView`.
+
+## Basic Usage
+
+<Canvas of={ScrollViewStories.Default} />
+
+## Scroll Direction
+
+### Vertical Scrolling
+
+<Canvas of={ScrollViewStories.Vertical} />
+
+### Horizontal Scrolling
+
+<Canvas of={ScrollViewStories.Horizontal} />
+
+## Scroll Indicators
+
+Hide scroll indicators if needed:
+
+<Canvas of={ScrollViewStories.WithoutIndicators} />
+
+## With Spacer
+
+Use Spacer within ScrollView for flexible layouts:
+
+<Canvas of={ScrollViewStories.WithSpacer} />
+
+## Long Content
+
+ScrollView handles long content efficiently:
+
+<Canvas of={ScrollViewStories.LongContent} />
+
+## Custom Styling
+
+Apply custom styles to ScrollView:
+
+<Canvas of={ScrollViewStories.CustomStyle} />
+
+## Notes
+
+- ScrollView requires explicit dimensions (height for vertical, width for horizontal)
+- Default scroll direction is vertical
+- Scroll indicators can be hidden with `showsIndicators={false}`
+- ScrollView supports all standard React children
+- Use ScrollView for content that may exceed container bounds
+
+## Best Practices
+
+1. **Dimensions**: Always provide explicit dimensions for ScrollView containers
+2. **Performance**: For long lists, consider using LazyVStack or LazyHStack instead
+3. **Nested scrolling**: Avoid nested ScrollViews in the same direction
+4. **Accessibility**: Ensure scrollable content is accessible via keyboard navigation
+5. **Mobile**: Test scrolling behavior on touch devices
+

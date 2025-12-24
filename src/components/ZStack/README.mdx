@@ -1,0 +1,62 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ZStackStories from './stories'
+
+<Meta title="SwiftUI/ZStack/Readme" />
+
+# ZStack
+
+## Overview
+
+ZStack is a view that overlays its children, aligning them in both axes. A ZStack overlays child views on top of each other. You can control the alignment of the children within the ZStack.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `ZStack`.
+
+## Basic Usage
+
+<Canvas of={ZStackStories.Default} />
+
+## Alignment
+
+Control how children are aligned within the ZStack:
+
+<Canvas of={ZStackStories.WithAlignment} />
+
+### Top Leading
+
+<Canvas of={ZStackStories.TopLeading} />
+
+### Bottom Trailing
+
+<Canvas of={ZStackStories.BottomTrailing} />
+
+## Image Overlay
+
+Common use case: overlay text on images:
+
+<Canvas of={ZStackStories.ImageOverlay} />
+
+## Button Overlay
+
+<Canvas of={ZStackStories.ButtonOverlay} />
+
+## Multiple Layers
+
+ZStack can contain multiple layers:
+
+<Canvas of={ZStackStories.MultipleLayers} />
+
+## Notes
+
+- Children are stacked in the order they appear (first child is bottom layer)
+- ZStack requires explicit dimensions or will size to fit children
+- Alignment controls positioning of all children as a group
+- Useful for overlays, badges, and layered UI elements
+
+## Best Practices
+
+1. **Layer order**: Place background elements first, foreground elements last
+2. **Dimensions**: Always provide explicit dimensions for ZStack containers
+3. **Alignment**: Use appropriate alignment for your design needs
+4. **Performance**: Avoid excessive nesting of ZStack components
+5. **Accessibility**: Ensure overlays don't obscure important content
+

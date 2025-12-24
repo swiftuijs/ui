@@ -1,4 +1,7 @@
-import { Meta } from '@storybook/addon-docs/blocks'
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as NavigationBarStories from './stories'
+
+<Meta title="SwiftUI/NavigationBar/Readme" />
 
 # NavigationBar
 
@@ -12,56 +15,21 @@ NavigationBar is a component that displays a title, optional back button, and to
 
 NavigationBar is typically used automatically through StandardPage's `navigationTitle` prop:
 
-```tsx
-import { StandardPage } from '@swiftuijs/ui'
+<Canvas of={NavigationBarStories.Default} />
 
-function HomePage() {
-  return (
-    <StandardPage id="home" navigationTitle="Home">
-      <VStack>
-        <Text>Welcome to Home</Text>
-      </VStack>
-    </StandardPage>
-  )
-}
-```
+NavigationBar can also be used directly:
 
 ## Automatic Back Button
 
 The back button automatically appears when the page is not the root page:
 
-```tsx
-// Root page - no back button
-<StandardPage id="home" navigationTitle="Home">
-  ...
-</StandardPage>
-
-// Detail page - back button appears automatically
-<StandardPage id="detail" navigationTitle="Details">
-  ...
-</StandardPage>
-```
+<Canvas of={NavigationBarStories.WithBackButton} />
 
 ## With Toolbar Items
 
 Add toolbar items on the right side of the navigation bar:
 
-```tsx
-<StandardPage 
-  id="detail" 
-  navigationTitle="Product Details"
-  toolbarItems={
-    <HStack spacing={8}>
-      <Button onClick={handleShare}>Share</Button>
-      <Button onClick={handleEdit}>Edit</Button>
-    </HStack>
-  }
->
-  <VStack>
-    <Text>Product information...</Text>
-  </VStack>
-</StandardPage>
-```
+<Canvas of={NavigationBarStories.WithToolbarItems} />
 
 ## Single Toolbar Button
 
@@ -112,35 +80,7 @@ function CustomPage() {
 
 NavigationBar works seamlessly with NavigationStack:
 
-```tsx
-import { NavigationStack, StandardPage, NavigationLink } from '@swiftuijs/ui'
-
-function App() {
-  return (
-    <NavigationStack>
-      <StandardPage id="home" navigationTitle="Home">
-        <List>
-          <NavigationLink 
-            destination={DetailPage}
-            pageOptions={{ type: 'page' }}
-          >
-            <Text>Go to Detail</Text>
-          </NavigationLink>
-        </List>
-      </StandardPage>
-    </NavigationStack>
-  )
-}
-
-function DetailPage() {
-  return (
-    <StandardPage id="detail" navigationTitle="Details">
-      {/* Back button appears automatically */}
-      <Text>Detail content</Text>
-    </StandardPage>
-  )
-}
-```
+<Canvas of={NavigationBarStories.InNavigationStack} />
 
 ## Props Reference
 

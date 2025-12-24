@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as TextFieldStories from './stories'
+
+<Meta title="SwiftUI/TextField/Readme" />
+
+# TextField
+
+## Overview
+
+TextField is a control that displays an editable text interface. TextField is used to collect single-line text input from users.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `TextField`.
+
+## Basic Usage
+
+<Canvas of={TextFieldStories.Default} />
+
+## With Value
+
+Control the text field value:
+
+<Canvas of={TextFieldStories.WithValue} />
+
+## Notes
+
+- TextField supports controlled and uncontrolled modes
+- Use `value` and `onChange` for controlled inputs
+- TextField supports all standard HTML input types (text, email, password, etc.)
+- Use `placeholder` to provide hints about expected input
+- TextField can be disabled with the `disabled` prop
+
+## Best Practices
+
+1. **Labels**: Always provide labels or placeholders for text fields
+2. **Validation**: Validate input on blur or submit
+3. **Feedback**: Provide clear feedback for invalid inputs
+4. **Accessibility**: Use proper labels and ARIA attributes
+5. **Mobile**: Ensure text fields are properly sized for mobile keyboards
+

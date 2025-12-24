@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as LabelStories from './stories'
+
+<Meta title="SwiftUI/Label/Readme" />
+
+# Label
+
+## Overview
+
+Label is a view that displays an icon and a title. Label provides a consistent way to display icon-text combinations, commonly used in navigation items and lists.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Label`.
+
+## Basic Usage
+
+<Canvas of={LabelStories.Default} />
+
+## Variants
+
+Label supports different display variants:
+
+### Icon Only
+
+<Canvas of={LabelStories.IconOnly} />
+
+### Title Only
+
+<Canvas of={LabelStories.TitleOnly} />
+
+## Notes
+
+- Label requires `icon` and `title` props
+- Label supports different variants: `default`, `iconOnly`, `titleOnly`
+- Label provides consistent spacing and alignment
+- Use Label for navigation items, list items, and menu items
+- Label automatically handles icon and text alignment
+
+## Best Practices
+
+1. **Icons**: Use appropriate icons that match the label meaning
+2. **Consistency**: Use Label consistently for icon-text combinations
+3. **Accessibility**: Ensure labels are accessible with proper text
+4. **Variants**: Choose appropriate variant for your use case
+5. **Spacing**: Label provides consistent spacing automatically
+

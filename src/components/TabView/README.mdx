@@ -1,0 +1,51 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as TabViewStories from './stories'
+
+<Meta title="SwiftUI/TabView/Readme" />
+
+# TabView
+
+## Overview
+
+TabView is a view that switches between multiple child views using interactive tabs. TabView provides a tabbed interface for organizing content into separate sections.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `TabView`.
+
+## Basic Usage
+
+<Canvas of={TabViewStories.Default} />
+
+## With Icons
+
+Add icons to tab items:
+
+<Canvas of={TabViewStories.WithIcons} />
+
+## Top Tab Bar
+
+Place tab bar at the top:
+
+<Canvas of={TabViewStories.TopTabBar} />
+
+## Controlled TabView
+
+Control tab selection programmatically:
+
+<Canvas of={TabViewStories.Controlled} />
+
+## Notes
+
+- TabView requires an array of items with `label` and `content`
+- Each item can have an optional `icon`
+- Tab bar can be positioned at `top` or `bottom` (default)
+- TabView supports controlled mode with `selectedIndex` and `onSelectionChange`
+- TabView automatically handles tab switching animations
+
+## Best Practices
+
+1. **Clear labels**: Use descriptive labels for each tab
+2. **Icons**: Use icons to improve visual recognition
+3. **Content**: Keep tab content focused and relevant
+4. **Navigation**: Consider navigation patterns when using TabView
+5. **Accessibility**: Ensure tabs are keyboard accessible
+

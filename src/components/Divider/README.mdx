@@ -1,0 +1,60 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as DividerStories from './stories'
+
+<Meta title="SwiftUI/Divider/Readme" />
+
+# Divider
+
+## Overview
+
+Divider is a visual element that can be used to separate other content. Dividers are commonly used in Lists to separate items and create visual hierarchy.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Divider`.
+
+## Basic Usage
+
+<Canvas of={DividerStories.Default} />
+
+## In Layouts
+
+### In HStack
+
+<Canvas of={DividerStories.InHStack} />
+
+### In VStack
+
+<Canvas of={DividerStories.InVStack} />
+
+## Multiple Dividers
+
+<Canvas of={DividerStories.MultipleDividers} />
+
+## With Buttons
+
+<Canvas of={DividerStories.WithButtons} />
+
+## In List
+
+<Canvas of={DividerStories.InList} />
+
+## Custom Styling
+
+Apply custom styles to Divider:
+
+<Canvas of={DividerStories.CustomStyle} />
+
+## Notes
+
+- Dividers automatically adapt to their container's orientation
+- Dividers are commonly used in Lists to separate items
+- Custom styles can be applied via the `style` prop
+- Dividers provide visual separation without taking up significant space
+
+## Best Practices
+
+1. **Consistent usage**: Use dividers consistently throughout your app
+2. **Visual hierarchy**: Use dividers to create clear visual separation
+3. **Spacing**: Ensure appropriate spacing around dividers
+4. **Accessibility**: Dividers are decorative and don't need special accessibility considerations
+5. **Performance**: Dividers are lightweight and don't impact performance
+

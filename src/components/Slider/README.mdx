@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as SliderStories from './stories'
+
+<Meta title="SwiftUI/Slider/Readme" />
+
+# Slider
+
+## Overview
+
+Slider is a control for selecting a value from a bounded linear range of values. Slider provides a visual way to adjust a value by dragging a thumb along a track.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Slider`.
+
+## Basic Usage
+
+<Canvas of={SliderStories.Default} />
+
+## Notes
+
+- Slider requires `value`, `onValueChange`, `min`, and `max` props
+- Slider supports optional `step` for discrete values
+- Slider can be disabled with the `disabled` prop
+- Slider provides visual feedback during interaction
+- Use Slider for continuous value selection
+
+## Best Practices
+
+1. **Range**: Set appropriate min and max values
+2. **Step**: Use step for discrete value selection
+3. **Feedback**: Show current value to the user
+4. **Accessibility**: Ensure Slider is keyboard accessible
+5. **Mobile**: Test slider interaction on touch devices
+

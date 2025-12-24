@@ -1,0 +1,49 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as CardStories from './stories'
+
+<Meta title="SwiftUI/Card/Readme" />
+
+# Card
+
+## Overview
+
+Card is a container that presents content on a card. Card is a container with elevated styling, typically used to display related content.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's card styling.
+
+## Basic Usage
+
+<Canvas of={CardStories.Default} />
+
+## With Image
+
+<Canvas of={CardStories.WithImage} />
+
+## With Buttons
+
+<Canvas of={CardStories.WithButtons} />
+
+## Multiple Cards
+
+<Canvas of={CardStories.MultipleCards} />
+
+## Custom Styling
+
+<Canvas of={CardStories.CustomStyle} />
+
+## Notes
+
+- Card provides elevated styling for content
+- Card can contain any React children
+- Card supports custom styling via `style` prop
+- Cards are commonly used in lists and grids
+- Cards provide visual separation and hierarchy
+
+## Best Practices
+
+1. **Content grouping**: Use cards to group related content
+2. **Consistent styling**: Maintain consistent card styling
+3. **Spacing**: Provide appropriate padding for card content
+4. **Visual hierarchy**: Use cards to create visual hierarchy
+5. **Accessibility**: Ensure card content is accessible
+

@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as SecureFieldStories from './stories'
+
+<Meta title="SwiftUI/SecureField/Readme" />
+
+# SecureField
+
+## Overview
+
+SecureField is a control that displays a secure text input field. SecureField is used for password input and other sensitive information, automatically masking the input.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `SecureField`.
+
+## Basic Usage
+
+<Canvas of={SecureFieldStories.Default} />
+
+## Notes
+
+- SecureField automatically masks input for security
+- SecureField supports controlled and uncontrolled modes
+- Use `value` and `onChange` for controlled inputs
+- SecureField can be disabled with the `disabled` prop
+- Use `placeholder` to provide hints about expected input
+
+## Best Practices
+
+1. **Security**: Always use SecureField for password inputs
+2. **Validation**: Validate password strength and requirements
+3. **Placeholders**: Provide clear placeholder text
+4. **Accessibility**: Ensure SecureField is accessible
+5. **Mobile**: Test on mobile devices for proper keyboard behavior
+

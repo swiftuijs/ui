@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as RectangleStories from './stories'
+
+<Meta title="SwiftUI/Shape/Rectangle/Readme" />
+
+# Rectangle
+
+## Overview
+
+Rectangle is a rectangular shape. Rectangle is used to create rectangular visual elements, such as cards, backgrounds, and containers.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Rectangle`.
+
+## Basic Usage
+
+<Canvas of={RectangleStories.Default} />
+
+## With Stroke
+
+Add a stroke to the rectangle:
+
+<Canvas of={RectangleStories.WithStroke} />
+
+## Colors
+
+Display rectangles with different colors:
+
+<Canvas of={RectangleStories.Colors} />
+
+## Notes
+
+- Rectangle requires `fill` prop for fill color
+- Rectangle requires explicit dimensions via `style` prop
+- Rectangle supports optional `stroke` and `strokeWidth` props
+- Rectangle has sharp corners (use RoundedRectangle for rounded corners)
+- Use Rectangle for backgrounds, cards, and containers
+
+## Best Practices
+
+1. **Dimensions**: Always provide explicit dimensions
+2. **Fill color**: Always provide a fill color
+3. **Stroke**: Use stroke for borders and outlines
+4. **Rounded corners**: Use RoundedRectangle for rounded corners
+5. **Accessibility**: Ensure rectangles have sufficient contrast
+

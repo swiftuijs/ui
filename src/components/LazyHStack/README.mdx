@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as LazyHStackStories from './stories'
+
+<Meta title="SwiftUI/LazyHStack/Readme" />
+
+# LazyHStack
+
+## Overview
+
+LazyHStack is a container that arranges its children horizontally, loading them lazily. LazyHStack is similar to HStack but only renders children that are visible in the viewport, improving performance for long horizontal lists.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `LazyHStack`.
+
+## Basic Usage
+
+<Canvas of={LazyHStackStories.Default} />
+
+## In ScrollView
+
+<Canvas of={LazyHStackStories.InScrollView} />
+
+## With Estimated Item Width
+
+<Canvas of={LazyHStackStories.WithEstimatedWidth} />
+
+## With Alignment
+
+<Canvas of={LazyHStackStories.WithAlignment} />
+
+## Notes
+
+- LazyHStack supports all HStack props (spacing, alignment, etc.)
+- LazyHStack only renders visible items for better performance
+- Use `estimatedItemWidth` to optimize virtualization
+- LazyHStack is ideal for long horizontal lists
+- LazyHStack automatically handles viewport detection
+
+## Best Practices
+
+1. **Long lists**: Use LazyHStack for horizontal lists with many items
+2. **Performance**: LazyHStack improves performance for large datasets
+3. **Estimated width**: Provide estimatedItemWidth when possible
+4. **Keys**: Always provide unique keys for list items
+5. **ScrollView**: Use LazyHStack within ScrollView for scrollable horizontal lists
+
