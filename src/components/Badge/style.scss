@@ -1,37 +1,46 @@
-@use '../../style/vars.scss' as *;
+@use '~style/base.scss' as *;
 
-.#{ns('badge')} {
+@include component('badge') {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 2px 6px;
-  border-radius: var(--sw-radius-full, 9999px);
-  font-size: var(--sw-font-size-caption-2, 11px);
-  font-weight: var(--sw-font-weight-semibold, 600);
+  border-radius: var(--sw-radius-full);
+  font-size: var(--sw-font-size-caption-2);
+  font-weight: var(--sw-font-weight-semibold);
   line-height: 1;
-  min-width: 18px;
-  height: 18px;
-  background-color: var(--sw-color-gray, #8E8E93);
-  color: #FFFFFF;
-}
+  background-color: var(--sw-color-red);
+  color: var(--sw-color-white);
+  min-width: 20px;
+  height: 20px;
 
-.#{ns('badge-default')} {
-  background-color: var(--sw-color-gray, #8E8E93);
-}
+  &-default {
+    background-color: var(--sw-color-red);
+    color: var(--sw-color-white);
+  }
 
-.#{ns('badge-primary')} {
-  background-color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
-}
+  &-primary {
+    background-color: var(--sw-accent-color);
+    color: var(--sw-color-white);
+  }
 
-.#{ns('badge-success')} {
-  background-color: #34C759;
-}
+  &-secondary {
+    background-color: var(--sw-color-gray);
+    color: var(--sw-color-white);
+  }
 
-.#{ns('badge-warning')} {
-  background-color: #FF9500;
-}
+  &-success {
+    background-color: var(--sw-color-green);
+    color: var(--sw-color-white);
+  }
 
-.#{ns('badge-error')} {
-  background-color: #FF3B30;
-}
+  &-warning {
+    background-color: var(--sw-color-orange);
+    color: var(--sw-color-white);
+  }
 
+  &-danger {
+    background-color: var(--sw-color-red);
+    color: var(--sw-color-white);
+  }
+}

@@ -1,83 +1,40 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('slider')} {
-  position: relative;
+@include component('slider') {
   width: 100%;
-  height: 44px;
+  position: relative;
   display: flex;
   align-items: center;
-}
+  height: 32px;
 
-.#{ns('slider-track')} {
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background-color: var(--sw-color-gray-lighter);
-  border-radius: var(--sw-radius-full);
-}
+  &-track {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background-color: var(--sw-color-gray-lighter);
+    border-radius: var(--sw-radius-full);
+  }
 
-.#{ns('slider-fill')} {
-  height: 100%;
-  background-color: var(--sw-accent-color);
-  border-radius: var(--sw-radius-full);
-  transition: width var(--sw-transition-fast);
-}
+  &-fill {
+    position: absolute;
+    height: 4px;
+    background-color: var(--sw-accent-color);
+    border-radius: var(--sw-radius-full);
+  }
 
-.#{ns('slider-input')} {
-  position: relative;
-  width: 100%;
-  height: 44px;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  -webkit-appearance: none;
-  appearance: none;
-  cursor: pointer;
-  z-index: 1;
-
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
+  &-thumb {
+    position: absolute;
     width: 28px;
     height: 28px;
+    background-color: var(--sw-color-white);
     border-radius: var(--sw-radius-full);
-    background-color: var(--sw-accent-color);
-    border: 2px solid var(--sw-color-background-primary);
     box-shadow: var(--sw-shadow-sm);
     cursor: pointer;
-    transition: transform var(--sw-transition-fast);
-  }
+    transform: translateX(-50%);
+    transition: transform 0.1s ease;
 
-  &::-moz-range-thumb {
-    width: 28px;
-    height: 28px;
-    border-radius: var(--sw-radius-full);
-    background-color: var(--sw-accent-color);
-    border: 2px solid var(--sw-color-background-primary);
-    box-shadow: var(--sw-shadow-sm);
-    cursor: pointer;
-    transition: transform var(--sw-transition-fast);
-  }
-
-  &:active:not(:disabled) {
-    &::-webkit-slider-thumb {
-      transform: scale(1.1);
-    }
-    &::-moz-range-thumb {
-      transform: scale(1.1);
-    }
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-
-    &::-webkit-slider-thumb {
-      cursor: not-allowed;
-    }
-    &::-moz-range-thumb {
-      cursor: not-allowed;
+    &:active {
+      transform: translateX(-50%) scale(1.1);
     }
   }
 }
-

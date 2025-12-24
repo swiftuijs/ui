@@ -1,2 +1,8 @@
+// 工具样式 - 只包含 mixins、functions 等，不产生实际样式输出
+@use './vars.scss' as *;
 @forward './vars.scss';
 @forward './utils.scss';
+@forward './mixins/_component.scss';
+@forward './mixins/_flex-container.scss';
+@forward './mixins/_spacing.scss';
+@forward './mixins/_responsive.scss';

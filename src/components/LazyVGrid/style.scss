@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('lazyvgrid')} {
+@include component('lazyvgrid') {
   display: grid;
   grid-template-columns: repeat(var(--grid-columns, 2), 1fr);
   gap: var(--grid-spacing, 0);

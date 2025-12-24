@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('group')} {
+@include component('group') {
   // Group is a transparent container with no default styling
   // It's used for logical grouping and applying modifiers
 }

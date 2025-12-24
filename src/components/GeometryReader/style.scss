@@ -1,6 +1,6 @@
-@use '../../style/vars.scss' as *;
+@use '~style/base.scss' as *;
 
-.#{ns('geometry-reader')} {
+@include component('geometry-reader') {
   position: relative;
   width: 100%;
   height: 100%;

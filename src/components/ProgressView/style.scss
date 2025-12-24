@@ -1,52 +1,44 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('progressview')} {
+@include component('progressview') {
   width: 100%;
-  height: 4px;
   position: relative;
-}
 
-.#{ns('progressview-track')} {
-  width: 100%;
-  height: 100%;
-  background-color: var(--sw-color-gray-lighter);
-  border-radius: var(--sw-radius-full);
-  overflow: hidden;
-}
-
-.#{ns('progressview-fill')} {
-  height: 100%;
-  background-color: var(--sw-accent-color);
-  border-radius: var(--sw-radius-full);
-  transition: width var(--sw-transition-normal);
-}
-
-.#{ns('progressview-indeterminate')} {
-  width: 100%;
-  height: 100%;
-  background-color: var(--sw-color-gray-lighter);
-  border-radius: var(--sw-radius-full);
-  overflow: hidden;
-  position: relative;
-}
-
-.#{ns('progressview-indeterminate-bar')} {
-  position: absolute;
-  top: 0;
-  left: -50%;
-  width: 50%;
-  height: 100%;
-  background-color: var(--sw-accent-color);
-  border-radius: var(--sw-radius-full);
-  animation: progress-indeterminate 1.5s ease-in-out infinite;
-}
-
-@keyframes progress-indeterminate {
-  0% {
-    left: -50%;
+  &-linear {
+    height: 4px;
+    background-color: var(--sw-color-gray-lighter);
+    border-radius: var(--sw-radius-full);
+    overflow: hidden;
   }
-  100% {
-    left: 100%;
+
+  &-bar {
+    height: 100%;
+    background-color: var(--sw-accent-color);
+    border-radius: var(--sw-radius-full);
+    transition: width 0.3s ease;
+  }
+
+  &-circular {
+    width: 40px;
+    height: 40px;
+    position: relative;
+  }
+
+  &-circle {
+    transform: rotate(-90deg);
+  }
+
+  &-circle-bg {
+    fill: none;
+    stroke: var(--sw-color-gray-lighter);
+    stroke-width: 4;
+  }
+
+  &-circle-progress {
+    fill: none;
+    stroke: var(--sw-accent-color);
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
   }
 }
-

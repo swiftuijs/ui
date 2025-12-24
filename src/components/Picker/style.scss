@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('picker')} {
+@include component('picker') {
   width: 100%;
   padding: var(--sw-spacing-sm) var(--sw-spacing-md);
   padding-right: var(--sw-spacing-2xl);

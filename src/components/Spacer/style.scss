@@ -1,5 +1,5 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('spacer')} {
+@include component('spacer') {
   flex: 1;
 }

@@ -1,3 +1,5 @@
+// 公共样式 - 只在根目录引入一次
 @use './common.scss';
 @use './view-transition.scss';
 @use './container-alignment.scss';
+@use './animations.scss';

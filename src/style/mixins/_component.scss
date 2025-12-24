@@ -1,0 +1,19 @@
+@use '../vars.scss' as *;
+
+$prefix: $ns;
+
+/// Component mixin - 统一组件样式类名前缀
+/// @param {String} $name - 组件名称（不需要前缀）
+/// @example
+///   @include component('button') {
+///     // styles
+///   }
+///   // 输出: .sw-button { ... }
+@mixin component($name) {
+  $prefix: #{$ns}-#{$name} !global;
+  .#{$prefix} {
+    @content;
+  }
+  
+  $prefix: $ns !global;
+}

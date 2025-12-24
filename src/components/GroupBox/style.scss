@@ -1,22 +1,19 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('groupbox')} {
+@include component('groupbox') {
   border: 1px solid var(--sw-color-separator);
-  border-radius: var(--sw-radius-md);
-  background-color: var(--sw-color-background-primary);
+  border-radius: var(--sw-radius-lg);
   padding: var(--sw-spacing-md);
-}
+  background-color: var(--sw-color-background-primary);
 
-.#{ns('groupbox-label')} {
-  font-size: var(--sw-font-size-subheadline);
-  font-weight: var(--sw-font-weight-semibold);
-  color: var(--sw-color-label-secondary);
-  margin-bottom: var(--sw-spacing-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+  &-label {
+    font-size: var(--sw-font-size-subheadline);
+    font-weight: var(--sw-font-weight-semibold);
+    color: var(--sw-color-label-primary);
+    margin-bottom: var(--sw-spacing-sm);
+  }
 
-.#{ns('groupbox-content')} {
-  // Content area
+  &-content {
+    color: var(--sw-color-label-primary);
+  }
 }
-

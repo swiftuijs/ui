@@ -1,32 +1,32 @@
-@use '../../style/vars.scss' as *;
+@use '~style/base.scss' as *;
 
-.#{ns('tab-view')} {
+@include component('tab-view') {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
   position: relative;
+
+  &-top {
+    .#{$prefix}-bar {
+      order: 1;
+    }
+    .#{$prefix}-content {
+      order: 2;
+    }
+  }
+
+  &-bottom {
+    .#{$prefix}-bar {
+      order: 2;
+    }
+    .#{$prefix}-content {
+      order: 1;
+    }
+  }
 }
 
-.#{ns('tab-view-top')} {
-  .#{ns('tab-bar')} {
-    order: 1;
-  }
-  .#{ns('tab-content')} {
-    order: 2;
-  }
-}
-
-.#{ns('tab-view-bottom')} {
-  .#{ns('tab-bar')} {
-    order: 2;
-  }
-  .#{ns('tab-content')} {
-    order: 1;
-  }
-}
-
-.#{ns('tab-bar')} {
+@include component('tab-bar') {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -35,7 +35,7 @@
   z-index: 10;
 }
 
-.#{ns('tab-item')} {
+@include component('tab-item') {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -56,13 +56,13 @@
   &:active {
     opacity: 0.6;
   }
+
+  &-active {
+    color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
+  }
 }
 
-.#{ns('tab-item-active')} {
-  color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
-}
-
-.#{ns('tab-icon')} {
+@include component('tab-icon') {
   font-size: 24px;
   margin-bottom: 4px;
   display: flex;
@@ -70,16 +70,15 @@
   justify-content: center;
 }
 
-.#{ns('tab-label')} {
+@include component('tab-label') {
   font-size: var(--sw-font-size-caption-1, 12px);
   font-weight: var(--sw-font-weight-medium, 500);
   text-align: center;
 }
 
-.#{ns('tab-content')} {
+@include component('tab-content') {
   flex: 1;
   width: 100%;
   overflow: auto;
   position: relative;
 }
-

@@ -1,38 +1,31 @@
-@use '../../style/vars.scss' as *;
+@use '~style/base.scss' as *;
 
-.#{ns('navigation-bar')} {
-  position: relative;
-  height: 44px;
+@include component('navigation-bar') {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sw-spacing-md) var(--sw-spacing-lg);
+  background-color: var(--sw-color-background-primary);
+  border-bottom: 1px solid var(--sw-color-separator);
   min-height: 44px;
-  width: 100%;
-  background-color: var(--sw-color-background-primary, #FFFFFF);
-  border-bottom: 0.5px solid var(--sw-color-separator, #C6C6C8);
-  display: flex;
-  align-items: center;
-  z-index: 10;
 
-  // Safe area support
-  padding-top: env(safe-area-inset-top, 0px);
-  margin-top: calc(-1 * env(safe-area-inset-top, 0px));
-}
-
-.#{ns('navigation-bar-back')} {
-  cursor: pointer;
-  user-select: none;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.7;
+  &-title {
+    font-size: var(--sw-font-size-headline);
+    font-weight: var(--sw-font-weight-semibold);
+    color: var(--sw-color-label-primary);
+    flex: 1;
+    text-align: center;
   }
 
-  &:active {
-    opacity: 0.5;
+  &-leading {
+    display: flex;
+    align-items: center;
+    gap: var(--sw-spacing-sm);
+  }
+
+  &-trailing {
+    display: flex;
+    align-items: center;
+    gap: var(--sw-spacing-sm);
   }
 }
-
-.#{ns('navigation-bar-toolbar')} {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-

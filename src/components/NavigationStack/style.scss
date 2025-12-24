@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('navigationstack')} {
+@include component('navigationstack') {
   position: relative;
   height: 100%;
   width: 100%;

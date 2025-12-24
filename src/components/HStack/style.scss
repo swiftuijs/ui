@@ -1,12 +1,12 @@
 @use '~style/mixins/flex-container.scss' as *;
 @use '~style/mixins/spacing.scss' as *;
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('hstack')} {
+@include component('hstack') {
   @include flex-container(row, center);
   @include stack-spacing('--hstack-spacing');
 
-  > .#{ns('spacer')} {
+  > .#{$prefix}-spacer {
     @include spacer-child(width);
   }
 }

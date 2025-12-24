@@ -1,12 +1,12 @@
 @use '~style/mixins/flex-container.scss' as *;
 @use '~style/mixins/spacing.scss' as *;
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('vstack')} {
+@include component('vstack') {
   @include flex-container(column, stretch);
   @include stack-spacing('--vstack-spacing');
 
-  > .#{ns('spacer')} {
+  > .#{$prefix}-spacer {
     @include spacer-child(height);
   }
 }

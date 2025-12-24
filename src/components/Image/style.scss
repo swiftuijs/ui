@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('image')} {
+@include component('image') {
   max-width: 100%;
   height: auto;
   display: block;

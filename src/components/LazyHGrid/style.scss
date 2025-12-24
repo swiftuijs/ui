@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('lazyhgrid')} {
+@include component('lazyhgrid') {
   display: grid;
   grid-template-rows: repeat(var(--grid-rows, 2), 1fr);
   gap: var(--grid-spacing, 0);

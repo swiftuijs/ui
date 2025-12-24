@@ -1,6 +1,6 @@
-@use '../../style/vars.scss' as *;
+@use '~style/base.scss' as *;
 
-.#{ns('form')} {
+@include component('form') {
   display: flex;
   flex-direction: column;
   width: 100%;

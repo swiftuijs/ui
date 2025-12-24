@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('textfield')} {
+@include component('textfield') {
   width: 100%;
   padding: var(--sw-spacing-sm) var(--sw-spacing-md);
   border: 1px solid var(--sw-color-separator);

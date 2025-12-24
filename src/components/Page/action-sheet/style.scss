@@ -1,7 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-
-@keyframes actionsheet-slide-up {
+@keyframes #{$ns}-actionsheet-slide-up {
   0% {
     opacity: 0;
     transform: translateY(100%);
@@ -13,7 +12,8 @@
     transform: translateY(0);
   }
 }
-@keyframes actionsheet-slide-down {
+
+@keyframes #{$ns}-actionsheet-slide-down {
   0% {
     opacity: 1;
     transform: translateY(0);
@@ -24,7 +24,7 @@
   }
 }
 
-.#{ns('page')} {
+@include component('page') {
   // actionsheet page
   &[data-page-type='actionsheet'] {
     top: auto;
@@ -40,13 +40,12 @@
     will-change: transform, opacity, height;
 
     &[date-page-status='entering'] {
-      
-      animation: actionsheet-slide-up 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      animation: #{$ns}-actionsheet-slide-up 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
 
     &[date-page-status='exiting'] {
       opacity: 0;
-      animation: actionsheet-slide-down 0.3s cubic-bezier(0, 0.8, 0.5, 1);
+      animation: #{$ns}-actionsheet-slide-down 0.3s cubic-bezier(0, 0.8, 0.5, 1);
     }
 
     &.animate-height {
@@ -54,12 +53,12 @@
     }
 
     &.hide-dragbar {
-      >.#{ns('dragbar')} {
+      > .#{$prefix}-dragbar {
         display: none;
       }
     }
 
-    >.#{ns('dragbar')} {
+    > .#{$prefix}-dragbar {
       position: absolute;
       top: 0;
       left: 0;
@@ -68,7 +67,7 @@
       z-index: 999;
       @include centerBlock;
 
-      &>.#{ns('dragbar-indicator')} {
+      > .#{$prefix}-dragbar-indicator {
         width: 36px;
         height: 5px;
         background: rgba(60, 60, 67, 0.3);

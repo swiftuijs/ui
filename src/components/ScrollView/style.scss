@@ -1,11 +1,11 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('scrollview')} {
+@include component('scrollview') {
   position: relative;
   display: flex;
   -webkit-overflow-scrolling: touch;
 
-  >.#{ns('spacer')} {
+  > .#{ns('spacer')} {
     min-height: var(--min-length);
   }
 
@@ -14,7 +14,7 @@
     overflow-y: auto;
     height: 100%;
     flex-direction: column;
-    >.#{ns('spacer')} {
+    > .#{ns('spacer')} {
       min-height: var(--min-length);
     }
   }
@@ -33,7 +33,7 @@
     overflow-x: auto;
     width: 100%;
     flex-direction: row;
-    >.#{ns('spacer')} {
+    > .#{ns('spacer')} {
       min-width: var(--min-length);
     }
   }

@@ -1,54 +1,42 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('stepper')} {
+@include component('stepper') {
   display: inline-flex;
   align-items: center;
-  gap: var(--sw-spacing-md);
+  gap: var(--sw-spacing-sm);
   border: 1px solid var(--sw-color-separator);
   border-radius: var(--sw-radius-md);
-  background-color: var(--sw-color-background-primary);
-  padding: var(--sw-spacing-xs);
-}
+  overflow: hidden;
 
-.#{ns('stepper-button')} {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: transparent;
-  border-radius: var(--sw-radius-sm);
-  cursor: pointer;
-  transition: background-color var(--sw-transition-fast);
-  -webkit-tap-highlight-color: transparent;
+  &-button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: var(--sw-spacing-sm) var(--sw-spacing-md);
+    cursor: pointer;
+    color: var(--sw-accent-color);
+    font-size: var(--sw-font-size-body);
+    transition: background-color var(--sw-transition-fast);
+    -webkit-tap-highlight-color: transparent;
 
-  &:hover:not(:disabled) {
-    background-color: var(--sw-color-background-secondary);
+    &:hover:not(:disabled) {
+      background-color: var(--sw-color-background-secondary);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--sw-color-gray-lighter);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
   }
 
-  &:active:not(:disabled) {
-    background-color: var(--sw-color-gray-lighter);
-  }
-
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+  &-value {
+    min-width: 32px;
+    text-align: center;
+    font-size: var(--sw-font-size-body);
+    color: var(--sw-color-label-primary);
   }
 }
-
-.#{ns('stepper-icon')} {
-  font-size: 20px;
-  font-weight: var(--sw-font-weight-semibold);
-  color: var(--sw-color-label-primary);
-  line-height: 1;
-}
-
-.#{ns('stepper-value')} {
-  min-width: 40px;
-  text-align: center;
-  font-size: var(--sw-font-size-body);
-  font-weight: var(--sw-font-weight-medium);
-  color: var(--sw-color-label-primary);
-}
-

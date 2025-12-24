@@ -1,6 +1,6 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('link')} {
+@include component('link') {
   color: var(--sw-accent-color);
   cursor: pointer;
   text-decoration: none;

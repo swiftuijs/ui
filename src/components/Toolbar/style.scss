@@ -1,42 +1,41 @@
-@use '../../style/vars.scss' as *;
+@use '~style/base.scss' as *;
 
-.#{ns('toolbar')} {
+@include component('toolbar') {
   width: 100%;
   background-color: var(--sw-color-background-primary, #FFFFFF);
   border-bottom: 1px solid var(--sw-color-separator, #C6C6C8);
   padding: var(--sw-spacing-sm, 8px) var(--sw-spacing-md, 12px);
-}
 
-.#{ns('toolbar-content')} {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 44px;
-}
+  &-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+  }
 
-.#{ns('toolbar-group')} {
-  display: flex;
-  align-items: center;
-  gap: var(--sw-spacing-sm, 8px);
-  flex: 0 0 auto;
-}
+  &-group {
+    display: flex;
+    align-items: center;
+    gap: var(--sw-spacing-sm, 8px);
+    flex: 0 0 auto;
 
-.#{ns('toolbar-group-center')} {
-  flex: 1;
-  justify-content: center;
-}
+    &-center {
+      flex: 1;
+      justify-content: center;
+    }
 
-.#{ns('toolbar-group-end')} {
-  margin-left: auto;
-}
+    &-end {
+      margin-left: auto;
+    }
+  }
 
-.#{ns('toolbar-item')} {
-  display: flex;
-  align-items: center;
-}
+  &-item {
+    display: flex;
+    align-items: center;
 
-.#{ns('toolbar-item-destructive')} {
-  color: var(--sw-color-error, #FF3B30);
+    &-destructive {
+      color: var(--sw-color-error, #FF3B30);
+    }
+  }
 }
-

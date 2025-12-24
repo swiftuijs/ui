@@ -1,11 +1,11 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('section')} {
+@include component('section') {
   width: 100%;
   padding: var(--sw-spacing-lg);
   background-color: var(--sw-color-background-primary);
   
-  .#{ns('section-header')} {
+  @include component('section-header') {
     padding-bottom: var(--sw-spacing-sm);
     margin-bottom: var(--sw-spacing-sm);
     font-size: var(--sw-font-size-subheadline);

@@ -1,6 +1,6 @@
-@use '../../style/vars.scss' as *;
+@use '~style/base.scss' as *;
 
-.#{ns('text-editor')} {
+@include component('text-editor') {
   width: 100%;
   padding: var(--sw-spacing-md, 12px);
   border: 1px solid var(--sw-color-separator, #C6C6C8);

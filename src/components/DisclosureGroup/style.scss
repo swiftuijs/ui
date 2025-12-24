@@ -1,52 +1,56 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('disclosuregroup')} {
+@include component('disclosuregroup') {
   border: 1px solid var(--sw-color-separator);
   border-radius: var(--sw-radius-md);
   background-color: var(--sw-color-background-primary);
   overflow: hidden;
-}
 
-.#{ns('disclosuregroup-toggle')} {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--sw-spacing-md);
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  transition: background-color var(--sw-transition-fast);
-  -webkit-tap-highlight-color: transparent;
+  // disclosuregroup-toggle
+  &-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sw-spacing-md);
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color var(--sw-transition-fast);
+    -webkit-tap-highlight-color: transparent;
 
-  &:hover {
-    background-color: var(--sw-color-background-secondary);
+    &:hover {
+      background-color: var(--sw-color-background-secondary);
+    }
+
+    &:active {
+      background-color: var(--sw-color-gray-lighter);
+    }
   }
 
-  &:active {
-    background-color: var(--sw-color-gray-lighter);
+  // disclosuregroup-label
+  &-label {
+    font-size: var(--sw-font-size-body);
+    font-weight: var(--sw-font-weight-medium);
+    color: var(--sw-color-label-primary);
+  }
+
+  // disclosuregroup-icon
+  &-icon {
+    font-size: 12px;
+    color: var(--sw-color-label-secondary);
+    transition: transform var(--sw-transition-fast);
+  }
+
+  // disclosuregroup-expanded disclosuregroup-icon
+  &-expanded &-icon {
+    transform: rotate(90deg);
+  }
+
+  // disclosuregroup-content
+  &-content {
+    padding: var(--sw-spacing-md);
+    padding-top: 0;
+    border-top: 1px solid var(--sw-color-separator);
   }
 }
-
-.#{ns('disclosuregroup-label')} {
-  font-size: var(--sw-font-size-body);
-  font-weight: var(--sw-font-weight-medium);
-  color: var(--sw-color-label-primary);
-}
-
-.#{ns('disclosuregroup-icon')} {
-  font-size: 12px;
-  color: var(--sw-color-label-secondary);
-  transition: transform var(--sw-transition-fast);
-}
-
-.#{ns('disclosuregroup-expanded')} .#{ns('disclosuregroup-icon')} {
-  transform: rotate(90deg);
-}
-
-.#{ns('disclosuregroup-content')} {
-  padding: var(--sw-spacing-md);
-  padding-top: 0;
-  border-top: 1px solid var(--sw-color-separator);
-}
-

@@ -1,67 +1,7 @@
-@import '~style/base.scss';
+@use '~style/base.scss' as *;
 
-.#{ns('activityindicator')} {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.#{ns('activityindicator-spinner')} {
-  position: relative;
-  width: 20px;
-  height: 20px;
-}
-
-.#{ns('activityindicator-small')} .#{ns('activityindicator-spinner')} {
-  width: 16px;
-  height: 16px;
-}
-
-.#{ns('activityindicator-medium')} .#{ns('activityindicator-spinner')} {
-  width: 20px;
-  height: 20px;
-}
-
-.#{ns('activityindicator-large')} .#{ns('activityindicator-spinner')} {
-  width: 32px;
-  height: 32px;
-}
-
-.#{ns('activityindicator-circle')} {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  border-radius: var(--sw-radius-full);
-  background-color: var(--indicator-color, var(--sw-accent-color));
-  animation: activity-indicator-spin 1.2s linear infinite;
-  
-  @for $i from 1 through 8 {
-    &:nth-child(#{$i}) {
-      transform: rotate(#{($i - 1) * 45deg}) translateY(-8px);
-      animation-delay: #{-1.2s + ($i - 1) * 0.15s};
-    }
-  }
-}
-
-.#{ns('activityindicator-small')} .#{ns('activityindicator-circle')} {
-  @for $i from 1 through 8 {
-    &:nth-child(#{$i}) {
-      transform: rotate(#{($i - 1) * 45deg}) translateY(-6px);
-    }
-  }
-}
-
-.#{ns('activityindicator-large')} .#{ns('activityindicator-circle')} {
-  width: 3px;
-  height: 3px;
-  @for $i from 1 through 8 {
-    &:nth-child(#{$i}) {
-      transform: rotate(#{($i - 1) * 45deg}) translateY(-14px);
-    }
-  }
-}
-
-@keyframes activity-indicator-spin {
+// ActivityIndicator 特有的圆圈脉冲动画
+@keyframes #{$ns}-activityindicator-circle-pulse {
   0%, 100% {
     opacity: 1;
   }
@@ -70,3 +10,70 @@
   }
 }
 
+@include component('activityindicator') {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // activityindicator-spinner
+  &-spinner {
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+
+  // activityindicator-small activityindicator-spinner
+  &-small &-spinner {
+    width: 16px;
+    height: 16px;
+  }
+
+  // activityindicator-medium activityindicator-spinner
+  &-medium &-spinner {
+    width: 20px;
+    height: 20px;
+  }
+
+  // activityindicator-large activityindicator-spinner
+  &-large &-spinner {
+    width: 32px;
+    height: 32px;
+  }
+
+  // activityindicator-circle
+  &-circle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: var(--sw-radius-full);
+    background-color: var(--indicator-color, var(--sw-accent-color));
+    animation: #{$ns}-activityindicator-circle-pulse 1.2s linear infinite;
+    
+    @for $i from 1 through 8 {
+      &:nth-child(#{$i}) {
+        transform: rotate(#{($i - 1) * 45deg}) translateY(-8px);
+        animation-delay: #{-1.2s + ($i - 1) * 0.15s};
+      }
+    }
+  }
+
+  // activityindicator-small activityindicator-circle
+  &-small &-circle {
+    @for $i from 1 through 8 {
+      &:nth-child(#{$i}) {
+        transform: rotate(#{($i - 1) * 45deg}) translateY(-6px);
+      }
+    }
+  }
+
+  // activityindicator-large activityindicator-circle
+  &-large &-circle {
+    width: 3px;
+    height: 3px;
+    @for $i from 1 through 8 {
+      &:nth-child(#{$i}) {
+        transform: rotate(#{($i - 1) * 45deg}) translateY(-14px);
+      }
+    }
+  }
+}
