@@ -1,0 +1,1 @@
+.sw-vstack{position:relative;display:flex;flex-direction:column;align-items:stretch;width:100%;gap:var(--vstack-spacing, var(--sw-spacing-xs))}.sw-vstack>.sw-vstack-spacer{min-height:var(--min-length)}

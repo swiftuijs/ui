@@ -1,0 +1,1 @@
+.sw-text{font-size:var(--sw-font-size-body);font-weight:var(--sw-font-weight-regular);line-height:var(--sw-line-height-normal);color:var(--sw-color-label-primary);-webkit-hyphens:auto;hyphens:auto;word-wrap:break-word}.sw-text.line-clamp{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:var(--line-limit, 1);text-overflow:ellipsis}

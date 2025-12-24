@@ -1,1 +1,0 @@
-import{r,j as o}from"../vite-inject-mocker-entry.js";import{T as s}from"./index-GXmEOI2s.js";const t=r.memo(function(e){return o.jsx(s,{...e,type:"password"})});t.__docgenInfo={description:"",methods:[],displayName:"SecureField"};export{t as S};
