@@ -2,13 +2,23 @@
 
 @include component('page') {
   // standard page
-  &[data-page-type='standard'] {
+  &[data-page-type='page'] {
     display: flex;
     flex-direction: column;
   }
 
   // page-navigation-bar (nested in standard page)
-  &[data-page-type='standard'] .#{$prefix}-navigation-bar {
+  &[data-page-type='page'] .#{$ns}-navigation-bar {
     flex-shrink: 0;
+  }
+
+  // page-content (nested in standard page)
+  &[data-page-type='page'] .#{$ns}-page-content {
+    flex: 1;
+    width: 100%;
+    min-height: 0;  // 允许 flex 子元素正确收缩
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 }

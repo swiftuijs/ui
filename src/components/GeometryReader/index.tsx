@@ -85,21 +85,58 @@ export function GeometryReader(props: IGeometryReaderProps) {
       return
     }
 
+    let rafId: number | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+
     const updateGeometry = () => {
-      const rect = container.getBoundingClientRect()
-      setGeometry({
-        width: rect.width,
-        height: rect.height,
-        x: rect.x,
-        y: rect.y,
+      // Cancel any pending updates
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+      }
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId)
+      }
+
+      // Use requestAnimationFrame for smooth updates
+      rafId = requestAnimationFrame(() => {
+        const rect = container.getBoundingClientRect()
+        const newGeometry = {
+          // Round to prevent sub-pixel flickering
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+          x: Math.round(rect.x),
+          y: Math.round(rect.y),
+        }
+        
+        // Only update if values actually changed significantly (tolerance of 1px)
+        setGeometry((prev) => {
+          const widthDiff = Math.abs(prev.width - newGeometry.width)
+          const heightDiff = Math.abs(prev.height - newGeometry.height)
+          const xDiff = Math.abs(prev.x - newGeometry.x)
+          const yDiff = Math.abs(prev.y - newGeometry.y)
+          
+          // Only update if any dimension changed by more than the tolerance
+          if (widthDiff <= 1 && heightDiff <= 1 && xDiff <= 1 && yDiff <= 1) {
+            return prev
+          }
+          return newGeometry
+        })
       })
     }
 
-    // Initial measurement
-    updateGeometry()
+    // Debounced version for ResizeObserver to prevent layout thrashing
+    const debouncedUpdate = () => {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId)
+      }
+      timeoutId = setTimeout(updateGeometry, 16) // ~60fps
+    }
+
+    // Initial measurement with a small delay to ensure layout is stable
+    timeoutId = setTimeout(updateGeometry, 0)
 
     // Use ResizeObserver to watch for size changes
-    const resizeObserver = new ResizeObserver(updateGeometry)
+    const resizeObserver = new ResizeObserver(debouncedUpdate)
     resizeObserver.observe(container)
 
     // Also listen to window resize for position changes
@@ -110,6 +147,12 @@ export function GeometryReader(props: IGeometryReaderProps) {
       resizeObserver.disconnect()
       window.removeEventListener('resize', updateGeometry)
       window.removeEventListener('scroll', updateGeometry)
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+      }
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId)
+      }
     }
   }, [])
 

@@ -1,19 +1,26 @@
 @use '~style/base.scss' as *;
 
 @include component('navigation-bar') {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: var(--sw-spacing-md) var(--sw-spacing-lg);
   background-color: var(--sw-color-background-primary);
   border-bottom: 1px solid var(--sw-color-separator);
   min-height: 44px;
+  z-index: 10;
 
   &-title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60%;
     font-size: var(--sw-font-size-headline);
     font-weight: var(--sw-font-weight-semibold);
     color: var(--sw-color-label-primary);
-    flex: 1;
     text-align: center;
   }
 
@@ -21,11 +28,16 @@
     display: flex;
     align-items: center;
     gap: var(--sw-spacing-sm);
+    min-width: 80px;
+    z-index: 1;
   }
 
   &-trailing {
     display: flex;
     align-items: center;
     gap: var(--sw-spacing-sm);
+    min-width: 80px;
+    justify-content: flex-end;
+    z-index: 1;
   }
 }

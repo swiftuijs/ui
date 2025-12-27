@@ -61,7 +61,7 @@ export class Page extends Component<IPageProps> {
       container.removeEventListener('animationend', onAnimationEnd)
     }
     container.addEventListener('animationend', onAnimationEnd)
-    container.setAttribute('date-page-status', 'entering')
+    container.setAttribute('data-page-status', 'entering')
   }
   // optimize performance, only update when id or type changes
   // TODO: this may cause unexpected issues, check if this is the best way to optimize
@@ -109,6 +109,6 @@ export class Page extends Component<IPageProps> {
       if (callback) callback()
     }
     container.addEventListener('animationend', animationEnd)
-    container.setAttribute('date-page-status', 'exiting')
+    container.setAttribute('data-page-status', 'exiting')
   }
 }

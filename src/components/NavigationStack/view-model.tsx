@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import type { IBaseComponent, IPageItem, ILoosePageItem } from 'src/types'
 import { standardizeProps, generateUniqueId, eventBus, prefixClass } from 'src/common'
+import { startViewTransition, isViewTransitionSupported } from 'src/common/view-transition'
 import { INaviContext } from 'src/contexts'
 import type { Page } from 'src/components/Page'
 
@@ -59,13 +60,25 @@ export function useViewModel(props: INavigationStackProps) {
         nextPage = currentPaths[index]
         paths.current = [...currentPaths.slice(index, 1), nextPage]
       }
-      if (nextPage.type === 'page') {
-        pageCallbacks[nextPage._id] = () => {
-          setShownPages([nextPage])
-          delete pageCallbacks[nextPage._id]
+      // Use View Transitions API if configured and supported
+      const useViewTransition = nextPage.transition?.type === 'view-transition' && isViewTransitionSupported()
+      
+      if (useViewTransition) {
+        // For view transitions, directly replace with new page (browser handles the animation)
+        startViewTransition({
+          update: () => setShownPages([nextPage]),
+          type: 'forwards'
+        })
+      } else {
+        // For regular transitions, show both pages and wait for page-entered callback
+        if (nextPage.type === 'page') {
+          pageCallbacks[nextPage._id] = () => {
+            setShownPages([nextPage])
+            delete pageCallbacks[nextPage._id]
+          }
         }
+        setShownPages((prev) => [...prev, nextPage])
       }
-      setShownPages((prev) => [...prev, nextPage])
     })
 
     // remove page
@@ -89,17 +102,29 @@ export function useViewModel(props: INavigationStackProps) {
       }
       // if paths is empty, show home page
       const nextPage = paths.current[paths.current.length - 1] || homePage
-      setShownPages([nextPage, currentPage])
-      // wait new page rendered, then exit last page
-      requestIdleCallback(() => {
-        if (pageInstanceMap[currentPage._id]) {
-          pageInstanceMap[currentPage._id]!.exitPage(() => {
+      
+      // Use View Transitions API if current page configured it and supported
+      const useViewTransition = currentPage.transition?.type === 'view-transition' && isViewTransitionSupported()
+      
+      if (useViewTransition) {
+        // For view transitions, use a different approach
+        startViewTransition({
+          update: () => setShownPages([nextPage]),
+          type: 'backwards'
+        })
+      } else {
+        setShownPages([nextPage, currentPage])
+        // wait new page rendered, then exit last page
+        requestIdleCallback(() => {
+          if (pageInstanceMap[currentPage._id]) {
+            pageInstanceMap[currentPage._id]!.exitPage(() => {
+              setShownPages([nextPage])
+            })
+          } else {
             setShownPages([nextPage])
-          })
-        } else {
-          setShownPages([nextPage])
-        }
-      })
+          }
+        })
+      }
     })
     // when new page entered, execute page callback, done page append animation
     eventBus.on(`${eventPrefix}.page-entered`, (pageId: string) => {

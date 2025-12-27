@@ -39,11 +39,11 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 20px;
     will-change: transform, opacity, height;
 
-    &[date-page-status='entering'] {
+    &[data-page-status='entering'] {
       animation: #{$ns}-actionsheet-slide-up 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
 
-    &[date-page-status='exiting'] {
+    &[data-page-status='exiting'] {
       opacity: 0;
       animation: #{$ns}-actionsheet-slide-down 0.3s cubic-bezier(0, 0.8, 0.5, 1);
     }

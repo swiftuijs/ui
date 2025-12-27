@@ -2,6 +2,8 @@
 
 // ref: https: //developer.apple.com/documentation/swiftui/alignment
 .#{ns('container')} {
+  width: 100%;  // 确保 container 占满宽度
+  
   &[data-alignment='leading'] {
     justify-content: flex-start;
     align-items: center;

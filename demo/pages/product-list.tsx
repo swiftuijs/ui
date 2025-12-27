@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { VStack, HStack, Text, List, Section, Image, Button, Divider, Spacer, ScrollView, NavigationLink, GeometryReader, LazyVGrid } from 'src/index'
 import { StandardPage } from 'src/components/Page/standard-page'
 import { ProductDetailPage } from './product-detail'
@@ -206,39 +206,76 @@ function ProductCard({ product, onAddToCart, isInCart }: {
   )
 }
 
-export function ProductListPage({ categoryId, categoryName }: ProductListPageProps) {
-  const [cart, setCart] = useState<string[]>([])
-  const categoryProducts = products[categoryId] || []
-
-  const addToCart = (productId: string) => {
-    setCart([...cart, productId])
-  }
-
-  const isInCart = (productId: string) => cart.includes(productId)
+// Content component with hysteresis for responsive breakpoints
+function ProductListContent({ 
+  geometry, 
+  categoryName,
+  categoryProducts,
+  addToCart,
+  isInCart,
+  cart
+}: {
+  geometry: { width: number; height: number; x: number; y: number }
+  categoryName: string
+  categoryProducts: typeof products[string]
+  addToCart: (id: string) => void
+  isInCart: (id: string) => boolean
+  cart: string[]
+}) {
+  const containerWidth = geometry.width
+  
+  // Use state with hysteresis to prevent flickering at thresholds
+  const [isLargeScreen, setIsLargeScreen] = useState(containerWidth >= 1024)
+  const [isMediumScreen, setIsMediumScreen] = useState(containerWidth >= 768)
+  
+  useEffect(() => {
+    // Hysteresis for large screen (1024px threshold)
+    if (containerWidth >= 1040 && !isLargeScreen) {
+      setIsLargeScreen(true)
+    } else if (containerWidth < 1008 && isLargeScreen) {
+      setIsLargeScreen(false)
+    }
+    
+    // Hysteresis for medium screen (768px threshold)
+    if (containerWidth >= 784 && !isMediumScreen) {
+      setIsMediumScreen(true)
+    } else if (containerWidth < 752 && isMediumScreen) {
+      setIsMediumScreen(false)
+    }
+  }, [containerWidth, isLargeScreen, isMediumScreen])
+  
+  // Memoize computed values - use padding instead of maxWidth to avoid affecting measurements
+  const layoutConfig = useMemo(() => {
+    let padding: string
+    if (isLargeScreen) {
+      padding = '40px'
+    } else if (isMediumScreen) {
+      padding = '24px'
+    } else {
+      padding = '16px'
+    }
+    
+    return {
+      isLargeScreen,
+      isMediumScreen,
+      padding,
+      columns: isLargeScreen ? 3 : isMediumScreen ? 2 : 1
+    }
+  }, [isLargeScreen, isMediumScreen])
 
   return (
-    <StandardPage id={`products-${categoryId}`} navigationTitle={categoryName}>
-      <GeometryReader>
-        {(geometry) => {
-          const containerWidth = geometry.width
-          const isLargeScreen = containerWidth >= 1024
-          const isMediumScreen = containerWidth >= 768
-          const padding = isLargeScreen ? '40px' : isMediumScreen ? '24px' : '16px'
-          const columns = isLargeScreen ? 3 : isMediumScreen ? 2 : 1
+    <ScrollView direction="vertical" showsIndicators={true}>
+      <VStack spacing={0}>
+        <VStack spacing={8} style={{ padding: layoutConfig.padding, paddingBottom: '16px' }}>
+          <Text style={{ fontSize: layoutConfig.isLargeScreen ? '32px' : '24px', fontWeight: 'bold' }}>
+            {categoryName}
+          </Text>
+        </VStack>
 
-          return (
-            <ScrollView direction="vertical" showsIndicators={true}>
-              <VStack spacing={0}>
-                <VStack spacing={8} style={{ padding, paddingBottom: '16px' }}>
-                  <Text style={{ fontSize: isLargeScreen ? '32px' : '24px', fontWeight: 'bold' }}>
-                    {categoryName}
-                  </Text>
-                </VStack>
-
-                {isLargeScreen || isMediumScreen ? (
-                  // Desktop/Tablet: Grid layout
-                  <div style={{ padding, paddingTop: 0 }}>
-                    <LazyVGrid columns={columns} spacing={24}>
+        {layoutConfig.isLargeScreen || layoutConfig.isMediumScreen ? (
+          // Desktop/Tablet: Grid layout
+          <div style={{ padding: layoutConfig.padding, paddingTop: 0 }}>
+            <LazyVGrid columns={layoutConfig.columns} spacing={24}>
                       {categoryProducts.map((product) => (
                         <ProductCard
                           key={product.id}
@@ -345,12 +382,12 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
                   </VStack>
                 )}
 
-                {cart.length > 0 && (
-                  <VStack spacing={12} style={{ 
-                    padding, 
-                    backgroundColor: '#f2f2f7',
-                    marginTop: '20px'
-                  }}>
+        {cart.length > 0 && (
+          <VStack spacing={12} style={{ 
+            padding: layoutConfig.padding, 
+            backgroundColor: '#f2f2f7',
+            marginTop: '20px'
+          }}>
                     <HStack spacing={8} alignment="center">
                       <Text style={{ fontSize: '16px', fontWeight: '600' }}>
                         🛒 Cart ({cart.length} items)
@@ -371,11 +408,35 @@ export function ProductListPage({ categoryId, categoryName }: ProductListPagePro
                       </NavigationLink>
                     </HStack>
                   </VStack>
-                )}
-              </VStack>
-            </ScrollView>
-          )
-        }}
+        )}
+      </VStack>
+    </ScrollView>
+  )
+}
+
+export function ProductListPage({ categoryId, categoryName }: ProductListPageProps) {
+  const [cart, setCart] = useState<string[]>([])
+  const categoryProducts = products[categoryId] || []
+
+  const addToCart = (productId: string) => {
+    setCart([...cart, productId])
+  }
+
+  const isInCart = (productId: string) => cart.includes(productId)
+
+  return (
+    <StandardPage id={`products-${categoryId}`} navigationTitle={categoryName}>
+      <GeometryReader>
+        {(geometry) => (
+          <ProductListContent
+            geometry={geometry}
+            categoryName={categoryName}
+            categoryProducts={categoryProducts}
+            addToCart={addToCart}
+            isInCart={isInCart}
+            cart={cart}
+          />
+        )}
       </GeometryReader>
     </StandardPage>
   )

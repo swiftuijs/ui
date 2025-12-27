@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import type { IBaseComponent, EAlignment } from 'src/types'
 import { standardizeProps, standardizeUnit, prefixClass } from 'src/common'
 import { LayoutContext } from 'src/contexts'
@@ -44,21 +45,33 @@ export function BaseStack(props: IBaseStackProps) {
     ...restProps
   } = props
 
-  // Build style object with spacing and custom vars
-  const style: Record<string, string> = {}
-  Object.entries(styleVars).forEach(([key, value]) => {
-    style[key] = String(value)
-  })
-  if (spacing !== undefined && direction !== undefined) {
-    const spacingVar = direction === 'row' ? '--hstack-spacing' : '--vstack-spacing'
-    style[spacingVar] = standardizeUnit(spacing)
-  }
+  // Serialize styleVars for stable dependency comparison
+  const styleVarsKey = useMemo(() => 
+    JSON.stringify(styleVars), 
+    [styleVars]
+  )
 
-  // Build className array
-  const classNameArray = [prefixClass(stackClassName), prefixClass('container')]
-  if (alignment) {
-    classNameArray.push(`align-${alignment}`)
-  }
+  // Memoize style object to prevent unnecessary re-renders
+  const style = useMemo(() => {
+    const styleObj: Record<string, string> = {}
+    Object.entries(styleVars).forEach(([key, value]) => {
+      styleObj[key] = String(value)
+    })
+    if (spacing !== undefined && direction !== undefined) {
+      const spacingVar = direction === 'row' ? '--hstack-spacing' : '--vstack-spacing'
+      styleObj[spacingVar] = standardizeUnit(spacing)
+    }
+    return styleObj
+  }, [styleVarsKey, spacing, direction])
+
+  // Memoize className array to prevent unnecessary re-renders
+  const classNameArray = useMemo(() => {
+    const classes = [prefixClass(stackClassName), prefixClass('container')]
+    if (alignment) {
+      classes.push(`align-${alignment}`)
+    }
+    return classes
+  }, [stackClassName, alignment])
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(
     { ...restProps, alignment },

@@ -59,16 +59,15 @@ export const NavigationBar = memo(function NavigationBar(props: INavigationBarPr
 
   return (
     <div className={prefixClass('navigation-bar')}>
-      <HStack spacing={8} alignment="center" style={{ height: '100%', padding: '0 16px' }}>
-        {/* Back Button */}
+      {/* Back Button or Spacer */}
+      <div className={prefixClass('navigation-bar-leading')}>
         {showBackButton ? (
           <Button
             onClick={onBack}
-            className={prefixClass('navigation-bar-back')}
             style={{
               backgroundColor: 'transparent',
               border: 'none',
-              padding: '8px 0',
+              padding: '8px 12px 8px 0',
               minWidth: 'auto',
               color: 'var(--sw-color-blue, #007AFF)',
               fontSize: '17px',
@@ -79,24 +78,14 @@ export const NavigationBar = memo(function NavigationBar(props: INavigationBarPr
               <Text style={{ fontSize: '17px' }}>Back</Text>
             </HStack>
           </Button>
-        ) : (
-          <div style={{ width: '60px' }} />
-        )}
+        ) : null}
+      </div>
 
-        <Spacer />
-
-        {/* Title */}
-        {title && (
+      {/* Title */}
+      {title && (
+        <div className={prefixClass('navigation-bar-title')}>
           <Text
             style={{
-              fontSize: '17px',
-              fontWeight: '600',
-              textAlign: 'center',
-              flex: 1,
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              maxWidth: 'calc(100% - 120px)',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -104,19 +93,13 @@ export const NavigationBar = memo(function NavigationBar(props: INavigationBarPr
           >
             {title}
           </Text>
-        )}
+        </div>
+      )}
 
-        <Spacer />
-
-        {/* Toolbar Items */}
-        {toolbarItems ? (
-          <div className={prefixClass('navigation-bar-toolbar')}>
-            {toolbarItems}
-          </div>
-        ) : (
-          <div style={{ width: '60px' }} />
-        )}
-      </HStack>
+      {/* Toolbar Items */}
+      <div className={prefixClass('navigation-bar-trailing')}>
+        {toolbarItems}
+      </div>
     </div>
   )
 })
