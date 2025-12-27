@@ -137,12 +137,12 @@ function ProductCard({ product, onAddToCart, isInCart }: {
       <Image
         src={product.image}
         alt={product.name}
+        viewTransitionName={transitionName}
         style={{
           width: '100%',
           height: '200px',
           objectFit: 'cover',
-          borderRadius: '8px',
-          viewTransitionName: transitionName
+          borderRadius: '8px'
         }}
       />
       <VStack spacing={6} alignment="leading">

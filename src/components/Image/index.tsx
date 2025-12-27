@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef, useEffect } from 'react'
 import type { IBaseElementComponent } from 'src/types'
 import { standardizeProps, prefixClass } from 'src/common'
 
@@ -17,14 +17,29 @@ import './style.scss'
  * 
  * @see https://developer.apple.com/documentation/swiftui/image
  */
-export type IImageProps = Omit<IBaseElementComponent<'img'>, 'children'>
+export type IImageProps = Omit<IBaseElementComponent<'img'>, 'children'> & {
+  /**
+   * View transition name for shared element transitions
+   */
+  viewTransitionName?: string
+}
 
 export const Image = memo(function Image (props: IImageProps) {
-  const { commonProps, restProps } = standardizeProps(props, {
+  const { viewTransitionName, ...imgProps } = props
+  const imgRef = useRef<HTMLImageElement>(null)
+  
+  const { commonProps, restProps } = standardizeProps(imgProps, {
     className: prefixClass('image')
   })
   
+  // Set view-transition-name using ref to avoid React warning
+  useEffect(() => {
+    if (imgRef.current && viewTransitionName) {
+      imgRef.current.style.setProperty('view-transition-name', viewTransitionName)
+    }
+  }, [viewTransitionName])
+  
   return (
-    <img {...commonProps} {...restProps} />
+    <img ref={imgRef} {...commonProps} {...restProps} />
   )
 })

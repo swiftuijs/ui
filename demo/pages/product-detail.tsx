@@ -45,11 +45,11 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
             <Image
               src={product.image}
               alt={product.name}
+              viewTransitionName={transitionName}
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
-                viewTransitionName: transitionName
+                objectFit: 'cover'
               }}
             />
             {!product.inStock && (

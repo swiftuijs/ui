@@ -41,15 +41,23 @@ export async function startViewTransition(
     return
   }
 
+  // Add direction class to document for CSS targeting
+  const directionClass = options.type || 'forwards'
+  document.documentElement.classList.add(directionClass)
+
   const transition = document.startViewTransition(() => {
     options.update()
   })
 
-  // Set transition type for CSS targeting
+  // Set transition type for CSS targeting (if supported)
   if (transition.types && options.type) {
     transition.types.add(options.type)
   }
 
-  // Wait for transition to complete
-  await transition.updateCallbackDone
+  // Clean up direction class after transition
+  try {
+    await transition.finished
+  } finally {
+    document.documentElement.classList.remove(directionClass)
+  }
 }

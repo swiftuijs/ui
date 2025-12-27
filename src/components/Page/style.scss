@@ -1,5 +1,24 @@
 @use '~style/base.scss' as *;
 
+// Slide animations for page transitions
+@keyframes #{$ns}-page-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes #{$ns}-page-slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
 @include component('page') {
   position: absolute;
   inset: 0;
@@ -11,10 +30,134 @@
   flex-direction: column;
   overflow: hidden;
 
+  // Standard page slide animations
+  &[data-page-type='page'] {
+    &[data-page-status='entering'] {
+      animation: #{$ns}-page-slide-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
 
+    &[data-page-status='exiting'] {
+      animation: #{$ns}-page-slide-out 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+  }
 
   > .#{ns('container')} {
     width: 100%;
     height: 100%;
+  }
+}
+
+// View Transitions API support
+@supports (view-transition-name: none) {
+  // For view transitions, disable default animations
+  .#{$ns}-page[data-transition-type='view-transition'] {
+    &[data-page-status='entering'],
+    &[data-page-status='exiting'] {
+      animation: none;
+    }
+  }
+}
+
+// View Transition API animations - iOS style push/pop
+
+// Forward navigation (push): new page slides in from right, old page slides left
+html.forwards {
+  &::view-transition-old(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-left;
+    z-index: 1;
+  }
+
+  &::view-transition-new(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-right;
+    z-index: 2;
+  }
+}
+
+// Backward navigation (pop): old page slides out to right, new page slides in from left
+html.backwards {
+  &::view-transition-old(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-right;
+    z-index: 2;
+  }
+
+  &::view-transition-new(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-left;
+    z-index: 1;
+  }
+}
+
+// Default (no direction class)
+::view-transition-old(root) {
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-left;
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-right;
+  z-index: 2;
+}
+
+// Shared element transitions (for elements with view-transition-name)
+// These elements will smoothly morph between old and new positions
+::view-transition-group(*) {
+  animation-duration: 0.35s;
+  animation-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  // Disable default cross-fade for shared elements, let the morph handle it
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+// Smooth morph for shared elements
+::view-transition-group(*) {
+  animation-name: shared-element-morph;
+}
+
+@keyframes shared-element-morph {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// iOS-style slide animations
+@keyframes slide-from-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-to-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-30%);
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-30%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-to-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
   }
 }
