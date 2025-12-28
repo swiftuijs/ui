@@ -23,8 +23,7 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
       id={`product-${product.id}`} 
       navigationTitle={product.name}
       transition={{
-        type: 'view-transition',
-        viewTransitionName: transitionName
+        type: 'view-transition'
       }}
     >
       <ScrollView direction="vertical" showsIndicators={true}>
@@ -38,8 +37,6 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
           <ZStack alignment="center" style={{ 
             width: '100%', 
             height: '300px',
-            borderRadius: '12px',
-            overflow: 'hidden',
             backgroundColor: '#f2f2f7'
           }}>
             <Image
@@ -49,7 +46,8 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover'
+                objectFit: 'cover',
+                borderRadius: '12px'
               }}
             />
             {!product.inStock && (

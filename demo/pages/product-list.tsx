@@ -336,8 +336,7 @@ function ProductListContent({
                                 pageOptions={{ 
                                   type: 'page',
                                   transition: {
-                                    type: 'view-transition',
-                                    viewTransitionName: transitionName
+                                    type: 'view-transition'
                                   }
                                 }}
                               >

@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
+import { flushSync } from 'react-dom'
 import type { IBaseComponent, IPageItem, ILoosePageItem } from 'src/types'
 import { standardizeProps, generateUniqueId, eventBus, prefixClass } from 'src/common'
 import { startViewTransition, isViewTransitionSupported } from 'src/common/view-transition'
@@ -64,9 +65,14 @@ export function useViewModel(props: INavigationStackProps) {
       const useViewTransition = nextPage.transition?.type === 'view-transition' && isViewTransitionSupported()
       
       if (useViewTransition) {
-        // For view transitions, directly replace with new page (browser handles the animation)
+        // For view transitions, use flushSync to ensure React renders synchronously
+        // This allows the browser to capture both old and new snapshots with correct view-transition-names
         startViewTransition({
-          update: () => setShownPages([nextPage]),
+          update: () => {
+            flushSync(() => {
+              setShownPages([nextPage])
+            })
+          },
           type: 'forwards'
         })
       } else {
@@ -107,9 +113,13 @@ export function useViewModel(props: INavigationStackProps) {
       const useViewTransition = currentPage.transition?.type === 'view-transition' && isViewTransitionSupported()
       
       if (useViewTransition) {
-        // For view transitions, use a different approach
+        // For view transitions, use flushSync to ensure React renders synchronously
         startViewTransition({
-          update: () => setShownPages([nextPage]),
+          update: () => {
+            flushSync(() => {
+              setShownPages([nextPage])
+            })
+          },
           type: 'backwards'
         })
       } else {

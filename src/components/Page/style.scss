@@ -98,27 +98,46 @@ html.backwards {
 }
 
 // Shared element transitions (for elements with view-transition-name)
-// These elements will smoothly morph between old and new positions
+// These elements will smoothly morph between old and new positions/sizes
 ::view-transition-group(*) {
   animation-duration: 0.35s;
   animation-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
+  // Ensure shared elements are on top of everything
+  z-index: 1000;
 }
 
-::view-transition-old(*),
-::view-transition-new(*) {
-  // Disable default cross-fade for shared elements, let the morph handle it
-  animation: none;
+// Control how the old and new images are composited
+::view-transition-image-pair(*) {
+  isolation: isolate;
+}
+
+// For shared elements, use cross-fade between old and new states
+// The browser automatically handles position and size interpolation
+::view-transition-old(*) {
+  // Fade out the old element
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both fade-out;
+  // Ensure it doesn't block interaction
   mix-blend-mode: normal;
 }
 
-// Smooth morph for shared elements
-::view-transition-group(*) {
-  animation-name: shared-element-morph;
+::view-transition-new(*) {
+  // Fade in the new element
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both fade-in;
+  mix-blend-mode: normal;
 }
 
-@keyframes shared-element-morph {
+@keyframes fade-out {
   from {
     opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
   to {
     opacity: 1;

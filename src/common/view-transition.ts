@@ -36,10 +36,13 @@ export async function startViewTransition(
   options: IViewTransitionOptions
 ): Promise<void> {
   if (!isViewTransitionSupported()) {
+    console.warn('[View Transition] API not supported, using fallback')
     // Fallback: immediate update if View Transitions not supported
     options.update()
     return
   }
+
+  console.log('[View Transition] Starting transition:', options.type, options.transitionName)
 
   // Add direction class to document for CSS targeting
   const directionClass = options.type || 'forwards'
@@ -54,9 +57,12 @@ export async function startViewTransition(
     transition.types.add(options.type)
   }
 
+  console.log('[View Transition] Transition started')
+
   // Clean up direction class after transition
   try {
     await transition.finished
+    console.log('[View Transition] Transition finished')
   } finally {
     document.documentElement.classList.remove(directionClass)
   }
