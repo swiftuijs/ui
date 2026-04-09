@@ -4,7 +4,7 @@ import type { IBaseComponent, IPageItem, ILoosePageItem } from '@/types'
 import { standardizeProps, generateUniqueId, eventBus, prefixClass } from '@/common'
 import { startViewTransition, isViewTransitionSupported } from '@/common/view-transition'
 import { INaviContext } from '@/contexts'
-import type { Page } from '@/components/Page'
+import type { PageHandle } from '@/components/Page'
 
 const HOME_PAGE_ID = generateUniqueId('_index_')
 
@@ -23,7 +23,7 @@ export function useViewModel(props: INavigationStackProps) {
     count: () => paths.current.length,
     dismiss: () => eventBus.emit(`${innerEventPrefix.current}.remove`, 1),
   })
-  const pageInstances = useRef<Record<string, Page | null>>({})
+  const pageInstances = useRef<Record<string, PageHandle | null>>({})
 
   const homePage: IPageItem = useMemo(() => ({
     component: () => (<>{props.children}</>),
@@ -59,7 +59,8 @@ export function useViewModel(props: INavigationStackProps) {
       } else {
         // if page already in path, move it to the end
         nextPage = currentPaths[index]
-        paths.current = [...currentPaths.slice(index, 1), nextPage]
+        const remaining = currentPaths.filter((item) => item._id !== _id)
+        paths.current = [...remaining, nextPage]
       }
       // Use View Transitions API if configured and supported
       const useViewTransition = nextPage.transition?.type === 'view-transition' && isViewTransitionSupported()

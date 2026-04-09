@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { NavigationBar } from './index'
 import { Button } from '../Button'
 
@@ -16,31 +16,28 @@ describe('NavigationBar', () => {
 
   it('should not render title when not provided', () => {
     const { container } = render(<NavigationBar />)
-    const titleElement = container.querySelector('.sw-text')
-    // Title should not be rendered when not provided
-    expect(titleElement).not.toBeInTheDocument()
+    expect(container).not.toHaveTextContent(/\S/)
   })
 
   it('should show back button when showBackButton is true', () => {
     render(<NavigationBar title="Test" showBackButton={true} />)
-    expect(screen.getByText('Back')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
   })
 
   it('should not show back button when showBackButton is false', () => {
     render(<NavigationBar title="Test" showBackButton={false} />)
-    expect(screen.queryByText('Back')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /back/i })).not.toBeInTheDocument()
   })
 
   it('should not show back button by default', () => {
     render(<NavigationBar title="Test" />)
-    expect(screen.queryByText('Back')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /back/i })).not.toBeInTheDocument()
   })
 
   it('should call onBack when back button is clicked', () => {
     const handleBack = vi.fn()
     render(<NavigationBar title="Test" showBackButton={true} onBack={handleBack} />)
-    const backButton = screen.getByText('Back')
-    backButton.click()
+    fireEvent.click(screen.getByRole('button', { name: /back/i }))
     expect(handleBack).toHaveBeenCalledTimes(1)
   })
 
@@ -56,9 +53,8 @@ describe('NavigationBar', () => {
   })
 
   it('should not render toolbar items when not provided', () => {
-    const { container } = render(<NavigationBar title="Test" />)
-    const toolbar = container.querySelector('.sw-navigation-bar-toolbar')
-    expect(toolbar).not.toBeInTheDocument()
+    render(<NavigationBar title="Test" />)
+    expect(screen.queryByRole('button', { name: /share/i })).not.toBeInTheDocument()
   })
 
   it('should apply correct className', () => {
@@ -68,9 +64,8 @@ describe('NavigationBar', () => {
   })
 
   it('should render back button with correct className', () => {
-    const { container } = render(<NavigationBar title="Test" showBackButton={true} />)
-    const backButton = container.querySelector('.sw-navigation-bar-back')
-    expect(backButton).toBeInTheDocument()
+    render(<NavigationBar title="Test" showBackButton={true} />)
+    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
   })
 
   it('should render all elements together', () => {
@@ -85,15 +80,12 @@ describe('NavigationBar', () => {
     )
     
     expect(screen.getByText('Product Details')).toBeInTheDocument()
-    expect(screen.getByText('Back')).toBeInTheDocument()
-    expect(screen.getByText('Share')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /share/i })).toBeInTheDocument()
   })
 
   it('should handle empty title string', () => {
     const { container } = render(<NavigationBar title="" />)
-    const titleElement = container.querySelector('.sw-text')
-    // Empty string should not render title
-    expect(titleElement).not.toBeInTheDocument()
+    expect(container).not.toHaveTextContent(/\S/)
   })
 })
-

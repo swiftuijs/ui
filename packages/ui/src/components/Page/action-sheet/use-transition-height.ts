@@ -41,7 +41,6 @@ export function useTransitionHeight(props: IDragBarProps) {
   // listen to event to change height
   useEffect(() => {
     eventBus.on(props.eventToChangeDetent, (height: number) => {
-      console.log("height", height)
       updateHeight(height)
     })
     return () => {
