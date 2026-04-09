@@ -1,44 +1,62 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { render, screen } from '@/testing/render'
 import { Button } from './index'
 
 describe('Button', () => {
-  it('should render correctly', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByText('Click me')).toBeInTheDocument()
-  })
+  describe('primitive checklist', () => {
+    it('renders a semantic button with an accessible name', () => {
+      render(<Button>Save changes</Button>)
 
-  it('should apply custom className', () => {
-    const { container } = render(<Button className="custom-class">Test</Button>)
-    const button = container.querySelector('button')
-    expect(button).toHaveClass('custom-class')
-    expect(button).toHaveClass('sw-button')
-  })
+      const button = screen.getByRole('button', { name: 'Save changes' })
 
-  it('should apply custom style', () => {
-    const { container } = render(<Button style={{ color: 'red' }}>Test</Button>)
-    const button = container.querySelector('button')
-    expect(button).toHaveStyle({ color: 'rgb(255, 0, 0)' })
-  })
+      expect(button.tagName).toBe('BUTTON')
+      expect(button).toHaveAttribute('type', 'button')
+    })
 
-  it('should handle click events', () => {
-    const handleClick = vi.fn()
-    render(<Button onClick={handleClick}>Click</Button>)
-    const button = screen.getByText('Click')
-    button.click()
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
+    it('composes user className and style with primitive defaults', () => {
+      render(
+        <Button className="custom-class" style={{ marginTop: '4px' }}>
+          Styled button
+        </Button>
+      )
 
-  it('should be disabled when disabled prop is set', () => {
-    render(<Button disabled>Disabled</Button>)
-    const button = screen.getByText('Disabled')
-    expect(button).toBeDisabled()
-  })
+      const button = screen.getByRole('button', { name: 'Styled button' })
 
-  it('should pass through other props', () => {
-    render(<Button type="submit" data-testid="test-button">Submit</Button>)
-    const button = screen.getByTestId('test-button')
-    expect(button).toHaveAttribute('type', 'submit')
+      expect(button).toHaveClass('sw-button', 'custom-class')
+      expect(button).toHaveStyle({ marginTop: '4px' })
+    })
+
+    it('preserves disabled native button behavior', async () => {
+      const user = userEvent.setup()
+      const handleClick = vi.fn()
+
+      render(
+        <Button disabled onClick={handleClick}>
+          Disabled action
+        </Button>
+      )
+
+      const button = screen.getByRole('button', { name: 'Disabled action' })
+
+      expect(button).toBeDisabled()
+
+      await user.click(button)
+
+      expect(handleClick).not.toHaveBeenCalled()
+    })
+
+    it('lets callers override controlled button props when needed', () => {
+      render(
+        <Button aria-pressed type="submit">
+          Submit form
+        </Button>
+      )
+
+      const button = screen.getByRole('button', { name: 'Submit form' })
+
+      expect(button).toHaveAttribute('type', 'submit')
+      expect(button).toHaveAttribute('aria-pressed', 'true')
+    })
   })
 })
-

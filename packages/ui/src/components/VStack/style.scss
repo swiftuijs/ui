@@ -4,7 +4,7 @@
 
 @include component('vstack') {
   @include flex-container(column, stretch);
-  @include stack-spacing('--vstack-spacing');
+  @include stack-spacing('--stack-spacing');
 
   > .#{$prefix}-spacer {
     @include spacer-child(height);

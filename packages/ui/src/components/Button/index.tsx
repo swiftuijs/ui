@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
@@ -20,12 +19,13 @@ import './style.scss'
  */
 export type IButtonProps = IBaseElementComponent<'button'>
 
-export const Button = memo(function Button (props: IButtonProps) {
-  const { commonProps, restProps, children } = standardizeProps(props, {
+export function Button(props: IButtonProps) {
+  const { type = 'button', ...buttonProps } = props
+  const { commonProps, restProps, children } = standardizeProps(buttonProps, {
     className: prefixClass('button')
   })
-  
+
   return (
-    <button {...commonProps} {...restProps}>{children}</button>
+    <button type={type} {...commonProps} {...restProps}>{children}</button>
   )
-})
+}

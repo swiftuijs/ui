@@ -4,7 +4,7 @@
 
 @include component('hstack') {
   @include flex-container(row, center);
-  @include stack-spacing('--hstack-spacing');
+  @include stack-spacing('--stack-spacing');
 
   > .#{$prefix}-spacer {
     @include spacer-child(width);

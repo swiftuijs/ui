@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import type { IBaseComponent, EAlignment } from '@/types'
 import { BaseStack } from '../Stack/BaseStack'
 
@@ -34,10 +33,10 @@ export interface IHStackProps extends IBaseComponent {
    * 
    * @default 0
    */
-  spacing?: number
+  spacing?: number | string
 }
 
-export const HStack = memo(function HStack(props: IHStackProps) {
+export function HStack(props: IHStackProps) {
   const { alignment = 'center', spacing, ...restProps } = props
 
   return (
@@ -49,4 +48,4 @@ export const HStack = memo(function HStack(props: IHStackProps) {
       {...restProps}
     />
   )
-})
+}

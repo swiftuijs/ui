@@ -1,46 +1,53 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen } from '@/testing/render'
 import { Text } from './index'
 
 describe('Text', () => {
-  it('should render correctly', () => {
-    render(<Text>Hello World</Text>)
-    expect(screen.getByText('Hello World')).toBeInTheDocument()
-  })
+  describe('primitive checklist', () => {
+    it('renders semantic text output', () => {
+      render(<Text>Hello World</Text>)
 
-  it('should apply custom className', () => {
-    const { container } = render(<Text className="custom-class">Test</Text>)
-    const div = container.firstChild as HTMLElement
-    expect(div).toHaveClass('custom-class')
-    expect(div).toHaveClass('sw-text')
-  })
+      const text = screen.getByText('Hello World')
 
-  it('should apply custom style', () => {
-    const { container } = render(<Text style={{ color: 'blue' }}>Test</Text>)
-    const div = container.firstChild as HTMLElement
-    expect(div).toHaveStyle({ color: 'rgb(0, 0, 255)' })
-  })
+      expect(text.tagName).toBe('SPAN')
+    })
 
-  it('should apply lineLimit when provided', () => {
-    const { container } = render(<Text lineLimit={2}>Long text</Text>)
-    const div = container.firstChild as HTMLElement
-    expect(div).toHaveClass('line-clamp')
-    expect(div).toHaveStyle({ '--line-limit': '2' })
-  })
+    it('composes user className and style', () => {
+      render(
+        <Text className="custom-class" style={{ color: 'blue' }}>
+          Styled text
+        </Text>
+      )
 
-  it('should not apply line-clamp when lineLimit is not provided', () => {
-    const { container } = render(<Text>Normal text</Text>)
-    const div = container.firstChild as HTMLElement
-    expect(div).not.toHaveClass('line-clamp')
-  })
+      const text = screen.getByText('Styled text')
 
-  it('should render children correctly', () => {
-    render(
-      <Text>
-        <span>Nested content</span>
-      </Text>
-    )
-    expect(screen.getByText('Nested content')).toBeInTheDocument()
+      expect(text).toHaveClass('sw-text', 'custom-class')
+      expect(text).toHaveStyle({ color: 'rgb(0, 0, 255)' })
+    })
+
+    it('exposes line clamping as user-observable output', () => {
+      render(<Text lineLimit={2}>Clamped copy</Text>)
+
+      const text = screen.getByText('Clamped copy')
+
+      expect(text).toHaveClass('line-clamp')
+      expect(text).toHaveStyle({ '--line-limit': '2' })
+    })
+
+    it('keeps line clamping disabled for omitted or zero limits', () => {
+      render(
+        <>
+          <Text>No clamp</Text>
+          <Text lineLimit={0}>Zero clamp</Text>
+        </>
+      )
+
+      const unclampedText = screen.getByText('No clamp')
+      const zeroLimitText = screen.getByText('Zero clamp')
+
+      expect(unclampedText).not.toHaveClass('line-clamp')
+      expect(zeroLimitText).not.toHaveClass('line-clamp')
+      expect(zeroLimitText.style.getPropertyValue('--line-limit')).toBe('')
+    })
   })
 })
-

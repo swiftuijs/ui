@@ -1,6 +1,10 @@
-import { useMemo } from 'react'
 import type { IBaseComponent, EAlignment } from '@/types'
-import { standardizeProps, standardizeUnit, prefixClass } from '@/common'
+import {
+  createCssVariables,
+  resolveSpacingValue,
+  standardizeProps,
+  prefixClass,
+} from '@/common'
 import { LayoutContext } from '@/contexts'
 
 export interface IBaseStackProps extends IBaseComponent {
@@ -15,7 +19,7 @@ export interface IBaseStackProps extends IBaseComponent {
    * The distance between adjacent subviews, in pixels.
    * Only applies to HStack and VStack, not ZStack.
    */
-  spacing?: number
+  spacing?: number | string
   /**
    * The alignment of the children within the stack.
    */
@@ -27,7 +31,7 @@ export interface IBaseStackProps extends IBaseComponent {
   /**
    * Custom style variables specific to the stack type.
    */
-  styleVars?: Record<string, string | number>
+  styleVars?: Record<`--${string}`, string | number | undefined>
 }
 
 /**
@@ -45,38 +49,15 @@ export function BaseStack(props: IBaseStackProps) {
     ...restProps
   } = props
 
-  // Serialize styleVars for stable dependency comparison
-  const styleVarsKey = useMemo(() => 
-    JSON.stringify(styleVars), 
-    [styleVars]
-  )
-
-  // Memoize style object to prevent unnecessary re-renders
-  const style = useMemo(() => {
-    const styleObj: Record<string, string> = {}
-    Object.entries(styleVars).forEach(([key, value]) => {
-      styleObj[key] = String(value)
-    })
-    if (spacing !== undefined && direction !== undefined) {
-      const spacingVar = direction === 'row' ? '--hstack-spacing' : '--vstack-spacing'
-      styleObj[spacingVar] = standardizeUnit(spacing)
-    }
-    return styleObj
-  }, [styleVarsKey, spacing, direction])
-
-  // Memoize className array to prevent unnecessary re-renders
-  const classNameArray = useMemo(() => {
-    const classes = [prefixClass(stackClassName), prefixClass('container')]
-    if (alignment) {
-      classes.push(`align-${alignment}`)
-    }
-    return classes
-  }, [stackClassName, alignment])
+  const style = createCssVariables({
+    ...styleVars,
+    '--stack-spacing': direction ? resolveSpacingValue(spacing) : undefined,
+  })
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(
     { ...restProps, alignment },
     {
-      className: classNameArray,
+      className: [prefixClass(stackClassName), prefixClass('container')],
       style,
     }
   )
@@ -98,4 +79,3 @@ export function BaseStack(props: IBaseStackProps) {
 
   return content
 }
-

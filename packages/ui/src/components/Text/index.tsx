@@ -1,6 +1,5 @@
-import { memo } from 'react'
 import type { IBaseComponent } from '@/types'
-import { standardizeProps, prefixClass } from '@/common'
+import { createCssVariables, standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
 
@@ -30,19 +29,20 @@ export interface ITextProps extends IBaseComponent {
   lineLimit?: number
 }
 
-export const Text = memo(function Text(props: ITextProps) {
+export function Text(props: ITextProps) {
   const { lineLimit, ...tProps } = props
-  const style = lineLimit ? { '--line-limit': lineLimit } : undefined
-
+  const shouldClamp = typeof lineLimit === 'number' && lineLimit > 0
 
   const { commonProps, restProps, children } = standardizeProps(tProps, {
-    className: [prefixClass('text'), style ? 'line-clamp' : false ],
-    style,
+    className: [prefixClass('text'), shouldClamp ? 'line-clamp' : false],
+    style: createCssVariables({
+      '--line-limit': shouldClamp ? lineLimit : undefined,
+    }),
   })
 
   return (
-    <div {...commonProps} {...restProps}>
+    <span {...commonProps} {...restProps}>
       {children}
-    </div>
+    </span>
   )
-})
+}

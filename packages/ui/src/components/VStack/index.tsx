@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import type { IBaseComponent, EAlignment } from '@/types'
 import { BaseStack } from '../Stack/BaseStack'
 
@@ -34,10 +33,10 @@ export interface IVStackProps extends IBaseComponent {
    * 
    * @default 0
    */
-  spacing?: number
+  spacing?: number | string
 }
 
-export const VStack = memo(function VStack(props: IVStackProps) {
+export function VStack(props: IVStackProps) {
   const { spacing, alignment, ...restProps } = props
 
   return (
@@ -49,4 +48,4 @@ export const VStack = memo(function VStack(props: IVStackProps) {
       {...restProps}
     />
   )
-})
+}
