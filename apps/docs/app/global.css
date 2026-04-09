@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  background:
+    radial-gradient(circle at top, color-mix(in srgb, var(--color-fd-primary) 10%, white) 0%, transparent 42%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 38%, #f6f7fb 100%);
+}
+
+body {
+  min-height: 100vh;
+}

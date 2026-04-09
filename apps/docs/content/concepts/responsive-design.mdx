@@ -1,0 +1,29 @@
+---
+title: Responsive Design
+description: Responsive behavior in SwiftUI.js should be deliberate, token-driven, and compatible with the web platform.
+---
+
+# Responsive Design
+
+Responsive behavior in SwiftUI.js is not a late-stage patch. It belongs in the same foundation as tokens, layout primitives, and composition patterns.
+
+## Principles
+
+- Prefer tokenized spacing and sizing over hard-coded pixel exceptions.
+- Let containers adapt first before introducing per-component overrides.
+- Keep breakpoints understandable and few enough to reason about.
+- Match responsive changes to user-facing layout goals, not arbitrary viewport trivia.
+
+## A Good Mental Model
+
+Think in terms of **content pressure**:
+
+- When content is comfortable, preserve hierarchy and whitespace.
+- When space tightens, reduce density in a controlled way.
+- When a layout must change shape, do it at clear boundaries rather than through a long tail of one-off exceptions.
+
+## What This Means In Practice
+
+SwiftUI.js should expose responsive helpers that compose with the design tokens already in the package. Components should not each invent their own breakpoint language.
+
+As the component system grows, the docs app can add richer examples and recipes, but the baseline rule remains simple: responsive behavior should be centralized, predictable, and visible in the API.
