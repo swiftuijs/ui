@@ -1,45 +1,8 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./",
-    "rootDir": "./",
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "es6", // Specify ECMAScript target version
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ], // List of library files to be included in the compilation
-    "allowJs": true, // Allow JavaScript files to be compiled
-    "skipLibCheck": true, // Skip type checking of all declaration files
-    "esModuleInterop": true, // Disables namespace imports (import * as fs from "fs") and enables CJS/AMD/UMD style imports (import fs from "fs")
-    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
-    "strict": true, // Enable all strict type checking options
-    "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file.
-    "module": "esnext", // Specify module code generation
-    "moduleResolution": "bundler", // Resolve modules using bundler style (recommended for Vite 6)
-    "isolatedModules": true, // Unconditionally emit imports for unresolved files
-    "resolveJsonModule": true, // Include modules imported with .json extension
-    "noEmit": true, // Do not emit output (meaning do not compile code, only perform type checking)
-    "jsx": "react-jsx", // Support JSX in .tsx files
-    "sourceMap": true, // Generate corrresponding .map file
-    "declaration": true, // Generate corresponding .d.ts file
-    "noUnusedLocals": true, // Report errors on unused locals
-    "noUnusedParameters": true, // Report errors on unused parameters
-    "incremental": true, // Enable incremental compilation by reading/writing information from prior compilations to a file on disk
-    "noFallthroughCasesInSwitch": true, // Report errors for fallthrough cases in switch statement,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
-    "paths": {
-      "src/*": ["src/*"],
-      "~style/*": ["src/style/*"],
-    }
-  },
-  "include": [
-    "example/**/*", // *** The files TypeScript should type check ***
-    "src/**/*", // *** The files TypeScript should type check ***
-    "demo/**/*",
-    "stories"  ],
-  "exclude": [
-    "node_modules",
-    "build"
-  ] // *** The files to not type check ***
+  "files": [],
+  "references": [
+    { "path": "./packages/ui" },
+    { "path": "./apps/docs" },
+    { "path": "./apps/storybook" }
+  ]
 }
