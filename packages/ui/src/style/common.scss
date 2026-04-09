@@ -5,7 +5,7 @@
 }
 
 html {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  font-family: var(--sw-typography-font-family-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -27,38 +27,30 @@ html, body {
 }
 
 body {
-  --sw-accent-color: var(--sw-color-blue);
+  --sw-accent-color: var(--sw-color-blue-base);
 }
 
 // iOS Design System Variables
 // Based on iOS Human Interface Guidelines and SwiftUI design tokens
 
 :root {
-  // Colors - iOS System Colors
-  --sw-color-blue: #007AFF;
+  // Token source of truth variables
+  --sw-color-blue-base: #007AFF;
   --sw-color-blue-dark: #0051D5;
   --sw-color-blue-light: #5AC8FA;
-  
-  --sw-color-gray: #8E8E93;
+  --sw-color-gray-base: #8E8E93;
   --sw-color-gray-light: #C7C7CC;
   --sw-color-gray-lighter: #E5E5EA;
   --sw-color-gray-dark: #636366;
-  
   --sw-color-label-primary: #000000;
   --sw-color-label-secondary: #8E8E93;
   --sw-color-label-tertiary: #C7C7CC;
-  
   --sw-color-background-primary: #FFFFFF;
   --sw-color-background-secondary: #F2F2F7;
   --sw-color-background-tertiary: #FFFFFF;
-  
-  --sw-color-separator: #C6C6C8;
+  --sw-color-separator-default: #C6C6C8;
   --sw-color-separator-opaque: #38383A;
-  
-  // Accent color (default iOS blue)
-  --sw-accent-color: var(--sw-color-blue);
-  
-  // Spacing - iOS spacing system (4px base unit)
+
   --sw-spacing-xs: 4px;
   --sw-spacing-sm: 8px;
   --sw-spacing-md: 12px;
@@ -66,29 +58,60 @@ body {
   --sw-spacing-xl: 20px;
   --sw-spacing-2xl: 24px;
   --sw-spacing-3xl: 32px;
-  
-  // Typography - iOS font sizes
-  --sw-font-size-large-title: 34px;
-  --sw-font-size-title-1: 28px;
-  --sw-font-size-title-2: 22px;
-  --sw-font-size-title-3: 20px;
-  --sw-font-size-headline: 17px;
-  --sw-font-size-body: 17px;
-  --sw-font-size-callout: 16px;
-  --sw-font-size-subheadline: 15px;
-  --sw-font-size-footnote: 13px;
-  --sw-font-size-caption-1: 12px;
-  --sw-font-size-caption-2: 11px;
-  
-  --sw-font-weight-regular: 400;
-  --sw-font-weight-medium: 500;
-  --sw-font-weight-semibold: 600;
-  --sw-font-weight-bold: 700;
-  
-  --sw-line-height-tight: 1.2;
-  --sw-line-height-normal: 1.4;
-  --sw-line-height-relaxed: 1.6;
-  
+  --sw-typography-font-family-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --sw-typography-font-size-large-title: 34px;
+  --sw-typography-font-size-title1: 28px;
+  --sw-typography-font-size-title2: 22px;
+  --sw-typography-font-size-title3: 20px;
+  --sw-typography-font-size-headline: 17px;
+  --sw-typography-font-size-body: 17px;
+  --sw-typography-font-size-callout: 16px;
+  --sw-typography-font-size-subheadline: 15px;
+  --sw-typography-font-size-footnote: 13px;
+  --sw-typography-font-size-caption1: 12px;
+  --sw-typography-font-size-caption2: 11px;
+  --sw-typography-font-weight-regular: 400;
+  --sw-typography-font-weight-medium: 500;
+  --sw-typography-font-weight-semibold: 600;
+  --sw-typography-font-weight-bold: 700;
+  --sw-typography-line-height-tight: 1.2;
+  --sw-typography-line-height-normal: 1.4;
+  --sw-typography-line-height-relaxed: 1.6;
+  --sw-motion-duration-fast: 0.15s;
+  --sw-motion-duration-normal: 0.25s;
+  --sw-motion-duration-slow: 0.35s;
+  --sw-motion-easing-standard: ease-out;
+  --sw-motion-transition-fast: 0.15s ease-out;
+  --sw-motion-transition-normal: 0.25s ease-out;
+  --sw-motion-transition-slow: 0.35s ease-out;
+
+  // Compatibility aliases for existing component styles
+  --sw-color-blue: var(--sw-color-blue-base);
+  --sw-color-gray: var(--sw-color-gray-base);
+  --sw-color-separator: var(--sw-color-separator-default);
+  --sw-accent-color: var(--sw-color-blue-base);
+  --sw-font-size-large-title: var(--sw-typography-font-size-large-title);
+  --sw-font-size-title-1: var(--sw-typography-font-size-title1);
+  --sw-font-size-title-2: var(--sw-typography-font-size-title2);
+  --sw-font-size-title-3: var(--sw-typography-font-size-title3);
+  --sw-font-size-headline: var(--sw-typography-font-size-headline);
+  --sw-font-size-body: var(--sw-typography-font-size-body);
+  --sw-font-size-callout: var(--sw-typography-font-size-callout);
+  --sw-font-size-subheadline: var(--sw-typography-font-size-subheadline);
+  --sw-font-size-footnote: var(--sw-typography-font-size-footnote);
+  --sw-font-size-caption-1: var(--sw-typography-font-size-caption1);
+  --sw-font-size-caption-2: var(--sw-typography-font-size-caption2);
+  --sw-font-weight-regular: var(--sw-typography-font-weight-regular);
+  --sw-font-weight-medium: var(--sw-typography-font-weight-medium);
+  --sw-font-weight-semibold: var(--sw-typography-font-weight-semibold);
+  --sw-font-weight-bold: var(--sw-typography-font-weight-bold);
+  --sw-line-height-tight: var(--sw-typography-line-height-tight);
+  --sw-line-height-normal: var(--sw-typography-line-height-normal);
+  --sw-line-height-relaxed: var(--sw-typography-line-height-relaxed);
+  --sw-transition-fast: var(--sw-motion-transition-fast);
+  --sw-transition-normal: var(--sw-motion-transition-normal);
+  --sw-transition-slow: var(--sw-motion-transition-slow);
+
   // Border radius - iOS corner radius
   --sw-radius-xs: 4px;
   --sw-radius-sm: 6px;
@@ -101,11 +124,6 @@ body {
   --sw-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
   --sw-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
   --sw-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
-  
-  // Transitions - iOS animation timing
-  --sw-transition-fast: 0.15s ease-out;
-  --sw-transition-normal: 0.25s ease-out;
-  --sw-transition-slow: 0.35s ease-out;
   
   // Z-index layers
   --sw-z-base: 0;

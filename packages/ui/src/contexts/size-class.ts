@@ -4,7 +4,7 @@
  */
 import { createStore } from 'plain-store'
 import { isInBrowser } from '@/common'
-import { SIZECLASS_BREAKPOINTS } from '@/common/breakpoints'
+import { SIZE_CLASS_REGULAR_MIN } from '@/tokens'
 import { viewportStore } from './viewport'
 import { eventBus } from '@/common/event-bus'
 
@@ -19,14 +19,14 @@ export type SizeClass = 'compact' | 'regular'
 export interface ISizeClassInfo {
   /**
    * Horizontal SizeClass
-   * - compact: width < 375px (typically small screens)
-   * - regular: width >= 375px (typically large screens)
+   * - compact: width is below SIZE_CLASS_REGULAR_MIN.horizontal
+   * - regular: width is at or above SIZE_CLASS_REGULAR_MIN.horizontal
    */
   horizontal: SizeClass
   /**
    * Vertical SizeClass
-   * - compact: height < 667px (typically short screens)
-   * - regular: height >= 667px (typically tall screens)
+   * - compact: height is below SIZE_CLASS_REGULAR_MIN.vertical
+   * - regular: height is at or above SIZE_CLASS_REGULAR_MIN.vertical
    */
   vertical: SizeClass
   /**
@@ -42,14 +42,18 @@ export interface ISizeClassInfo {
 /**
  * Calculate SizeClass based on viewport dimensions
  */
-function calculateSizeClass(viewport: { width: number; height: number } | null): ISizeClassInfo | null {
+function resolveAxisSizeClass(value: number, regularMin: number): SizeClass {
+  return value < regularMin ? 'compact' : 'regular'
+}
+
+export function getSizeClassInfo(viewport: { width: number; height: number } | null): ISizeClassInfo | null {
   if (!viewport) {
     return null
   }
 
   return {
-    horizontal: viewport.width < SIZECLASS_BREAKPOINTS.horizontal ? 'compact' : 'regular',
-    vertical: viewport.height < SIZECLASS_BREAKPOINTS.vertical ? 'compact' : 'regular',
+    horizontal: resolveAxisSizeClass(viewport.width, SIZE_CLASS_REGULAR_MIN.horizontal),
+    vertical: resolveAxisSizeClass(viewport.height, SIZE_CLASS_REGULAR_MIN.vertical),
     width: viewport.width,
     height: viewport.height,
   }
@@ -66,14 +70,14 @@ export const sizeClassStore = createStore<ISizeClassInfo | null>(null)
 if (isInBrowser) {
   // Listen to viewport changes via event bus
   eventBus.on('viewport:change', (viewport: { width: number; height: number } | null) => {
-    const sizeClass = calculateSizeClass(viewport)
+    const sizeClass = getSizeClassInfo(viewport)
     sizeClassStore.setStore(sizeClass)
   })
 
   // Initialize with current viewport
   const initialViewport = viewportStore.getStore()
   if (initialViewport) {
-    const initialSizeClass = calculateSizeClass(initialViewport)
+    const initialSizeClass = getSizeClassInfo(initialViewport)
     sizeClassStore.setStore(initialSizeClass)
   }
 }
@@ -99,3 +103,4 @@ export function useSizeClass(): ISizeClassInfo | null {
   return sizeClassStore.useStore()
 }
 
+export { SIZE_CLASS_REGULAR_MIN }
