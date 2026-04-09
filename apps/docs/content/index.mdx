@@ -12,6 +12,7 @@ Use these docs to understand:
 - how to install the package cleanly
 - how layout and alignment concepts map onto the DOM
 - how responsive behavior is expressed through tokens and composition
+- which parts of the system are aligned, adapted, partial, or still planned
 
 ## Start Here
 
@@ -21,6 +22,17 @@ Then move into the concept guides:
 
 - [SwiftUI Alignment](/docs/concepts/swiftui-alignment/)
 - [Responsive Design](/docs/concepts/responsive-design/)
+
+## Maturity
+
+Production-ready here means the foundation is stable enough for real app use: documented, tested, and predictable in the browser. It does not mean every SwiftUI concept has a one-to-one web equivalent.
+
+- `aligned` means the API and behavior map closely to SwiftUI intent and are ready to use as documented.
+- `adapted` means the feature keeps the SwiftUI mental model but uses web-native behavior where the platform differs.
+- `partial` means the concept is useful and shipped, but some related behavior, edge cases, or companion APIs are still in progress.
+- `planned` means the idea is part of the roadmap, not a promise of current parity.
+
+When a feature is marked anything other than `aligned`, the docs should say what is different so users can make an informed call.
 
 ## What Lives Here
 
