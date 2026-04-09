@@ -3,37 +3,6 @@
   "name": "swiftuijs-workspace",
   "version": "0.0.1",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./components/*": {
-      "import": "./dist/components/*/index.js",
-      "types": "./dist/components/*/index.d.ts"
-    },
-    "./common/*": {
-      "import": "./dist/common/*.js",
-      "types": "./dist/common/*.d.ts"
-    },
-    "./contexts/*": {
-      "import": "./dist/contexts/*.js",
-      "types": "./dist/contexts/*.d.ts"
-    },
-    "./hooks/*": {
-      "import": "./dist/hooks/*.js",
-      "types": "./dist/hooks/*.d.ts"
-    },
-    "./style/*": {
-      "import": "./dist/style/*.css"
-    }
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "turbo run build",
     "lint": "turbo run lint",
@@ -82,16 +51,5 @@
     "vite-plugin-dts": "^4.0.0",
     "vitest": "^4.0.16"
   },
-  "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
-  },
-  "packageManager": "pnpm@10.0.0",
-  "source": "src/index.tsx",
-  "repository": "https://github.com/swiftuijs/ui.git",
-  "author": "Saiya",
-  "license": "MIT",
-  "dependencies": {
-    "plain-store": "^0.2.2"
-  }
+  "packageManager": "pnpm@10.0.0"
 }

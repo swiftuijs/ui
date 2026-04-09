@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      plain-store:
-        specifier: ^0.2.2
-        version: 0.2.2(react@19.2.3)
     devDependencies:
       '@chromatic-com/storybook':
         specifier: ^4.1.3

@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { VStack, Text, List, Section, NavigationLink, HStack, Spacer, useSizeClass, GeometryReader } from 'src/index'
-import { StandardPage } from 'src/components/Page/standard-page'
+import { VStack, Text, List, Section, NavigationLink, HStack, Spacer, useSizeClass, GeometryReader } from '@/index'
+import { StandardPage } from '@/components/Page/standard-page'
 import { ProductListPage } from './product-list'
 
 // Product categories data

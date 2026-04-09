@@ -1,5 +1,5 @@
-import { VStack, HStack, Text, Image, Button, ScrollView, ZStack, Divider, Link } from 'src/index'
-import { StandardPage } from 'src/components/Page/standard-page'
+import { VStack, HStack, Text, Image, Button, ScrollView, ZStack, Divider, Link } from '@/index'
+import { StandardPage } from '@/components/Page/standard-page'
 
 interface Product {
   id: string
@@ -203,4 +203,3 @@ export function ProductDetailPage({ product }: ProductDetailPageProps) {
     </StandardPage>
   )
 }
-

@@ -5,10 +5,35 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./components/*": {
+      "import": "./dist/components/*/index.js",
+      "types": "./dist/components/*/index.d.ts"
+    },
+    "./common/*": {
+      "import": "./dist/common/*.js",
+      "types": "./dist/common/*.d.ts"
+    },
+    "./contexts/*": {
+      "import": "./dist/contexts/*.js",
+      "types": "./dist/contexts/*.d.ts"
+    },
+    "./hooks/*": {
+      "import": "./dist/hooks/*.js",
+      "types": "./dist/hooks/*.d.ts"
+    },
+    "./style/*": {
+      "import": "./dist/style/*.css"
+    }
+  },
   "files": ["dist"],
   "scripts": {
     "dev": "vite dev",
-    "build": "rimraf dist && vite build && tsc -p tsconfig.build.json",
+    "build": "rimraf dist tsconfig.build.tsbuildinfo && vite build && tsc -p tsconfig.build.json",
     "lint": "eslint src --max-warnings 0",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
@@ -19,5 +44,8 @@
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
-  }
+  },
+  "repository": "https://github.com/swiftuijs/ui.git",
+  "author": "Saiya",
+  "license": "MIT"
 }

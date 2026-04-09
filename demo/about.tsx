@@ -2,7 +2,7 @@ import {
   VStack, Button, ScrollView,
   Text, NavigationLink,
   Spacer
-} from 'src/index'
+} from '@/index'
 
 import { ZStackView } from './zstack-view'
 

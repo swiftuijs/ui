@@ -1,6 +1,6 @@
 import {
   VStack, List, Section, Divider, Text, Button, HStack, Spacer
-} from 'src/index'
+} from '@/index'
 
 export function ListDemo() {
   return (
@@ -84,4 +84,3 @@ export function ListDemo() {
     </VStack>
   )
 }
-

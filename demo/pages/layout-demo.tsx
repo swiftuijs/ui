@@ -1,6 +1,6 @@
 import {
   VStack, HStack, ZStack, Spacer, Text, Button
-} from 'src/index'
+} from '@/index'
 
 export function LayoutDemo() {
   return (
@@ -66,4 +66,3 @@ export function LayoutDemo() {
     </VStack>
   )
 }
-

@@ -5,6 +5,8 @@ import { resolve, join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
+const workspaceRoot = resolve(__dirname, '../..')
+const demoIndexFile = resolve(workspaceRoot, 'demo/index.html')
 
 // 读取 package.json 获取依赖信息
 const pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8'))
@@ -144,15 +146,15 @@ export default defineConfig((env) => {
 
   return {
     ...commonConfig,
-    root: './',
+    root: workspaceRoot,
     server: {
       host: true,
-      open: 'demo/index.html'
+      open: '/demo/index.html'
     },
     build: {
       rollupOptions: {
         input: {
-          main: 'demo/index.html',
+          main: demoIndexFile,
         },
       }
     }

@@ -1,5 +1,5 @@
-import { VStack, HStack, Text, List, Section, Image, Button, Divider, Spacer, ScrollView } from 'src/index'
-import { StandardPage } from 'src/components/Page/standard-page'
+import { VStack, HStack, Text, List, Section, Image, Button, Divider, Spacer, ScrollView } from '@/index'
+import { StandardPage } from '@/components/Page/standard-page'
 
 interface Product {
   id: string
@@ -163,4 +163,3 @@ export function CartPage({ cartItems, products }: CartPageProps) {
     </StandardPage>
   )
 }
-

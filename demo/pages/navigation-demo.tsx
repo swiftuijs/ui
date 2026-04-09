@@ -1,6 +1,6 @@
 import {
   VStack, NavigationStack, NavigationLink, Text, Button, ScrollView, Section
-} from 'src/index'
+} from '@/index'
 
 function DetailPage() {
   return (
@@ -79,4 +79,3 @@ export function NavigationDemo() {
     </NavigationStack>
   )
 }
-

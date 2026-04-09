@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import { VStack, HStack, Text, List, Section, Image, Button, Divider, Spacer, ScrollView, NavigationLink, GeometryReader, LazyVGrid } from 'src/index'
-import { StandardPage } from 'src/components/Page/standard-page'
+import { VStack, HStack, Text, List, Section, Image, Button, Divider, Spacer, ScrollView, NavigationLink, GeometryReader, LazyVGrid } from '@/index'
+import { StandardPage } from '@/components/Page/standard-page'
 import { ProductDetailPage } from './product-detail'
 import { CartPage } from './cart'
 

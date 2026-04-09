@@ -3,7 +3,7 @@ import {
   Text, Divider, NavigationLink,
   Spacer, useNaviContext
 
-} from 'src/index'
+} from '@/index'
 
 import { About } from './about'
 

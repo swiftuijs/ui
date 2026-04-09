@@ -1,7 +1,7 @@
 import {
   VStack,
   Section,
-} from 'src/index'
+} from '@/index'
 
 
 export function Messages() {

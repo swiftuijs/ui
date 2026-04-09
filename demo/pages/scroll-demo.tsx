@@ -1,6 +1,6 @@
 import {
   VStack, ScrollView, Text, HStack, Spacer
-} from 'src/index'
+} from '@/index'
 
 export function ScrollDemo() {
   return (
@@ -57,4 +57,3 @@ export function ScrollDemo() {
     </VStack>
   )
 }
-

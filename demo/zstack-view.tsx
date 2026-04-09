@@ -3,7 +3,7 @@ import {
   VStack, HStack, 
   Text, NavigationLink,
   Spacer, useNaviContext,
-} from 'src/index'
+} from '@/index'
 
 
 export function ZStackView() {

@@ -1,6 +1,6 @@
 import {
   VStack, HStack, Text, Image, Button, Link
-} from 'src/index'
+} from '@/index'
 
 export function ContentDemo() {
   return (
@@ -72,4 +72,3 @@ export function ContentDemo() {
     </VStack>
   )
 }
-

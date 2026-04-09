@@ -1,5 +1,5 @@
 import ReactDom from 'react-dom/client'
-import { NavigationStack, SafeArea, useSizeClass } from 'src/index'
+import { NavigationStack, SafeArea, useSizeClass } from '@/index'
 import { HomePage } from './pages/home'
 
 export const App = () => {
