@@ -1,0 +1,18 @@
+@use '@style/base.scss' as *;
+
+@include component('label') {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sw-spacing-sm);
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  &-text {
+    font-size: var(--sw-font-size-body);
+    color: var(--sw-color-label-primary);
+  }
+}

@@ -1,0 +1,182 @@
+@use '@style/base.scss' as *;
+
+// Slide animations for page transitions
+@keyframes #{$ns}-page-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes #{$ns}-page-slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@include component('page') {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  padding: var(--safe-area-top, env(safe-area-inset-top)) var(--safe-area-right, env(safe-area-inset-right)) var(--safe-area-bottom, env(safe-area-inset-bottom)) var(--safe-area-left, env(safe-area-inset-bottom));
+  background-color: #fff;
+  @include centerBlock;
+  flex-direction: column;
+  overflow: hidden;
+
+  // Standard page slide animations
+  &[data-page-type='page'] {
+    &[data-page-status='entering'] {
+      animation: #{$ns}-page-slide-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    &[data-page-status='exiting'] {
+      animation: #{$ns}-page-slide-out 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+  }
+
+  > .#{ns('container')} {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// View Transitions API support
+@supports (view-transition-name: none) {
+  // For view transitions, disable default animations
+  .#{$ns}-page[data-transition-type='view-transition'] {
+    &[data-page-status='entering'],
+    &[data-page-status='exiting'] {
+      animation: none;
+    }
+  }
+}
+
+// View Transition API animations - iOS style push/pop
+
+// Forward navigation (push): new page slides in from right, old page slides left
+html.forwards {
+  &::view-transition-old(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-left;
+    z-index: 1;
+  }
+
+  &::view-transition-new(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-right;
+    z-index: 2;
+  }
+}
+
+// Backward navigation (pop): old page slides out to right, new page slides in from left
+html.backwards {
+  &::view-transition-old(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-right;
+    z-index: 2;
+  }
+
+  &::view-transition-new(root) {
+    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-left;
+    z-index: 1;
+  }
+}
+
+// Default (no direction class)
+::view-transition-old(root) {
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-left;
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-right;
+  z-index: 2;
+}
+
+// Shared element transitions (for elements with view-transition-name)
+// These elements will smoothly morph between old and new positions/sizes
+::view-transition-group(*) {
+  animation-duration: 0.35s;
+  animation-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
+  // Ensure shared elements are on top of everything
+  z-index: 1000;
+}
+
+// Control how the old and new images are composited
+::view-transition-image-pair(*) {
+  isolation: isolate;
+}
+
+// For shared elements, use cross-fade between old and new states
+// The browser automatically handles position and size interpolation
+::view-transition-old(*) {
+  // Fade out the old element
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both fade-out;
+  // Ensure it doesn't block interaction
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(*) {
+  // Fade in the new element
+  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both fade-in;
+  mix-blend-mode: normal;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// iOS-style slide animations
+@keyframes slide-from-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-to-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-30%);
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-30%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-to-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}

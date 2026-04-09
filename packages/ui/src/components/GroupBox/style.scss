@@ -1,0 +1,19 @@
+@use '@style/base.scss' as *;
+
+@include component('groupbox') {
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-lg);
+  padding: var(--sw-spacing-md);
+  background-color: var(--sw-color-background-primary);
+
+  &-label {
+    font-size: var(--sw-font-size-subheadline);
+    font-weight: var(--sw-font-weight-semibold);
+    color: var(--sw-color-label-primary);
+    margin-bottom: var(--sw-spacing-sm);
+  }
+
+  &-content {
+    color: var(--sw-color-label-primary);
+  }
+}

@@ -1,0 +1,5 @@
+@use '@style/base.scss' as *;
+
+@include component('spacer') {
+  flex: 1;
+}

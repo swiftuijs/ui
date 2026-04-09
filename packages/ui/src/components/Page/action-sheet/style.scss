@@ -1,0 +1,78 @@
+@use '@style/base.scss' as *;
+
+@keyframes #{$ns}-actionsheet-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes #{$ns}-actionsheet-slide-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@include component('page') {
+  // actionsheet page
+  &[data-page-type='actionsheet'] {
+    top: auto;
+    height: 60%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 20px;
+    will-change: transform, opacity, height;
+
+    &[data-page-status='entering'] {
+      animation: #{$ns}-actionsheet-slide-up 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+
+    &[data-page-status='exiting'] {
+      opacity: 0;
+      animation: #{$ns}-actionsheet-slide-down 0.3s cubic-bezier(0, 0.8, 0.5, 1);
+    }
+
+    &.animate-height {
+      transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &.hide-dragbar {
+      > .#{$prefix}-dragbar {
+        display: none;
+      }
+    }
+
+    > .#{$prefix}-dragbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 16px;
+      z-index: 999;
+      @include centerBlock;
+
+      > .#{$prefix}-dragbar-indicator {
+        width: 36px;
+        height: 5px;
+        background: rgba(60, 60, 67, 0.3);
+        border-radius: 999px;
+      }
+    }
+  }
+}
