@@ -1,0 +1,41 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ButtonStories from './Button.stories'
+import { buttonMeta } from './types'
+
+<Meta title={`SwiftUI/${buttonMeta.name}/Docs`} />
+
+# Button
+
+## Status
+
+{buttonMeta.status} is the current alignment state for the component. The implementation follows SwiftUI's `Button` concept while keeping the web-native `onClick` interaction model.
+
+## SwiftUI Alignment
+
+Button maps directly to SwiftUI's `Button` control: a label or icon triggers an action when activated. The React version keeps the same mental model while exposing standard HTML button behavior.
+
+## Usage
+
+### Basic Button
+
+<Canvas of={ButtonStories.Default} />
+
+### Interactive Button
+
+<Canvas of={ButtonStories.Interactive} />
+
+### Disabled Button
+
+<Canvas of={ButtonStories.Disabled} />
+
+### Buttons in Layouts
+
+<Canvas of={ButtonStories.InHStack} />
+
+<Canvas of={ButtonStories.InVStack} />
+
+## Notes
+
+- Use clear labels that describe the action
+- Keep disabled buttons visually distinct
+- Use custom styling sparingly so the component stays consistent with the design system
