@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import { NavigationStack } from './index'
 import { useNaviContext } from '@/contexts'
+import { eventBus } from '@/common'
 
 const viewTransition = {
   type: 'view-transition' as const,
@@ -73,9 +74,43 @@ function PageB() {
   )
 }
 
+function HomePageWithoutViewTransition() {
+  const navi = useNaviContext()
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        navi.append({
+          id: 'plain-page-a',
+          component: PlainPageA,
+        })
+      }}
+    >
+      Open plain page A
+    </button>
+  )
+}
+
+function PlainPageA() {
+  const navi = useNaviContext()
+
+  return (
+    <>
+      <div>Plain Page A</div>
+      <button type="button" onClick={() => navi.dismiss()}>
+        Dismiss plain page
+      </button>
+    </>
+  )
+}
+
 describe('NavigationStack', () => {
   afterEach(() => {
     Reflect.deleteProperty(document, 'startViewTransition')
+    Reflect.deleteProperty(globalThis, 'requestIdleCallback')
+    vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   it('returns to the previous page when revisiting an existing page in the path', () => {
@@ -111,5 +146,56 @@ describe('NavigationStack', () => {
 
     expect(screen.getByText('Page B')).toBeInTheDocument()
     expect(screen.queryByText('Page A')).not.toBeInTheDocument()
+  })
+
+  it('fires page-entered once and completes the non-view-transition enter and exit lifecycle', async () => {
+    vi.useFakeTimers()
+
+    Object.defineProperty(globalThis, 'requestIdleCallback', {
+      configurable: true,
+      writable: true,
+      value: (callback: IdleRequestCallback) => setTimeout(
+        () => callback({ didTimeout: false, timeRemaining: () => 0 } as IdleDeadline),
+        0,
+      ),
+    })
+
+    const emitSpy = vi.spyOn(eventBus, 'emit')
+
+    render(
+      <NavigationStack>
+        <HomePageWithoutViewTransition />
+      </NavigationStack>
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open plain page A' }))
+
+    const plainPage = document.getElementById('page$$plain-page-a')
+    expect(plainPage).toHaveAttribute('data-page-status', 'entering')
+    expect(screen.getByText('Plain Page A')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Open plain page A' })).toBeInTheDocument()
+
+    fireEvent.animationEnd(plainPage!)
+
+    const pageEnteredCalls = emitSpy.mock.calls.filter(
+      ([eventName, pageId]) => eventName.toString().endsWith('.page-entered') && pageId === 'page$$plain-page-a',
+    )
+    expect(pageEnteredCalls).toHaveLength(1)
+    expect(screen.queryByRole('button', { name: 'Open plain page A' })).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dismiss plain page' }))
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0)
+    })
+
+    const exitingPage = document.getElementById('page$$plain-page-a')
+    expect(exitingPage).toHaveAttribute('data-page-status', 'exiting')
+    expect(screen.getByRole('button', { name: 'Open plain page A' })).toBeInTheDocument()
+
+    fireEvent.animationEnd(exitingPage!)
+
+    expect(screen.getByRole('button', { name: 'Open plain page A' })).toBeInTheDocument()
+    expect(screen.queryByText('Plain Page A')).not.toBeInTheDocument()
   })
 })

@@ -63,7 +63,7 @@ export const Page = forwardRef<PageHandle, IPageProps>(function Page(props, ref)
     return () => {
       container.removeEventListener('animationend', onAnimationEnd)
     }
-  }, [naviContext.eventPrefix, noEnteringAnimation, props.id])
+  }, [naviContext.eventPrefix, props.id])
 
   useImperativeHandle(ref, () => ({
     exitPage(callback?: IFn) {
