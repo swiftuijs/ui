@@ -40,6 +40,7 @@ export interface PageHandle {
 export const Page = forwardRef<PageHandle, IPageProps>(function Page(props, ref) {
   const { noEnteringAnimation, transition, ...restProps } = props
   const containerRef = useRef<HTMLDivElement>(null)
+  const noEnteringAnimationRef = useRef(noEnteringAnimation)
   const naviContext = useNaviContext()
   const pageType: IPageType = props.type || 'page'
 
@@ -47,7 +48,7 @@ export const Page = forwardRef<PageHandle, IPageProps>(function Page(props, ref)
     const container = containerRef.current
     if (!container) return
 
-    if (noEnteringAnimation) {
+    if (noEnteringAnimationRef.current) {
       eventBus.emit(`${naviContext.eventPrefix}.page-entered`, props.id)
       return
     }

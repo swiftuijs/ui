@@ -2,7 +2,6 @@ import { memo, type ReactNode } from 'react'
 import { prefixClass } from '@/common'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
-import { Spacer } from '../Spacer'
 import { Text } from '../Text'
 
 import './style.scss'
