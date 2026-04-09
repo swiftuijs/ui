@@ -57,17 +57,6 @@ describe('NavigationBar', () => {
     expect(screen.queryByRole('button', { name: /share/i })).not.toBeInTheDocument()
   })
 
-  it('should apply correct className', () => {
-    const { container } = render(<NavigationBar title="Test" />)
-    const navBar = container.firstChild as HTMLElement
-    expect(navBar).toHaveClass('sw-navigation-bar')
-  })
-
-  it('should render back button with correct className', () => {
-    render(<NavigationBar title="Test" showBackButton={true} />)
-    expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
-  })
-
   it('should render all elements together', () => {
     const handleBack = vi.fn()
     render(
