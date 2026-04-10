@@ -25,6 +25,7 @@ export const Default: Story = {
     items: [
       {
         label: 'Home',
+        value: 'home',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Home</Text>
@@ -34,6 +35,7 @@ export const Default: Story = {
       },
       {
         label: 'Search',
+        value: 'search',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Search</Text>
@@ -43,6 +45,7 @@ export const Default: Story = {
       },
       {
         label: 'Profile',
+        value: 'profile',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Profile</Text>
@@ -59,6 +62,7 @@ export const WithIcons: Story = {
     items: [
       {
         label: 'Home',
+        value: 'home',
         icon: '🏠',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
@@ -68,6 +72,7 @@ export const WithIcons: Story = {
       },
       {
         label: 'Favorites',
+        value: 'favorites',
         icon: '⭐',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
@@ -77,6 +82,7 @@ export const WithIcons: Story = {
       },
       {
         label: 'Settings',
+        value: 'settings',
         icon: '⚙️',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
@@ -94,6 +100,7 @@ export const TopTabBar: Story = {
     items: [
       {
         label: 'Tab 1',
+        value: 'tab-1',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
             <Text>Tab 1 Content</Text>
@@ -102,6 +109,7 @@ export const TopTabBar: Story = {
       },
       {
         label: 'Tab 2',
+        value: 'tab-2',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
             <Text>Tab 2 Content</Text>
@@ -110,6 +118,7 @@ export const TopTabBar: Story = {
       },
       {
         label: 'Tab 3',
+        value: 'tab-3',
         content: (
           <VStack spacing={20} style={{ padding: '20px' }}>
             <Text>Tab 3 Content</Text>
@@ -121,33 +130,44 @@ export const TopTabBar: Story = {
 }
 
 function ControlledTabView() {
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selection, setSelection] = useState('tab-1')
 
   return (
     <div>
       <div style={{ padding: '10px', marginBottom: '10px' }}>
-        <Button onClick={() => setSelectedIndex((prev) => (prev + 1) % 3)}>
+        <Button
+          onClick={() =>
+            setSelection((prev) => {
+              if (prev === 'tab-1') return 'tab-2'
+              if (prev === 'tab-2') return 'tab-3'
+              return 'tab-1'
+            })
+          }
+        >
           Next Tab
         </Button>
-        <Text style={{ marginLeft: '10px' }}>Selected: {selectedIndex}</Text>
+        <Text style={{ marginLeft: '10px' }}>Selected: {selection}</Text>
       </div>
       <TabView
         items={[
           {
             label: 'Tab 1',
+            value: 'tab-1',
             content: <VStack style={{ padding: '20px' }}><Text>Tab 1</Text></VStack>,
-            },
-            {
-              label: 'Tab 2',
-              content: <VStack style={{ padding: '20px' }}><Text>Tab 2</Text></VStack>,
-            },
-            {
-              label: 'Tab 3',
-              content: <VStack style={{ padding: '20px' }}><Text>Tab 3</Text></VStack>,
-            },
-          ]}
-        selectedIndex={selectedIndex}
-        onSelectionChange={setSelectedIndex}
+          },
+          {
+            label: 'Tab 2',
+            value: 'tab-2',
+            content: <VStack style={{ padding: '20px' }}><Text>Tab 2</Text></VStack>,
+          },
+          {
+            label: 'Tab 3',
+            value: 'tab-3',
+            content: <VStack style={{ padding: '20px' }}><Text>Tab 3</Text></VStack>,
+          },
+        ]}
+        selection={selection}
+        onSelectionChange={(nextSelection) => setSelection(String(nextSelection))}
       />
     </div>
   )
@@ -156,4 +176,3 @@ function ControlledTabView() {
 export const Controlled: Story = {
   render: () => <ControlledTabView />,
 }
-

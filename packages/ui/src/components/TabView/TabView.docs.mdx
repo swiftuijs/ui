@@ -36,16 +36,17 @@ Control tab selection programmatically:
 ## Notes
 
 - TabView requires an array of items with `label` and `content`
+- Each item can define a stable `value` used by `selection` and `defaultSelection`
 - Each item can have an optional `icon`
 - Tab bar can be positioned at `top` or `bottom` (default)
-- TabView supports controlled mode with `selectedIndex` and `onSelectionChange`
-- TabView automatically handles tab switching animations
+- TabView supports controlled mode with `selection` and `onSelectionChange`
+- Tabs expose proper `tablist`, `tab`, and `tabpanel` semantics
+- Arrow keys, Home, and End move between tabs
 
 ## Best Practices
 
 1. **Clear labels**: Use descriptive labels for each tab
 2. **Icons**: Use icons to improve visual recognition
 3. **Content**: Keep tab content focused and relevant
-4. **Navigation**: Consider navigation patterns when using TabView
+4. **Selection**: Prefer stable `value` identifiers over relying on item order
 5. **Accessibility**: Ensure tabs are keyboard accessible
-
