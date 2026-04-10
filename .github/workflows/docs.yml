@@ -1,11 +1,13 @@
 name: Docs
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
     paths:
       - apps/docs/**
+      - apps/docs/public/**
       - packages/ui/src/components/**/*.docs.mdx
       - package.json
       - pnpm-lock.yaml
@@ -17,6 +19,7 @@ on:
       - main
     paths:
       - apps/docs/**
+      - apps/docs/public/**
       - packages/ui/src/components/**/*.docs.mdx
       - package.json
       - pnpm-lock.yaml
@@ -27,6 +30,9 @@ on:
 concurrency:
   group: docs-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   verify-docs:
@@ -51,3 +57,36 @@ jobs:
 
       - name: Build docs
         run: pnpm --filter docs build
+
+  deploy-docs:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: verify-docs
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build docs
+        run: pnpm --filter docs build
+
+      - name: Deploy docs to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: apps/docs/out
+          force_orphan: true
