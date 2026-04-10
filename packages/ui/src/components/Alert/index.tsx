@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useEffect, useId } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
@@ -71,6 +71,25 @@ export const Alert = memo(function Alert(props: IAlertProps) {
     ...restProps
   } = props
 
+  const titleId = useId().replace(/:/g, '')
+  const descriptionId = useId().replace(/:/g, '')
+
+  // Match native alert dismissal expectations on web keyboards.
+  useEffect(() => {
+    if (!isVisible) {
+      return
+    }
+
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onDismiss()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isVisible, onDismiss])
+
   if (!isVisible) return null
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
@@ -80,10 +99,17 @@ export const Alert = memo(function Alert(props: IAlertProps) {
   return (
     <>
       <div className={prefixClass('alert-backdrop')} onClick={onDismiss} />
-      <div {...commonProps} {...finalRestProps}>
+      <div
+        {...commonProps}
+        {...finalRestProps}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={message ? descriptionId : undefined}
+      >
         <div className={prefixClass('alert-content')}>
-          <div className={prefixClass('alert-title')}>{title}</div>
-          {message && <div className={prefixClass('alert-message')}>{message}</div>}
+          <div id={titleId} className={prefixClass('alert-title')}>{title}</div>
+          {message && <div id={descriptionId} className={prefixClass('alert-message')}>{message}</div>}
           <div className={prefixClass('alert-actions')}>
             {buttons.map((button, index) => (
               <button
@@ -104,4 +130,3 @@ export const Alert = memo(function Alert(props: IAlertProps) {
     </>
   )
 })
-
