@@ -13,27 +13,56 @@ const meta: Meta<typeof Stepper> = {
 export default meta
 type Story = StoryObj<typeof Stepper>
 
-const StepperDemo = () => {
+const ControlledDemo = () => {
   const [value, setValue] = useState(5)
   return (
     <VStack spacing={16}>
-      <Text>Value: {value}</Text>
+      <Text>Controlled value: {value}</Text>
       <Stepper
         value={value}
-        onIncrement={() => setValue(value + 1)}
-        onDecrement={() => setValue(value - 1)}
+        onValueChange={setValue}
       />
+    </VStack>
+  )
+}
+
+const UncontrolledDemo = () => {
+  const [value, setValue] = useState(2)
+  return (
+    <VStack spacing={16}>
+      <Text>Observed value: {value}</Text>
+      <Stepper
+        defaultValue={2}
+        onChange={setValue}
+      />
+    </VStack>
+  )
+}
+
+const BoundedDemo = () => {
+  const [value, setValue] = useState(1)
+  return (
+    <VStack spacing={16}>
+      <Text>Bounded value: {value}</Text>
       <Stepper
         value={value}
-        onIncrement={() => setValue(value + 1)}
-        onDecrement={() => setValue(value - 1)}
+        onValueChange={setValue}
         min={0}
-        max={10}
+        max={4}
+        step={2}
       />
+    </VStack>
+  )
+}
+
+const DisabledDemo = () => {
+  const [value, setValue] = useState(3)
+  return (
+    <VStack spacing={16}>
+      <Text>Disabled value: {value}</Text>
       <Stepper
-        value={value}
-        onIncrement={() => setValue(value + 1)}
-        onDecrement={() => setValue(value - 1)}
+        defaultValue={3}
+        onValueChange={setValue}
         disabled
       />
     </VStack>
@@ -41,6 +70,21 @@ const StepperDemo = () => {
 }
 
 export const Default: Story = {
-  render: () => <StepperDemo />,
+  render: () => <ControlledDemo />,
 }
 
+export const Controlled: Story = {
+  render: () => <ControlledDemo />,
+}
+
+export const Uncontrolled: Story = {
+  render: () => <UncontrolledDemo />,
+}
+
+export const Bounded: Story = {
+  render: () => <BoundedDemo />,
+}
+
+export const Disabled: Story = {
+  render: () => <DisabledDemo />,
+}

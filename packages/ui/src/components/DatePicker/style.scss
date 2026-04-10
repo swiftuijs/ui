@@ -2,6 +2,8 @@
 
 @include component('datepicker') {
   width: 100%;
+  min-inline-size: 0;
+  box-sizing: border-box;
   padding: var(--sw-spacing-sm) var(--sw-spacing-md);
   border: 1px solid var(--sw-color-separator);
   border-radius: var(--sw-radius-md);
@@ -10,8 +12,9 @@
   line-height: var(--sw-line-height-normal);
   color: var(--sw-color-label-primary);
   background-color: var(--sw-color-background-primary);
-  transition: border-color var(--sw-transition-fast), 
-              box-shadow var(--sw-transition-fast);
+  transition:
+    border-color var(--sw-transition-fast),
+    box-shadow var(--sw-transition-fast);
   -webkit-appearance: none;
   appearance: none;
 
@@ -27,4 +30,3 @@
     background-color: var(--sw-color-background-secondary);
   }
 }
-

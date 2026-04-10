@@ -7,7 +7,7 @@ import * as DatePickerStories from './DatePicker.stories'
 
 ## Overview
 
-DatePicker is a control for selecting dates and times. DatePicker provides a user-friendly interface for date and time selection.
+DatePicker is a native `<input>`-backed control for selecting dates and times. It keeps standard form semantics, browser validation, and keyboard behavior.
 
 **SwiftUI Correspondence**: Similar to SwiftUI's `DatePicker`.
 
@@ -15,19 +15,32 @@ DatePicker is a control for selecting dates and times. DatePicker provides a use
 
 <Canvas of={DatePickerStories.Default} />
 
+## Uncontrolled Usage
+
+<Canvas of={DatePickerStories.Uncontrolled} />
+
+## Date and Time
+
+<Canvas of={DatePickerStories.DateAndTime} />
+
+## SwiftUI-Style Components
+
+<Canvas of={DatePickerStories.DisplayedComponents} />
+
 ## Notes
 
-- DatePicker supports different modes: `date`, `time`, `datetime`
-- DatePicker requires `value` and `onValueChange` for controlled mode
-- DatePicker can be disabled with the `disabled` prop
-- DatePicker automatically handles date/time formatting
-- Use DatePicker for date and time input in forms
+- `value` and `defaultValue` use native input strings
+- `onChange` forwards the native input event
+- `onValueChange` receives the latest string value
+- Supported modes are `date`, `time`, and `dateAndTime`
+- `displayedComponents={['date', 'hourAndMinute']}` maps to `dateAndTime`
+- Use `min` and `max` for native bounds in the same string format as `value`
+- `disabled` behaves like a native input prop
 
 ## Best Practices
 
-1. **Mode selection**: Choose appropriate mode for your use case
-2. **Default values**: Consider providing default dates when appropriate
-3. **Validation**: Validate date ranges and constraints
-4. **Accessibility**: Ensure DatePicker is accessible
-5. **Localization**: Consider localization for date formats
-
+1. **Mode selection**: Choose `date`, `time`, or `dateAndTime` based on the required granularity
+2. **String values**: Keep the value in the browser's native input format for the selected mode
+3. **Bounds**: Use `min` and `max` to constrain user input
+4. **Labels**: Provide an accessible label or visible label
+5. **Localization**: Let the browser handle localized rendering of the native control

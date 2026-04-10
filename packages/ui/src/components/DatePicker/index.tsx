@@ -1,50 +1,106 @@
 import { memo } from 'react'
-import type { IBaseComponent } from '@/types'
+import type { ChangeEventHandler } from 'react'
+import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
 
+export type DatePickerMode = 'date' | 'time' | 'dateAndTime'
+export type DatePickerDisplayedComponent = 'date' | 'hourAndMinute'
+
+function resolveMode(
+  mode: DatePickerMode | undefined,
+  displayedComponents: DatePickerDisplayedComponent[] | undefined
+): DatePickerMode {
+  if (displayedComponents?.includes('date') && displayedComponents.includes('hourAndMinute')) {
+    return 'dateAndTime'
+  }
+
+  if (displayedComponents?.includes('hourAndMinute')) {
+    return 'time'
+  }
+
+  if (displayedComponents?.includes('date')) {
+    return 'date'
+  }
+
+  return mode ?? 'date'
+}
+
+function resolveInputType(mode: DatePickerMode) {
+  return mode === 'dateAndTime' ? 'datetime-local' : mode
+}
+
 /**
- * A control for selecting dates.
- * 
- * Use DatePicker to create a control that allows users to select a date.
- * 
+ * A control for selecting dates and times.
+ *
+ * DatePicker is backed by a native date/time input so it keeps standard form
+ * semantics, keyboard behavior, and browser validation.
+ *
+ * Values are passed as native input strings:
+ * - `date` -> `YYYY-MM-DD`
+ * - `time` -> `HH:MM`
+ * - `dateAndTime` -> `YYYY-MM-DDTHH:MM`
+ *
  * @example
  * ```tsx
  * <DatePicker
- *   value={date}
+ *   value="2026-04-10"
  *   onValueChange={setDate}
  * />
  * ```
- * 
+ *
  * @see https://developer.apple.com/documentation/swiftui/datepicker
  */
-export interface IDatePickerProps extends IBaseComponent {
+export interface IDatePickerProps extends Omit<
+  IBaseElementComponent<'input'>,
+  'type' | 'value' | 'defaultValue' | 'onChange' | 'children' | 'min' | 'max'
+> {
   /**
-   * The currently selected date.
+   * The current native input value.
    */
-  value?: Date | string
+  value?: string
   /**
-   * Callback fired when the date changes.
+   * The initial native input value when uncontrolled.
    */
-  onValueChange?: (date: Date) => void
+  defaultValue?: string
   /**
-   * The minimum selectable date.
+   * Native input change handler.
    */
-  minimumDate?: Date | string
+  onChange?: ChangeEventHandler<HTMLInputElement>
   /**
-   * The maximum selectable date.
+   * Value-first change handler for SwiftUI-style ergonomics.
    */
-  maximumDate?: Date | string
+  onValueChange?: (value: string) => void
+  /**
+   * The minimum selectable value, expressed in the same native input format as `value`.
+   */
+  min?: string
+  /**
+   * The maximum selectable value, expressed in the same native input format as `value`.
+   */
+  max?: string
+  /**
+   * Backward-compatible minimum alias for SwiftUI-style callers.
+   */
+  minimumDate?: string
+  /**
+   * Backward-compatible maximum alias for SwiftUI-style callers.
+   */
+  maximumDate?: string
   /**
    * The display mode of the date picker.
-   * 
+   *
    * @default 'date'
    */
-  mode?: 'date' | 'time' | 'datetime'
+  mode?: DatePickerMode
+  /**
+   * SwiftUI-style displayed components. When provided, these values determine the native input type.
+   */
+  displayedComponents?: DatePickerDisplayedComponent[]
   /**
    * Whether the date picker is disabled.
-   * 
+   *
    * @default false
    */
   disabled?: boolean
@@ -53,68 +109,46 @@ export interface IDatePickerProps extends IBaseComponent {
 export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
   const {
     value,
+    defaultValue,
+    onChange,
     onValueChange,
+    min,
+    max,
     minimumDate,
     maximumDate,
     mode = 'date',
+    displayedComponents,
     disabled = false,
     ...restProps
   } = props
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
-    className: prefixClass('datepicker')
+    className: prefixClass('datepicker'),
   })
 
-  const formatDateForInput = (date?: Date | string): string => {
-    if (!date) return ''
-    const d = typeof date === 'string' ? new Date(date) : date
-    if (isNaN(d.getTime())) return ''
-    
-    if (mode === 'date') {
-      return d.toISOString().split('T')[0]
-    } else if (mode === 'time') {
-      return d.toTimeString().slice(0, 5)
-    } else {
-      return d.toISOString().slice(0, 16)
-    }
-  }
+  const resolvedMode = resolveMode(mode, displayedComponents)
+  const inputType = resolveInputType(resolvedMode)
+  const isControlled = value !== undefined
+  const resolvedMin = min ?? minimumDate
+  const resolvedMax = max ?? maximumDate
 
-  const formatMinMaxForInput = (date?: Date | string): string => {
-    if (!date) return ''
-    const d = typeof date === 'string' ? new Date(date) : date
-    if (isNaN(d.getTime())) return ''
-    
-    if (mode === 'date') {
-      return d.toISOString().split('T')[0]
-    } else if (mode === 'time') {
-      return d.toTimeString().slice(0, 5)
-    } else {
-      return d.toISOString().slice(0, 16)
-    }
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    onChange?.(event)
+    onValueChange?.(event.currentTarget.value)
   }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onValueChange) {
-      const newDate = new Date(e.target.value)
-      if (!isNaN(newDate.getTime())) {
-        onValueChange(newDate)
-      }
-    }
-  }
-
-  const inputType = mode === 'date' ? 'date' : mode === 'time' ? 'time' : 'datetime-local'
 
   return (
     <input
+      key={`${isControlled ? 'controlled' : 'uncontrolled'}-${inputType}`}
       {...commonProps}
       {...finalRestProps}
       type={inputType}
-      value={formatDateForInput(value)}
+      value={isControlled ? value : undefined}
+      defaultValue={isControlled ? undefined : defaultValue}
       onChange={handleChange}
-      min={formatMinMaxForInput(minimumDate)}
-      max={formatMinMaxForInput(maximumDate)}
+      min={resolvedMin}
+      max={resolvedMax}
       disabled={disabled}
     />
   )
 })
-

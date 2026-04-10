@@ -8,6 +8,10 @@
   border-radius: var(--sw-radius-md);
   overflow: hidden;
 
+  &-disabled {
+    opacity: 0.6;
+  }
+
   &-button {
     appearance: none;
     border: none;
@@ -35,8 +39,11 @@
 
   &-value {
     min-width: 32px;
+    padding: var(--sw-spacing-sm) var(--sw-spacing-md);
     text-align: center;
     font-size: var(--sw-font-size-body);
     color: var(--sw-color-label-primary);
+    font-variant-numeric: tabular-nums;
+    user-select: none;
   }
 }

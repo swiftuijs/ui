@@ -13,37 +13,87 @@ const meta: Meta<typeof DatePicker> = {
 export default meta
 type Story = StoryObj<typeof DatePicker>
 
-const DatePickerDemo = () => {
-  const [date, setDate] = useState<Date>()
+const ControlledDateDemo = () => {
+  const [date, setDate] = useState('2026-04-10')
   return (
     <VStack spacing={16}>
-      <Text>Selected: {date ? date.toLocaleDateString() : 'None'}</Text>
+      <Text>Selected: {date}</Text>
       <DatePicker
+        aria-label="Controlled date"
         value={date}
         onValueChange={setDate}
         mode="date"
       />
+    </VStack>
+  )
+}
+
+const UncontrolledTimeDemo = () => {
+  return (
+    <VStack spacing={16}>
       <DatePicker
-        value={date}
-        onValueChange={setDate}
+        aria-label="Meeting time"
+        defaultValue="09:30"
         mode="time"
       />
+      <Text>Use the browser-native time picker input.</Text>
+    </VStack>
+  )
+}
+
+const DateAndTimeDemo = () => {
+  const [value, setValue] = useState('2026-04-10T09:30')
+  return (
+    <VStack spacing={16}>
+      <Text>Selected: {value}</Text>
       <DatePicker
-        value={date}
-        onValueChange={setDate}
-        mode="datetime"
+        aria-label="Scheduled start"
+        value={value}
+        onValueChange={setValue}
+        mode="dateAndTime"
       />
+    </VStack>
+  )
+}
+
+const DisplayedComponentsDemo = () => {
+  const [value, setValue] = useState('2026-04-10T09:30')
+  return (
+    <VStack spacing={16}>
+      <Text>Selected: {value}</Text>
       <DatePicker
-        value={date}
-        onValueChange={setDate}
-        mode="date"
-        disabled
+        aria-label="SwiftUI-style schedule"
+        value={value}
+        onValueChange={setValue}
+        displayedComponents={['date', 'hourAndMinute']}
       />
     </VStack>
   )
 }
 
 export const Default: Story = {
-  render: () => <DatePickerDemo />,
+  render: () => <ControlledDateDemo />,
 }
 
+export const Uncontrolled: Story = {
+  render: () => <UncontrolledTimeDemo />,
+}
+
+export const DateAndTime: Story = {
+  render: () => <DateAndTimeDemo />,
+}
+
+export const DisplayedComponents: Story = {
+  render: () => <DisplayedComponentsDemo />,
+}
+
+export const Disabled: Story = {
+  render: () => (
+    <DatePicker
+      aria-label="Disabled date"
+      defaultValue="2026-04-10"
+      disabled
+      mode="date"
+    />
+  ),
+}
