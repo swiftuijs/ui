@@ -15,3 +15,42 @@ html {
 body {
   min-height: 100vh;
 }
+
+.docs-home-hero-card {
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-fd-card) 84%, white) 0%,
+      color-mix(in srgb, var(--color-fd-card) 92%, var(--color-fd-background)) 100%
+    );
+}
+
+.docs-home-registry-card {
+  color: var(--color-fd-card-foreground);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-fd-secondary) 82%, var(--color-fd-foreground)) 0%,
+      color-mix(in srgb, var(--color-fd-card) 72%, var(--color-fd-foreground)) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--color-fd-border) 50%, transparent);
+}
+
+.docs-home-registry-list {
+  background: color-mix(in srgb, var(--color-fd-background) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-fd-border) 40%, transparent);
+}
+
+.docs-home-registry-row {
+  background: color-mix(in srgb, var(--color-fd-background) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-fd-border) 32%, transparent);
+}
+
+.docs-home-guide-card {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-fd-card) 92%, white) 0%,
+      color-mix(in srgb, var(--color-fd-card) 82%, var(--color-fd-background)) 100%
+    );
+}
