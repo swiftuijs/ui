@@ -23,11 +23,13 @@ Include destructive actions:
 
 ## Notes
 
-- Toolbar requires an array of items with `content` and `placement`
-- Placement options: `cancellationAction`, `principal`, `confirmationAction`, `destructiveAction`
-- Toolbar items are automatically positioned based on placement
-- Toolbar is commonly used at the bottom of screens
-- Toolbar provides consistent spacing and alignment
+- Toolbar renders as a horizontal `role="toolbar"` region.
+- Use `aria-label` or `aria-labelledby` so assistive technology can describe the toolbar purpose.
+- Toolbar requires an array of items with `content` and `placement`.
+- Placement options: `navigation`, `cancellationAction`, `principal`, `automatic`, `confirmationAction`, `destructiveAction`.
+- Toolbar groups items by placement and keeps the placement order stable.
+- Toolbar is commonly used at the bottom of screens.
+- Toolbar provides consistent spacing and alignment.
 
 ## Best Practices
 
@@ -36,4 +38,3 @@ Include destructive actions:
 3. **Destructive actions**: Use `destructiveAction` placement for dangerous actions
 4. **Accessibility**: Ensure toolbar items are accessible
 5. **Mobile**: Consider mobile interaction patterns when designing toolbars
-

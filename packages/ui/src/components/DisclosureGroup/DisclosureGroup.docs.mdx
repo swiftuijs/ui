@@ -10,6 +10,7 @@ import * as DisclosureGroupStories from './DisclosureGroup.stories'
 DisclosureGroup is a view that shows or hides its content based on a disclosure state. DisclosureGroup creates an expandable/collapsible section with a toggle control.
 
 **SwiftUI Correspondence**: Similar to SwiftUI's `DisclosureGroup`.
+**Web behavior**: The toggle is linked to its content with stable IDs and `aria-controls` / `aria-labelledby`.
 
 ## Basic Usage
 
@@ -37,7 +38,7 @@ DisclosureGroup is a view that shows or hides its content based on a disclosure 
 - DisclosureGroup supports controlled and uncontrolled modes
 - Use `defaultExpanded` for uncontrolled mode
 - Use `expanded` and `onExpandedChange` for controlled mode
-- DisclosureGroup automatically handles expand/collapse animations
+- DisclosureGroup automatically handles expand/collapse state and accessibility linkage
 
 ## Best Practices
 
@@ -46,4 +47,3 @@ DisclosureGroup is a view that shows or hides its content based on a disclosure 
 3. **State management**: Choose controlled or uncontrolled mode based on your needs
 4. **Accessibility**: DisclosureGroup includes proper ARIA attributes
 5. **Performance**: DisclosureGroup only renders content when expanded
-

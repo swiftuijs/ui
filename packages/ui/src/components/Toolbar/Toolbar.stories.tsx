@@ -21,7 +21,9 @@ type Story = StoryObj<IToolbarProps>
 
 export const Default: Story = {
   args: {
+    'aria-label': 'Editor actions',
     items: [
+      { content: <Button>Back</Button>, placement: 'navigation' },
       { content: <Button>Cancel</Button>, placement: 'cancellationAction' },
       { content: <Text style={{ fontWeight: 'bold' }}>Title</Text>, placement: 'principal' },
       { content: <Button>Done</Button>, placement: 'confirmationAction' },
@@ -31,11 +33,12 @@ export const Default: Story = {
 
 export const WithDestructive: Story = {
   args: {
+    'aria-label': 'Editor actions',
     items: [
+      { content: <Button>Back</Button>, placement: 'navigation' },
       { content: <Button>Cancel</Button>, placement: 'cancellationAction' },
       { content: <Text style={{ fontWeight: 'bold' }}>Edit</Text>, placement: 'principal' },
       { content: <Button>Delete</Button>, placement: 'destructiveAction' },
     ],
   },
 }
-

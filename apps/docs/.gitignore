@@ -1,3 +1,5 @@
 .next/
 .source/
+.generated-content/
+.generated/
 out/

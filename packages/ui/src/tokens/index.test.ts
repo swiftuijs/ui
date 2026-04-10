@@ -155,4 +155,25 @@ describe('tokens', () => {
       expect(commonStylesheet).toContain(`${cssVariable}:`)
     }
   })
+
+  it('does not override page-level html or body theme surfaces', () => {
+    const commonStylesheet = fs.readFileSync(path.resolve(process.cwd(), 'src/style/common.scss'), 'utf8')
+
+    expect(commonStylesheet).not.toMatch(/\bhtml,\s*body\s*\{/s)
+    expect(commonStylesheet).not.toMatch(/\bbody\s*\{[^}]*background-color:/s)
+    expect(commonStylesheet).not.toMatch(/\bbody\s*\{[^}]*color:/s)
+    expect(commonStylesheet).not.toMatch(/\bhtml\s*\{[^}]*font-family:/s)
+  })
+
+  it('supports explicit theme switching through data-theme attributes', () => {
+    const commonStylesheet = fs.readFileSync(path.resolve(process.cwd(), 'src/style/common.scss'), 'utf8')
+
+    expect(commonStylesheet).toContain("[data-theme='light']")
+    expect(commonStylesheet).toContain("[data-theme='dark']")
+    expect(commonStylesheet).toContain(':root.dark')
+    expect(commonStylesheet).toContain('.dark')
+    expect(commonStylesheet).toMatch(/(:root\.dark|\[data-theme='dark'\]|\.dark)[\s\S]*color-scheme:\s*dark;/)
+    expect(commonStylesheet).toContain('--sw-color-background-primary: #000000;')
+    expect(commonStylesheet).toContain('--sw-color-label-primary: #FFFFFF;')
+  })
 })

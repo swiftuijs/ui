@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useId } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
@@ -28,16 +28,25 @@ export interface IGroupBoxProps extends IBaseComponent {
 
 export const GroupBox = memo(function GroupBox(props: IGroupBoxProps) {
   const { label, ...restProps } = props
+  const labelId = useId()
 
   const { commonProps, restProps: finalRestProps, children } = standardizeProps(restProps, {
     className: prefixClass('groupbox')
   })
 
   return (
-    <div {...commonProps} {...finalRestProps}>
-      {label && <div className={prefixClass('groupbox-label')}>{label}</div>}
+    <div
+      {...commonProps}
+      {...finalRestProps}
+      role="group"
+      aria-labelledby={label ? labelId : undefined}
+    >
+      {label && (
+        <div id={labelId} className={prefixClass('groupbox-label')}>
+          {label}
+        </div>
+      )}
       <div className={prefixClass('groupbox-content')}>{children}</div>
     </div>
   )
 })
-

@@ -26,7 +26,7 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-16 px-6 py-12 md:px-10 lg:px-12">
-      <section className="docs-home-hero-card grid gap-8 rounded-[2rem] border border-fd-border/70 p-8 shadow-sm backdrop-blur md:grid-cols-[1.3fr_0.9fr] md:p-12">
+      <section className="grid gap-8 rounded-[2rem] border border-fd-border/70 bg-fd-card p-8 shadow-sm backdrop-blur md:grid-cols-[1.3fr_0.9fr] md:p-12">
         <div className="space-y-6">
           <p className="text-sm font-medium uppercase tracking-[0.24em] text-fd-muted-foreground">
             SwiftUI-Aligned React Library
@@ -57,7 +57,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
-        <div className="docs-home-registry-card grid gap-4 rounded-[1.5rem] p-6 shadow-inner">
+        <div className="grid gap-4 rounded-[1.5rem] border border-fd-border bg-fd-card p-6 text-fd-card-foreground shadow-inner">
           <div>
             <p className="text-sm uppercase tracking-[0.24em] text-fd-muted-foreground">
               Build-time registry
@@ -69,11 +69,11 @@ export default async function HomePage() {
               <code className="font-mono text-[0.9em]">packages/ui/src/components</code>
             </p>
           </div>
-          <div className="docs-home-registry-list grid gap-2 rounded-2xl p-4">
+          <div className="grid gap-2 rounded-2xl border border-fd-border bg-fd-background p-4">
             {previewComponents.map((component) => (
               <div
                 key={component.slug}
-                className="docs-home-registry-row flex items-center justify-between gap-4 rounded-xl px-3 py-2"
+                className="flex items-center justify-between gap-4 rounded-xl border border-fd-border bg-fd-card px-3 py-2"
               >
                 <span className="font-medium">{component.title}</span>
                 <span className="font-mono text-xs uppercase tracking-[0.2em] text-fd-muted-foreground">
@@ -90,7 +90,7 @@ export default async function HomePage() {
           <Link
             key={guide.href}
             href={guide.href}
-            className="docs-home-guide-card group rounded-[1.5rem] border border-fd-border/70 p-6 transition hover:-translate-y-0.5 hover:border-fd-primary/40 hover:shadow-sm"
+            className="group rounded-[1.5rem] border border-fd-border/70 bg-fd-card p-6 transition hover:-translate-y-0.5 hover:border-fd-primary/40 hover:shadow-sm"
           >
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-xl font-semibold text-fd-foreground">{guide.title}</h2>

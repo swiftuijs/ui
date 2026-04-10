@@ -10,6 +10,7 @@ import * as MenuStories from './Menu.stories'
 Menu is a view that displays a menu of options. Menu presents a list of actions that can be triggered by the user, typically shown as a dropdown or popover.
 
 **SwiftUI Correspondence**: Similar to SwiftUI's `Menu`.
+**Web behavior**: The top-level menu follows the menu-button pattern with keyboard opening, roving focus, and Escape/outside-click dismissal. Submenu labels and arrows are rendered as visual affordances only in this pass.
 
 ## Basic Usage
 
@@ -33,13 +34,20 @@ Control menu placement:
 
 <Canvas of={MenuStories.TopPlacement} />
 
+## Visual Submenus
+
+Submenu arrows are shown as presentation only:
+
+<Canvas of={MenuStories.WithVisualSubmenu} />
+
 ## Notes
 
 - Menu requires a `trigger` element and an array of `items`
 - Each item can have a `label`, optional `icon`, and `action`
 - Items can be disabled with the `disabled` prop
 - Menu supports different placements (top, bottom, left, right)
-- Menu automatically handles positioning and dismissal
+- Menu automatically handles positioning, Escape dismissal, and outside-click dismissal
+- Submenu entries are currently visual-only and do not open nested popovers
 
 ## Best Practices
 
@@ -48,4 +56,3 @@ Control menu placement:
 3. **Grouping**: Group related actions together
 4. **Destructive actions**: Clearly mark destructive actions
 5. **Accessibility**: Ensure menu is keyboard accessible
-

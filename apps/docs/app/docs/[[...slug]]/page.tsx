@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from 'fumadocs-ui/page';
 
+import { ComponentDocPage } from '@/components/component-doc-page';
 import { getMDXComponents } from '@/mdx-components';
 import { source } from '@/lib/source';
 
@@ -21,11 +22,11 @@ export default async function DocPage({
   }
 
   const MDX = page.data.body;
-
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
+      <ComponentDocPage slug={slug} />
       <DocsBody>
         <MDX components={getMDXComponents()} />
       </DocsBody>

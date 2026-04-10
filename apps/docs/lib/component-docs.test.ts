@@ -34,21 +34,22 @@ async function createFixture() {
   await Promise.all([
     writeFile(
       join(buttonDir, 'Button.docs.mdx'),
-      `---
-title: Button
-description: Trigger actions.
----
+      `import { Meta, Canvas } from '@storybook/addon-docs/blocks'
 
 # Button
+
+Trigger actions.
+
+<Canvas of={{}} />
+
 `,
     ),
     writeFile(
       join(badgeDir, 'Badge.docs.mdx'),
-      `---
-title: Badge
----
+      `# Badge
 
-# Badge
+Surface small pieces of metadata.
+
 `,
     ),
     writeFile(
@@ -68,7 +69,7 @@ describe('loadComponentDocs', () => {
 
     expect(docs).toEqual([
       {
-        description: null,
+        description: 'Surface small pieces of metadata.',
         href: '/docs/components/badge',
         name: 'Badge',
         slug: 'badge',

@@ -10,6 +10,9 @@
   // menu-trigger
   &-trigger {
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   // menu (main)
@@ -55,13 +58,24 @@
 
   // menu-item
   &-item {
+    width: 100%;
     display: flex;
     align-items: center;
     padding: var(--sw-spacing-sm, 8px) var(--sw-spacing-md, 12px);
     cursor: pointer;
     border-radius: var(--sw-radius-sm, 6px);
+    border: none;
+    background: transparent;
+    appearance: none;
+    text-align: left;
+    font: inherit;
     transition: background-color var(--sw-transition-fast, 0.15s ease-out);
     color: var(--sw-color-label-primary, #000000);
+
+    &:focus-visible {
+      outline: 2px solid var(--sw-color-tint, #0A84FF);
+      outline-offset: 2px;
+    }
 
     &:hover:not(.#{$prefix}-item-disabled) {
       background-color: var(--sw-color-background-secondary, #F2F2F7);
@@ -74,6 +88,10 @@
     &-disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    &-focused {
+      background-color: var(--sw-color-background-secondary, #F2F2F7);
     }
 
     &-icon {

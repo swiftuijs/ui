@@ -5,14 +5,6 @@ export function baseOptions(): BaseLayoutProps {
     githubUrl: 'https://github.com/swiftuijs/ui',
     links: [
       {
-        text: 'Getting Started',
-        url: '/docs/getting-started/',
-      },
-      {
-        text: 'Concepts',
-        url: '/docs/concepts/swiftui-alignment/',
-      },
-      {
         external: true,
         text: 'GitHub',
         url: 'https://github.com/swiftuijs/ui',

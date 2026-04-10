@@ -1,5 +1,5 @@
 import { memo, type ReactNode } from 'react'
-import type { IBaseComponent } from '@/types'
+import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
@@ -31,7 +31,7 @@ export interface IToolbarItem {
 /**
  * Props for Toolbar component
  */
-export interface IToolbarProps extends IBaseComponent {
+export interface IToolbarProps extends IBaseElementComponent<'div'> {
   /**
    * Toolbar items
    */
@@ -73,56 +73,45 @@ export const Toolbar = memo(function Toolbar(props: IToolbarProps) {
     return acc
   }, {} as Record<ToolbarPlacement, IToolbarItem[]>)
 
+  const renderGroup = (placement: ToolbarPlacement, className?: string) => {
+    const placementItems = groupedItems[placement]
+
+    if (!placementItems?.length) {
+      return null
+    }
+
+    return (
+      <div className={[prefixClass('toolbar-group'), className].filter(Boolean).join(' ')} data-placement={placement}>
+        {placementItems.map((item, index) => (
+          <div
+            key={item.id || `${placement}-${index}`}
+            className={[
+              prefixClass('toolbar-item'),
+              placement === 'destructiveAction' ? prefixClass('toolbar-item-destructive') : undefined,
+            ].filter(Boolean).join(' ')}
+          >
+            {item.content}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
-    <div {...commonProps} {...finalRestProps}>
+    <div
+      {...commonProps}
+      {...finalRestProps}
+      role="toolbar"
+      aria-orientation="horizontal"
+    >
       <div className={prefixClass('toolbar-content')}>
-        {groupedItems.cancellationAction && (
-          <div className={prefixClass('toolbar-group')}>
-            {groupedItems.cancellationAction.map((item, index) => (
-              <div key={item.id || index} className={prefixClass('toolbar-item')}>
-                {item.content}
-              </div>
-            ))}
-          </div>
-        )}
-        {groupedItems.principal && (
-          <div className={`${prefixClass('toolbar-group')} ${prefixClass('toolbar-group-center')}`}>
-            {groupedItems.principal.map((item, index) => (
-              <div key={item.id || index} className={prefixClass('toolbar-item')}>
-                {item.content}
-              </div>
-            ))}
-          </div>
-        )}
-        {groupedItems.automatic && (
-          <div className={prefixClass('toolbar-group')}>
-            {groupedItems.automatic.map((item, index) => (
-              <div key={item.id || index} className={prefixClass('toolbar-item')}>
-                {item.content}
-              </div>
-            ))}
-          </div>
-        )}
-        {groupedItems.confirmationAction && (
-          <div className={`${prefixClass('toolbar-group')} ${prefixClass('toolbar-group-end')}`}>
-            {groupedItems.confirmationAction.map((item, index) => (
-              <div key={item.id || index} className={prefixClass('toolbar-item')}>
-                {item.content}
-              </div>
-            ))}
-          </div>
-        )}
-        {groupedItems.destructiveAction && (
-          <div className={`${prefixClass('toolbar-group')} ${prefixClass('toolbar-group-end')}`}>
-            {groupedItems.destructiveAction.map((item, index) => (
-              <div key={item.id || index} className={`${prefixClass('toolbar-item')} ${prefixClass('toolbar-item-destructive')}`}>
-                {item.content}
-              </div>
-            ))}
-          </div>
-        )}
+        {renderGroup('navigation')}
+        {renderGroup('cancellationAction')}
+        {renderGroup('principal', prefixClass('toolbar-group-center'))}
+        {renderGroup('automatic')}
+        {renderGroup('confirmationAction', prefixClass('toolbar-group-end'))}
+        {renderGroup('destructiveAction', prefixClass('toolbar-group-end'))}
       </div>
     </div>
   )
 })
-

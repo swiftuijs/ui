@@ -37,7 +37,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${sans.variable} ${mono.variable}`}
     >
-      <body className="flex min-h-screen flex-col antialiased">
+      <body className="min-h-screen bg-fd-background text-fd-foreground antialiased">
         <RootProvider>{children}</RootProvider>
       </body>
     </html>

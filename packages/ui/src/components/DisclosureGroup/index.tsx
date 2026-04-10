@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useId, useState } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
@@ -50,6 +50,9 @@ export const DisclosureGroup = memo(function DisclosureGroup(props: IDisclosureG
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
   const isControlled = controlledExpanded !== undefined
   const expanded = isControlled ? controlledExpanded : internalExpanded
+  const baseId = useId().replace(/:/g, '')
+  const buttonId = `${baseId}-disclosure-button`
+  const contentId = `${baseId}-disclosure-content`
 
   const handleToggle = () => {
     const newExpanded = !expanded
@@ -66,22 +69,28 @@ export const DisclosureGroup = memo(function DisclosureGroup(props: IDisclosureG
   return (
     <div {...commonProps} {...finalRestProps}>
       <button
+        id={buttonId}
         type="button"
         className={prefixClass('disclosuregroup-toggle')}
         onClick={handleToggle}
         aria-expanded={expanded}
+        aria-controls={contentId}
       >
         <span className={prefixClass('disclosuregroup-label')}>{label}</span>
-        <span className={prefixClass('disclosuregroup-icon')}>
+        <span className={prefixClass('disclosuregroup-icon')} aria-hidden="true">
           {expanded ? '▼' : '▶'}
         </span>
       </button>
       {expanded && (
-        <div className={prefixClass('disclosuregroup-content')}>
+        <div
+          id={contentId}
+          className={prefixClass('disclosuregroup-content')}
+          role="region"
+          aria-labelledby={buttonId}
+        >
           {children}
         </div>
       )}
     </div>
   )
 })
-

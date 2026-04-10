@@ -5,15 +5,21 @@
   border-radius: var(--sw-radius-lg);
   padding: var(--sw-spacing-md);
   background-color: var(--sw-color-background-primary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sw-spacing-sm);
 
   &-label {
+    display: block;
     font-size: var(--sw-font-size-subheadline);
     font-weight: var(--sw-font-weight-semibold);
     color: var(--sw-color-label-primary);
-    margin-bottom: var(--sw-spacing-sm);
   }
 
   &-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-spacing-sm);
     color: var(--sw-color-label-primary);
   }
 }

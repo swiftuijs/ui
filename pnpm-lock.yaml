@@ -122,6 +122,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@swiftuijs/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       fast-glob:
         specifier: ^3.3.3
         version: 3.3.3
@@ -140,6 +143,9 @@ importers:
       next:
         specifier: 16.2.3
         version: 16.2.3(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.97.1)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react:
         specifier: 19.2.0
         version: 19.2.0

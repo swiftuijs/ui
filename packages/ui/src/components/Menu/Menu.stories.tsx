@@ -63,3 +63,21 @@ export const TopPlacement: Story = {
   },
 }
 
+export const WithVisualSubmenu: Story = {
+  args: {
+    trigger: <Button>Advanced</Button>,
+    items: [
+      {
+        label: 'Share',
+        action: () => alert('Share'),
+      },
+      {
+        label: 'More options',
+        submenu: [
+          { label: 'Duplicate', action: () => alert('Duplicate') },
+          { label: 'Rename', action: () => alert('Rename') },
+        ],
+      },
+    ],
+  },
+}

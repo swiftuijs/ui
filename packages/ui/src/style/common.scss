@@ -4,12 +4,6 @@
   box-sizing: border-box; 
 }
 
-html {
-  font-family: var(--sw-typography-font-family-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 input,
 select,
 textarea {
@@ -17,23 +11,12 @@ textarea {
   color: inherit;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--sw-color-background-secondary);
-  color: var(--sw-color-label-primary);
-}
-
-body {
-  --sw-accent-color: var(--sw-color-blue-base);
-}
-
 // iOS Design System Variables
 // Based on iOS Human Interface Guidelines and SwiftUI design tokens
 
-:root {
+:root,
+[data-theme='light'] {
+  color-scheme: light;
   // Token source of truth variables
   --sw-color-blue-base: #007AFF;
   --sw-color-blue-dark: #0051D5;
@@ -90,6 +73,7 @@ body {
   --sw-color-gray: var(--sw-color-gray-base);
   --sw-color-separator: var(--sw-color-separator-default);
   --sw-accent-color: var(--sw-color-blue-base);
+  --sw-font-family-sans: var(--sw-typography-font-family-sans);
   --sw-font-size-large-title: var(--sw-typography-font-size-large-title);
   --sw-font-size-title-1: var(--sw-typography-font-size-title1);
   --sw-font-size-title-2: var(--sw-typography-font-size-title2);
@@ -134,4 +118,31 @@ body {
   --sw-z-modal: 1050;
   --sw-z-popover: 1060;
   --sw-z-tooltip: 1070;
+}
+
+:root.dark,
+[data-theme='dark'],
+.dark {
+  color-scheme: dark;
+
+  --sw-color-blue-base: #0A84FF;
+  --sw-color-blue-dark: #409CFF;
+  --sw-color-blue-light: #64D2FF;
+  --sw-color-gray-base: #8E8E93;
+  --sw-color-gray-light: #48484A;
+  --sw-color-gray-lighter: #3A3A3C;
+  --sw-color-gray-dark: #AEAEB2;
+  --sw-color-label-primary: #FFFFFF;
+  --sw-color-label-secondary: #AEAEB2;
+  --sw-color-label-tertiary: #8E8E93;
+  --sw-color-background-primary: #000000;
+  --sw-color-background-secondary: #1C1C1E;
+  --sw-color-background-tertiary: #2C2C2E;
+  --sw-color-separator-default: #38383A;
+  --sw-color-separator-opaque: #545458;
+
+  --sw-color-blue: var(--sw-color-blue-base);
+  --sw-color-gray: var(--sw-color-gray-base);
+  --sw-color-separator: var(--sw-color-separator-default);
+  --sw-accent-color: var(--sw-color-blue-base);
 }
