@@ -3,42 +3,59 @@
 @include component('progressview') {
   width: 100%;
   position: relative;
+  display: grid;
+  gap: var(--sw-spacing-xs);
 
-  &-linear {
+  &-labels {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sw-spacing-sm);
+    font-size: var(--sw-font-size-footnote);
+    color: var(--sw-color-label-secondary);
+  }
+
+  &-label,
+  &-current-value {
+    min-width: 0;
+  }
+
+  &-track,
+  &-indeterminate {
     height: 4px;
     background-color: var(--sw-color-gray-lighter);
     border-radius: var(--sw-radius-full);
     overflow: hidden;
   }
 
-  &-bar {
+  &-fill {
     height: 100%;
     background-color: var(--sw-accent-color);
     border-radius: var(--sw-radius-full);
     transition: width 0.3s ease;
   }
 
-  &-circular {
-    width: 40px;
-    height: 40px;
+  &-indeterminate {
     position: relative;
   }
 
-  &-circle {
-    transform: rotate(-90deg);
+  &-indeterminate-bar {
+    position: absolute;
+    inset-block: 0;
+    left: -35%;
+    width: 35%;
+    border-radius: inherit;
+    background-color: var(--sw-accent-color);
+    animation: #{$ns}-progressview-indeterminate 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes #{$ns}-progressview-indeterminate {
+  0% {
+    transform: translateX(0);
   }
 
-  &-circle-bg {
-    fill: none;
-    stroke: var(--sw-color-gray-lighter);
-    stroke-width: 4;
-  }
-
-  &-circle-progress {
-    fill: none;
-    stroke: var(--sw-accent-color);
-    stroke-width: 4;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.3s ease;
+  100% {
+    transform: translateX(390%);
   }
 }

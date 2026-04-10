@@ -7,7 +7,7 @@ import * as ProgressViewStories from './ProgressView.stories'
 
 ## Overview
 
-ProgressView is a view that displays the progress of a task. ProgressView can show determinate progress (with a specific value) or indeterminate progress (spinning indicator).
+ProgressView displays determinate or indeterminate task progress using web-native `progressbar` semantics with a SwiftUI-style `value` and `total` API.
 
 **SwiftUI Correspondence**: Similar to SwiftUI's `ProgressView`.
 
@@ -15,25 +15,30 @@ ProgressView is a view that displays the progress of a task. ProgressView can sh
 
 <Canvas of={ProgressViewStories.Default} />
 
-## Animated Progress
+## Determinate Values
 
-ProgressView can be animated to show progress changes:
+<Canvas of={ProgressViewStories.Determinate} />
+
+## Indeterminate Progress
+
+<Canvas of={ProgressViewStories.Indeterminate} />
+
+## Animated Progress
 
 <Canvas of={ProgressViewStories.Animated} />
 
 ## Notes
 
-- ProgressView supports determinate progress (0-1 or completed/total)
-- ProgressView supports indeterminate progress (spinning indicator)
-- Progress value should be between 0 and 1
-- ProgressView provides visual feedback for task progress
-- Use ProgressView for file uploads, downloads, and other async operations
+- `value` follows SwiftUI's mental model and can be paired with `total`
+- When `total` is omitted, `value` is treated as a fractional value between `0` and `1`
+- `progress` and `completed` remain supported as legacy aliases for existing callers
+- `indeterminate` removes value semantics and shows an animated loading bar
+- `label` and `currentValueLabel` render visible progress metadata alongside the bar
 
 ## Best Practices
 
-1. **Value range**: Keep progress values between 0 and 1
-2. **Feedback**: Update progress regularly for better UX
-3. **Indeterminate**: Use indeterminate style when progress is unknown
-4. **Placement**: Place ProgressView where users expect to see progress
-5. **Accessibility**: Provide text labels indicating progress percentage
-
+1. **Value model**: Prefer `value` plus `total` when you have real units, not just percentages.
+2. **Feedback**: Keep `currentValueLabel` in sync with user-visible progress when the task is long-running.
+3. **Indeterminate**: Use `indeterminate` only when the task duration is unknown.
+4. **Labels**: Provide a visible `label` or an accessible label via `aria-label`.
+5. **Placement**: Put ProgressView close to the task it describes.

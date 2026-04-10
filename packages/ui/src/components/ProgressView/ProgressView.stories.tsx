@@ -16,13 +16,44 @@ type Story = StoryObj<typeof ProgressView>
 export const Default: Story = {
   render: () => (
     <VStack spacing={16}>
-      <ProgressView progress={0} />
-      <ProgressView progress={0.25} />
-      <ProgressView progress={0.5} />
-      <ProgressView progress={0.75} />
-      <ProgressView progress={1} />
-      <ProgressView completed={30} total={100} />
-      <ProgressView indeterminate />
+      <ProgressView aria-label="Zero progress" value={0} />
+      <ProgressView aria-label="Quarter progress" value={0.25} />
+      <ProgressView aria-label="Half progress" value={0.5} />
+      <ProgressView aria-label="Three-quarter progress" value={0.75} />
+      <ProgressView aria-label="Complete progress" value={1} />
+    </VStack>
+  ),
+}
+
+export const Determinate: Story = {
+  render: () => (
+    <VStack spacing={16}>
+      <ProgressView
+        aria-label="File upload"
+        label="Uploading file"
+        currentValueLabel="30%"
+        value={30}
+        total={100}
+      />
+      <ProgressView
+        aria-label="Install progress"
+        label="Installing update"
+        currentValueLabel="4 of 7"
+        value={4}
+        total={7}
+      />
+    </VStack>
+  ),
+}
+
+export const Indeterminate: Story = {
+  render: () => (
+    <VStack spacing={16}>
+      <Text>Waiting for server response</Text>
+      <ProgressView
+        aria-label="Loading"
+        indeterminate
+      />
     </VStack>
   ),
 }
@@ -43,7 +74,11 @@ const AnimatedProgressDemo = () => {
   return (
     <VStack spacing={16}>
       <Text>Progress: {Math.round(progress * 100)}%</Text>
-      <ProgressView progress={progress} />
+      <ProgressView
+        aria-label="Animated progress"
+        value={progress}
+        currentValueLabel={`${Math.round(progress * 100)}%`}
+      />
     </VStack>
   )
 }
@@ -51,4 +86,3 @@ const AnimatedProgressDemo = () => {
 export const Animated: Story = {
   render: () => <AnimatedProgressDemo />,
 }
-
