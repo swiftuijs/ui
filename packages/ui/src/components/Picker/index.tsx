@@ -1,14 +1,14 @@
 import { memo } from 'react'
-import type { IBaseComponent } from '@/types'
+import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
 
 /**
  * A control for selecting from a set of mutually exclusive values.
- * 
+ *
  * Use Picker to create a dropdown menu that allows users to select from a list of options.
- * 
+ *
  * @example
  * ```tsx
  * <Picker
@@ -20,7 +20,7 @@ import './style.scss'
  *   ]}
  * />
  * ```
- * 
+ *
  * @see https://developer.apple.com/documentation/swiftui/picker
  */
 export interface IPickerOption {
@@ -34,7 +34,10 @@ export interface IPickerOption {
   label: string
 }
 
-export interface IPickerProps extends IBaseComponent {
+export interface IPickerProps extends Omit<
+  IBaseElementComponent<'select'>,
+  'value' | 'defaultValue' | 'onChange' | 'children' | 'disabled' | 'multiple' | 'size'
+> {
   /**
    * The currently selected value.
    */
@@ -53,10 +56,26 @@ export interface IPickerProps extends IBaseComponent {
   placeholder?: string
   /**
    * Whether the picker is disabled.
-   * 
+   *
    * @default false
    */
   disabled?: boolean
+}
+
+function validatePickerOptions(options: IPickerOption[]) {
+  const normalizedValues = options.map((option) => String(option.value))
+
+  if (normalizedValues.includes('')) {
+    throw new Error('Picker option values must not use the reserved empty string placeholder value.')
+  }
+
+  const hasDuplicateNormalizedValues = normalizedValues.some(
+    (value, index) => normalizedValues.indexOf(value) !== index
+  )
+
+  if (hasDuplicateNormalizedValues) {
+    throw new Error('Picker option values must be unique after string coercion.')
+  }
 }
 
 export const Picker = memo(function Picker(props: IPickerProps) {
@@ -69,29 +88,37 @@ export const Picker = memo(function Picker(props: IPickerProps) {
     ...restProps
   } = props
 
+  validatePickerOptions(options)
+
+  const isControlled = selectedValue !== undefined
+
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('picker')
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (onValueChange) {
-      const value = e.target.value
-      const option = options.find(opt => String(opt.value) === value)
-      if (option) {
-        onValueChange(option.value)
-      }
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!onValueChange) {
+      return
+    }
+
+    const option = options.find((item) => String(item.value) === event.currentTarget.value)
+
+    if (option) {
+      onValueChange(option.value)
     }
   }
 
   return (
     <select
+      key={isControlled ? 'controlled' : 'uncontrolled'}
       {...commonProps}
       {...finalRestProps}
-      value={selectedValue !== undefined ? String(selectedValue) : ''}
+      value={isControlled ? String(selectedValue) : undefined}
+      defaultValue={isControlled ? undefined : ''}
       onChange={handleChange}
       disabled={disabled}
     >
-      <option value="" disabled>
+      <option value="" disabled hidden>
         {placeholder}
       </option>
       {options.map((option) => (
@@ -102,4 +129,3 @@ export const Picker = memo(function Picker(props: IPickerProps) {
     </select>
   )
 })
-

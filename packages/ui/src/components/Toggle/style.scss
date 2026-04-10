@@ -7,9 +7,22 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 
-  &[aria-disabled='true'] {
+  &-disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &:focus-within &-track {
+    box-shadow: 0 0 0 3px color(from var(--sw-accent-color) srgb r g b / 0.1);
+  }
+
+  // toggle-input
+  &-input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
   }
 
   // toggle-track
@@ -46,7 +59,7 @@
   }
 
   // toggle:active toggle-thumb
-  &:active:not([aria-disabled='true']) &-thumb {
+  &:active:not(.sw-toggle-disabled) &-thumb {
     transform: scale(0.95);
   }
 }

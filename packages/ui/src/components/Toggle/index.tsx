@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import type { IBaseComponent } from '@/types'
+import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
@@ -19,7 +19,10 @@ import './style.scss'
  * 
  * @see https://developer.apple.com/documentation/swiftui/toggle
  */
-export interface IToggleProps extends IBaseComponent {
+export interface IToggleProps extends Omit<
+  IBaseElementComponent<'input'>,
+  'type' | 'checked' | 'onChange' | 'children'
+> {
   /**
    * Whether the toggle is currently on.
    */
@@ -40,28 +43,29 @@ export const Toggle = memo(function Toggle(props: IToggleProps) {
   const { isOn, onChange, disabled = false, ...restProps } = props
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
-    className: [prefixClass('toggle'), isOn && prefixClass('toggle-on')]
+    className: [prefixClass('toggle'), isOn && prefixClass('toggle-on'), disabled && prefixClass('toggle-disabled')]
   })
 
-  const handleClick = () => {
-    if (!disabled) {
-      onChange(!isOn)
-    }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.checked)
   }
 
   return (
-    <div
+    <label
       {...commonProps}
-      {...finalRestProps}
-      role="switch"
-      aria-checked={isOn}
-      aria-disabled={disabled}
-      onClick={handleClick}
     >
+      <input
+        {...finalRestProps}
+        type="checkbox"
+        role="switch"
+        checked={isOn}
+        onChange={handleChange}
+        disabled={disabled}
+        className={prefixClass('toggle-input')}
+      />
       <div className={prefixClass('toggle-track')}>
         <div className={prefixClass('toggle-thumb')} />
       </div>
-    </div>
+    </label>
   )
 })
-

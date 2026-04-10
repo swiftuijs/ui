@@ -1,5 +1,5 @@
 import { memo, type FormEvent } from 'react'
-import type { IBaseComponent } from '@/types'
+import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
@@ -7,7 +7,7 @@ import './style.scss'
 /**
  * Props for Form component
  */
-export interface IFormProps extends IBaseComponent {
+export interface IFormProps extends Omit<IBaseElementComponent<'form'>, 'onSubmit' | 'noValidate'> {
   /**
    * Form submission handler
    * @param event - Form submit event
@@ -22,8 +22,7 @@ export interface IFormProps extends IBaseComponent {
 /**
  * A container for grouping form controls.
  * 
- * Form provides a semantic container for form elements and handles form submission.
- * It automatically prevents default form submission behavior and calls the onSubmit handler.
+ * Form provides a semantic container for form elements and delegates submission to the native form element.
  * 
  * @example
  * ```tsx
@@ -41,14 +40,7 @@ export interface IFormProps extends IBaseComponent {
 export const Form = memo(function Form(props: IFormProps) {
   const { onSubmit, isValid, ...restProps } = props
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (onSubmit) {
-      onSubmit(event)
-    }
-  }
-
-  const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
+  const { commonProps, restProps: finalRestProps, children } = standardizeProps(restProps, {
     className: [prefixClass('form')],
   })
 
@@ -56,9 +48,10 @@ export const Form = memo(function Form(props: IFormProps) {
     <form
       {...commonProps}
       {...finalRestProps}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       noValidate={isValid === false}
-    />
+    >
+      {children}
+    </form>
   )
 })
-

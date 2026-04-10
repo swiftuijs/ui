@@ -28,9 +28,9 @@ Add validation to form fields:
 ## Notes
 
 - Form provides semantic HTML form element
-- Form handles form submission via `onSubmit` handler
+- Form forwards native `onSubmit` handling to the browser
 - Form supports all standard form controls (TextField, Toggle, Picker, etc.)
-- Form prevents default submission behavior automatically
+- Call `event.preventDefault()` in your handler when you want client-side submission behavior
 - Use Form for better accessibility and semantic structure
 
 ## Best Practices
@@ -40,4 +40,3 @@ Add validation to form fields:
 3. **Accessibility**: Use proper labels and form structure
 4. **User feedback**: Provide visual feedback for form state (loading, success, error)
 5. **Security**: Validate and sanitize all user inputs on the server side
-
