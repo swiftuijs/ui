@@ -40,7 +40,7 @@ describe('Toggle', () => {
         </form>
       )
 
-      expect(new FormData(container.querySelector('form')!).get('notifications')).toBe('enabled')
+      expect(new globalThis.FormData(container.querySelector('form')!).get('notifications')).toBe('enabled')
     })
   })
 })

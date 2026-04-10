@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { render, screen } from '@/testing/render'
 import { Picker } from './index'
 
+type NativeOptionElement = globalThis.HTMLOptionElement
+
 describe('Picker', () => {
   describe('primitive checklist', () => {
     it("submits the selected option's original value through native form data", () => {
@@ -20,7 +22,7 @@ describe('Picker', () => {
         </form>
       )
 
-      expect(new FormData(container.querySelector('form')!).get('quantity')).toBe('two')
+      expect(new globalThis.FormData(container.querySelector('form')!).get('quantity')).toBe('two')
     })
 
     it('preserves callback value types when a numeric option is selected', async () => {
@@ -77,11 +79,11 @@ describe('Picker', () => {
       )
 
       const select = screen.getByRole('combobox', { name: 'Status' })
-      const placeholder = container.querySelector('option[hidden]') as HTMLOptionElement
+      const placeholder = container.querySelector('option[hidden]') as NativeOptionElement
 
       expect(placeholder.selected).toBe(true)
       expect(select).toHaveValue('')
-      expect(new FormData(container.querySelector('form')!).get('status')).toBe('')
+      expect(new globalThis.FormData(container.querySelector('form')!).get('status')).toBe('')
     })
 
     it('respects native form reset in uncontrolled mode', async () => {
@@ -102,16 +104,16 @@ describe('Picker', () => {
 
       const form = container.querySelector('form')!
       const select = screen.getByRole('combobox', { name: 'Status' })
-      const placeholder = container.querySelector('option[hidden]') as HTMLOptionElement
+      const placeholder = container.querySelector('option[hidden]') as NativeOptionElement
 
       await user.selectOptions(select, screen.getByRole('option', { name: 'Ready' }))
-      expect(new FormData(form).get('status')).toBe('ready')
+      expect(new globalThis.FormData(form).get('status')).toBe('ready')
 
       form.reset()
 
       expect(placeholder.selected).toBe(true)
       expect(select).toHaveValue('')
-      expect(new FormData(form).get('status')).toBe('')
+      expect(new globalThis.FormData(form).get('status')).toBe('')
     })
 
     it('preserves the selected option value when options are inserted in uncontrolled mode', async () => {
