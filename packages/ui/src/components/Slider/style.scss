@@ -2,39 +2,90 @@
 
 @include component('slider') {
   width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
+  display: block;
   height: 32px;
+  margin: 0;
+  background: transparent;
+  color: var(--sw-accent-color);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  accent-color: var(--sw-accent-color);
 
-  &-track {
-    position: absolute;
-    width: 100%;
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible::-webkit-slider-thumb,
+  &:focus-visible::-moz-range-thumb {
+    box-shadow:
+      0 0 0 3px color(from var(--sw-accent-color) srgb r g b / 0.14),
+      var(--sw-shadow-sm);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &::-webkit-slider-runnable-track {
     height: 4px;
+    border: 0;
+    border-radius: var(--sw-radius-full);
     background-color: var(--sw-color-gray-lighter);
-    border-radius: var(--sw-radius-full);
   }
 
-  &-fill {
-    position: absolute;
-    height: 4px;
-    background-color: var(--sw-accent-color);
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-top: -8px;
+    border: 1px solid var(--sw-color-separator);
     border-radius: var(--sw-radius-full);
-  }
-
-  &-thumb {
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    background-color: var(--sw-color-white);
-    border-radius: var(--sw-radius-full);
+    background-color: var(--sw-color-background-primary);
     box-shadow: var(--sw-shadow-sm);
-    cursor: pointer;
-    transform: translateX(-50%);
-    transition: transform 0.1s ease;
+    transition:
+      transform var(--sw-transition-fast),
+      box-shadow var(--sw-transition-fast);
+  }
 
-    &:active {
-      transform: translateX(-50%) scale(1.1);
-    }
+  &:hover:not(:disabled)::-webkit-slider-thumb,
+  &:active:not(:disabled)::-webkit-slider-thumb {
+    transform: scale(1.04);
+  }
+
+  &::-moz-range-track {
+    height: 4px;
+    border: 0;
+    border-radius: var(--sw-radius-full);
+    background-color: var(--sw-color-gray-lighter);
+  }
+
+  &::-moz-range-progress {
+    height: 4px;
+    border-radius: var(--sw-radius-full);
+    background-color: var(--sw-accent-color);
+  }
+
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--sw-color-separator);
+    border-radius: var(--sw-radius-full);
+    background-color: var(--sw-color-background-primary);
+    cursor: pointer;
+    box-shadow: var(--sw-shadow-sm);
+    transition:
+      transform var(--sw-transition-fast),
+      box-shadow var(--sw-transition-fast);
+  }
+
+  &:hover:not(:disabled)::-moz-range-thumb,
+  &:active:not(:disabled)::-moz-range-thumb {
+    transform: scale(1.04);
+  }
+
+  &::-moz-focus-outer {
+    border: 0;
   }
 }

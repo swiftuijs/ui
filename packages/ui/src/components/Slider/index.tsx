@@ -1,5 +1,6 @@
 import { memo } from 'react'
-import type { IBaseComponent } from '@/types'
+import type { ChangeEvent } from 'react'
+import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
@@ -21,15 +22,26 @@ import './style.scss'
  * 
  * @see https://developer.apple.com/documentation/swiftui/slider
  */
-export interface ISliderProps extends IBaseComponent {
+export interface ISliderProps extends Omit<
+  IBaseElementComponent<'input'>,
+  'type' | 'value' | 'defaultValue' | 'onChange' | 'children'
+> {
   /**
    * The current value of the slider.
    */
-  value: number
+  value?: number
+  /**
+   * The initial value of the slider when uncontrolled.
+   */
+  defaultValue?: number
   /**
    * Callback fired when the value changes.
    */
-  onValueChange: (value: number) => void
+  onValueChange?: (value: number) => void
+  /**
+   * Native change event handler forwarded to the underlying input.
+   */
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
   /**
    * The minimum value of the slider.
    * 
@@ -59,7 +71,9 @@ export interface ISliderProps extends IBaseComponent {
 export const Slider = memo(function Slider(props: ISliderProps) {
   const {
     value,
+    defaultValue,
     onValueChange,
+    onChange,
     min = 0,
     max = 100,
     step = 1,
@@ -71,32 +85,26 @@ export const Slider = memo(function Slider(props: ISliderProps) {
     className: prefixClass('slider')
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseFloat(e.target.value)
-    onValueChange(newValue)
+  const isControlled = value !== undefined
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event)
+    onValueChange?.(event.currentTarget.valueAsNumber)
   }
 
-  const percentage = ((value - min) / (max - min)) * 100
-
   return (
-    <div {...commonProps} {...finalRestProps}>
-      <div className={prefixClass('slider-track')}>
-        <div
-          className={prefixClass('slider-fill')}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={handleChange}
-        disabled={disabled}
-        className={prefixClass('slider-input')}
-      />
-    </div>
+    <input
+      key={isControlled ? 'controlled' : 'uncontrolled'}
+      {...commonProps}
+      {...finalRestProps}
+      type="range"
+      min={min}
+      max={max}
+      step={step}
+      value={isControlled ? value : undefined}
+      defaultValue={isControlled ? undefined : defaultValue}
+      onChange={handleChange}
+      disabled={disabled}
+    />
   )
 })
-

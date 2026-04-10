@@ -10,7 +10,7 @@ const meta: Meta<typeof TextEditor> = {
   parameters: {
     docs: {
       description: {
-        component: 'A view that displays and edits multiline text.'
+        component: 'A native textarea-backed multiline editor with SwiftUI-style value callbacks.'
       }
     }
   }
@@ -20,38 +20,54 @@ export default meta
 
 type Story = StoryObj<ITextEditorProps>
 
-function DefaultTextEditor() {
-  const [value, setValue] = useState('')
+function ControlledTextEditor() {
+  const [value, setValue] = useState('Draft message')
 
   return (
     <VStack spacing={10}>
       <Text>Character count: {value.length}</Text>
       <TextEditor
+        aria-label="Controlled message"
         value={value}
-        onChange={setValue}
-        placeholder="Enter text..."
+        onValueChange={setValue}
+        placeholder="Write a response..."
       />
     </VStack>
   )
 }
 
 export const Default: Story = {
-  render: () => <DefaultTextEditor />,
+  args: {
+    'aria-label': 'Notes',
+    defaultValue: 'Start with a draft here...',
+    placeholder: 'Enter notes...',
+  },
 }
 
-export const WithMinMaxLines: Story = {
+export const Controlled: Story = {
+  render: () => <ControlledTextEditor />,
+}
+
+export const Rows: Story = {
   args: {
-    value: 'Line 1\nLine 2\nLine 3',
-    minLines: 3,
-    maxLines: 5,
-    placeholder: 'Enter 3-5 lines...',
+    'aria-label': 'Release notes',
+    defaultValue: 'Line 1\nLine 2\nLine 3\nLine 4',
+    placeholder: 'Enter release notes...',
+  },
+}
+
+export const ReadOnly: Story = {
+  args: {
+    'aria-label': 'Locked note',
+    defaultValue: 'You can copy this text, but not edit it.',
+    readOnly: true,
   },
 }
 
 export const Disabled: Story = {
   args: {
-    value: 'This is disabled',
+    'aria-label': 'Disabled note',
+    defaultValue: 'This editor is disabled.',
     disabled: true,
   },
 }
-

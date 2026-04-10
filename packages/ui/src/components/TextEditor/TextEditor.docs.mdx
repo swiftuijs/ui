@@ -7,39 +7,49 @@ import * as TextEditorStories from './TextEditor.stories'
 
 ## Overview
 
-TextEditor is a view that displays and edits multiline text. TextEditor is used for longer text input that requires multiple lines, such as comments, descriptions, or messages.
+TextEditor is a native `<textarea>`-backed multiline editor for longer text such as comments, descriptions, and notes.
 
-**SwiftUI Correspondence**: Similar to SwiftUI's `TextEditor`.
+**SwiftUI Correspondence**: Similar to SwiftUI's `TextEditor`, with a web-native `onChange` event plus `onValueChange` for value-first updates.
 
 ## Basic Usage
 
 <Canvas of={TextEditorStories.Default} />
 
-## With Min/Max Lines
+## Controlled Usage
 
-Control the minimum and maximum number of lines:
+Use `value` with `onValueChange` when the parent owns the text state:
 
-<Canvas of={TextEditorStories.WithMinMaxLines} />
+<Canvas of={TextEditorStories.Controlled} />
+
+## Content Sizing
+
+When `rows` is omitted, TextEditor derives a sensible row count from explicit line breaks in the current content and keeps it between 3 and 8 rows:
+
+<Canvas of={TextEditorStories.Rows} />
+
+## Read Only
+
+TextEditor can be displayed as read only:
+
+<Canvas of={TextEditorStories.ReadOnly} />
 
 ## Disabled State
-
-TextEditor can be disabled:
 
 <Canvas of={TextEditorStories.Disabled} />
 
 ## Notes
 
-- TextEditor supports controlled and uncontrolled modes
-- Use `value` and `onChange` for controlled inputs
-- `minLines` and `maxLines` control the editor height
-- TextEditor automatically grows/shrinks within the line limits
-- Use `placeholder` to provide hints about expected input
+- `defaultValue` creates an uncontrolled editor that still behaves like a normal textarea
+- `value` keeps the editor controlled by the parent
+- `onChange` receives the native textarea change event
+- `onValueChange` receives the latest string value for SwiftUI-style state updates
+- `placeholder`, `disabled`, and `readOnly` behave like native textarea props
+- `rows` can be set explicitly, otherwise the editor derives a sensible row count from explicit line breaks in its content
 
 ## Best Practices
 
-1. **Line limits**: Set appropriate min/max lines for your use case
-2. **Placeholders**: Provide clear placeholder text
-3. **Validation**: Validate input length and content
-4. **Accessibility**: Ensure TextEditor is accessible and keyboard navigable
-5. **Mobile**: Test on mobile devices for proper keyboard behavior
-
+1. **Controlled vs uncontrolled**: Pick one mode and keep it consistent.
+2. **Labels**: Provide an accessible label or use an associated `<Label>`.
+3. **Sizing**: Use `rows` when you need a fixed height; otherwise the editor sizes itself from explicit line breaks.
+4. **Validation**: Validate input length and content at the form level.
+5. **Accessibility**: Keep the native textarea semantics intact for keyboard and assistive tech users.

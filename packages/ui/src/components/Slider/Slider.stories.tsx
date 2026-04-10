@@ -13,27 +13,44 @@ const meta: Meta<typeof Slider> = {
 export default meta
 type Story = StoryObj<typeof Slider>
 
-const SliderDemo = () => {
+const ControlledSliderDemo = () => {
   const [value, setValue] = useState(50)
   return (
     <VStack spacing={16}>
-      <Text>Value: {value}</Text>
+      <Text>Controlled value: {value}</Text>
       <Slider
+        aria-label="Controlled slider"
         value={value}
         onValueChange={setValue}
         min={0}
         max={100}
       />
+    </VStack>
+  )
+}
+
+const UncontrolledSliderDemo = () => {
+  return (
+    <VStack spacing={16}>
+      <Text>Uses browser-managed default value</Text>
       <Slider
-        value={value}
-        onValueChange={setValue}
+        aria-label="Uncontrolled slider"
+        defaultValue={35}
         min={0}
         max={100}
         step={5}
       />
+    </VStack>
+  )
+}
+
+const DisabledSliderDemo = () => {
+  return (
+    <VStack spacing={16}>
+      <Text>Disabled slider</Text>
       <Slider
-        value={value}
-        onValueChange={setValue}
+        aria-label="Disabled slider"
+        defaultValue={65}
         min={0}
         max={100}
         disabled
@@ -43,6 +60,13 @@ const SliderDemo = () => {
 }
 
 export const Default: Story = {
-  render: () => <SliderDemo />,
+  render: () => <ControlledSliderDemo />,
 }
 
+export const Uncontrolled: Story = {
+  render: () => <UncontrolledSliderDemo />,
+}
+
+export const Disabled: Story = {
+  render: () => <DisabledSliderDemo />,
+}

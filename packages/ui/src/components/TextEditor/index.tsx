@@ -1,5 +1,5 @@
-import { memo, type ChangeEvent } from 'react'
-import type { IBaseComponent } from '@/types'
+import { memo, useEffect, useMemo, useRef, useState, type ChangeEventHandler } from 'react'
+import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
 import './style.scss'
@@ -7,32 +7,32 @@ import './style.scss'
 /**
  * Props for TextEditor component
  */
-export interface ITextEditorProps extends Omit<IBaseComponent, 'children'> {
+export interface ITextEditorProps extends Omit<IBaseElementComponent<'textarea'>, 'children' | 'value' | 'defaultValue' | 'onChange'> {
   /**
-   * Editor value
+   * The current value of the editor.
    */
   value?: string
   /**
-   * Value change handler
+   * The initial value of the editor when uncontrolled.
    */
-  onChange?: (value: string) => void
+  defaultValue?: string
+  /**
+   * Native textarea change handler.
+   */
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>
+  /**
+   * Value-first change handler for SwiftUI-style ergonomics.
+   */
+  onValueChange?: (value: string) => void
   /**
    * Placeholder text
    */
   placeholder?: string
   /**
-   * Minimum number of lines
-   * @default 1
+   * Native textarea row count. When omitted, TextEditor grows with content and
+   * keeps a sensible size between 3 and 8 rows based on its current content.
    */
-  minLines?: number
-  /**
-   * Maximum number of lines
-   */
-  maxLines?: number
-  /**
-   * Whether the editor is disabled
-   */
-  disabled?: boolean
+  rows?: number
 }
 
 /**
@@ -45,7 +45,7 @@ export interface ITextEditorProps extends Omit<IBaseComponent, 'children'> {
  * ```tsx
  * <TextEditor
  *   value={text}
- *   onChange={setText}
+ *   onValueChange={setText}
  *   placeholder="Enter text..."
  * />
  * ```
@@ -54,37 +54,93 @@ export interface ITextEditorProps extends Omit<IBaseComponent, 'children'> {
  */
 export const TextEditor = memo(function TextEditor(props: ITextEditorProps) {
   const {
-    value = '',
+    value,
+    defaultValue,
     onChange,
+    onValueChange,
     placeholder,
-    minLines = 1,
-    maxLines,
-    disabled = false,
+    rows,
     ...restProps
   } = props
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    if (onChange) {
-      onChange(e.target.value)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const isControlled = value !== undefined
+  const clampRows = (nextValue: string) => Math.min(Math.max(nextValue.split(/\r\n|\r|\n/).length || 1, 3), 8)
+  const initialDerivedRows = useMemo(
+    () => clampRows(value ?? defaultValue ?? ''),
+    [defaultValue, value]
+  )
+  const [derivedRows, setDerivedRows] = useState(initialDerivedRows)
+  const resolvedRows = rows ?? derivedRows
+
+  useEffect(() => {
+    if (!isControlled) {
+      return
     }
+
+    setDerivedRows(clampRows(value ?? ''))
+  }, [isControlled, value])
+
+  useEffect(() => {
+    if (isControlled || rows !== undefined) {
+      return
+    }
+
+    const textarea = textareaRef.current
+
+    if (!textarea) {
+      return
+    }
+
+    const syncFromDom = () => {
+      setDerivedRows(clampRows(textarea.value))
+    }
+
+    syncFromDom()
+
+    const form = textarea.form
+
+    if (!form) {
+      return
+    }
+
+    const handleReset = () => {
+      Promise.resolve().then(syncFromDom)
+    }
+
+    form.addEventListener('reset', handleReset)
+
+    return () => {
+      form.removeEventListener('reset', handleReset)
+    }
+  }, [isControlled, rows])
+
+  const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
+    const nextValue = event.target.value
+
+    if (!isControlled && rows === undefined) {
+      setDerivedRows(clampRows(nextValue))
+    }
+
+    onChange?.(event)
+    onValueChange?.(nextValue)
   }
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: [prefixClass('text-editor')],
   })
 
-  const rows = maxLines ? Math.min(Math.max(value.split('\n').length, minLines), maxLines) : Math.max(value.split('\n').length, minLines)
-
   return (
     <textarea
+      key={isControlled ? 'controlled' : 'uncontrolled'}
+      ref={textareaRef}
       {...commonProps}
       {...finalRestProps}
-      value={value}
+      value={isControlled ? value : undefined}
+      defaultValue={isControlled ? undefined : defaultValue}
       onChange={handleChange}
       placeholder={placeholder}
-      rows={rows}
-      disabled={disabled}
+      rows={resolvedRows}
     />
   )
 })
-
