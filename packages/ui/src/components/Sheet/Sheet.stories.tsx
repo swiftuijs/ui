@@ -142,3 +142,29 @@ function LockedBackdropSheet() {
 export const LockedBackdrop: Story = {
   render: () => <LockedBackdropSheet />,
 }
+
+function DetentSheet() {
+  const [isPresented, setIsPresented] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setIsPresented(true)}>Show Detent Sheet</Button>
+      <Sheet
+        isPresented={isPresented}
+        onDismiss={() => setIsPresented(false)}
+        presentationDetents={['medium', 'large']}
+        selectedDetent="medium"
+      >
+        <VStack spacing={20} style={{ padding: '20px' }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Detent Sheet</Text>
+          <Text>This sheet starts at the medium detent.</Text>
+          <Button onClick={() => setIsPresented(false)}>Dismiss</Button>
+        </VStack>
+      </Sheet>
+    </>
+  )
+}
+
+export const Detents: Story = {
+  render: () => <DetentSheet />,
+}

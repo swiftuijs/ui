@@ -74,4 +74,22 @@ describe('Sheet', () => {
     expect(dialog).toHaveClass('sw-sheet-thinMaterial')
     expect(dialog).toHaveStyle({ '--sw-sheet-corner-radius': '28px' })
   })
+
+  it('marks configured presentation detents and the selected detent', () => {
+    render(
+      <Sheet
+        isPresented
+        presentationDetents={['medium', 'large']}
+        selectedDetent="large"
+      >
+        <div>Detented sheet</div>
+      </Sheet>,
+    )
+
+    const dialog = screen.getByRole('dialog')
+
+    expect(dialog).toHaveAttribute('data-presentation-detents', 'medium,large')
+    expect(dialog).toHaveAttribute('data-selected-detent', 'large')
+    expect(dialog).toHaveStyle({ '--sw-sheet-height': '90%' })
+  })
 })

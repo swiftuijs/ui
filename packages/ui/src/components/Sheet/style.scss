@@ -19,7 +19,7 @@
     position: relative;
     width: 100%;
     max-width: 600px;
-    max-height: 90%;
+    max-height: var(--sw-sheet-height, 90%);
     background-color: var(--sw-color-background-primary);
     border-top-left-radius: var(--sw-sheet-corner-radius, var(--sw-radius-lg));
     border-top-right-radius: var(--sw-sheet-corner-radius, var(--sw-radius-lg));

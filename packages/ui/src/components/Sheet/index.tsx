@@ -1,6 +1,7 @@
 import { forwardRef, type CSSProperties } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
+import type { IPresentationDetent } from '@/types'
 
 import './style.scss'
 
@@ -40,6 +41,36 @@ export interface ISheetProps extends IBaseComponent {
    * Overrides the sheet corner radius.
    */
   cornerRadius?: number | string
+  /**
+   * Available detents for the sheet height.
+   * @default ['large']
+   */
+  presentationDetents?: IPresentationDetent[]
+  /**
+   * Currently selected detent.
+   */
+  selectedDetent?: IPresentationDetent
+}
+
+const DETENT_HEIGHT_MAP: Record<'medium' | 'large', string> = {
+  medium: '60%',
+  large: '90%',
+}
+
+function resolveDetentHeight(detent: IPresentationDetent | undefined) {
+  if (detent == null) {
+    return undefined
+  }
+
+  if (typeof detent === 'number') {
+    return `${detent}px`
+  }
+
+  if (detent === 'medium' || detent === 'large') {
+    return DETENT_HEIGHT_MAP[detent]
+  }
+
+  return detent
 }
 
 /**
@@ -71,9 +102,14 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     backgroundInteraction = 'dismiss',
     backgroundStyle = 'automatic',
     cornerRadius,
+    presentationDetents = ['large'],
+    selectedDetent,
     children,
     ...restProps
   } = props
+
+  const resolvedDetent = selectedDetent ?? presentationDetents[0]
+  const resolvedDetentHeight = resolveDetentHeight(resolvedDetent)
 
   if (!isPresented) {
     return null
@@ -98,6 +134,7 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     style: {
       '--sw-sheet-corner-radius':
         typeof cornerRadius === 'number' ? `${cornerRadius}px` : cornerRadius,
+      '--sw-sheet-height': resolvedDetentHeight,
     } as CSSProperties,
   })
 
@@ -112,7 +149,9 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
         {...finalRestProps}
         data-background-interaction={backgroundInteraction}
         data-background-style={backgroundStyle}
+        data-presentation-detents={presentationDetents.join(',')}
         data-presentation-style={presentationStyle}
+        data-selected-detent={resolvedDetent == null ? undefined : String(resolvedDetent)}
         ref={ref}
         role="dialog"
         aria-modal="true"
