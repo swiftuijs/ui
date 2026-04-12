@@ -66,6 +66,8 @@
     "photospicker",
     "picker",
     "popover",
+    "presentationbackground",
+    "presentationcornerradius",
     "progressview",
     "radialgradient",
     "redacted",
