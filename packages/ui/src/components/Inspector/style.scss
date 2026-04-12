@@ -1,0 +1,68 @@
+.sw-inspector {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--sw-color-border, rgba(60, 60, 67, 0.18));
+  border-radius: 18px;
+  background: var(--sw-color-surface, rgba(255, 255, 255, 0.72));
+  overflow: hidden;
+}
+
+.sw-inspector-leading {
+  flex-direction: row;
+}
+
+.sw-inspector-trailing {
+  flex-direction: row;
+}
+
+.sw-inspector-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 1rem;
+}
+
+.sw-inspector-panel {
+  flex: 0 0 auto;
+  min-width: 16rem;
+  max-width: min(28rem, 42vw);
+  border-left: 1px solid var(--sw-color-border, rgba(60, 60, 67, 0.18));
+  background: var(--sw-color-surface-elevated, rgba(255, 255, 255, 0.92));
+  display: flex;
+  flex-direction: column;
+}
+
+.sw-inspector-leading .sw-inspector-panel {
+  border-left: 0;
+  border-right: 1px solid var(--sw-color-border, rgba(60, 60, 67, 0.18));
+}
+
+.sw-inspector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1rem 0.75rem;
+  border-bottom: 1px solid var(--sw-color-border, rgba(60, 60, 67, 0.18));
+}
+
+.sw-inspector-title {
+  font-weight: 600;
+}
+
+.sw-inspector-dismiss {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.sw-inspector-body {
+  min-height: 0;
+  padding: 1rem;
+  overflow: auto;
+}
