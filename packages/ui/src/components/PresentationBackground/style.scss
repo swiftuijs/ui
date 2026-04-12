@@ -1,0 +1,40 @@
+@use '@style/base.scss' as *;
+
+@include component('presentationbackground') {
+  display: block;
+  border: 1px solid color-mix(in srgb, var(--sw-color-text, #111827) 10%, transparent);
+  background: color-mix(in srgb, var(--sw-color-background, #ffffff) 88%, transparent);
+}
+
+@include component('presentationbackground-automatic') {
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+}
+
+@include component('presentationbackground-thinMaterial') {
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--sw-color-background, #ffffff) 78%, transparent);
+}
+
+@include component('presentationbackground-regularMaterial') {
+  backdrop-filter: blur(18px);
+  background: color-mix(in srgb, var(--sw-color-background, #ffffff) 90%, transparent);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.14);
+}
+
+@include component('presentationbackground-clear') {
+  backdrop-filter: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+@include component('presentationbackground-shape-automatic') {
+  border-radius: 22px;
+}
+
+@include component('presentationbackground-shape-rounded') {
+  border-radius: 28px;
+}
+
+@include component('presentationbackground-shape-capsule') {
+  border-radius: 999px;
+}

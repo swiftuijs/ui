@@ -116,11 +116,6 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
 
   const resolvedDetent = selectedDetent ?? presentationDetents[0]
   const resolvedDetentHeight = resolveDetentHeight(resolvedDetent)
-
-  if (!isPresented) {
-    return null
-  }
-
   const canDismissInteractively = backgroundInteraction === 'dismiss' && !interactiveDismissDisabled
 
   useEffect(() => {
@@ -128,7 +123,7 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
       return
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') {
         onDismiss()
       }
@@ -139,6 +134,10 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [canDismissInteractively, isPresented, onDismiss])
+
+  if (!isPresented) {
+    return null
+  }
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!canDismissInteractively) {

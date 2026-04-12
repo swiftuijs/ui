@@ -1,0 +1,7 @@
+@use '@style/base.scss' as *;
+
+@include component('presentationcornerradius') {
+  display: block;
+  border-radius: var(--sw-presentation-corner-radius, 24px);
+  overflow: clip;
+}
