@@ -1,0 +1,29 @@
+@use '@style/base.scss' as *;
+
+@include component('scrollindicators') {
+  display: block;
+}
+
+@include component('scrollindicators-automatic') {
+  --sw-scroll-indicators-visibility: automatic;
+}
+
+@include component('scrollindicators-visible') {
+  --sw-scroll-indicators-visibility: visible;
+}
+
+@include component('scrollindicators-hidden') {
+  --sw-scroll-indicators-visibility: hidden;
+}
+
+@include component('scrollindicators-vertical') {
+  --sw-scroll-indicators-axes: vertical;
+}
+
+@include component('scrollindicators-horizontal') {
+  --sw-scroll-indicators-axes: horizontal;
+}
+
+@include component('scrollindicators-all') {
+  --sw-scroll-indicators-axes: all;
+}

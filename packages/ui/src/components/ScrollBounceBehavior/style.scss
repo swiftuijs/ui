@@ -1,0 +1,29 @@
+@use '@style/base.scss' as *;
+
+@include component('scrollbouncebehavior') {
+  display: block;
+}
+
+@include component('scrollbouncebehavior-automatic') {
+  --sw-scroll-bounce-behavior: automatic;
+}
+
+@include component('scrollbouncebehavior-always') {
+  --sw-scroll-bounce-behavior: always;
+}
+
+@include component('scrollbouncebehavior-basedOnSize') {
+  --sw-scroll-bounce-behavior: basedOnSize;
+}
+
+@include component('scrollbouncebehavior-vertical') {
+  --sw-scroll-bounce-axes: vertical;
+}
+
+@include component('scrollbouncebehavior-horizontal') {
+  --sw-scroll-bounce-axes: horizontal;
+}
+
+@include component('scrollbouncebehavior-all') {
+  --sw-scroll-bounce-axes: all;
+}

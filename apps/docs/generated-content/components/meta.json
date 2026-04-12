@@ -77,6 +77,8 @@
     "safearea",
     "safeareainset",
     "scenepadding",
+    "scrollbouncebehavior",
+    "scrollindicators",
     "scrolltarget",
     "scrolltransition",
     "scrollview",
