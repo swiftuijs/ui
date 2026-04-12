@@ -1,0 +1,22 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as VideoPlayerStories from './VideoPlayer.stories';
+
+<Meta title="SwiftUI/VideoPlayer/Readme" />
+
+# VideoPlayer
+
+VideoPlayer wraps the native browser video element while keeping SwiftUI's dedicated media-player mental model.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from AVKit's `VideoPlayer`.
+
+## Examples
+
+<Canvas of={VideoPlayerStories.Default} />
+<Canvas of={VideoPlayerStories.WithFallback} />
+
+## Notes
+
+- Playback UI comes from the browser's native video controls.
+- The component is intentionally thin and keeps the underlying `<video>` element available.

@@ -1,0 +1,21 @@
+import { Canvas as StoryCanvas, Meta } from '@storybook/addon-docs/blocks';
+import * as CanvasStories from './Canvas.stories';
+
+<Meta title="SwiftUI/Canvas/Readme" />
+
+# Canvas
+
+Canvas exposes the browser's drawing surface with a SwiftUI-style dedicated component wrapper.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `Canvas`.
+
+## Examples
+
+<StoryCanvas of={CanvasStories.Default} />
+
+## Notes
+
+- Rendering is delegated to the supplied `draw` callback.
+- The current implementation targets a 2D context.

@@ -1,0 +1,9 @@
+@use '@/style/common.scss' as *;
+
+.sw-videoplayer {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--sw-radius-lg);
+  background: #000;
+}

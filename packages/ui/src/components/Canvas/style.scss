@@ -1,0 +1,8 @@
+@use '@/style/common.scss' as *;
+
+.sw-canvas {
+  display: block;
+  max-width: 100%;
+  border-radius: var(--sw-radius-md);
+  background: var(--sw-color-background-secondary);
+}

@@ -6,6 +6,7 @@
     "asyncimage",
     "badge",
     "button",
+    "canvas",
     "card",
     "color",
     "colorpicker",
@@ -66,6 +67,7 @@
     "textfield",
     "toggle",
     "toolbar",
+    "videoplayer",
     "viewthatfits",
     "vstack",
     "zstack"
