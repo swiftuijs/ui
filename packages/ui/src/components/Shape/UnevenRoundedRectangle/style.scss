@@ -1,0 +1,8 @@
+@use '@style/base.scss' as *;
+
+@include component('shape-uneven-rounded-rectangle') {
+  border-top-left-radius: var(--sw-shape-top-leading-radius);
+  border-top-right-radius: var(--sw-shape-top-trailing-radius);
+  border-bottom-left-radius: var(--sw-shape-bottom-leading-radius);
+  border-bottom-right-radius: var(--sw-shape-bottom-trailing-radius);
+}
