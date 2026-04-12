@@ -1,0 +1,20 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as TextSelectionStories from './TextSelection.stories'
+
+<Meta title="SwiftUI/TextSelection/Readme" />
+
+# TextSelection
+
+## Overview
+
+TextSelection adapts SwiftUI's `textSelection(_:)` modifier into an explicit wrapper that controls browser text selection semantics.
+
+**Status**: adapted
+
+## Usage
+
+<Canvas of={TextSelectionStories.Enabled} />
+
+## Variants
+
+<Canvas of={TextSelectionStories.Disabled} />

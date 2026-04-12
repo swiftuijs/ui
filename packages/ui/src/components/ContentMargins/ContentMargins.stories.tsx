@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Card, ContentMargins, Text, VStack } from '@swiftuijs/ui'
+import { Card, ContentMargins, Text, VStack } from '@/components'
 
 const meta: Meta<typeof ContentMargins> = {
   title: 'SwiftUI/ContentMargins',

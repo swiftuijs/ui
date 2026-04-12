@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Card, ContainerRelativeFrame, HStack, Text, VStack } from '@swiftuijs/ui'
+import { Card, ContainerRelativeFrame, HStack, Text, VStack } from '@/components'
 
 const meta: Meta<typeof ContainerRelativeFrame> = {
   title: 'SwiftUI/ContainerRelativeFrame',

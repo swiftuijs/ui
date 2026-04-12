@@ -440,6 +440,13 @@ export function transformStorySourceForDocs(source: string, uiImportPath: string
         return rewritten ? `import { ${rewritten} } from '${uiImportPath}'` : '';
       },
     )
+    .replace(
+      /^import\s+\{([^}]+)\}\s+from\s+['"]@\/components(?:\/index)?['"]\s*;?\s*$/gm,
+      (_, specifiers: string) => {
+        const rewritten = rewriteImportSpecifiers(specifiers);
+        return rewritten ? `import { ${rewritten} } from '${uiImportPath}'` : '';
+      },
+    )
     .replace(/^const meta:\s*Meta<[\s\S]*?^export default meta\s*$/gm, '')
     .replace(/^type Story\s*=\s*StoryObj<[\s\S]*?^\s*$/gm, '')
     .replace(/export const (\w+)\s*:\s*Story\s*=/g, 'export const $1 =')

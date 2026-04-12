@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { AspectRatio, Card, Text, VStack } from '@swiftuijs/ui'
+import { AspectRatio, Card, Text, VStack } from '@/components'
 
 const meta: Meta<typeof AspectRatio> = {
   title: 'SwiftUI/AspectRatio',

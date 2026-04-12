@@ -1,0 +1,14 @@
+.sw-containerbackground {
+  display: block;
+  background: var(--sw-color-surface, rgba(255, 255, 255, 0.92));
+  border: 1px solid var(--sw-color-border, rgba(15, 23, 42, 0.12));
+  border-radius: 1rem;
+}
+
+.sw-containerbackground-secondary {
+  background: var(--sw-color-surface-secondary, rgba(241, 245, 249, 0.92));
+}
+
+.sw-containerbackground-prominent {
+  background: var(--sw-color-surface-prominent, rgba(226, 232, 240, 0.96));
+}
