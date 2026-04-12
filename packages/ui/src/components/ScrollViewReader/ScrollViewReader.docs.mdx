@@ -1,0 +1,24 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as ScrollViewReaderStories from './ScrollViewReader.stories'
+
+<Meta title="SwiftUI/ScrollViewReader/Readme" />
+
+# ScrollViewReader
+
+## Overview
+
+ScrollViewReader exposes a proxy that can scroll to child `ScrollTarget` anchors by identifier.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `ScrollViewReader`.
+
+## Basic Usage
+
+<Canvas of={ScrollViewReaderStories.Default} />
+
+## Notes
+
+- `scrollTo(id)` resolves descendants marked with `ScrollTarget`
+- the current web adaptation uses `scrollIntoView()` under the hood
+- keep target identifiers stable across renders so imperative scrolling remains deterministic
