@@ -92,4 +92,40 @@ describe('Sheet', () => {
     expect(dialog).toHaveAttribute('data-selected-detent', 'large')
     expect(dialog).toHaveStyle({ '--sw-sheet-height': '90%' })
   })
+
+  it('dismisses on Escape by default', async () => {
+    const user = userEvent.setup()
+    const onDismiss = vi.fn()
+
+    render(
+      <Sheet isPresented onDismiss={onDismiss}>
+        <div>Keyboard sheet</div>
+      </Sheet>,
+    )
+
+    await user.keyboard('{Escape}')
+
+    expect(onDismiss).toHaveBeenCalledTimes(1)
+  })
+
+  it('can disable interactive dismiss behavior', async () => {
+    const user = userEvent.setup()
+    const onDismiss = vi.fn()
+
+    render(
+      <Sheet
+        isPresented
+        interactiveDismissDisabled
+        onDismiss={onDismiss}
+      >
+        <div>Locked presentation</div>
+      </Sheet>,
+    )
+
+    await user.click(screen.getByRole('presentation'))
+    await user.keyboard('{Escape}')
+
+    expect(onDismiss).not.toHaveBeenCalled()
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-interactive-dismiss-disabled', 'true')
+  })
 })

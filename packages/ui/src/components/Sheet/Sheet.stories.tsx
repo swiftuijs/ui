@@ -168,3 +168,28 @@ function DetentSheet() {
 export const Detents: Story = {
   render: () => <DetentSheet />,
 }
+
+function InteractiveDismissDisabledSheet() {
+  const [isPresented, setIsPresented] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setIsPresented(true)}>Show Locked Interaction Sheet</Button>
+      <Sheet
+        isPresented={isPresented}
+        onDismiss={() => setIsPresented(false)}
+        interactiveDismissDisabled
+      >
+        <VStack spacing={20} style={{ padding: '20px' }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Interactive Dismiss Disabled</Text>
+          <Text>Backdrop taps and Escape no longer dismiss this presentation.</Text>
+          <Button onClick={() => setIsPresented(false)}>Close explicitly</Button>
+        </VStack>
+      </Sheet>
+    </>
+  )
+}
+
+export const InteractiveDismissDisabled: Story = {
+  render: () => <InteractiveDismissDisabledSheet />,
+}

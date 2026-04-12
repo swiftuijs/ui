@@ -1,4 +1,4 @@
-import { forwardRef, type CSSProperties } from 'react'
+import { forwardRef, useEffect, type CSSProperties } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 import type { IPresentationDetent } from '@/types'
@@ -50,6 +50,11 @@ export interface ISheetProps extends IBaseComponent {
    * Currently selected detent.
    */
   selectedDetent?: IPresentationDetent
+  /**
+   * Prevents interactive dismiss affordances like backdrop tap and Escape.
+   * @default false
+   */
+  interactiveDismissDisabled?: boolean
 }
 
 const DETENT_HEIGHT_MAP: Record<'medium' | 'large', string> = {
@@ -104,6 +109,7 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     cornerRadius,
     presentationDetents = ['large'],
     selectedDetent,
+    interactiveDismissDisabled = false,
     children,
     ...restProps
   } = props
@@ -115,8 +121,27 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     return null
   }
 
+  const canDismissInteractively = backgroundInteraction === 'dismiss' && !interactiveDismissDisabled
+
+  useEffect(() => {
+    if (!isPresented || !onDismiss || !canDismissInteractively) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onDismiss()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [canDismissInteractively, isPresented, onDismiss])
+
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (backgroundInteraction !== 'dismiss') {
+    if (!canDismissInteractively) {
       return
     }
 
@@ -149,6 +174,7 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
         {...finalRestProps}
         data-background-interaction={backgroundInteraction}
         data-background-style={backgroundStyle}
+        data-interactive-dismiss-disabled={String(interactiveDismissDisabled)}
         data-presentation-detents={presentationDetents.join(',')}
         data-presentation-style={presentationStyle}
         data-selected-detent={resolvedDetent == null ? undefined : String(resolvedDetent)}
