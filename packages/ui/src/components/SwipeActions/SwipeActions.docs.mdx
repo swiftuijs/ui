@@ -1,0 +1,24 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as SwipeActionsStories from './SwipeActions.stories'
+
+<Meta title="SwiftUI/SwipeActions/Readme" />
+
+# SwipeActions
+
+## Overview
+
+SwipeActions adapts SwiftUI's swipe-revealed row actions into an explicit, accessible web row wrapper. On the web, actions are revealed with a toggle instead of relying on touch-only gestures.
+
+## Usage
+
+<Canvas of={SwipeActionsStories.Default} />
+
+## Variants
+
+<Canvas of={SwipeActionsStories.Leading} />
+<Canvas of={SwipeActionsStories.Destructive} />
+
+## Notes
+
+- Use `edge="leading"` to place actions before the row content.
+- Use controlled `open` state when a surrounding list needs to coordinate which row is expanded.

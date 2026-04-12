@@ -1,4 +1,6 @@
 export * from './Rectangle'
 export * from './Circle'
+export * from './Capsule'
+export * from './Ellipse'
 export * from './RoundedRectangle'
 export * from './UnevenRoundedRectangle'

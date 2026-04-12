@@ -1,0 +1,53 @@
+@use '@style/base.scss' as *;
+
+@include component('swipe-actions') {
+  display: grid;
+  gap: 8px;
+}
+
+@include component('swipe-actions-toggle') {
+  width: fit-content;
+  border: 0;
+  background: none;
+  color: var(--sw-color-primary, #007aff);
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+@include component('swipe-actions-row') {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+@include component('swipe-actions-content') {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+@include component('swipe-actions-panel') {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+@include component('swipe-actions-button') {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--sw-color-gray-4, #d1d5db);
+  background: var(--sw-color-background-secondary, #f3f4f6);
+  color: var(--sw-color-text-primary, #111827);
+  border-radius: 12px;
+  padding: 0 14px;
+  min-height: 40px;
+  font: inherit;
+  cursor: pointer;
+}
+
+@include component('swipe-actions-button-destructive') {
+  border-color: var(--sw-color-red-4, #fca5a5);
+  background: var(--sw-color-red-1, #fee2e2);
+  color: var(--sw-color-red-7, #b91c1c);
+}
