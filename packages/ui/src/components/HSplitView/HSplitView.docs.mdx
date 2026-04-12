@@ -1,0 +1,28 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as HSplitViewStories from './HSplitView.stories'
+
+<Meta title="SwiftUI/HSplitView/Readme" />
+
+# HSplitView
+
+## Overview
+
+HSplitView lays out multiple panes side by side, adapting SwiftUI's horizontal split container model to a proportional flex layout on the web.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `HSplitView`.
+
+## Basic Usage
+
+<Canvas of={HSplitViewStories.Default} />
+
+## Three Panes
+
+<Canvas of={HSplitViewStories.ThreePane} />
+
+## Notes
+
+- `fractions` defines the relative width of each pane in source order
+- split dividers are visual only in this first implementation; pane resizing is not yet interactive
+- children are rendered in place, so each pane can host arbitrary SwiftUI.js content

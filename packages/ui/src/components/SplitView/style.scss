@@ -1,0 +1,53 @@
+@use '@/style/common.scss' as *;
+
+.sw-splitview {
+  display: flex;
+  min-inline-size: 0;
+  min-block-size: 0;
+  gap: var(--sw-spacing-sm);
+}
+
+.sw-hsplitview {
+  flex-direction: row;
+}
+
+.sw-vsplitview {
+  flex-direction: column;
+}
+
+.sw-splitview-segment {
+  display: flex;
+  min-inline-size: 0;
+  min-block-size: 0;
+  flex: 1 1 0;
+}
+
+.sw-hsplitview .sw-splitview-segment {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.sw-vsplitview .sw-splitview-segment {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sw-splitview-pane {
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.sw-splitview-divider {
+  flex: 0 0 auto;
+  background-color: var(--sw-color-separator);
+}
+
+.sw-splitview-divider[data-orientation='horizontal'] {
+  width: 1px;
+  margin-inline: var(--sw-spacing-sm);
+}
+
+.sw-splitview-divider[data-orientation='vertical'] {
+  height: 1px;
+  margin-block: var(--sw-spacing-sm);
+}

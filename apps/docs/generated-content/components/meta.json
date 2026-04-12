@@ -26,6 +26,7 @@
     "gridrow",
     "group",
     "groupbox",
+    "hsplitview",
     "hstack",
     "image",
     "label",
@@ -72,6 +73,7 @@
     "toolbar",
     "videoplayer",
     "viewthatfits",
+    "vsplitview",
     "vstack",
     "zstack"
   ],

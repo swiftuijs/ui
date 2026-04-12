@@ -1,0 +1,28 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as VSplitViewStories from './VSplitView.stories'
+
+<Meta title="SwiftUI/VSplitView/Readme" />
+
+# VSplitView
+
+## Overview
+
+VSplitView stacks multiple panes vertically while preserving the SwiftUI split-view mental model in a web-native layout container.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `VSplitView`.
+
+## Basic Usage
+
+<Canvas of={VSplitViewStories.Default} />
+
+## Three Panes
+
+<Canvas of={VSplitViewStories.ThreePane} />
+
+## Notes
+
+- `fractions` defines the relative height of each pane in source order
+- vertical dividers are emitted between panes by default
+- the first version focuses on stable pane layout, not interactive resizing
