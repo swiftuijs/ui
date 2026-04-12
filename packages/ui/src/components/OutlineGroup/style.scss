@@ -1,0 +1,28 @@
+@use '@/style/common.scss' as *;
+
+.sw-outlinegroup-tree,
+.sw-outlinegroup-children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sw-outlinegroup-row {
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+}
+
+.sw-outlinegroup-toggle,
+.sw-outlinegroup-label {
+  color: var(--sw-color-label-primary);
+  font-size: var(--sw-font-size-body);
+  line-height: var(--sw-line-height-normal);
+}
+
+.sw-outlinegroup-toggle {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}

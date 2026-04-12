@@ -1,0 +1,15 @@
+@use '@/style/common.scss' as *;
+
+.sw-pastebutton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sw-spacing-sm) var(--sw-spacing-lg);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-full);
+  background: var(--sw-color-background-secondary);
+  color: var(--sw-color-label-primary);
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-medium);
+  cursor: pointer;
+}

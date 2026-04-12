@@ -1,0 +1,24 @@
+@use '@/style/common.scss' as *;
+
+.sw-table {
+  overflow-x: auto;
+}
+
+.sw-table-element {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--sw-color-background-primary);
+}
+
+.sw-table-element th,
+.sw-table-element td {
+  padding: var(--sw-spacing-md);
+  border-bottom: 1px solid var(--sw-color-separator);
+  text-align: left;
+}
+
+.sw-table-element th {
+  color: var(--sw-color-label-secondary);
+  font-size: var(--sw-font-size-footnote);
+  font-weight: var(--sw-font-weight-semibold);
+}
