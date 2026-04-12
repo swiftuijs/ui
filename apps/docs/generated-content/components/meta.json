@@ -63,6 +63,7 @@
     "popover",
     "progressview",
     "radialgradient",
+    "redacted",
     "refreshable",
     "safearea",
     "safeareainset",
@@ -93,6 +94,7 @@
     "toolbar",
     "videoplayer",
     "viewthatfits",
+    "visualeffect",
     "vsplitview",
     "vstack",
     "zstack"

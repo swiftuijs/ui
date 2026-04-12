@@ -1,0 +1,28 @@
+@use '@style/base.scss' as *;
+
+@include component('redacted') {
+  display: inline-flex;
+  position: relative;
+  isolation: isolate;
+}
+
+@include component('redacted-active') {
+  color: transparent;
+}
+
+.sw-redacted-active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--sw-color-secondary, #e5e7eb) 78%, transparent) 0%,
+    color-mix(in srgb, var(--sw-color-secondary, #e5e7eb) 96%, transparent) 50%,
+    color-mix(in srgb, var(--sw-color-secondary, #e5e7eb) 78%, transparent) 100%
+  );
+}
+
+.sw-redacted-privacy.sw-redacted-active::after {
+  background: color-mix(in srgb, var(--sw-color-secondary, #e5e7eb) 92%, transparent);
+}
