@@ -1,0 +1,20 @@
+@use '@style/base.scss' as *;
+
+@include component('safe-area-inset') {
+  display: grid;
+  gap: 12px;
+}
+
+.sw-safe-area-inset-leading,
+.sw-safe-area-inset-trailing {
+  grid-auto-flow: column;
+  align-items: stretch;
+}
+
+@include component('safe-area-inset-slot') {
+  min-width: 0;
+}
+
+@include component('safe-area-inset-content') {
+  min-width: 0;
+}

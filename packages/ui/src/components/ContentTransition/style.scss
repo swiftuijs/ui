@@ -1,0 +1,30 @@
+@use '@style/base.scss' as *;
+
+@include component('contenttransition') {
+  display: inline-flex;
+  transition: opacity 0.18s ease, transform 0.18s ease, filter 0.18s ease;
+}
+
+@include component('contenttransition-opacity') {
+  opacity: 1;
+}
+
+@include component('contenttransition-interpolate') {
+  filter: saturate(1);
+}
+
+@include component('contenttransition-scale') {
+  transform: scale(1);
+}
+
+.sw-contenttransition-active.sw-contenttransition-opacity {
+  opacity: 1;
+}
+
+.sw-contenttransition-active.sw-contenttransition-interpolate {
+  filter: saturate(1.05);
+}
+
+.sw-contenttransition-active.sw-contenttransition-scale {
+  transform: scale(1.02);
+}
