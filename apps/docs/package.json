@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "prepare-content": "pnpm exec tsx ./scripts/generate-docs-content.ts",
-    "prepare-docs": "pnpm --filter @swiftuijs/ui build && pnpm run prepare-content && fumadocs-mdx",
+    "prepare-docs": "pnpm run prepare-content && fumadocs-mdx",
     "prepare-types": "pnpm run prepare-docs && mkdir -p .next/types && next typegen",
     "postinstall": "pnpm run prepare-docs",
     "prebuild": "pnpm run prepare-docs",

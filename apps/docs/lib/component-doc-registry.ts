@@ -606,6 +606,7 @@ async function buildComponentRegistryEntries(componentDocs: ComponentDoc[]) {
 async function buildPreviewModules(entries: GeneratedComponentRegistryEntry[], previewDir: string) {
   const previews: PreviewModuleEntry[] = [];
   const uiRootExports = await loadUiRootExports(previewDir);
+  const uiImportPath = '@swiftuijs/ui';
 
   for (const entry of entries) {
     if (!entry.storyPath) {
@@ -613,16 +614,11 @@ async function buildPreviewModules(entries: GeneratedComponentRegistryEntry[], p
     }
 
     const storySource = await readFile(entry.storyPath, 'utf8');
-    const previewFilePath = join(previewDir, `${entry.slug}.tsx`);
-    const uiImportPath = relative(dirname(previewFilePath), join(previewDir, '../../../../packages/ui/dist/index.js'))
-      .replaceAll('\\', '/')
-      .replace(/\.js$/, '');
-    const safeUiImportPath = uiImportPath.startsWith('.') ? uiImportPath : `./${uiImportPath}`;
     const transformed = transformStorySourceForDocs(
       storySource,
-      safeUiImportPath,
+      uiImportPath,
     );
-    const importedSymbols = extractUiImports(transformed, safeUiImportPath);
+    const importedSymbols = extractUiImports(transformed, uiImportPath);
     const metaComponent = extractMetaComponent(storySource);
 
     if ([...importedSymbols].some((symbol) => !uiRootExports.has(symbol))) {

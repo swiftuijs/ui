@@ -7,6 +7,7 @@ const config = {
     unoptimized: true,
   },
   output: 'export',
+  transpilePackages: ['@swiftuijs/ui'],
   trailingSlash: true,
   turbopack: {
     root: fileURLToPath(new URL('../..', import.meta.url)),

@@ -1,0 +1,8 @@
+@use '@style/base.scss' as *;
+
+@include component('unredacted') {
+  display: inline-flex;
+  color: inherit;
+  filter: none;
+  opacity: 1;
+}

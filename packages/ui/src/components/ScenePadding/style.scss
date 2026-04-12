@@ -1,0 +1,13 @@
+@use '@style/base.scss' as *;
+
+@include component('scenepadding') {
+  display: block;
+}
+
+@include component('scenepadding-regular') {
+  min-width: 0;
+}
+
+@include component('scenepadding-compact') {
+  min-width: 0;
+}
