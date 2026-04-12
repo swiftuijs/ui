@@ -1,0 +1,40 @@
+@use '@style/base.scss' as *;
+
+@include component('scrolltransition') {
+  display: inline-flex;
+  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+@include component('scrolltransition-identity') {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@include component('scrolltransition-opacity') {
+  opacity: 0.72;
+}
+
+@include component('scrolltransition-scale') {
+  transform: scale(0.96);
+}
+
+@include component('scrolltransition-topLeading') {
+  transform: translate3d(0, -6px, 0);
+}
+
+@include component('scrolltransition-bottomTrailing') {
+  transform: translate3d(0, 6px, 0);
+}
+
+.sw-scrolltransition-active.sw-scrolltransition-opacity {
+  opacity: 1;
+}
+
+.sw-scrolltransition-active.sw-scrolltransition-scale {
+  transform: scale(1);
+}
+
+.sw-scrolltransition-active.sw-scrolltransition-topLeading,
+.sw-scrolltransition-active.sw-scrolltransition-bottomTrailing {
+  transform: translate3d(0, 0, 0);
+}

@@ -1,0 +1,23 @@
+@use '@style/base.scss' as *;
+
+@include component('matchedgeometryeffect') {
+  display: inline-flex;
+  transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.22s ease;
+  will-change: transform, opacity;
+}
+
+@include component('matchedgeometryeffect-source') {
+  transform-origin: center center;
+}
+
+@include component('matchedgeometryeffect-target') {
+  transform-origin: center center;
+}
+
+.sw-matchedgeometryeffect-active.sw-matchedgeometryeffect-source {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--sw-color-primary, #007aff) 22%, transparent);
+}
+
+.sw-matchedgeometryeffect-active.sw-matchedgeometryeffect-target {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--sw-color-primary, #007aff) 12%, transparent);
+}
