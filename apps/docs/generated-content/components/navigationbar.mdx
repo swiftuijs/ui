@@ -1,0 +1,172 @@
+---
+title: "NavigationBar"
+description: "NavigationBar is a component that displays a title, optional back button, and toolbar items. It's automatically used by StandardPage when a `navigationTitle` is provided, following iOS Human Interface Guidelines and SwiftUI's navigation bar design patterns."
+---
+
+## Overview
+
+NavigationBar is a component that displays a title, optional back button, and toolbar items. It's automatically used by StandardPage when a `navigationTitle` is provided, following iOS Human Interface Guidelines and SwiftUI's navigation bar design patterns.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `.navigationTitle()` and `.toolbar()` modifiers.
+
+## Basic Usage
+
+NavigationBar is typically used automatically through StandardPage's `navigationTitle` prop:
+
+NavigationBar can also be used directly:
+
+## Automatic Back Button
+
+The back button automatically appears when the page is not the root page:
+
+## With Toolbar Items
+
+Add toolbar items on the right side of the navigation bar:
+
+## Single Toolbar Button
+
+```tsx
+<StandardPage 
+  id="edit" 
+  navigationTitle="Edit Profile"
+
+>
+  <Form>...</Form>
+</StandardPage>
+```
+
+## Custom Back Button Behavior
+
+The back button automatically calls `dismiss()` from the navigation context. If you need custom behavior, you can access the navigation context:
+
+```tsx
+
+      navi.dismiss()
+    }
+  }
+
+  return (
+    <StandardPage 
+      id="custom" 
+      navigationTitle="Custom Page"
+      // Note: Back button behavior is handled automatically
+      // For custom behavior, you might need to hide the default
+      // and add a custom button in toolbarItems
+    >
+      ...
+    </StandardPage>
+  )
+}
+```
+
+## Integration with NavigationStack
+
+NavigationBar works seamlessly with NavigationStack:
+
+## Props Reference
+
+### StandardPage Props (for NavigationBar)
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `navigationTitle` | `string` | - | Title to display in navigation bar. When provided, navigation bar is shown. |
+| `toolbarItems` | `ReactNode` | - | Items to display on the right side of navigation bar. |
+
+### NavigationBar Props (Internal)
+
+NavigationBar is used internally, but you can access it directly if needed:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | - | Navigation bar title |
+| `showBackButton` | `boolean` | `false` | Whether to show back button |
+| `onBack` | `() => void` | - | Callback when back button is clicked |
+| `toolbarItems` | `ReactNode` | - | Toolbar items to display |
+
+## Common Patterns
+
+### Master-Detail Pattern
+
+```tsx
+// Master (List)
+<StandardPage id="products" navigationTitle="Products">
+  <List>
+
+      >
+
+      </NavigationLink>
+    ))}
+  </List>
+</StandardPage>
+
+// Detail
+
+    >
+      <VStack>
+
+      </VStack>
+    </StandardPage>
+  )
+}
+```
+
+### Form with Save Button
+
+```tsx
+<StandardPage 
+  id="edit" 
+  navigationTitle="Edit Profile"
+
+    >
+      Save
+    </Button>
+  }
+>
+
+  </Form>
+</StandardPage>
+```
+
+### Multiple Toolbar Actions
+
+```tsx
+<StandardPage 
+  id="article" 
+  navigationTitle="Article"
+
+        <Text>🔖</Text>
+      </Button>
+
+        <Text>Share</Text>
+      </Button>
+    </HStack>
+  }
+>
+  <ScrollView>
+
+  </ScrollView>
+</StandardPage>
+```
+
+## Styling
+
+NavigationBar uses CSS variables for theming. You can customize colors:
+
+```css
+
+```
+
+## Best Practices
+
+1. **Keep titles concise**: Navigation bar titles should be short and descriptive
+2. **Use toolbar for actions**: Place action buttons in `toolbarItems`, not in page content
+3. **Limit toolbar items**: Too many toolbar items can clutter the navigation bar
+4. **Consistent navigation**: Use navigationTitle consistently across related pages
+5. **Accessibility**: Ensure toolbar buttons have proper labels for screen readers
+
+## Related Components
+
+- [StandardPage](/docs/components-standard-page) - Container that uses NavigationBar
+- [NavigationStack](/docs/components-navigation-stack) - Manages navigation hierarchy
+- [NavigationLink](/docs/components-navigation-link) - Triggers navigation
+- [Button](/docs/components-button) - Used in toolbar items

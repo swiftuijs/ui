@@ -1,0 +1,31 @@
+---
+title: "Slider"
+description: "Slider is a control for selecting a value from a bounded linear range of values. Slider is built on a native `<input type=\"range\">`, so it keeps standard keyboard support, focus behavior, and form participation."
+---
+
+## Overview
+
+Slider is a control for selecting a value from a bounded linear range of values. Slider is built on a native `<input type="range">`, so it keeps standard keyboard support, focus behavior, and form participation.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Slider`.
+
+## Uncontrolled Usage
+
+Use `defaultValue` when the browser should own the current value after mount.
+
+## Notes
+
+- Slider supports controlled mode with `value` and `onValueChange`
+- Slider supports uncontrolled mode with `defaultValue`
+- Slider also forwards the native `onChange` event for web-native integrations
+- Slider supports `min`, `max`, `step`, and `disabled`
+- Slider participates in native form submission because it renders a real range input
+- Use Slider for continuous value selection
+
+## Best Practices
+
+1. **Range**: Set appropriate `min` and `max` values
+2. **Step**: Use `step` for discrete value selection
+3. **Feedback**: Show the current value to the user when it matters
+4. **Accessibility**: Provide a label through `aria-label`, `aria-labelledby`, or a visible label
+5. **Mobile**: Test slider interaction on touch devices

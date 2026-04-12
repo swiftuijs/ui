@@ -1,0 +1,19 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ShareLinkStories from './ShareLink.stories'
+
+<Meta title="SwiftUI/ShareLink/Readme" />
+
+# ShareLink
+
+## Overview
+
+ShareLink presents a platform share action. On the web it uses the Web Share API when available and falls back to opening shareable URLs.
+
+## Usage
+
+<Canvas of={ShareLinkStories.Default} />
+
+## Notes
+
+- Use `item` for the canonical URL or text payload.
+- `subject` and `message` map to the web share title and text fields.

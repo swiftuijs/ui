@@ -1,0 +1,28 @@
+---
+title: "DatePicker"
+description: "DatePicker is a native `<input>`-backed control for selecting dates and times. It keeps standard form semantics, browser validation, and keyboard behavior."
+---
+
+## Overview
+
+DatePicker is a native `<input>`-backed control for selecting dates and times. It keeps standard form semantics, browser validation, and keyboard behavior.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `DatePicker`.
+
+## Notes
+
+- `value` and `defaultValue` use native input strings
+- `onChange` forwards the native input event
+- `onValueChange` receives the latest string value
+- Supported modes are `date`, `time`, and `dateAndTime`
+
+- Use `min` and `max` for native bounds in the same string format as `value`
+- `disabled` behaves like a native input prop
+
+## Best Practices
+
+1. **Mode selection**: Choose `date`, `time`, or `dateAndTime` based on the required granularity
+2. **String values**: Keep the value in the browser's native input format for the selected mode
+3. **Bounds**: Use `min` and `max` to constrain user input
+4. **Labels**: Provide an accessible label or visible label
+5. **Localization**: Let the browser handle localized rendering of the native control

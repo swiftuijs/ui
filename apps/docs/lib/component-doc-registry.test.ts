@@ -7,7 +7,7 @@ import {
 } from './component-doc-registry';
 
 describe('component doc registry helpers', () => {
-  it('extracts complete story source blocks for code disclosure', () => {
+  it('extracts render-story jsx for code disclosure', () => {
     const input = `export const Default = {
   args: {
     children: 'Button',
@@ -16,16 +16,55 @@ describe('component doc registry helpers', () => {
 }
 
 export const Custom = {
-  render: () => <div>Custom</div>,
+  render: () => (
+    <div>
+      <span>Custom</span>
+    </div>
+  ),
 }
 `;
 
-    expect(extractStoryCode(input, 'Default')).toBe(`export const Default = {
+    expect(extractStoryCode(input, 'Custom', 'Button')).toBe(`<div>
+      <span>Custom</span>
+    </div>`);
+  });
+
+  it('inlines local demo component implementations for render stories', () => {
+    const input = `function DefaultDialog() {
+  return (
+    <>
+      <button type="button">Open</button>
+      <ConfirmationDialog isVisible onDismiss={() => {}} actions={[{ label: 'Delete' }]} />
+    </>
+  )
+}
+
+export const Default = {
+  render: () => <DefaultDialog />,
+}
+`;
+
+    expect(extractStoryCode(input, 'Default', 'ConfirmationDialog')).toBe(`function DefaultDialog() {
+  return (
+    <>
+      <button type="button">Open</button>
+      <ConfirmationDialog isVisible onDismiss={() => {}} actions={[{ label: 'Delete' }]} />
+    </>
+  )
+}`);
+  });
+
+  it('builds component usage code from args-only stories', () => {
+    const input = `export const Default = {
   args: {
     children: 'Button',
     disabled: true,
+    variant: 'bordered',
   },
-}`);
+}
+`;
+
+    expect(extractStoryCode(input, 'Default', 'Button')).toBe(`<Button disabled variant="bordered">Button</Button>`);
   });
 
   it('extracts the meta component so args-only stories can render in docs', () => {

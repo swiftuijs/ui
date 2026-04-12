@@ -1,0 +1,24 @@
+@use '../../style/common.scss';
+
+.sw-popover-layer {
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: var(--sw-z-popover);
+}
+
+.sw-popover {
+  min-width: 220px;
+  pointer-events: auto;
+  position: fixed;
+}
+
+.sw-popover-content {
+  background: color-mix(in srgb, var(--sw-color-background-primary) 96%, transparent);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  color: var(--sw-color-label-primary);
+  padding: 14px;
+}

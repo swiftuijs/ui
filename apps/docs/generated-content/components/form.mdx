@@ -1,0 +1,30 @@
+---
+title: "Form"
+description: "Form is a container for grouping form controls. Form provides a semantic container for form elements and handles form submission."
+---
+
+## Overview
+
+Form is a container for grouping form controls. Form provides a semantic container for form elements and handles form submission.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Form`.
+
+## With Validation
+
+Add validation to form fields:
+
+## Notes
+
+- Form provides semantic HTML form element
+- Form forwards native `onSubmit` handling to the browser
+- Form supports all standard form controls (TextField, Toggle, Picker, etc.)
+- Call `event.preventDefault()` in your handler when you want client-side submission behavior
+- Use Form for better accessibility and semantic structure
+
+## Best Practices
+
+1. **Validation**: Always validate form inputs before submission
+2. **Error handling**: Provide clear error messages for invalid inputs
+3. **Accessibility**: Use proper labels and form structure
+4. **User feedback**: Provide visual feedback for form state (loading, success, error)
+5. **Security**: Validate and sanitize all user inputs on the server side

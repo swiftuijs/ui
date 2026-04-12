@@ -1,0 +1,44 @@
+---
+title: "Menu"
+description: "Menu is a view that displays a menu of options. Menu presents a list of actions that can be triggered by the user, typically shown as a dropdown or popover."
+---
+
+## Overview
+
+Menu is a view that displays a menu of options. Menu presents a list of actions that can be triggered by the user, typically shown as a dropdown or popover.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Menu`.
+**Web behavior**: The top-level menu follows the menu-button pattern with keyboard opening, roving focus, and Escape/outside-click dismissal. One submenu level is supported with pointer hover and keyboard traversal.
+
+## With Icons
+
+Add icons to menu items:
+
+## With Disabled Items
+
+Disable specific menu items:
+
+## Placement
+
+Control menu placement:
+
+## Submenus
+
+Nested actions can be presented in a submenu:
+
+## Notes
+
+- Menu requires a `trigger` element and an array of `items`
+- Each item can have a `label`, optional `icon`, and `action`
+- Items can be disabled with the `disabled` prop
+- Menu supports different placements (top, bottom, left, right)
+- Menu automatically handles positioning, Escape dismissal, and outside-click dismissal
+- One submenu level is supported for nested actions
+
+## Best Practices
+
+1. **Clear actions**: Use descriptive labels for menu items
+2. **Icons**: Use icons to improve visual recognition
+3. **Grouping**: Group related actions together
+4. **Destructive actions**: Clearly mark destructive actions
+5. **Accessibility**: Ensure menu is keyboard accessible

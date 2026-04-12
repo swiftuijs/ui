@@ -1,0 +1,39 @@
+---
+title: "TextEditor"
+description: "TextEditor is a native `<textarea>`-backed multiline editor for longer text such as comments, descriptions, and notes."
+---
+
+## Overview
+
+TextEditor is a native `<textarea>`-backed multiline editor for longer text such as comments, descriptions, and notes.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `TextEditor`, with a web-native `onChange` event plus `onValueChange` for value-first updates.
+
+## Controlled Usage
+
+Use `value` with `onValueChange` when the parent owns the text state:
+
+## Content Sizing
+
+When `rows` is omitted, TextEditor derives a sensible row count from explicit line breaks in the current content and keeps it between 3 and 8 rows:
+
+## Read Only
+
+TextEditor can be displayed as read only:
+
+## Notes
+
+- `defaultValue` creates an uncontrolled editor that still behaves like a normal textarea
+- `value` keeps the editor controlled by the parent
+- `onChange` receives the native textarea change event
+- `onValueChange` receives the latest string value for SwiftUI-style state updates
+- `placeholder`, `disabled`, and `readOnly` behave like native textarea props
+- `rows` can be set explicitly, otherwise the editor derives a sensible row count from explicit line breaks in its content
+
+## Best Practices
+
+1. **Controlled vs uncontrolled**: Pick one mode and keep it consistent.
+2. **Labels**: Provide an accessible label or use an associated `<Label>`.
+3. **Sizing**: Use `rows` when you need a fixed height; otherwise the editor sizes itself from explicit line breaks.
+4. **Validation**: Validate input length and content at the form level.
+5. **Accessibility**: Keep the native textarea semantics intact for keyboard and assistive tech users.

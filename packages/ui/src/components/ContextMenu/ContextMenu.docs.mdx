@@ -1,0 +1,20 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ContextMenuStories from './ContextMenu.stories'
+
+<Meta title="SwiftUI/ContextMenu/Readme" />
+
+# ContextMenu
+
+## Overview
+
+ContextMenu presents a menu of actions from a context interaction. On the web this maps to the native right-click gesture while preserving SwiftUI's contextual action model.
+
+## Usage
+
+<Canvas of={ContextMenuStories.Default} />
+
+## Notes
+
+- Right click the wrapped content to open the menu.
+- Items dismiss the menu after selection.
+- The menu closes on outside click or `Escape`.

@@ -63,7 +63,7 @@ export const TopPlacement: Story = {
   },
 }
 
-export const WithVisualSubmenu: Story = {
+export const WithSubmenu: Story = {
   args: {
     trigger: <Button>Advanced</Button>,
     items: [

@@ -1,0 +1,23 @@
+@use '@/style/common.scss' as *;
+
+.sw-labeledcontent {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sw-spacing-lg);
+  padding: var(--sw-spacing-sm) 0;
+}
+
+.sw-labeledcontent-label {
+  color: var(--sw-color-label-secondary);
+  font-size: var(--sw-font-size-body);
+  line-height: var(--sw-line-height-normal);
+}
+
+.sw-labeledcontent-value {
+  color: var(--sw-color-label-primary);
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-medium);
+  line-height: var(--sw-line-height-normal);
+  text-align: right;
+}

@@ -1,0 +1,45 @@
+@use '@/style/common.scss' as *;
+
+.sw-gauge {
+  display: grid;
+  gap: var(--sw-spacing-sm);
+}
+
+.sw-gauge-header,
+.sw-gauge-bounds {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sw-spacing-md);
+}
+
+.sw-gauge-label,
+.sw-gauge-current-value {
+  font-size: var(--sw-font-size-subheadline);
+  line-height: var(--sw-line-height-normal);
+}
+
+.sw-gauge-label {
+  color: var(--sw-color-label-primary);
+  font-weight: var(--sw-font-weight-medium);
+}
+
+.sw-gauge-current-value,
+.sw-gauge-bound {
+  color: var(--sw-color-label-secondary);
+}
+
+.sw-gauge-track {
+  position: relative;
+  overflow: hidden;
+  min-height: 0.5rem;
+  border-radius: var(--sw-radius-full);
+  background: var(--sw-color-gray-lighter);
+}
+
+.sw-gauge-fill {
+  height: 0.5rem;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--sw-color-blue-light), var(--sw-color-blue));
+  transition: width var(--sw-transition-normal);
+}

@@ -1,0 +1,69 @@
+---
+title: Components
+description: Auto-generated component reference for SwiftUI.js.
+---
+
+# Components
+
+Component pages are generated from colocated `*.docs.mdx` files under `packages/ui/src/components`.
+
+## Available Components
+
+- [ActivityIndicator](/docs/components/activityindicator): ActivityIndicator is a view that displays a spinning indicator to show that a task is in progress. ActivityIndicator is commonly used to indicate loading states.
+- [Alert](/docs/components/alert): Alert is a container that presents an alert dialog. Alert displays a modal dialog with a message and optional action buttons.
+- [Badge](/docs/components/badge): Badge is a view that displays a badge, typically used to show counts, status, or labels. Badges are commonly used in navigation items, buttons, and list items.
+- [Button](/docs/components/button): Button maps directly to SwiftUI's `Button` control: a label or icon triggers an action when activated. The React version keeps the same mental model while exposing standard HTML button behavior.
+- [Card](/docs/components/card): Card is a container that presents content on a card. Card is a container with elevated styling, typically used to display related content.
+- [Color](/docs/components/color): Color is a view that displays a solid color. Color is used to display color swatches, backgrounds, and visual color indicators.
+- [ConfirmationDialog](/docs/components/confirmationdialog): ConfirmationDialog presents a stack of actions that asks the user to confirm an intent. It aligns with SwiftUI's `confirmationDialog` mental model while using web-native dialog semantics.
+- [ContentUnavailableView](/docs/components/contentunavailableview): ContentUnavailableView presents polished empty states for missing data, search misses, and first-run experiences.
+- [ContextMenu](/docs/components/contextmenu): ContextMenu presents a menu of actions from a context interaction. On the web this maps to the native right-click gesture while preserving SwiftUI's contextual action model.
+- [ControlGroup](/docs/components/controlgroup): ControlGroup clusters related actions under a shared label. The component keeps SwiftUI's grouped-control mental model while using standard web grouping semantics.
+- [DatePicker](/docs/components/datepicker): DatePicker is a native `<input>`-backed control for selecting dates and times. It keeps standard form semantics, browser validation, and keyboard behavior.
+- [DisclosureGroup](/docs/components/disclosuregroup): DisclosureGroup is a view that shows or hides its content based on a disclosure state. DisclosureGroup creates an expandable/collapsible section with a toggle control.
+- [Divider](/docs/components/divider): Divider is a visual element that can be used to separate other content. Dividers are commonly used in Lists to separate items and create visual hierarchy.
+- [ForEach](/docs/components/foreach): ForEach is a utility function for rendering arrays of data. ForEach is a helper function that maps over an array and renders each item.
+- [Form](/docs/components/form): Form is a container for grouping form controls. Form provides a semantic container for form elements and handles form submission.
+- [Gauge](/docs/components/gauge): Gauge shows a current value within a bounded range, matching SwiftUI's summary-style meter while keeping standard `progressbar` semantics.
+- [GeometryReader](/docs/components/geometryreader): GeometryReader is a view that provides geometry information to its children, allowing you to create responsive layouts based on container size. GeometryReader gives you access to the size and position of the container.
+- [Group](/docs/components/group): Group is a container for grouping view content. Group is a transparent container that groups views together without adding visual styling. It's useful for applying modifiers to multiple views at once.
+- [GroupBox](/docs/components/groupbox): GroupBox is a container that visually groups related content with a border and optional label. GroupBox is similar to Group but adds visual styling with a border and background.
+- [HStack](/docs/components/hstack): HStack is a view that arranges its children in a horizontal line. An HStack is a container view that arranges its child views in a horizontal line. You can customize the spacing between views and the alignment of views within the stack.
+- [Image](/docs/components/image): Image is a view that displays an image. Use Image to display images from various sources, including bundled images, system images, and images from URLs.
+- [Label](/docs/components/label): Label is a view that displays an icon and a title. Label provides a consistent way to display icon-text combinations, commonly used in navigation items and lists.
+- [LabeledContent](/docs/components/labeledcontent): LabeledContent presents a label and related value using the same compact summary pattern as SwiftUI.
+- [LazyHGrid](/docs/components/lazyhgrid): LazyHGrid is a container that arranges its children in a horizontal grid, loading them lazily. LazyHGrid creates a horizontal grid layout with lazy loading for performance.
+- [LazyHStack](/docs/components/lazyhstack): LazyHStack is a container that arranges its children horizontally, loading them lazily. LazyHStack is similar to HStack but only renders children that are visible in the viewport, improving performance for long horizontal lists.
+- [LazyVGrid](/docs/components/lazyvgrid): LazyVGrid is a container that arranges its children in a grid, loading them lazily. LazyVGrid creates a vertical grid layout with lazy loading for performance.
+- [LazyVStack](/docs/components/lazyvstack): LazyVStack is a container that arranges its children vertically, loading them lazily. LazyVStack is similar to VStack but only renders children that are visible in the viewport, improving performance for long lists.
+- [Link](/docs/components/link): Link is a control for navigating to a URL. Links provide a way to navigate to external websites or internal routes.
+- [List](/docs/components/list): List is a container that presents rows of data arranged in a single column. Lists are commonly used to display collections of items, often with dividers between items.
+- [Menu](/docs/components/menu): Menu is a view that displays a menu of options. Menu presents a list of actions that can be triggered by the user, typically shown as a dropdown or popover.
+- [NavigationBar](/docs/components/navigationbar): NavigationBar is a component that displays a title, optional back button, and toolbar items. It's automatically used by StandardPage when a `navigationTitle` is provided, following iOS Human Interface Guidelines and SwiftUI's navigation bar design patterns.
+- [NavigationLink](/docs/components/navigationlink): NavigationLink is a component that triggers navigation to a destination within a NavigationStack. It can navigate to another component or an external URL, and supports customizable transition animations.
+- [NavigationStack](/docs/components/navigationstack): NavigationStack is a container that manages a stack of views for navigation. NavigationStack provides navigation functionality similar to iOS navigation controllers, allowing users to navigate forward and backward through a hierarchy of views.
+- [StandardPage](/docs/components/page/standard-page/standardpage): StandardPage is the default page container used in NavigationStack. It provides a standard page layout and can optionally display a navigation bar with title and toolbar items.
+- [Picker](/docs/components/picker): Picker is a control for selecting from a set of mutually exclusive values. Picker displays a list of options and allows the user to select one.
+- [Popover](/docs/components/popover): Popover presents lightweight content anchored to another control. It aligns with SwiftUI's `popover` presentation while keeping web-friendly dialog semantics.
+- [ProgressView](/docs/components/progressview): ProgressView displays determinate or indeterminate task progress using web-native `progressbar` semantics with a SwiftUI-style `value` and `total` API.
+- [SafeArea](/docs/components/safearea): SafeArea is a view that insets its content to respect safe area boundaries. SafeArea ensures content is not obscured by system UI elements like notches, status bars, and home indicators.
+- [ScrollView](/docs/components/scrollview): ScrollView is a scrollable view that allows users to scroll through content that exceeds the visible area. ScrollView supports both vertical and horizontal scrolling.
+- [Section](/docs/components/section): Section is a container view that groups related content. Sections are commonly used in Lists to organize items into logical groups with optional headers.
+- [SecureField](/docs/components/securefield): SecureField is a control that displays a secure text input field. SecureField is used for password input and other sensitive information, automatically masking the input.
+- [Circle](/docs/components/shape/circle): Circle is a circular shape. Circle is used to create circular visual elements, such as avatars, badges, and indicators.
+- [Rectangle](/docs/components/shape/rectangle): Rectangle is a rectangular shape. Rectangle is used to create rectangular visual elements, such as cards, backgrounds, and containers.
+- [RoundedRectangle](/docs/components/shape/roundedrectangle): RoundedRectangle is a rectangular shape with rounded corners. RoundedRectangle is commonly used for cards, buttons, and modern UI elements.
+- [ShareLink](/docs/components/sharelink): ShareLink presents a platform share action. On the web it uses the Web Share API when available and falls back to opening shareable URLs.
+- [Sheet](/docs/components/sheet): Sheet is a view that presents content as a modal sheet. Sheets slide up from the bottom of the screen and are commonly used for presenting forms, settings, or additional content.
+- [Slider](/docs/components/slider): Slider is a control for selecting a value from a bounded linear range of values. Slider is built on a native `<input type="range">`, so it keeps standard keyboard support, focus behavior, and form participation.
+- [Spacer](/docs/components/spacer): Spacer is a flexible space that expands along the major axis of its parent container. Spacer is used to push content apart and create flexible layouts.
+- [Stepper](/docs/components/stepper): Stepper is a control for incrementing or decrementing a numeric value. It supports both controlled and uncontrolled usage and exposes semantic increment/decrement buttons.
+- [TabView](/docs/components/tabview): TabView is a view that switches between multiple child views using interactive tabs. TabView provides a tabbed interface for organizing content into separate sections.
+- [Text](/docs/components/text): Text is a view that displays one or more lines of read-only text. Use Text to display a string in your app's user interface. The Text view draws a string in a given font, with support for multiple lines, text truncation, and wrapping.
+- [TextEditor](/docs/components/texteditor): TextEditor is a native `<textarea>`-backed multiline editor for longer text such as comments, descriptions, and notes.
+- [TextField](/docs/components/textfield): TextField is a control that displays an editable text interface. TextField is used to collect single-line text input from users.
+- [Toggle](/docs/components/toggle): Toggle is a control that switches between on and off states. Toggle is commonly used for boolean settings and preferences.
+- [Toolbar](/docs/components/toolbar): Toolbar is a view that displays toolbar items. Toolbar provides a consistent way to display actions and controls, typically at the bottom of the screen.
+- [ViewThatFits](/docs/components/viewthatfits): ViewThatFits picks the first layout variant that fits the available width. The web version uses `data-min-width` hints on child views to choose an appropriate variant.
+- [VStack](/docs/components/vstack): VStack is a view that arranges its children in a vertical line. A VStack is a container view that arranges its child views in a vertical line. You can customize the spacing between views and the alignment of views within the stack.
+- [ZStack](/docs/components/zstack): ZStack is a view that overlays its children, aligning them in both axes. A ZStack overlays child views on top of each other. You can control the alignment of the children within the ZStack.

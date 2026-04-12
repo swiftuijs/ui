@@ -10,6 +10,17 @@ const items = [
   { label: 'Share', action: vi.fn() },
 ]
 
+const submenuItems = [
+  { label: 'Share', action: vi.fn() },
+  {
+    label: 'More options',
+    submenu: [
+      { label: 'Duplicate', action: vi.fn() },
+      { label: 'Rename', action: vi.fn() },
+    ],
+  },
+]
+
 describe('Menu', () => {
   it('exposes menu-button semantics and opens from pointer interaction', async () => {
     const user = userEvent.setup()
@@ -102,5 +113,52 @@ describe('Menu', () => {
 
     expect(handleOpenChange).toHaveBeenCalledWith(true)
     expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  })
+
+  it('opens a submenu on pointer hover and activates nested items', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <Menu
+        trigger={<Button>Advanced</Button>}
+        items={submenuItems}
+      />
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Advanced' }))
+    await user.hover(screen.getByRole('menuitem', { name: 'More options' }))
+
+    const submenu = screen.getByRole('menu', { name: 'More options' })
+    expect(submenu).toBeInTheDocument()
+
+    await user.click(screen.getByRole('menuitem', { name: 'Duplicate' }))
+
+    expect(submenuItems[1].submenu?.[0].action).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('menu', { name: 'More options' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  })
+
+  it('supports keyboard navigation into and out of submenus', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <Menu
+        trigger={<Button>Advanced keyboard</Button>}
+        items={submenuItems}
+      />
+    )
+
+    const trigger = screen.getByRole('button', { name: 'Advanced keyboard' })
+
+    trigger.focus()
+    await user.keyboard('{ArrowDown}')
+    await user.keyboard('{ArrowDown}')
+    await user.keyboard('{ArrowRight}')
+
+    const duplicate = screen.getByRole('menuitem', { name: 'Duplicate' })
+    expect(duplicate).toHaveFocus()
+
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByRole('menuitem', { name: 'More options' })).toHaveFocus()
   })
 })

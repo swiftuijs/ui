@@ -9,7 +9,7 @@ import { writeComponentRegistry } from './component-doc-registry';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultContentDir = join(docsRoot, 'content');
-const defaultGeneratedContentDir = join(docsRoot, '.generated-content');
+const defaultGeneratedContentDir = join(docsRoot, 'generated-content');
 
 function normaliseWhitespace(value: string): string {
   return value.replace(/\n{3,}/g, '\n\n').trim();

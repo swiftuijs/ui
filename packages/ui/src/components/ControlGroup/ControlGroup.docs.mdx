@@ -1,0 +1,19 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ControlGroupStories from './ControlGroup.stories'
+
+<Meta title="SwiftUI/ControlGroup/Readme" />
+
+# ControlGroup
+
+## Overview
+
+ControlGroup clusters related actions under a shared label. The component keeps SwiftUI's grouped-control mental model while using standard web grouping semantics.
+
+## Usage
+
+<Canvas of={ControlGroupStories.Default} />
+
+## Notes
+
+- Use `label` to provide the group's accessible name.
+- Use `orientation="vertical"` when actions should stack instead of sit inline.

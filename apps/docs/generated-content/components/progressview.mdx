@@ -1,0 +1,26 @@
+---
+title: "ProgressView"
+description: "ProgressView displays determinate or indeterminate task progress using web-native `progressbar` semantics with a SwiftUI-style `value` and `total` API."
+---
+
+## Overview
+
+ProgressView displays determinate or indeterminate task progress using web-native `progressbar` semantics with a SwiftUI-style `value` and `total` API.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `ProgressView`.
+
+## Notes
+
+- `value` follows SwiftUI's mental model and can be paired with `total`
+- When `total` is omitted, `value` is treated as a fractional value between `0` and `1`
+- `progress` and `completed` remain supported as legacy aliases for existing callers
+- `indeterminate` removes value semantics and shows an animated loading bar
+- `label` and `currentValueLabel` render visible progress metadata alongside the bar
+
+## Best Practices
+
+1. **Value model**: Prefer `value` plus `total` when you have real units, not just percentages.
+2. **Feedback**: Keep `currentValueLabel` in sync with user-visible progress when the task is long-running.
+3. **Indeterminate**: Use `indeterminate` only when the task duration is unknown.
+4. **Labels**: Provide a visible `label` or an accessible label via `aria-label`.
+5. **Placement**: Put ProgressView close to the task it describes.

@@ -1,10 +1,13 @@
 import {
   cloneElement,
   isValidElement,
+  useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
+  type ComponentRef,
   type KeyboardEvent,
   type ReactElement,
   type MouseEvent as ReactMouseEvent,
@@ -72,6 +75,8 @@ export interface IMenuProps extends IBaseComponent {
   onOpenChange?: (isOpen: boolean) => void
 }
 
+type MenuButtonElement = ComponentRef<'button'>
+
 type TriggerElementProps = {
   id?: string
   role?: string
@@ -115,9 +120,14 @@ export function Menu(props: IMenuProps) {
 
   const [internalIsOpen, setInternalIsOpen] = useState(false)
   const [focusedItemIndex, setFocusedItemIndex] = useState(-1)
+  const [activeSubmenuIndex, setActiveSubmenuIndex] = useState<number | null>(null)
+  const [focusedSubmenuIndex, setFocusedSubmenuIndex] = useState(-1)
   const menuRef = useRef<HTMLDivElement>(null)
-  const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const submenuRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<Array<MenuButtonElement | null>>([])
+  const submenuItemRefs = useRef<Array<MenuButtonElement | null>>([])
   const pendingFocusIndexRef = useRef<number | null>(null)
+  const pendingSubmenuFocusIndexRef = useRef<number | null>(null)
   const restoreFocusRef = useRef(false)
   const baseId = useId().replace(/:/g, '')
   const triggerId = `${baseId}-trigger`
@@ -126,66 +136,88 @@ export function Menu(props: IMenuProps) {
   const isControlled = controlledIsOpen !== undefined
   const isOpen = isControlled ? controlledIsOpen : internalIsOpen
 
-  const findNextEnabledIndex = (startIndex: number, direction: 1 | -1) => {
-    if (!items.length) {
+  const findNextEnabledIndexForItems = useCallback((targetItems: IMenuItem[], startIndex: number, direction: 1 | -1) => {
+    if (!targetItems.length) {
       return -1
     }
 
-    for (let offset = 1; offset <= items.length; offset += 1) {
-      const nextIndex = (startIndex + direction * offset + items.length) % items.length
-      if (!items[nextIndex]?.disabled) {
+    for (let offset = 1; offset <= targetItems.length; offset += 1) {
+      const nextIndex = (startIndex + direction * offset + targetItems.length) % targetItems.length
+      if (!targetItems[nextIndex]?.disabled) {
         return nextIndex
       }
     }
 
     return -1
-  }
+  }, [])
 
-  const focusItem = (index: number) => {
+  const findNextEnabledIndex = useCallback((startIndex: number, direction: 1 | -1) => {
+    return findNextEnabledIndexForItems(items, startIndex, direction)
+  }, [findNextEnabledIndexForItems, items])
+
+  const focusItem = useCallback((index: number) => {
     if (index < 0) {
       return
     }
 
     setFocusedItemIndex(index)
     itemRefs.current[index]?.focus()
-  }
+  }, [])
 
-  const focusTrigger = () => {
+  const focusSubmenuItem = useCallback((index: number) => {
+    if (index < 0) {
+      return
+    }
+
+    setFocusedSubmenuIndex(index)
+    submenuItemRefs.current[index]?.focus()
+  }, [])
+
+  const focusTrigger = useCallback(() => {
     document.getElementById(triggerId)?.focus()
-  }
+  }, [triggerId])
 
-  const openMenu = (focusIndex?: number) => {
+  const openMenu = useCallback((focusIndex?: number) => {
     pendingFocusIndexRef.current = focusIndex ?? findNextEnabledIndex(-1, 1)
+    pendingSubmenuFocusIndexRef.current = null
     restoreFocusRef.current = false
+    setActiveSubmenuIndex(null)
+    setFocusedSubmenuIndex(-1)
 
     if (!isControlled) {
       setInternalIsOpen(true)
     }
 
     onOpenChange?.(true)
-  }
+  }, [findNextEnabledIndex, isControlled, onOpenChange])
 
-  const closeMenu = (restoreFocus = false) => {
+  const closeMenu = useCallback((restoreFocus = false) => {
     pendingFocusIndexRef.current = null
+    pendingSubmenuFocusIndexRef.current = null
     restoreFocusRef.current = restoreFocus
+    setActiveSubmenuIndex(null)
+    setFocusedSubmenuIndex(-1)
 
     if (!isControlled) {
       setInternalIsOpen(false)
     }
 
     onOpenChange?.(false)
-  }
+  }, [isControlled, onOpenChange])
 
-  const toggleMenu = () => {
+  const toggleMenu = useCallback(() => {
     if (isOpen) {
       closeMenu()
     } else {
       openMenu()
     }
-  }
+  }, [closeMenu, isOpen, openMenu])
 
-  const handleItemClick = (item: IMenuItem) => {
+  const handleItemClick = useCallback((item: IMenuItem) => {
     if (item.disabled) {
+      return
+    }
+    if (item.submenu?.length) {
       return
     }
     if (item.action) {
@@ -193,9 +225,11 @@ export function Menu(props: IMenuProps) {
     }
 
     closeMenu(true)
-  }
+  }, [closeMenu])
 
-  const handleMenuItemKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+  const handleMenuItemKeyDown = (event: KeyboardEvent<MenuButtonElement>, index: number) => {
+    const submenu = items[index]?.submenu ?? []
+
     switch (event.key) {
       case 'ArrowDown': {
         event.preventDefault()
@@ -227,7 +261,20 @@ export function Menu(props: IMenuProps) {
       case 'Enter':
       case ' ': {
         event.preventDefault()
-        handleItemClick(items[index])
+        if (submenu.length > 0) {
+          setActiveSubmenuIndex(index)
+          pendingSubmenuFocusIndexRef.current = findNextEnabledIndexForItems(submenu, -1, 1)
+        } else {
+          handleItemClick(items[index])
+        }
+        break
+      }
+      case 'ArrowRight': {
+        if (submenu.length > 0) {
+          event.preventDefault()
+          setActiveSubmenuIndex(index)
+          pendingSubmenuFocusIndexRef.current = findNextEnabledIndexForItems(submenu, -1, 1)
+        }
         break
       }
       case 'Tab':
@@ -295,11 +342,13 @@ export function Menu(props: IMenuProps) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isOpen])
+  }, [closeMenu, isOpen, triggerId])
 
   useEffect(() => {
     if (!isOpen) {
       setFocusedItemIndex(-1)
+      setActiveSubmenuIndex(null)
+      setFocusedSubmenuIndex(-1)
       if (restoreFocusRef.current) {
         restoreFocusRef.current = false
         focusTrigger()
@@ -310,7 +359,56 @@ export function Menu(props: IMenuProps) {
     const nextFocusIndex = pendingFocusIndexRef.current ?? findNextEnabledIndex(-1, 1)
     pendingFocusIndexRef.current = null
     focusItem(nextFocusIndex)
-  }, [isOpen, items])
+  }, [findNextEnabledIndex, focusItem, focusTrigger, isOpen])
+
+  const activeSubmenuItems = useMemo(
+    () => (activeSubmenuIndex === null ? [] : (items[activeSubmenuIndex]?.submenu ?? [])),
+    [activeSubmenuIndex, items],
+  )
+
+  useEffect(() => {
+    if (!isOpen || activeSubmenuIndex === null) {
+      setFocusedSubmenuIndex(-1)
+      return
+    }
+
+    const nextFocusIndex = pendingSubmenuFocusIndexRef.current ?? findNextEnabledIndexForItems(activeSubmenuItems, -1, 1)
+    pendingSubmenuFocusIndexRef.current = null
+    focusSubmenuItem(nextFocusIndex)
+  }, [activeSubmenuIndex, activeSubmenuItems, findNextEnabledIndexForItems, focusSubmenuItem, isOpen])
+
+  const handleSubmenuItemKeyDown = (event: KeyboardEvent<MenuButtonElement>, index: number) => {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault()
+        focusSubmenuItem(findNextEnabledIndexForItems(activeSubmenuItems, index, 1))
+        break
+      case 'ArrowUp':
+        event.preventDefault()
+        focusSubmenuItem(findNextEnabledIndexForItems(activeSubmenuItems, index, -1))
+        break
+      case 'ArrowLeft':
+        event.preventDefault()
+        setActiveSubmenuIndex(null)
+        setFocusedSubmenuIndex(-1)
+        if (activeSubmenuIndex !== null) {
+          focusItem(activeSubmenuIndex)
+        }
+        break
+      case 'Escape':
+        event.preventDefault()
+        closeMenu(true)
+        break
+      case 'Enter':
+      case ' ':
+        event.preventDefault()
+        activeSubmenuItems[index]?.action?.()
+        closeMenu(true)
+        break
+      default:
+        break
+    }
+  }
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: [prefixClass('menu-container')],
@@ -385,15 +483,69 @@ export function Menu(props: IMenuProps) {
               tabIndex={index === focusedItemIndex ? 0 : -1}
               disabled={item.disabled}
               aria-disabled={item.disabled || undefined}
+              aria-expanded={item.submenu?.length ? activeSubmenuIndex === index : undefined}
+              aria-haspopup={item.submenu?.length ? 'menu' : undefined}
               onClick={() => handleItemClick(item)}
               onKeyDown={(event) => handleMenuItemKeyDown(event, index)}
-              onFocus={() => setFocusedItemIndex(index)}
+              onFocus={() => {
+                setFocusedItemIndex(index)
+                if (item.submenu?.length) {
+                  setActiveSubmenuIndex(index)
+                } else {
+                  setActiveSubmenuIndex(null)
+                }
+              }}
+              onMouseEnter={() => {
+                if (item.submenu?.length) {
+                  setActiveSubmenuIndex(index)
+                }
+              }}
             >
               {item.icon && <span className={prefixClass('menu-item-icon')} aria-hidden="true">{item.icon}</span>}
               <span className={prefixClass('menu-item-label')}>{item.label}</span>
               {item.submenu && <span className={prefixClass('menu-item-arrow')} aria-hidden="true">›</span>}
             </button>
           ))}
+          {activeSubmenuIndex !== null && activeSubmenuItems.length > 0 ? (
+            <div
+              ref={submenuRef}
+              className={`${prefixClass('menu')} ${prefixClass('menu-submenu')} ${prefixClass('menu-right')}`}
+              role="menu"
+              aria-label={items[activeSubmenuIndex]?.label}
+            >
+              {activeSubmenuItems.map((item, index) => (
+                <button
+                  key={item.id || `${activeSubmenuIndex}-${index}`}
+                  ref={(node) => {
+                    submenuItemRefs.current[index] = node
+                  }}
+                  type="button"
+                  role="menuitem"
+                  className={clsx(
+                    prefixClass('menu-item'),
+                    item.disabled && prefixClass('menu-item-disabled'),
+                    index === focusedSubmenuIndex && prefixClass('menu-item-focused')
+                  )}
+                  tabIndex={index === focusedSubmenuIndex ? 0 : -1}
+                  disabled={item.disabled}
+                  aria-disabled={item.disabled || undefined}
+                  onClick={() => {
+                    if (item.disabled) {
+                      return
+                    }
+
+                    item.action?.()
+                    closeMenu(true)
+                  }}
+                  onKeyDown={(event) => handleSubmenuItemKeyDown(event, index)}
+                  onFocus={() => setFocusedSubmenuIndex(index)}
+                >
+                  {item.icon && <span className={prefixClass('menu-item-icon')} aria-hidden="true">{item.icon}</span>}
+                  <span className={prefixClass('menu-item-label')}>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
       )}
     </div>

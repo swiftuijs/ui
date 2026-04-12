@@ -1,0 +1,96 @@
+@use '../../style/common.scss';
+
+.sw-confirmation-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--sw-z-sheet-backdrop);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.sw-confirmation-dialog {
+  position: fixed;
+  inset-inline: 16px;
+  bottom: 16px;
+  z-index: var(--sw-z-sheet);
+  display: grid;
+  justify-items: stretch;
+  pointer-events: none;
+}
+
+.sw-confirmation-dialog-content {
+  display: grid;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.sw-confirmation-dialog-header,
+.sw-confirmation-dialog-actions {
+  overflow: hidden;
+  border: 1px solid var(--sw-color-separator);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--sw-color-background-primary) 92%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.sw-confirmation-dialog-header {
+  gap: 6px;
+  padding: 16px 18px;
+}
+
+.sw-confirmation-dialog-title {
+  color: var(--sw-color-label-primary);
+  font-size: var(--sw-font-size-headline);
+  font-weight: 600;
+  text-align: center;
+}
+
+.sw-confirmation-dialog-message {
+  color: var(--sw-color-label-secondary);
+  font-size: var(--sw-font-size-subheadline);
+  line-height: 1.45;
+  text-align: center;
+}
+
+.sw-confirmation-dialog-actions {
+  display: grid;
+}
+
+.sw-confirmation-dialog-button {
+  appearance: none;
+  border: 0;
+  border-radius: 0;
+  border-top: 1px solid var(--sw-color-separator);
+  background: transparent;
+  color: var(--sw-color-accent);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--sw-font-size-body);
+  min-height: 54px;
+  padding: 14px 18px;
+  transition: background-color 150ms ease;
+}
+
+.sw-confirmation-dialog-button:first-child {
+  border-top: 0;
+}
+
+.sw-confirmation-dialog-button:hover {
+  background: var(--sw-color-fill-quaternary);
+}
+
+.sw-confirmation-dialog-button-cancel {
+  font-weight: 600;
+}
+
+.sw-confirmation-dialog-button-destructive {
+  color: var(--sw-color-red);
+}
+
+@media (min-width: 768px) {
+  .sw-confirmation-dialog {
+    inset-inline: auto;
+    left: 50%;
+    width: min(420px, calc(100vw - 32px));
+    transform: translateX(-50%);
+  }
+}

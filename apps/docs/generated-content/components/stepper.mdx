@@ -1,0 +1,28 @@
+---
+title: "Stepper"
+description: "Stepper is a control for incrementing or decrementing a numeric value. It supports both controlled and uncontrolled usage and exposes semantic increment/decrement buttons."
+---
+
+## Overview
+
+Stepper is a control for incrementing or decrementing a numeric value. It supports both controlled and uncontrolled usage and exposes semantic increment/decrement buttons.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Stepper`.
+
+## Notes
+
+- `value` makes the control controlled
+- `defaultValue` initializes uncontrolled state
+- Use `onValueChange` or `onChange` to observe updates
+- Stepper supports optional `min`, `max`, and `step` constraints
+- Stepper can be disabled with the `disabled` prop
+- Buttons disable automatically at the current bounds
+- Use Stepper for precise numeric value adjustment
+
+## Best Practices
+
+1. **Constraints**: Set appropriate `min` and `max` values
+2. **State**: Prefer controlled `value` when the source of truth lives outside the component
+3. **Updates**: Use `defaultValue` for local state and `onValueChange` to observe changes
+4. **Feedback**: Show the current value to the user when the stepper is part of a larger form
+5. **Accessibility**: Keep the increment and decrement buttons visible and labeled

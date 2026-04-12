@@ -1,0 +1,37 @@
+---
+title: "Text"
+description: "Text is a view that displays one or more lines of read-only text. Use Text to display a string in your app's user interface. The Text view draws a string in a given font, with support for multiple lines, text truncation, and wrapping."
+---
+
+## Overview
+
+Text is a view that displays one or more lines of read-only text. Use Text to display a string in your app's user interface. The Text view draws a string in a given font, with support for multiple lines, text truncation, and wrapping.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `Text`.
+
+## Long Text
+
+Text automatically wraps to multiple lines when needed:
+
+## Line Limit
+
+Control the maximum number of lines displayed using the `lineLimit` prop:
+
+## Custom Styling
+
+Apply custom styles to text:
+
+## Notes
+
+- Text automatically wraps when it exceeds the container width
+- Use `lineLimit` to control text truncation
+- Text supports all standard CSS text styling properties
+- Text can contain other React components as children
+
+## Best Practices
+
+1. **Readability**: Ensure sufficient contrast between text and background colors
+2. **Line limits**: Use `lineLimit` appropriately to prevent layout issues with long text
+3. **Responsive**: Text automatically adapts to container width
+4. **Accessibility**: Use semantic HTML and proper heading hierarchy
+5. **Performance**: Avoid excessive nested text components for better performance

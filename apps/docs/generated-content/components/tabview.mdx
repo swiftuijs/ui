@@ -1,0 +1,40 @@
+---
+title: "TabView"
+description: "TabView is a view that switches between multiple child views using interactive tabs. TabView provides a tabbed interface for organizing content into separate sections."
+---
+
+## Overview
+
+TabView is a view that switches between multiple child views using interactive tabs. TabView provides a tabbed interface for organizing content into separate sections.
+
+**SwiftUI Correspondence**: Similar to SwiftUI's `TabView`.
+
+## With Icons
+
+Add icons to tab items:
+
+## Top Tab Bar
+
+Place tab bar at the top:
+
+## Controlled TabView
+
+Control tab selection programmatically:
+
+## Notes
+
+- TabView requires an array of items with `label` and `content`
+- Each item can define a stable `value` used by `selection` and `defaultSelection`
+- Each item can have an optional `icon`
+- Tab bar can be positioned at `top` or `bottom` (default)
+- TabView supports controlled mode with `selection` and `onSelectionChange`
+- Tabs expose proper `tablist`, `tab`, and `tabpanel` semantics
+- Arrow keys, Home, and End move between tabs
+
+## Best Practices
+
+1. **Clear labels**: Use descriptive labels for each tab
+2. **Icons**: Use icons to improve visual recognition
+3. **Content**: Keep tab content focused and relevant
+4. **Selection**: Prefer stable `value` identifiers over relying on item order
+5. **Accessibility**: Ensure tabs are keyboard accessible

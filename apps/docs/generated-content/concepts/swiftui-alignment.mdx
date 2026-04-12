@@ -1,0 +1,36 @@
+---
+title: SwiftUI Alignment
+description: Alignment in SwiftUI.js should preserve SwiftUI intent while remaining honest about DOM layout behavior.
+---
+
+# SwiftUI Alignment
+
+SwiftUI alignment is about intent, not a literal port of Apple's layout engine.
+
+SwiftUI.js keeps the public mental model familiar:
+
+- stacks express layout direction
+- alignment communicates how children should line up
+- spacing remains a first-class decision instead of an incidental margin
+
+## The Web Constraint
+
+On the web, alignment is implemented through CSS layout systems like flexbox and grid.
+
+That means SwiftUI.js should prefer APIs that map cleanly onto those systems instead of emulating hidden measurement behavior that would be fragile in React.
+
+## Practical Rule
+
+When you reach for alignment in SwiftUI.js, think in two layers:
+
+1. **Intent layer:** what edge, axis, or reading order should the layout communicate?
+2. **Implementation layer:** which DOM layout system can deliver that behavior predictably?
+
+This keeps the API SwiftUI-flavored while keeping the implementation stable and testable.
+
+## Guidance
+
+- Use stack alignment to control cross-axis behavior.
+- Use tokenized spacing instead of ad hoc one-off gaps.
+- Prefer semantic composition over deeply nested wrappers created only to force layout tricks.
+- Treat layout behavior as observable product behavior and test it at the component boundary.

@@ -61,7 +61,7 @@ function prettifyExportName(name: string) {
     .trim();
 }
 
-function parseCanvasExamples(source: string, storySource: string | null): ComponentExampleDoc[] {
+function parseCanvasExamples(source: string, storySource: string | null, componentName: string | null): ComponentExampleDoc[] {
   const lines = source.split('\n');
   const headings: Array<{ level: number; value: string }> = [];
   const examples: ComponentExampleDoc[] = [];
@@ -92,7 +92,7 @@ function parseCanvasExamples(source: string, storySource: string | null): Compon
       .find((entry) => !/^usage$/i.test(entry.value));
 
     examples.push({
-      code: storySource ? extractStoryCode(storySource, exportName) : '',
+      code: storySource ? extractStoryCode(storySource, exportName, componentName ?? undefined) : '',
       exportName,
       title: heading?.value ?? prettifyExportName(exportName),
     });
@@ -101,21 +101,186 @@ function parseCanvasExamples(source: string, storySource: string | null): Compon
   return examples;
 }
 
-export function extractStoryCode(storySource: string, exportName: string) {
-  const startToken = `export const ${exportName}`;
-  const startIndex = storySource.indexOf(startToken);
-
-  if (startIndex < 0) {
-    return '';
+function unwrapRenderBody(body: ts.ConciseBody, sourceFile: ts.SourceFile) {
+  if (ts.isBlock(body)) {
+    const returnStatement = body.statements.find(ts.isReturnStatement);
+    const expression = returnStatement?.expression;
+    return expression ? expression.getText(sourceFile).trim().replace(/^\(([\s\S]*)\)$/, '$1').trim() : '';
   }
 
-  const nextExportIndex = storySource.indexOf('\nexport const ', startIndex + startToken.length);
-  const nextDefaultIndex = storySource.indexOf('\nexport default', startIndex + startToken.length);
-  const endIndexCandidates = [nextExportIndex, nextDefaultIndex].filter((value) => value >= 0);
-  const endIndex =
-    endIndexCandidates.length > 0 ? Math.min(...endIndexCandidates) : storySource.length;
+  return body.getText(sourceFile).trim().replace(/^\(([\s\S]*)\)$/, '$1').trim();
+}
 
-  return storySource.slice(startIndex, endIndex).trim();
+function getDemoComponentName(body: ts.ConciseBody) {
+  if (!ts.isJsxSelfClosingElement(body) && !ts.isJsxElement(body)) {
+    return null;
+  }
+
+  const openingElement = ts.isJsxElement(body) ? body.openingElement : body;
+  if (!ts.isIdentifier(openingElement.tagName) || openingElement.attributes.properties.length > 0) {
+    return null;
+  }
+
+  return openingElement.tagName.text;
+}
+
+function extractLocalComponentSource(sourceFile: ts.SourceFile, componentName: string) {
+  for (const statement of sourceFile.statements) {
+    if (ts.isFunctionDeclaration(statement) && statement.name?.text === componentName) {
+      return statement.getText(sourceFile).trim();
+    }
+
+    if (!ts.isVariableStatement(statement)) {
+      continue;
+    }
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== componentName || !declaration.initializer) {
+        continue;
+      }
+
+      if (ts.isArrowFunction(declaration.initializer) || ts.isFunctionExpression(declaration.initializer)) {
+        return statement.getText(sourceFile).trim();
+      }
+    }
+  }
+
+  return null;
+}
+
+function isRenderFunction(
+  value: ts.Expression,
+): value is ts.ArrowFunction | ts.FunctionExpression {
+  return ts.isArrowFunction(value) || ts.isFunctionExpression(value);
+}
+
+function isRenderProperty(
+  property: ts.ObjectLiteralElementLike,
+): property is ts.PropertyAssignment & {
+  initializer: ts.ArrowFunction | ts.FunctionExpression;
+} {
+  return (
+    ts.isPropertyAssignment(property) &&
+    ts.isIdentifier(property.name) &&
+    property.name.text === 'render' &&
+    isRenderFunction(property.initializer)
+  );
+}
+
+function isRenderMethod(
+  property: ts.ObjectLiteralElementLike,
+): property is ts.MethodDeclaration {
+  return ts.isMethodDeclaration(property) && ts.isIdentifier(property.name) && property.name.text === 'render';
+}
+
+function isArgsProperty(
+  property: ts.ObjectLiteralElementLike,
+): property is ts.PropertyAssignment & {
+  initializer: ts.ObjectLiteralExpression;
+} {
+  return (
+    ts.isPropertyAssignment(property) &&
+    ts.isIdentifier(property.name) &&
+    property.name.text === 'args' &&
+    ts.isObjectLiteralExpression(property.initializer)
+  );
+}
+
+function formatJsxAttribute(name: string, value: ts.Expression, sourceFile: ts.SourceFile) {
+  if (value.kind === ts.SyntaxKind.TrueKeyword) {
+    return name;
+  }
+
+  if (ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value)) {
+    return `${name}=${JSON.stringify(value.text)}`;
+  }
+
+  return `${name}={${value.getText(sourceFile)}}`;
+}
+
+function buildArgsStoryCode(componentName: string, argsLiteral: ts.ObjectLiteralExpression, sourceFile: ts.SourceFile) {
+  const attributes: string[] = [];
+  let children: string | null = null;
+
+  for (const property of argsLiteral.properties) {
+    if (!ts.isPropertyAssignment(property) || !ts.isIdentifier(property.name)) {
+      continue;
+    }
+
+    const propName = property.name.text;
+    if (propName === 'children') {
+      if (ts.isStringLiteral(property.initializer) || ts.isNoSubstitutionTemplateLiteral(property.initializer)) {
+        children = property.initializer.text;
+      } else {
+        children = `{${property.initializer.getText(sourceFile)}}`;
+      }
+      continue;
+    }
+
+    attributes.push(formatJsxAttribute(propName, property.initializer, sourceFile));
+  }
+
+  const openingTag = attributes.length > 0 ? `<${componentName} ${attributes.join(' ')}>` : `<${componentName}>`;
+  return children === null ? `${openingTag}</${componentName}>` : `${openingTag}${children}</${componentName}>`;
+}
+
+export function extractStoryCode(storySource: string, exportName: string, componentName?: string) {
+  const sourceFile = ts.createSourceFile('story.tsx', storySource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) {
+      continue;
+    }
+
+    if (!statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
+      continue;
+    }
+
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== exportName || !declaration.initializer) {
+        continue;
+      }
+
+      if (!ts.isObjectLiteralExpression(declaration.initializer)) {
+        return declaration.initializer.getText(sourceFile).trim();
+      }
+
+      const renderProperty = declaration.initializer.properties.find(isRenderProperty);
+      const renderMethod = declaration.initializer.properties.find(isRenderMethod);
+
+      if (renderProperty) {
+        const demoComponentName = getDemoComponentName(renderProperty.initializer.body);
+        if (demoComponentName) {
+          const localComponentSource = extractLocalComponentSource(sourceFile, demoComponentName);
+          if (localComponentSource) {
+            return localComponentSource;
+          }
+        }
+
+        return unwrapRenderBody(renderProperty.initializer.body, sourceFile);
+      }
+
+      if (renderMethod && renderMethod.body) {
+        const demoComponentName = getDemoComponentName(renderMethod.body);
+        if (demoComponentName) {
+          const localComponentSource = extractLocalComponentSource(sourceFile, demoComponentName);
+          if (localComponentSource) {
+            return localComponentSource;
+          }
+        }
+
+        return unwrapRenderBody(renderMethod.body, sourceFile);
+      }
+
+      const argsProperty = declaration.initializer.properties.find(isArgsProperty);
+
+      if (argsProperty && componentName) {
+        return buildArgsStoryCode(componentName, argsProperty.initializer, sourceFile);
+      }
+    }
+  }
+
+  return '';
 }
 
 function rewriteImportSpecifiers(specifiers: string) {
@@ -128,15 +293,99 @@ function rewriteImportSpecifiers(specifiers: string) {
     .join(', ');
 }
 
-async function loadUiRootExports(previewDir: string) {
-  const distIndexPath = join(previewDir, '../../../../packages/ui/dist/index.js');
+async function resolveTsModulePath(basePath: string, specifier: string) {
+  const candidates = [
+    join(dirname(basePath), `${specifier}.ts`),
+    join(dirname(basePath), `${specifier}.tsx`),
+    join(dirname(basePath), specifier, 'index.ts'),
+    join(dirname(basePath), specifier, 'index.tsx'),
+  ];
 
-  const source = await readFile(distIndexPath, 'utf8').catch(() => null);
+  for (const candidate of candidates) {
+    if (await fileExists(candidate)) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+async function collectExportsFromSourceFile(filePath: string, visited = new Set<string>()) {
+  if (visited.has(filePath)) {
+    return new Set<string>();
+  }
+
+  visited.add(filePath);
+  const source = await readFile(filePath, 'utf8').catch(() => null);
   if (!source) {
     return new Set<string>();
   }
 
-  const blockMatch = source.match(/export\s*\{([\s\S]*?)\};/);
+  const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const exports = new Set<string>();
+
+  for (const statement of sourceFile.statements) {
+    if (
+      (ts.isVariableStatement(statement) || ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement))
+      && statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
+    ) {
+      if (ts.isVariableStatement(statement)) {
+        for (const declaration of statement.declarationList.declarations) {
+          if (ts.isIdentifier(declaration.name)) {
+            exports.add(declaration.name.text);
+          }
+        }
+      } else if (statement.name) {
+        exports.add(statement.name.text);
+      }
+    }
+
+    if (!ts.isExportDeclaration(statement) || !statement.moduleSpecifier) {
+      continue;
+    }
+
+    const specifier = ts.isStringLiteral(statement.moduleSpecifier) ? statement.moduleSpecifier.text : null;
+    if (!specifier?.startsWith('.')) {
+      continue;
+    }
+
+    if (statement.exportClause && ts.isNamedExports(statement.exportClause)) {
+      for (const element of statement.exportClause.elements) {
+        exports.add(element.name.text);
+      }
+      continue;
+    }
+
+    const resolvedPath = await resolveTsModulePath(filePath, specifier);
+    if (!resolvedPath) {
+      continue;
+    }
+
+    const nestedExports = await collectExportsFromSourceFile(resolvedPath, visited);
+    for (const exportedName of nestedExports) {
+      exports.add(exportedName);
+    }
+  }
+
+  return exports;
+}
+
+async function loadUiRootExports(previewDir: string) {
+  const sourceIndexPath = join(previewDir, '../../../../packages/ui/src/index.tsx');
+  if (await fileExists(sourceIndexPath)) {
+    const sourceExports = await collectExportsFromSourceFile(sourceIndexPath);
+    if (sourceExports.size > 0) {
+      return sourceExports;
+    }
+  }
+
+  const distIndexPath = join(previewDir, '../../../../packages/ui/dist/index.js');
+  const distSource = await readFile(distIndexPath, 'utf8').catch(() => null);
+  if (!distSource) {
+    return new Set<string>();
+  }
+
+  const blockMatch = distSource.match(/export\s*\{([\s\S]*?)\};/);
   if (!blockMatch) {
     return new Set<string>();
   }
@@ -322,6 +571,7 @@ async function buildComponentRegistryEntries(componentDocs: ComponentDoc[]) {
       const resolvedSourcePath = (await fileExists(indexPath)) ? indexPath : fallbackIndexPath;
       const hasStory = await fileExists(storyPath);
       const storySource = hasStory ? await readFile(storyPath, 'utf8') : null;
+      const storyComponent = storySource ? extractMetaComponent(storySource) : null;
       const typesSource = (await fileExists(typesPath)) ? await readFile(typesPath, 'utf8') : '';
       const { props, inheritedPropsNote } = extractPropsFromComponentSource(
         resolvedSourcePath,
@@ -331,7 +581,7 @@ async function buildComponentRegistryEntries(componentDocs: ComponentDoc[]) {
       return {
         description: doc.description,
         docsPath: doc.sourcePath,
-        examples: parseCanvasExamples(docsSource, storySource),
+        examples: parseCanvasExamples(docsSource, storySource, storyComponent ?? doc.title),
         href: doc.href,
         inheritedPropsNote,
         props,

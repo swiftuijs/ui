@@ -1,0 +1,28 @@
+@use '@/style/common.scss' as *;
+
+.sw-controlgroup {
+  display: grid;
+  gap: var(--sw-spacing-sm);
+}
+
+.sw-controlgroup-label {
+  color: var(--sw-color-label-secondary);
+  font-size: var(--sw-font-size-footnote);
+  font-weight: var(--sw-font-weight-medium);
+  line-height: var(--sw-line-height-normal);
+}
+
+.sw-controlgroup-content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sw-spacing-sm);
+  padding: var(--sw-spacing-xs);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-lg);
+  background: var(--sw-color-background-secondary);
+}
+
+.sw-controlgroup-vertical .sw-controlgroup-content {
+  display: grid;
+  justify-items: stretch;
+}

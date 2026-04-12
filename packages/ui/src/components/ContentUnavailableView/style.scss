@@ -1,0 +1,34 @@
+@use '@/style/common.scss' as *;
+
+.sw-contentunavailable {
+  display: grid;
+  justify-items: center;
+  gap: var(--sw-spacing-sm);
+  padding: var(--sw-spacing-3xl) var(--sw-spacing-lg);
+  text-align: center;
+  color: var(--sw-color-label-primary);
+}
+
+.sw-contentunavailable-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sw-color-label-secondary);
+}
+
+.sw-contentunavailable-title {
+  font-size: var(--sw-font-size-title-3);
+  font-weight: var(--sw-font-weight-semibold);
+  line-height: var(--sw-line-height-tight);
+}
+
+.sw-contentunavailable-description {
+  max-width: 32rem;
+  color: var(--sw-color-label-secondary);
+  font-size: var(--sw-font-size-body);
+  line-height: var(--sw-line-height-normal);
+}
+
+.sw-contentunavailable-actions {
+  margin-top: var(--sw-spacing-sm);
+}

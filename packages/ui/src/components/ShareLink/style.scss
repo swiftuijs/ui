@@ -1,0 +1,24 @@
+@use '@/style/common.scss' as *;
+
+.sw-sharelink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sw-spacing-xs);
+  padding: var(--sw-spacing-sm) var(--sw-spacing-lg);
+  border: 1px solid transparent;
+  border-radius: var(--sw-radius-full);
+  background: transparent;
+  color: var(--sw-color-blue);
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-medium);
+  line-height: var(--sw-line-height-normal);
+  cursor: pointer;
+  transition: background-color var(--sw-transition-fast), color var(--sw-transition-fast);
+}
+
+.sw-sharelink:hover,
+.sw-sharelink:focus-visible {
+  background: var(--sw-color-background-secondary);
+  outline: none;
+}

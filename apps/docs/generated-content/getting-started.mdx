@@ -1,0 +1,51 @@
+---
+title: Getting Started
+description: Install SwiftUI.js, include its shipped styles, and establish the first rendering baseline.
+---
+
+# Getting Started
+
+SwiftUI.js is published as a component package. The docs site is separate and statically exported, but your application consumes only the UI package.
+
+## Install
+
+```bash
+pnpm add @swiftuijs/ui react react-dom
+```
+
+## Include Styles
+
+The component package ships its compiled CSS alongside the React exports.
+
+```tsx
+import '@swiftuijs/ui/style/index.css';
+```
+
+Import the stylesheet once near the root of your application so token-driven defaults are available to every component.
+
+## Render Your First View
+
+```tsx
+import { Button, Text, VStack } from '@swiftuijs/ui';
+
+export function Demo() {
+  return (
+    <VStack spacing="md">
+      <Text variant="body">Hello from SwiftUI.js.</Text>
+      <Button>Continue</Button>
+    </VStack>
+  );
+}
+```
+
+## Recommended Next Steps
+
+1. Read [SwiftUI Alignment](/docs/concepts/swiftui-alignment/) to understand how stacks and alignment guides are expressed on the web.
+2. Read [Responsive Design](/docs/concepts/responsive-design/) before building adaptive layouts.
+3. Use the colocated component docs in the repository as the source of truth for individual components.
+
+## Contribution Expectations
+
+When you add a new component, ship the tests, Storybook story, and docs together so the implementation and the public narrative stay in sync.
+
+Breaking rewrites are allowed when they improve correctness, remove inconsistent behavior, or make the foundation easier to support. If a rewrite changes the public surface, document the difference instead of hiding it.

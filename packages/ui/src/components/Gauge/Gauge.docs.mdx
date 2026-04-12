@@ -1,0 +1,19 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as GaugeStories from './Gauge.stories'
+
+<Meta title="SwiftUI/Gauge/Readme" />
+
+# Gauge
+
+## Overview
+
+Gauge shows a current value within a bounded range, matching SwiftUI's summary-style meter while keeping standard `progressbar` semantics.
+
+## Usage
+
+<Canvas of={GaugeStories.Default} />
+
+## Notes
+
+- Use `label` to name the gauge for both UI and accessibility.
+- `minimumValueLabel` and `maximumValueLabel` help explain the range.

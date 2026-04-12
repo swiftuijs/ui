@@ -1,0 +1,52 @@
+@use '@style/base.scss' as *;
+
+@include component('context-menu') {
+  position: fixed;
+  min-width: 220px;
+  padding: var(--sw-spacing-xs, 4px);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--sw-color-background-primary) 96%, transparent);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+  z-index: var(--sw-z-popover);
+
+  &-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--sw-spacing-sm, 8px);
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--sw-color-label-primary);
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background: var(--sw-color-fill-quaternary);
+      outline: none;
+    }
+
+    &-destructive {
+      color: var(--sw-color-red);
+    }
+
+    &-disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    &-icon {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    &-label {
+      flex: 1;
+    }
+  }
+}
