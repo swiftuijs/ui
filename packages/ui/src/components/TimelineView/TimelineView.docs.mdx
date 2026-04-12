@@ -1,0 +1,21 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as TimelineViewStories from './TimelineView.stories';
+
+<Meta title="SwiftUI/TimelineView/Readme" />
+
+# TimelineView
+
+TimelineView re-renders its content on a fixed cadence, matching SwiftUI's scheduled-update mental model with a simple interval-based web adaptation.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `TimelineView`.
+
+## Examples
+
+<Canvas of={TimelineViewStories.Clock} />
+
+## Notes
+
+- The current web implementation uses `setInterval`.
+- The child render function receives the latest `Date` for each tick.
