@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,95641,e=>{"use strict";e.i(85069);let t=e.i(52092).MeshGradient;e.s(["Default",0,{args:{width:320,height:200,colors:["#ff375f","#5e5ce6","#30d158","#ffd60a"],points:[[.15,.2],[.8,.25],[.35,.82],[.82,.75]],style:{borderRadius:"24px"}}},"__DOCS_COMPONENT__",0,t])}]);

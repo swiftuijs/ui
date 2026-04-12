@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,72420,e=>{"use strict";e.i(85069);let t=e.i(37002).HelpLink;e.s(["CustomLabel",0,{args:{href:"https://example.com/support",label:"View support article"}},"Default",0,{args:{href:"https://example.com/help"}},"__DOCS_COMPONENT__",0,t])}]);

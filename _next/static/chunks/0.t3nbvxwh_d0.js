@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,44514,t=>{"use strict";t.i(85069);let e=t.i(34465).Ellipse;t.s(["Default",0,{args:{fill:"#34c759",style:{width:180,height:120}}},"WithStroke",0,{args:{fill:"#dcfce7",stroke:"#15803d",strokeWidth:3,style:{width:200,height:120}}},"__DOCS_COMPONENT__",0,e])}]);

@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,39862,e=>{"use strict";e.i(85069);let s=e.i(68664).ShareLink;e.s(["Default",0,{args:{item:"https://swiftuijs.evecalm.com/docs",subject:"SwiftUI.js",message:"Take a look",children:"Share docs"}},"__DOCS_COMPONENT__",0,s])}]);
