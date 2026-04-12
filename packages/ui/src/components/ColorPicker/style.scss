@@ -1,0 +1,21 @@
+@use '@/style/common.scss' as *;
+
+.sw-colorpicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sw-spacing-md);
+  color: var(--sw-color-label-primary);
+}
+
+.sw-colorpicker-label {
+  font-size: var(--sw-font-size-body);
+}
+
+.sw-colorpicker-input {
+  width: 2.5rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
