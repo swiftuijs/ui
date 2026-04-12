@@ -1,0 +1,37 @@
+@use '@style/base.scss' as *;
+
+@include component('refreshable') {
+  display: grid;
+  gap: 12px;
+}
+
+@include component('refreshable-header') {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@include component('refreshable-button') {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  border: 1px solid var(--sw-color-gray-4, #d1d5db);
+  background: var(--sw-color-background-secondary, #f3f4f6);
+  color: var(--sw-color-text-primary, #111827);
+  font: inherit;
+  cursor: pointer;
+}
+
+@include component('refreshable-toolbar') {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@include component('refreshable-content') {
+  min-width: 0;
+}
