@@ -1,0 +1,25 @@
+@use '@style/base.scss' as *;
+
+@include component('presentationcompactadaptation') {
+  display: block;
+}
+
+@include component('presentationcompactadaptation-automatic') {
+  --sw-presentation-compact-adaptation: automatic;
+}
+
+@include component('presentationcompactadaptation-none') {
+  --sw-presentation-compact-adaptation: none;
+}
+
+@include component('presentationcompactadaptation-popover') {
+  --sw-presentation-compact-adaptation: popover;
+}
+
+@include component('presentationcompactadaptation-sheet') {
+  --sw-presentation-compact-adaptation: sheet;
+}
+
+@include component('presentationcompactadaptation-fullScreenCover') {
+  --sw-presentation-compact-adaptation: fullScreenCover;
+}

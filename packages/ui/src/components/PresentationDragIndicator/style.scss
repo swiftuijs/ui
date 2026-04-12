@@ -1,0 +1,17 @@
+@use '@style/base.scss' as *;
+
+@include component('presentationdragindicator') {
+  display: block;
+}
+
+@include component('presentationdragindicator-automatic') {
+  --sw-presentation-drag-indicator: automatic;
+}
+
+@include component('presentationdragindicator-visible') {
+  --sw-presentation-drag-indicator: visible;
+}
+
+@include component('presentationdragindicator-hidden') {
+  --sw-presentation-drag-indicator: hidden;
+}
