@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
 import { Spacer, Text, VStack, HStack } from '../'
-import { ScrollView, IScrollViewProps } from '.'
+import { Button } from '../Button'
+import { ScrollTarget } from '../ScrollTarget'
+import { ScrollView, IScrollViewProps, type IScrollPosition } from '.'
 
 const meta: Meta<typeof ScrollView> = {
   title: 'SwiftUI/ScrollView',
@@ -18,6 +21,39 @@ const meta: Meta<typeof ScrollView> = {
 export default meta
 
 type Story = StoryObj<IScrollViewProps>
+
+function ProgrammaticPositionDemo() {
+  const [scrollPosition, setScrollPosition] = useState<IScrollPosition>()
+
+  return (
+    <VStack spacing={12}>
+      <HStack spacing={8}>
+        <Button onClick={() => setScrollPosition({ target: 'top' })}>Scroll to top</Button>
+        <Button onClick={() => setScrollPosition({ target: 'middle' })}>Scroll to middle</Button>
+        <Button onClick={() => setScrollPosition({ target: 'bottom' })}>Scroll to bottom</Button>
+      </HStack>
+      <ScrollView scrollPosition={scrollPosition} style={{ height: '220px' }}>
+        <VStack spacing={12}>
+          <ScrollTarget scrollId="top">
+            <Text>Top anchor</Text>
+          </ScrollTarget>
+          {Array.from({ length: 12 }, (_, i) => (
+            <Text key={i}>Scrollable item {i + 1}</Text>
+          ))}
+          <ScrollTarget scrollId="middle">
+            <Text>Middle anchor</Text>
+          </ScrollTarget>
+          {Array.from({ length: 12 }, (_, i) => (
+            <Text key={`tail-${i}`}>Tail item {i + 1}</Text>
+          ))}
+          <ScrollTarget scrollId="bottom">
+            <Text>Bottom anchor</Text>
+          </ScrollTarget>
+        </VStack>
+      </ScrollView>
+    </VStack>
+  )
+}
 
 export const Default: Story = {
   render: () => (
@@ -121,4 +157,8 @@ export const CustomStyle: Story = {
       </VStack>
     </ScrollView>
   )
+}
+
+export const ProgrammaticPosition: Story = {
+  render: () => <ProgrammaticPositionDemo />,
 }

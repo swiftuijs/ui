@@ -25,6 +25,10 @@ ScrollView handles long content efficiently:
 
 Apply custom styles to ScrollView:
 
+## Programmatic Position
+
+Drive a scroll view from state and scroll to anchors with `scrollPosition`:
+
 ## Notes
 
 - ScrollView requires explicit dimensions (height for vertical, width for horizontal)
@@ -32,6 +36,8 @@ Apply custom styles to ScrollView:
 
 - ScrollView supports all standard React children
 - Use ScrollView for content that may exceed container bounds
+- Use `scrollPosition` to keep scroll location in React state or jump to a `ScrollTarget`
+- Use `onScrollPhaseChange` to react to active scrolling versus idle states
 
 ## Best Practices
 
