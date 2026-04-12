@@ -1,0 +1,29 @@
+@use '@/style/common.scss' as *;
+
+.sw-navigationsplitview {
+  display: grid;
+  min-width: 0;
+  gap: var(--sw-spacing-md);
+}
+
+.sw-navigationsplitview-two-column {
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+}
+
+.sw-navigationsplitview-three-column {
+  grid-template-columns: minmax(14rem, 18rem) minmax(16rem, 22rem) minmax(0, 1fr);
+}
+
+.sw-navigationsplitview-sidebar,
+.sw-navigationsplitview-content,
+.sw-navigationsplitview-detail {
+  min-width: 0;
+  padding: var(--sw-spacing-md);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-lg);
+  background: var(--sw-color-background-secondary);
+}
+
+.sw-navigationsplitview-compact {
+  grid-template-columns: minmax(0, 1fr);
+}

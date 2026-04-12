@@ -1,0 +1,19 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as AsyncImageStories from './AsyncImage.stories'
+
+<Meta title="SwiftUI/AsyncImage/Readme" />
+
+# AsyncImage
+
+## Overview
+
+AsyncImage loads remote images and exposes simple loading and failure phases, aligned with SwiftUI's `AsyncImage` mental model.
+
+## Usage
+
+<Canvas of={AsyncImageStories.Default} />
+
+## Notes
+
+- Use `placeholder` for loading UI.
+- Use `fallback` for failed requests.

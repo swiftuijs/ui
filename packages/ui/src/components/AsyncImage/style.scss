@@ -1,0 +1,24 @@
+@use '@/style/common.scss' as *;
+
+.sw-asyncimage {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+}
+
+.sw-asyncimage-image {
+  max-width: 100%;
+  height: auto;
+  transition: opacity var(--sw-transition-normal);
+}
+
+.sw-asyncimage-placeholder,
+.sw-asyncimage-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--sw-color-label-secondary);
+  background: var(--sw-color-background-secondary);
+  border-radius: var(--sw-radius-md);
+}

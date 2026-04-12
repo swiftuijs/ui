@@ -1,0 +1,11 @@
+@use '@/style/common.scss' as *;
+
+.sw-gridrow {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 1), minmax(0, 1fr));
+  gap: var(--grid-spacing, 0px);
+}
+
+.sw-gridrow-cell {
+  min-width: 0;
+}

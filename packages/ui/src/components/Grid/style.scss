@@ -1,0 +1,6 @@
+@use '@/style/common.scss' as *;
+
+.sw-grid {
+  display: grid;
+  gap: var(--grid-spacing, 0px);
+}

@@ -11,6 +11,7 @@ Component pages are generated from colocated `*.docs.mdx` files under `packages/
 
 - [ActivityIndicator](/docs/components/activityindicator): ActivityIndicator is a view that displays a spinning indicator to show that a task is in progress. ActivityIndicator is commonly used to indicate loading states.
 - [Alert](/docs/components/alert): Alert is a container that presents an alert dialog. Alert displays a modal dialog with a message and optional action buttons.
+- [AsyncImage](/docs/components/asyncimage): AsyncImage loads remote images and exposes simple loading and failure phases, aligned with SwiftUI's `AsyncImage` mental model.
 - [Badge](/docs/components/badge): Badge is a view that displays a badge, typically used to show counts, status, or labels. Badges are commonly used in navigation items, buttons, and list items.
 - [Button](/docs/components/button): Button maps directly to SwiftUI's `Button` control: a label or icon triggers an action when activated. The React version keeps the same mental model while exposing standard HTML button behavior.
 - [Card](/docs/components/card): Card is a container that presents content on a card. Card is a container with elevated styling, typically used to display related content.
@@ -26,6 +27,8 @@ Component pages are generated from colocated `*.docs.mdx` files under `packages/
 - [Form](/docs/components/form): Form is a container for grouping form controls. Form provides a semantic container for form elements and handles form submission.
 - [Gauge](/docs/components/gauge): Gauge shows a current value within a bounded range, matching SwiftUI's summary-style meter while keeping standard `progressbar` semantics.
 - [GeometryReader](/docs/components/geometryreader): GeometryReader is a view that provides geometry information to its children, allowing you to create responsive layouts based on container size. GeometryReader gives you access to the size and position of the container.
+- [Grid](/docs/components/grid): Grid arranges content in explicit rows and columns, following SwiftUI's non-lazy grid model.
+- [GridRow](/docs/components/gridrow): GridRow defines a single row inside `Grid`.
 - [Group](/docs/components/group): Group is a container for grouping view content. Group is a transparent container that groups views together without adding visual styling. It's useful for applying modifiers to multiple views at once.
 - [GroupBox](/docs/components/groupbox): GroupBox is a container that visually groups related content with a border and optional label. GroupBox is similar to Group but adds visual styling with a border and background.
 - [HStack](/docs/components/hstack): HStack is a view that arranges its children in a horizontal line. An HStack is a container view that arranges its child views in a horizontal line. You can customize the spacing between views and the alignment of views within the stack.
@@ -41,6 +44,7 @@ Component pages are generated from colocated `*.docs.mdx` files under `packages/
 - [Menu](/docs/components/menu): Menu is a view that displays a menu of options. Menu presents a list of actions that can be triggered by the user, typically shown as a dropdown or popover.
 - [NavigationBar](/docs/components/navigationbar): NavigationBar is a component that displays a title, optional back button, and toolbar items. It's automatically used by StandardPage when a `navigationTitle` is provided, following iOS Human Interface Guidelines and SwiftUI's navigation bar design patterns.
 - [NavigationLink](/docs/components/navigationlink): NavigationLink is a component that triggers navigation to a destination within a NavigationStack. It can navigate to another component or an external URL, and supports customizable transition animations.
+- [NavigationSplitView](/docs/components/navigationsplitview): NavigationSplitView presents sidebar, optional content, and detail columns with a compact fallback mode.
 - [NavigationStack](/docs/components/navigationstack): NavigationStack is a container that manages a stack of views for navigation. NavigationStack provides navigation functionality similar to iOS navigation controllers, allowing users to navigate forward and backward through a hierarchy of views.
 - [StandardPage](/docs/components/page/standard-page/standardpage): StandardPage is the default page container used in NavigationStack. It provides a standard page layout and can optionally display a navigation bar with title and toolbar items.
 - [Picker](/docs/components/picker): Picker is a control for selecting from a set of mutually exclusive values. Picker displays a list of options and allows the user to select one.
