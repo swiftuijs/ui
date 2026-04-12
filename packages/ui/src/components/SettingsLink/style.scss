@@ -1,0 +1,15 @@
+@use '@style/base.scss' as *;
+
+@include component('settings-link') {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sw-color-primary, #007aff);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@include component('settings-link-chevron') {
+  font-size: 16px;
+  line-height: 1;
+}

@@ -1,0 +1,39 @@
+@use '@style/base.scss' as *;
+
+@keyframes sw-symbol-effect-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.12); opacity: 0.9; }
+}
+
+@keyframes sw-symbol-effect-bounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+  60% { transform: translateY(0); }
+}
+
+@keyframes sw-symbol-effect-appear {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@include component('symbol-effect') {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@include component('symbol-effect-active') {
+  will-change: transform, opacity;
+}
+
+@include component('symbol-effect-pulse') {
+  animation: sw-symbol-effect-pulse 1s ease-in-out infinite;
+}
+
+@include component('symbol-effect-bounce') {
+  animation: sw-symbol-effect-bounce 0.9s ease-in-out infinite;
+}
+
+@include component('symbol-effect-appear') {
+  animation: sw-symbol-effect-appear 0.24s ease-out both;
+}

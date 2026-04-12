@@ -1,0 +1,22 @@
+@use '@style/base.scss' as *;
+
+@include component('help-link') {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sw-color-primary, #007aff);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+@include component('help-link-icon') {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--sw-color-primary, #007aff) 12%, transparent);
+  font-size: 12px;
+  line-height: 1;
+}
