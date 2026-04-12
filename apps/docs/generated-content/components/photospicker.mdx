@@ -1,0 +1,16 @@
+---
+title: "PhotosPicker"
+description: "PhotosPicker opens an image-only asset chooser and forwards selected files, keeping SwiftUI's media selection intent while relying on the browser's native file picker."
+---
+
+PhotosPicker opens an image-only asset chooser and forwards selected files, keeping SwiftUI's media selection intent while relying on the browser's native file picker.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `PhotosPicker`.
+
+## Notes
+
+- The current web implementation selects image files via a hidden `input[type="file"]`.
+- `selectionLimit` trims the forwarded files to the requested maximum.
+- The browser controls the actual picker UI.

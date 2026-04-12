@@ -1,0 +1,16 @@
+---
+title: "SearchField"
+description: "SearchField provides a dedicated search input with a value-first callback, aligned with SwiftUI's searchable input patterns while remaining an explicit web control."
+---
+
+SearchField provides a dedicated search input with a value-first callback, aligned with SwiftUI's searchable input patterns while remaining an explicit web control.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's searchable text entry patterns into a standalone web control.
+
+## Notes
+
+- `onValueChange` supports SwiftUI-style state updates.
+- `onSubmit` receives the current query when the user presses Enter.
+- Under the hood the component uses a native `input[type="search"]`.

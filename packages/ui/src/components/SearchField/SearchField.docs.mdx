@@ -1,0 +1,23 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as SearchFieldStories from './SearchField.stories';
+
+<Meta title="SwiftUI/SearchField/Readme" />
+
+# SearchField
+
+SearchField provides a dedicated search input with a value-first callback, aligned with SwiftUI's searchable input patterns while remaining an explicit web control.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's searchable text entry patterns into a standalone web control.
+
+## Examples
+
+<Canvas of={SearchFieldStories.Default} />
+<Canvas of={SearchFieldStories.Empty} />
+
+## Notes
+
+- `onValueChange` supports SwiftUI-style state updates.
+- `onSubmit` receives the current query when the user presses Enter.
+- Under the hood the component uses a native `input[type="search"]`.

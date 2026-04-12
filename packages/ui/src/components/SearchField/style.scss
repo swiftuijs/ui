@@ -1,0 +1,26 @@
+@use '@/style/common.scss' as *;
+
+.sw-searchfield {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--sw-spacing-sm) var(--sw-spacing-lg);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-md);
+  background: var(--sw-color-background-secondary);
+  color: var(--sw-color-label-primary);
+  font: inherit;
+}
+
+.sw-searchfield:focus {
+  outline: none;
+  border-color: var(--sw-accent-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sw-accent-color) 22%, transparent);
+}
+
+.sw-searchfield-label {
+  display: flex;
+  margin-bottom: var(--sw-spacing-sm);
+  color: var(--sw-color-label-primary);
+  font-size: var(--sw-font-size-footnote);
+  font-weight: var(--sw-font-weight-medium);
+}
