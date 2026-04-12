@@ -78,17 +78,19 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
   return (
     <div
       className={prefixClass('sheet-backdrop')}
+      role="presentation"
       onClick={handleBackdropClick}
     >
       <div
         {...commonProps}
         {...finalRestProps}
+        data-presentation-style={presentationStyle}
         ref={ref}
         role="dialog"
         aria-modal="true"
       >
         {showDragIndicator && presentationStyle !== 'fullScreen' && (
-          <div className={prefixClass('sheet-drag-indicator')} />
+          <div className={prefixClass('sheet-drag-indicator')} data-testid="sheet-drag-indicator" />
         )}
         <div className={prefixClass('sheet-content')}>
           {children}
@@ -97,4 +99,3 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     </div>
   )
 })
-

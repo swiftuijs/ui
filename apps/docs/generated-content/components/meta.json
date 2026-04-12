@@ -38,6 +38,7 @@
     "list",
     "map",
     "menu",
+    "multidatepicker",
     "navigationbar",
     "navigationlink",
     "navigationsplitview",

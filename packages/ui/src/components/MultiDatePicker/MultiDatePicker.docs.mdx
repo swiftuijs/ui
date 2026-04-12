@@ -1,0 +1,36 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as MultiDatePickerStories from './MultiDatePicker.stories'
+
+<Meta title="SwiftUI/MultiDatePicker/Readme" />
+
+# MultiDatePicker
+
+## Overview
+
+MultiDatePicker adapts SwiftUI's multi-date selection model to the web by combining a native date input with an ordered list of selected dates.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `MultiDatePicker`.
+
+## Basic Usage
+
+<Canvas of={MultiDatePickerStories.Default} />
+
+## Bounded Selections
+
+<Canvas of={MultiDatePickerStories.Bounded} />
+
+## Notes
+
+- `value` and `defaultValue` use native `YYYY-MM-DD` date strings
+- `onValueChange` receives the full ordered selection after every toggle
+- `minimumDate` and `maximumDate` map to native input bounds
+- When `name` is provided, the control serializes each selected date as a repeated form field
+- Removing selected dates stays in the same control instead of opening a second editor
+
+## Best Practices
+
+1. Use ordered date arrays so selections remain deterministic across renders.
+2. Keep labels explicit because the control includes both a date entry field and a selected-date list.
+3. Prefer bounded ranges when the valid dates are known ahead of time.

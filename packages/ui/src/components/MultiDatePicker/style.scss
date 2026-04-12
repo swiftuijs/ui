@@ -1,0 +1,88 @@
+@use '@/style/common.scss' as *;
+
+.sw-multidatepicker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sw-spacing-sm);
+}
+
+.sw-multidatepicker-label {
+  color: var(--sw-color-label-primary);
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-medium);
+  line-height: var(--sw-line-height-normal);
+}
+
+.sw-multidatepicker-input {
+  width: 100%;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  padding: var(--sw-spacing-sm) var(--sw-spacing-md);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-md);
+  font-size: var(--sw-font-size-body);
+  font-weight: var(--sw-font-weight-regular);
+  line-height: var(--sw-line-height-normal);
+  color: var(--sw-color-label-primary);
+  background-color: var(--sw-color-background-primary);
+  transition:
+    border-color var(--sw-transition-fast),
+    box-shadow var(--sw-transition-fast);
+  -webkit-appearance: none;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+    border-color: var(--sw-accent-color);
+    box-shadow: 0 0 0 3px color(from var(--sw-accent-color) srgb r g b / 0.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--sw-color-background-secondary);
+  }
+}
+
+.sw-multidatepicker-hidden-inputs {
+  display: none;
+}
+
+.sw-multidatepicker-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sw-spacing-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sw-multidatepicker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sw-spacing-xs);
+  padding: var(--sw-spacing-xs) var(--sw-spacing-sm);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-pill);
+  background-color: var(--sw-color-fill-tertiary);
+}
+
+.sw-multidatepicker-value {
+  color: var(--sw-color-label-primary);
+  font-size: var(--sw-font-size-footnote);
+}
+
+.sw-multidatepicker-remove {
+  padding: 0;
+  border: 0;
+  color: var(--sw-accent-color);
+  font-size: var(--sw-font-size-footnote);
+  font-weight: var(--sw-font-weight-medium);
+  background: transparent;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
