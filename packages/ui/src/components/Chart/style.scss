@@ -1,0 +1,63 @@
+.sw-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.sw-chart-caption {
+  color: var(--sw-color-secondary-label, rgba(60, 60, 67, 0.6));
+  font-size: 0.875rem;
+}
+
+.sw-chart-empty {
+  border: 1px dashed var(--sw-color-border, rgba(60, 60, 67, 0.18));
+  border-radius: 16px;
+  color: var(--sw-color-secondary-label, rgba(60, 60, 67, 0.6));
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sw-chart-canvas {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.sw-chart-axis {
+  stroke: var(--sw-color-border, rgba(60, 60, 67, 0.18));
+  stroke-width: 1;
+}
+
+.sw-chart-bar,
+.sw-chart-line,
+.sw-chart-point {
+  color: var(--sw-color-accent, #007aff);
+}
+
+.sw-chart-bar {
+  fill: currentColor;
+}
+
+.sw-chart-line {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.sw-chart-point {
+  fill: currentColor;
+}
+
+.sw-chart-label,
+.sw-chart-value {
+  fill: currentColor;
+  font-size: 12px;
+}
+
+.sw-chart-label {
+  fill: var(--sw-color-secondary-label, rgba(60, 60, 67, 0.6));
+}

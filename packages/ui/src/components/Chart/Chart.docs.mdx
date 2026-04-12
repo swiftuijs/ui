@@ -1,0 +1,30 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as ChartStories from './Chart.stories'
+
+<Meta title="SwiftUI/Chart/Readme" />
+
+# Chart
+
+## Overview
+
+Chart presents numeric series as either bar or line marks.
+
+**SwiftUI Correspondence**: Adapts Swift Charts into a lightweight React component with a simplified single-series API.
+
+## Bar Mark
+
+<Canvas of={ChartStories.Bar} />
+
+## Line Mark
+
+<Canvas of={ChartStories.Line} />
+
+## Empty State
+
+<Canvas of={ChartStories.Empty} />
+
+## Notes
+
+- Use `mark="bar"` for category comparisons
+- Use `mark="line"` for trend visualization
+- Use `showValues` when exact values should stay visible beside the graphic
