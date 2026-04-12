@@ -1,0 +1,18 @@
+---
+title: "PhaseAnimator"
+description: "PhaseAnimator sequences a finite set of named phases and re-renders your content with the current phase value."
+---
+
+## Overview
+
+PhaseAnimator sequences a finite set of named phases and re-renders your content with the current phase value.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `PhaseAnimator`.
+
+## Notes
+
+- `phases` is the ordered sequence of values exposed to the render function
+- `trigger="automatic"` advances on the configured interval
+- `trigger="onDemand"` lets the rendered content advance or reset through controls

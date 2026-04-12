@@ -1,0 +1,28 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as PhaseAnimatorStories from './PhaseAnimator.stories'
+
+<Meta title="SwiftUI/PhaseAnimator/Readme" />
+
+# PhaseAnimator
+
+## Overview
+
+PhaseAnimator sequences a finite set of named phases and re-renders your content with the current phase value.
+
+**Status**: adapted
+
+**SwiftUI Correspondence**: Adapted from SwiftUI's `PhaseAnimator`.
+
+## Automatic Progression
+
+<Canvas of={PhaseAnimatorStories.Automatic} />
+
+## On-Demand Progression
+
+<Canvas of={PhaseAnimatorStories.OnDemand} />
+
+## Notes
+
+- `phases` is the ordered sequence of values exposed to the render function
+- `trigger="automatic"` advances on the configured interval
+- `trigger="onDemand"` lets the rendered content advance or reset through controls
