@@ -92,3 +92,53 @@ export const FullScreen: Story = {
   render: () => <FullScreenSheet />,
 }
 
+function MaterialSheet() {
+  const [isPresented, setIsPresented] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setIsPresented(true)}>Show Material Sheet</Button>
+      <Sheet
+        isPresented={isPresented}
+        onDismiss={() => setIsPresented(false)}
+        backgroundStyle="thinMaterial"
+        cornerRadius={28}
+      >
+        <VStack spacing={20} style={{ padding: '20px' }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Material Sheet</Text>
+          <Text>Thin material background with a custom corner radius.</Text>
+          <Button onClick={() => setIsPresented(false)}>Dismiss</Button>
+        </VStack>
+      </Sheet>
+    </>
+  )
+}
+
+export const Material: Story = {
+  render: () => <MaterialSheet />,
+}
+
+function LockedBackdropSheet() {
+  const [isPresented, setIsPresented] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setIsPresented(true)}>Show Locked Sheet</Button>
+      <Sheet
+        isPresented={isPresented}
+        onDismiss={() => setIsPresented(false)}
+        backgroundInteraction="none"
+      >
+        <VStack spacing={20} style={{ padding: '20px' }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Locked Backdrop</Text>
+          <Text>Backdrop taps no longer dismiss this sheet.</Text>
+          <Button onClick={() => setIsPresented(false)}>Close explicitly</Button>
+        </VStack>
+      </Sheet>
+    </>
+  )
+}
+
+export const LockedBackdrop: Story = {
+  render: () => <LockedBackdropSheet />,
+}

@@ -21,13 +21,28 @@
     max-width: 600px;
     max-height: 90%;
     background-color: var(--sw-color-background-primary);
-    border-top-left-radius: var(--sw-radius-lg);
-    border-top-right-radius: var(--sw-radius-lg);
+    border-top-left-radius: var(--sw-sheet-corner-radius, var(--sw-radius-lg));
+    border-top-right-radius: var(--sw-sheet-corner-radius, var(--sw-radius-lg));
     box-shadow: var(--sw-shadow-lg);
     animation: #{$ns}-slide-in-bottom var(--sw-transition-normal);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+  }
+
+  &-thinMaterial .#{$ns}-sheet-content {
+    background-color: color-mix(in srgb, var(--sw-color-background-primary) 82%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  &-regularMaterial .#{$ns}-sheet-content {
+    background-color: color-mix(in srgb, var(--sw-color-background-primary) 92%, transparent);
+    backdrop-filter: blur(10px) saturate(120%);
+  }
+
+  &-clear .#{$ns}-sheet-content {
+    background-color: transparent;
+    box-shadow: none;
   }
 
   &-header {

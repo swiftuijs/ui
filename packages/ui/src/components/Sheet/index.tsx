@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, type CSSProperties } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
@@ -26,6 +26,20 @@ export interface ISheetProps extends IBaseComponent {
    * @default true
    */
   showDragIndicator?: boolean
+  /**
+   * Whether interacting with the backdrop dismisses the sheet.
+   * @default 'dismiss'
+   */
+  backgroundInteraction?: 'dismiss' | 'none'
+  /**
+   * Visual background treatment for the presented sheet.
+   * @default 'automatic'
+   */
+  backgroundStyle?: 'automatic' | 'thinMaterial' | 'regularMaterial' | 'clear'
+  /**
+   * Overrides the sheet corner radius.
+   */
+  cornerRadius?: number | string
 }
 
 /**
@@ -54,6 +68,9 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     onDismiss,
     presentationStyle = 'pageSheet',
     showDragIndicator = true,
+    backgroundInteraction = 'dismiss',
+    backgroundStyle = 'automatic',
+    cornerRadius,
     children,
     ...restProps
   } = props
@@ -63,6 +80,10 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
   }
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (backgroundInteraction !== 'dismiss') {
+      return
+    }
+
     if (e.target === e.currentTarget && onDismiss) {
       onDismiss()
     }
@@ -72,7 +93,12 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     className: [
       prefixClass('sheet'),
       prefixClass(`sheet-${presentationStyle}`),
+      prefixClass(`sheet-${backgroundStyle}`),
     ],
+    style: {
+      '--sw-sheet-corner-radius':
+        typeof cornerRadius === 'number' ? `${cornerRadius}px` : cornerRadius,
+    } as CSSProperties,
   })
 
   return (
@@ -84,6 +110,8 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
       <div
         {...commonProps}
         {...finalRestProps}
+        data-background-interaction={backgroundInteraction}
+        data-background-style={backgroundStyle}
         data-presentation-style={presentationStyle}
         ref={ref}
         role="dialog"

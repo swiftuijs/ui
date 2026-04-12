@@ -37,4 +37,41 @@ describe('Sheet', () => {
     expect(dialog).toHaveClass('sw-sheet-fullScreen')
     expect(screen.queryByTestId('sheet-drag-indicator')).not.toBeInTheDocument()
   })
+
+  it('can disable backdrop dismissal when background interaction is none', async () => {
+    const user = userEvent.setup()
+    const onDismiss = vi.fn()
+
+    render(
+      <Sheet
+        isPresented
+        backgroundInteraction="none"
+        onDismiss={onDismiss}
+      >
+        <div>Locked sheet</div>
+      </Sheet>,
+    )
+
+    await user.click(screen.getByRole('presentation'))
+
+    expect(onDismiss).not.toHaveBeenCalled()
+  })
+
+  it('exposes background style and custom corner radius metadata', () => {
+    render(
+      <Sheet
+        isPresented
+        backgroundStyle="thinMaterial"
+        cornerRadius={28}
+      >
+        <div>Styled sheet</div>
+      </Sheet>,
+    )
+
+    const dialog = screen.getByRole('dialog')
+
+    expect(dialog).toHaveAttribute('data-background-style', 'thinMaterial')
+    expect(dialog).toHaveClass('sw-sheet-thinMaterial')
+    expect(dialog).toHaveStyle({ '--sw-sheet-corner-radius': '28px' })
+  })
 })
