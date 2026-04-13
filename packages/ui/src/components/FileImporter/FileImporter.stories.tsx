@@ -32,3 +32,18 @@ function DemoFileImporter() {
 export const Default: Story = {
   render: () => <DemoFileImporter />,
 }
+
+export const MultipleSelection: Story = {
+  render: () => (
+    <VStack spacing={12}>
+      <FileImporter
+        allowedContentTypes={['image/png', 'image/jpeg']}
+        allowsMultipleSelection
+        onSelect={() => undefined}
+      >
+        Import images
+      </FileImporter>
+      <Text>Uses SwiftUI-style selection aliases for accepted content types and multiple selection.</Text>
+    </VStack>
+  ),
+}

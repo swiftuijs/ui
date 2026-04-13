@@ -6,3 +6,8 @@ description: "FileImporter presents a button-backed file picker and forwards sel
 ## Overview
 
 FileImporter presents a button-backed file picker and forwards selected files to your app.
+
+## Notes
+
+- `allowedContentTypes` and `allowsMultipleSelection` are the preferred SwiftUI-aligned props.
+- The hidden input is reset after each selection so the same file can be chosen again in a subsequent import flow.
