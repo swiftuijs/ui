@@ -11,10 +11,31 @@ const HOME_PAGE_ID = generateUniqueId('_index_')
 /**
  * Props for NavigationStack component.
  */
-export type INavigationStackProps = IBaseComponent
+export interface INavigationStackProps extends IBaseComponent {
+  defaultPath?: ILoosePageItem[]
+  onPathChange?: (path: Array<Pick<IPageItem, 'id' | 'type'>>) => void
+}
+
+function normalizePage(page: ILoosePageItem): IPageItem {
+  const pageType = page.type || 'page'
+
+  return Object.assign({}, page, {
+    type: pageType,
+    _id: `${pageType}$$${page.id}`,
+  })
+}
+
+function toPublicPath(path: IPageItem[]) {
+  return path.map((page) => ({
+    id: page.id,
+    type: page.type,
+  }))
+}
 
 export function useViewModel(props: INavigationStackProps) {
-  const paths = useRef<IPageItem[]>([])
+  const { defaultPath, onPathChange } = props
+  const initialPath = useMemo(() => (defaultPath ?? []).map(normalizePage), [defaultPath])
+  const paths = useRef<IPageItem[]>(initialPath)
   const innerEventPrefix = useRef(`${generateUniqueId('navi')}`)
   const contextValue = useRef<INaviContext>({
     eventPrefix: innerEventPrefix.current,
@@ -32,16 +53,20 @@ export function useViewModel(props: INavigationStackProps) {
     _id: `page$$${HOME_PAGE_ID}`,
   }), [props.children])
 
-  const [shownPages, setShownPages] = useState([homePage])
+  const [shownPages, setShownPages] = useState(() => [initialPath[initialPath.length - 1] || homePage])
+
+  useEffect(() => {
+    onPathChange?.(toPublicPath(paths.current))
+  }, [onPathChange])
 
   useEffect(() => {
     const eventPrefix = innerEventPrefix.current
     const pageCallbacks: Record<string, () => void> = {}
     // append page
     eventBus.on(`${eventPrefix}.append`, (page: ILoosePageItem) => {
-      const pageType = page.type || 'page'
       const currentPaths = paths.current
-      const _id = `${pageType}$$${page.id}`
+      const nextNormalizedPage = normalizePage(page)
+      const _id = nextNormalizedPage._id
       let nextPage: IPageItem
 
       const index = currentPaths.findIndex((item) => item._id === _id)
@@ -49,7 +74,7 @@ export function useViewModel(props: INavigationStackProps) {
       if (currentPaths.length && index === currentPaths.length - 1) return
       // not in path, append it
       if (index === -1) {
-        nextPage = Object.assign({}, page, { type: pageType, _id })
+        nextPage = nextNormalizedPage
         // remove all none page items
         let lastPageIndex = currentPaths.findLastIndex((page) => page.type === 'page')
         if (lastPageIndex === -1) {
@@ -62,6 +87,7 @@ export function useViewModel(props: INavigationStackProps) {
         const remaining = currentPaths.filter((item) => item._id !== _id)
         paths.current = [...remaining, nextPage]
       }
+      onPathChange?.(toPublicPath(paths.current))
       // Use View Transitions API if configured and supported
       const useViewTransition = nextPage.transition?.type === 'view-transition' && isViewTransitionSupported()
       
@@ -95,6 +121,7 @@ export function useViewModel(props: INavigationStackProps) {
       const currentPage = paths.current[paths.current.length - 1]
       paths.current = paths.current.slice(0, -count)
       const pageInstanceMap = pageInstances.current
+      onPathChange?.(toPublicPath(paths.current))
 
       // current is showing modal, just remove it
       if (currentPage.type !== 'page') {
@@ -147,13 +174,14 @@ export function useViewModel(props: INavigationStackProps) {
       eventBus.off(`${eventPrefix}.remove`)
       eventBus.off(`${eventPrefix}.page-entered`)
     }
-  }, [homePage])
+  }, [homePage, onPathChange])
   
   // clear page instances every time shown pages changed
   pageInstances.current = {}
 
 
-  const {commonProps, restProps} = standardizeProps(props, {
+  const { defaultPath: _defaultPath, onPathChange: _onPathChange, ...layoutProps } = props
+  const {commonProps, restProps} = standardizeProps(layoutProps, {
     style: {},
     className: prefixClass('navigationstack')
   })

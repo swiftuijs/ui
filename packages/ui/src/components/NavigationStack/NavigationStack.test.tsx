@@ -105,6 +105,10 @@ function PlainPageA() {
   )
 }
 
+function PreloadedPage() {
+  return <div>Preloaded Page</div>
+}
+
 describe('NavigationStack', () => {
   afterEach(() => {
     Reflect.deleteProperty(document, 'startViewTransition')
@@ -197,5 +201,64 @@ describe('NavigationStack', () => {
 
     expect(screen.getByRole('button', { name: 'Open plain page A' })).toBeInTheDocument()
     expect(screen.queryByText('Plain Page A')).not.toBeInTheDocument()
+  })
+
+  it('supports a default path and shows the top-most page on first render', () => {
+    render(
+      <NavigationStack
+        defaultPath={[
+          {
+            component: PreloadedPage,
+            id: 'preloaded',
+          },
+        ]}
+      >
+        <HomePageWithoutViewTransition />
+      </NavigationStack>,
+    )
+
+    expect(screen.getByText('Preloaded Page')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Open plain page A' })).not.toBeInTheDocument()
+  })
+
+  it('reports public path changes when pages are pushed and removed', async () => {
+    vi.useFakeTimers()
+
+    Object.defineProperty(globalThis, 'requestIdleCallback', {
+      configurable: true,
+      writable: true,
+      value: (callback: IdleRequestCallback) => setTimeout(
+        () => callback({ didTimeout: false, timeRemaining: () => 0 } as IdleDeadline),
+        0,
+      ),
+    })
+
+    const handlePathChange = vi.fn()
+
+    render(
+      <NavigationStack onPathChange={handlePathChange}>
+        <HomePageWithoutViewTransition />
+      </NavigationStack>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open plain page A' }))
+    fireEvent.animationEnd(document.getElementById('page$$plain-page-a')!)
+
+    expect(handlePathChange).toHaveBeenLastCalledWith([
+      {
+        id: 'plain-page-a',
+        type: 'page',
+      },
+    ])
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dismiss plain page' }))
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0)
+    })
+
+    fireEvent.animationEnd(document.getElementById('page$$plain-page-a')!)
+
+    expect(handlePathChange).toHaveBeenLastCalledWith([])
   })
 })

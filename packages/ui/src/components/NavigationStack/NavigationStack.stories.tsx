@@ -93,6 +93,28 @@ export const About = () => {
   )
 }
 
+export const PreloadedPath: Story = {
+  args: {
+    defaultPath: [
+      {
+        component: About,
+        id: 'about',
+      },
+    ],
+  },
+  render(args) {
+    return (
+      <NavigationStack {...args}>
+        <VStack spacing={20}>
+          <NavigationLink destination={Messages}>Message</NavigationLink>
+          <NavigationLink destination={About}>About</NavigationLink>
+          <NavigationLink destination={ZStackView}>ZStack</NavigationLink>
+        </VStack>
+      </NavigationStack>
+    )
+  },
+}
+
 function ZStackView() {
   const navi = useNaviContext()
   const gotoHome = () => navi.removeLast(999)
