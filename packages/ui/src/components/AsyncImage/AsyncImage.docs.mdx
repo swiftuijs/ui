@@ -13,7 +13,14 @@ AsyncImage loads remote images and exposes simple loading and failure phases, al
 
 <Canvas of={AsyncImageStories.Default} />
 
+## Phase Updates
+
+Use `onPhaseChange` when the surrounding UI needs to react to loading, success, or failure:
+
+<Canvas of={AsyncImageStories.PhaseAware} />
+
 ## Notes
 
 - Use `placeholder` for loading UI.
 - Use `fallback` for failed requests.
+- `AsyncImage` resets back to the loading phase whenever `src` changes.

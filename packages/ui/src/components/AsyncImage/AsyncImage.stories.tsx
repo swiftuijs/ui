@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
 
 import { AsyncImage, type IAsyncImageProps } from '.'
 
@@ -27,4 +28,24 @@ export const WithFallback: Story = {
     placeholder: 'Loading image…',
     fallback: 'Image unavailable',
   },
+}
+
+function PhaseAwareDemo() {
+  const [phase, setPhase] = useState('loading')
+
+  return (
+    <div style={{ display: 'grid', gap: 12 }}>
+      <AsyncImage
+        src="https://via.placeholder.com/320x180"
+        alt="Phase aware image"
+        placeholder="Loading image…"
+        onPhaseChange={setPhase}
+      />
+      <div>Current phase: {phase}</div>
+    </div>
+  )
+}
+
+export const PhaseAware: Story = {
+  render: () => <PhaseAwareDemo />,
 }

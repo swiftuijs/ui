@@ -1,4 +1,4 @@
-import { memo, useState, type ReactNode, type SyntheticEvent } from 'react'
+import { memo, useEffect, useState, type ReactNode, type SyntheticEvent } from 'react'
 
 import type { IBaseElementComponent } from '@/types'
 import { prefixClass, standardizeProps } from '@/common'
@@ -19,6 +19,10 @@ export interface IAsyncImageProps extends Omit<IBaseElementComponent<'img'>, 'ch
    * Fallback content shown when loading fails.
    */
   fallback?: ReactNode
+  /**
+   * Emits the current async loading phase.
+   */
+  onPhaseChange?: (phase: 'loading' | 'success' | 'failure') => void
 }
 
 export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
@@ -27,7 +31,10 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
     fallback,
     onLoad,
     onError,
+    onPhaseChange,
     className,
+    src,
+    alt,
     ...restProps
   } = props
   const [phase, setPhase] = useState<'loading' | 'success' | 'failure'>('loading')
@@ -38,8 +45,16 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
     },
   )
 
+  useEffect(() => {
+    setPhase('loading')
+  }, [src])
+
+  useEffect(() => {
+    onPhaseChange?.(phase)
+  }, [onPhaseChange, phase])
+
   return (
-    <div {...commonProps} {...finalRestProps}>
+    <div {...commonProps} {...finalRestProps} data-phase={phase}>
       {phase === 'loading' && placeholder ? (
         <div className={prefixClass('asyncimage-placeholder')}>{placeholder}</div>
       ) : null}
@@ -47,7 +62,7 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
         <div className={prefixClass('asyncimage-fallback')}>{fallback}</div>
       ) : null}
       <img
-        alt={props.alt}
+        alt={alt}
         className={prefixClass('asyncimage-image')}
         onError={(event: SyntheticEvent<HTMLImageElement>) => {
           setPhase('failure')
@@ -57,7 +72,7 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
           setPhase('success')
           onLoad?.(event)
         }}
-        src={props.src}
+        src={src}
         style={{
           display: phase === 'failure' ? 'none' : undefined,
           opacity: phase === 'success' ? 1 : 0,
