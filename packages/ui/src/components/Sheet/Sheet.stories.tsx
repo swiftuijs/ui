@@ -176,6 +176,32 @@ export const Detents: Story = {
   render: () => <DetentSheet />,
 }
 
+function UncontrolledDetentSheet() {
+  const [isPresented, setIsPresented] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setIsPresented(true)}>Show Uncontrolled Detent Sheet</Button>
+      <Sheet
+        defaultSelectedDetent="medium"
+        isPresented={isPresented}
+        onDismiss={() => setIsPresented(false)}
+        presentationDetents={['medium', 'large']}
+      >
+        <VStack spacing={20} style={{ padding: '20px' }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Uncontrolled Detent Sheet</Text>
+          <Text>This sheet resets to its default detent each time it is presented.</Text>
+          <Button onClick={() => setIsPresented(false)}>Dismiss</Button>
+        </VStack>
+      </Sheet>
+    </>
+  )
+}
+
+export const UncontrolledDetents: Story = {
+  render: () => <UncontrolledDetentSheet />,
+}
+
 function InteractiveDismissDisabledSheet() {
   const [isPresented, setIsPresented] = useState(false)
 

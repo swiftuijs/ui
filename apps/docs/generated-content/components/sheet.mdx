@@ -29,6 +29,10 @@ Prevent backdrop taps from dismissing the sheet:
 
 Configure the available sheet heights and choose the initial detent. When more than one detent is available, the drag indicator becomes an explicit control that can cycle between them:
 
+## Uncontrolled Detents
+
+Use `defaultSelectedDetent` when the sheet should reset to a known starting detent each time it is presented:
+
 ## Interactive Dismiss
 
 Disable backdrop and keyboard dismissal when the presentation must stay locked until an explicit action:
@@ -38,6 +42,7 @@ Disable backdrop and keyboard dismissal when the presentation must stay locked u
 - Sheet requires `isPresented` and `onDismiss` props
 - Sheet supports different presentation styles
 - Sheet automatically handles dismiss gestures
+- `defaultSelectedDetent` resets uncontrolled detent state on each new presentation
 - Use Sheet for modal presentations
 - Sheet can contain any React content
 

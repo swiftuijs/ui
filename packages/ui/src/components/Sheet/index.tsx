@@ -86,6 +86,17 @@ function resolveDetentHeight(detent: IPresentationDetent | undefined) {
   return detent
 }
 
+function resolveAvailableDetent(
+  detent: IPresentationDetent | undefined,
+  presentationDetents: IPresentationDetent[]
+) {
+  if (detent !== undefined && presentationDetents.includes(detent)) {
+    return detent
+  }
+
+  return presentationDetents[0]
+}
+
 /**
  * A view that presents content as a modal sheet.
  * 
@@ -125,10 +136,13 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
   } = props
 
   const [internalSelectedDetent, setInternalSelectedDetent] = useState<IPresentationDetent>(() => {
-    return defaultSelectedDetent ?? selectedDetent ?? presentationDetents[0]
+    return resolveAvailableDetent(defaultSelectedDetent ?? selectedDetent, presentationDetents)
   })
   const isDetentControlled = selectedDetent !== undefined
-  const resolvedDetent = isDetentControlled ? selectedDetent : internalSelectedDetent
+  const resolvedDetent = resolveAvailableDetent(
+    isDetentControlled ? selectedDetent : internalSelectedDetent,
+    presentationDetents
+  )
   const resolvedDetentHeight = resolveDetentHeight(resolvedDetent)
   const canDismissInteractively = backgroundInteraction === 'dismiss' && !interactiveDismissDisabled
   const canAdjustDetents = presentationDetents.length > 1
@@ -149,6 +163,12 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [canDismissInteractively, isPresented, onDismiss])
+
+  useEffect(() => {
+    if (!isDetentControlled) {
+      setInternalSelectedDetent(resolveAvailableDetent(defaultSelectedDetent, presentationDetents))
+    }
+  }, [defaultSelectedDetent, isDetentControlled, isPresented, presentationDetents])
 
   if (!isPresented) {
     return null

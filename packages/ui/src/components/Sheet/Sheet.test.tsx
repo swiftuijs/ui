@@ -142,6 +142,61 @@ describe('Sheet', () => {
     expect(dialog).toHaveStyle({ '--sw-sheet-height': '60%' })
   })
 
+  it('resets uncontrolled detent state when the sheet is presented again', async () => {
+    const user = userEvent.setup()
+
+    const { rerender } = render(
+      <Sheet
+        isPresented
+        defaultSelectedDetent="medium"
+        presentationDetents={['medium', 'large']}
+      >
+        <div>Detented sheet</div>
+      </Sheet>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Adjust sheet height' }))
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'large')
+
+    rerender(
+      <Sheet
+        isPresented={false}
+        defaultSelectedDetent="medium"
+        presentationDetents={['medium', 'large']}
+      >
+        <div>Detented sheet</div>
+      </Sheet>,
+    )
+
+    rerender(
+      <Sheet
+        isPresented
+        defaultSelectedDetent="medium"
+        presentationDetents={['medium', 'large']}
+      >
+        <div>Detented sheet</div>
+      </Sheet>,
+    )
+
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
+    expect(screen.getByRole('dialog')).toHaveStyle({ '--sw-sheet-height': '60%' })
+  })
+
+  it('falls back to the first configured detent when a selected detent is unavailable', () => {
+    render(
+      <Sheet
+        isPresented
+        presentationDetents={['medium', 'large']}
+        selectedDetent={240}
+      >
+        <div>Detented sheet</div>
+      </Sheet>,
+    )
+
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
+    expect(screen.getByRole('dialog')).toHaveStyle({ '--sw-sheet-height': '60%' })
+  })
+
   it('dismisses on Escape by default', async () => {
     const user = userEvent.setup()
     const onDismiss = vi.fn()
