@@ -16,15 +16,32 @@ export interface IPhotosPickerProps extends Omit<IBaseElementComponent<'button'>
    */
   selectionLimit?: number
   /**
+   * SwiftUI-aligned alias for the maximum number of selected items.
+   */
+  maxSelectionCount?: number
+  /**
+   * Preferred media type filter.
+   *
+   * @default 'images'
+   */
+  matching?: 'images' | 'videos' | 'any'
+  /**
    * Called with the selected image files.
    */
   onSelect: (files: Array<globalThis.File>) => void
 }
 
 export const PhotosPicker = memo(function PhotosPicker(props: IPhotosPickerProps) {
-  const { onClick, onSelect, selectionLimit = 1, ...restProps } = props
+  const { onClick, onSelect, selectionLimit = 1, maxSelectionCount, matching = 'images', ...restProps } = props
   const inputRef = useRef<HTMLInputElement>(null)
-  const allowMultiple = selectionLimit !== 1
+  const resolvedSelectionLimit = maxSelectionCount ?? selectionLimit
+  const allowMultiple = resolvedSelectionLimit !== 1
+  const accept =
+    matching === 'videos'
+      ? 'video/*'
+      : matching === 'any'
+        ? 'image/*,video/*'
+        : 'image/*'
   const { commonProps, restProps: finalRestProps, children } = standardizeProps(restProps, {
     className: prefixClass('photospicker'),
   })
@@ -46,7 +63,7 @@ export const PhotosPicker = memo(function PhotosPicker(props: IPhotosPickerProps
         {children}
       </button>
       <input
-        accept="image/*"
+        accept={accept}
         data-testid="photos-picker-input"
         hidden
         multiple={allowMultiple}
@@ -55,8 +72,9 @@ export const PhotosPicker = memo(function PhotosPicker(props: IPhotosPickerProps
           if (files.length === 0) {
             return
           }
-          const limitedFiles = selectionLimit > 0 ? files.slice(0, selectionLimit) : files
+          const limitedFiles = resolvedSelectionLimit > 0 ? files.slice(0, resolvedSelectionLimit) : files
           onSelect(limitedFiles)
+          event.target.value = ''
         }}
         ref={inputRef}
         type="file"

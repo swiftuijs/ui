@@ -8,7 +8,7 @@ const meta = {
   args: {
     children: 'Choose photos',
     onSelect: () => undefined,
-    selectionLimit: 1,
+    maxSelectionCount: 1,
   },
 } satisfies Meta<typeof PhotosPicker>
 
@@ -21,6 +21,14 @@ export const Default: Story = {}
 export const MultipleSelection: Story = {
   args: {
     children: 'Choose gallery items',
-    selectionLimit: 4,
+    maxSelectionCount: 4,
+  },
+}
+
+export const VideoSelection: Story = {
+  args: {
+    children: 'Choose clips',
+    matching: 'videos',
+    maxSelectionCount: 2,
   },
 }

@@ -39,4 +39,37 @@ describe('PhotosPicker', () => {
     expect(input).toHaveAttribute('multiple')
     expect(onSelect).toHaveBeenCalledWith(files.slice(0, 2))
   })
+
+  it('supports SwiftUI-style matching and max selection props', () => {
+    const onSelect = vi.fn()
+
+    render(
+      <PhotosPicker matching="videos" maxSelectionCount={3} onSelect={onSelect}>
+        Pick media
+      </PhotosPicker>,
+    )
+
+    const input = screen.getByTestId('photos-picker-input')
+
+    expect(input).toHaveAttribute('accept', 'video/*')
+    expect(input).toHaveAttribute('multiple')
+  })
+
+  it('resets the hidden input after selection so the same asset can be picked again', () => {
+    const onSelect = vi.fn()
+
+    render(<PhotosPicker onSelect={onSelect}>Choose photos</PhotosPicker>)
+
+    const input = screen.getByTestId('photos-picker-input') as HTMLInputElement
+    const photo = new globalThis.File(['photo'], 'photo.png', { type: 'image/png' })
+    Object.defineProperty(input, 'value', {
+      configurable: true,
+      writable: true,
+      value: 'C:\\fakepath\\photo.png',
+    })
+
+    fireEvent.change(input, { target: { files: [photo] } })
+
+    expect(input.value).toBe('')
+  })
 })
