@@ -67,6 +67,25 @@ describe('TabView', () => {
       expect(screen.getByRole('tabpanel')).toHaveTextContent('Home panel')
     })
 
+    it('does not emit onSelectionChange when the currently selected tab is clicked again', async () => {
+      const user = userEvent.setup()
+      const handleSelectionChange = vi.fn()
+
+      render(
+        <TabView
+          aria-label="Main tabs"
+          items={items}
+          defaultSelection="home"
+          onSelectionChange={handleSelectionChange}
+        />
+      )
+
+      await user.click(screen.getByRole('tab', { name: 'Home' }))
+
+      expect(handleSelectionChange).not.toHaveBeenCalled()
+      expect(screen.getByRole('tab', { name: 'Home' })).toHaveAttribute('aria-selected', 'true')
+    })
+
     it('supports arrow-key navigation between tabs', async () => {
       const user = userEvent.setup()
 
@@ -132,6 +151,40 @@ describe('TabView', () => {
         <TabView
           aria-label="Main tabs"
           items={[items[0], items[2]]}
+          selection="search"
+        />
+      )
+
+      expect(screen.getByRole('tab', { name: 'Home' })).toHaveAttribute('aria-selected', 'true')
+      expect(screen.getByRole('tabpanel')).toHaveTextContent('Home panel')
+    })
+
+    it('renders tab badges as part of the tab affordance', () => {
+      render(
+        <TabView
+          aria-label="Main tabs"
+          items={[
+            { ...items[0], badge: 'New' },
+            { ...items[1], badge: 3 },
+            items[2],
+          ]}
+          defaultSelection="home"
+        />
+      )
+
+      expect(screen.getByRole('tab', { name: /Home/i })).toHaveTextContent('New')
+      expect(screen.getByRole('tab', { name: /Search/i })).toHaveTextContent('3')
+    })
+
+    it('falls back to the first enabled tab when a controlled selection points to a disabled tab', () => {
+      render(
+        <TabView
+          aria-label="Main tabs"
+          items={[
+            items[0],
+            { ...items[1], disabled: true },
+            items[2],
+          ]}
           selection="search"
         />
       )

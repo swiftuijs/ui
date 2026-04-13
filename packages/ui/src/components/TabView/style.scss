@@ -48,6 +48,7 @@
   color: var(--sw-color-label-secondary, #8E8E93);
   transition: color var(--sw-transition-fast, 0.15s ease-out);
   min-height: 48px;
+  gap: 2px;
 
   &:hover {
     color: var(--sw-color-label-primary, #000000);
@@ -78,6 +79,18 @@
 @include component('tab-label') {
   font-size: var(--sw-font-size-caption-1, 12px);
   font-weight: var(--sw-font-weight-medium, 500);
+  text-align: center;
+}
+
+@include component('tab-badge') {
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background-color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
+  color: var(--sw-color-background-primary, #FFFFFF);
+  font-size: 11px;
+  font-weight: var(--sw-font-weight-semibold, 600);
+  line-height: 18px;
   text-align: center;
 }
 

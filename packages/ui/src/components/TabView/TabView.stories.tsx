@@ -200,3 +200,28 @@ export const WithDisabledTab: Story = {
     defaultSelection: 'home',
   },
 }
+
+export const WithBadges: Story = {
+  args: {
+    items: [
+      {
+        label: 'Inbox',
+        value: 'inbox',
+        badge: 12,
+        content: <VStack style={{ padding: '20px' }}><Text>Inbox</Text></VStack>,
+      },
+      {
+        label: 'Updates',
+        value: 'updates',
+        badge: 'New',
+        content: <VStack style={{ padding: '20px' }}><Text>Updates</Text></VStack>,
+      },
+      {
+        label: 'Settings',
+        value: 'settings',
+        content: <VStack style={{ padding: '20px' }}><Text>Settings</Text></VStack>,
+      },
+    ],
+    defaultSelection: 'inbox',
+  },
+}

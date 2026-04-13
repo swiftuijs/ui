@@ -20,6 +20,10 @@ export interface ITabItem {
    */
   icon?: ReactNode
   /**
+   * Optional badge content shown alongside the tab label.
+   */
+  badge?: ReactNode
+  /**
    * Tab content
    */
   content: ReactNode
@@ -112,9 +116,12 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
   const isControlled = controlledSelection !== undefined
   const [internalSelection, setInternalSelection] = useState<TabValue>(() => defaultSelection ?? fallbackSelection)
   const currentSelection = isControlled ? controlledSelection : internalSelection
+  const currentSelectionIndex = normalizedItems.findIndex((item) => item.value === currentSelection)
+  const preferredActiveItem = currentSelectionIndex >= 0 ? normalizedItems[currentSelectionIndex] : undefined
+  const resolvedActiveItem = preferredActiveItem && !preferredActiveItem.disabled ? preferredActiveItem : firstEnabledItem
   const activeIndex = Math.max(
     0,
-    normalizedItems.findIndex((item) => item.value === currentSelection)
+    resolvedActiveItem ? normalizedItems.findIndex((item) => item.value === resolvedActiveItem.value) : 0
   )
   const activeItem = normalizedItems[activeIndex]
   const baseId = useId().replace(/:/g, '')
@@ -137,6 +144,10 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
   } = finalRestProps
 
   const handleSelection = (nextSelection: TabValue) => {
+    if (nextSelection === activeItem?.value) {
+      return
+    }
+
     if (!isControlled) {
       setInternalSelection(nextSelection)
     }
@@ -226,6 +237,9 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
           >
             {item.icon && <span className={prefixClass('tab-icon')}>{item.icon}</span>}
             <span className={prefixClass('tab-label')}>{item.label}</span>
+            {item.badge !== undefined && item.badge !== null && (
+              <span className={prefixClass('tab-badge')}>{item.badge}</span>
+            )}
           </button>
         )
       })}

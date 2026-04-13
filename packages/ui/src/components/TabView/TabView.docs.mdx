@@ -37,11 +37,18 @@ Control tab selection programmatically:
 
 <Canvas of={TabViewStories.WithDisabledTab} />
 
+## Tab Badges
+
+Use badges to surface counts or short status labels on a tab item:
+
+<Canvas of={TabViewStories.WithBadges} />
+
 ## Notes
 
 - TabView requires an array of items with `label` and `content`
 - Each item can define a stable `value` used by `selection` and `defaultSelection`
 - Each item can opt into `disabled` to stay visible but non-selectable
+- Each item can provide an optional `badge` for counts or short status text
 - Each item can have an optional `icon`
 - Tab bar can be positioned at `top` or `bottom` (default)
 - TabView supports controlled mode with `selection` and `onSelectionChange`
