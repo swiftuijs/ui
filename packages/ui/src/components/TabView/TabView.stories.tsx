@@ -176,3 +176,27 @@ function ControlledTabView() {
 export const Controlled: Story = {
   render: () => <ControlledTabView />,
 }
+
+export const WithDisabledTab: Story = {
+  args: {
+    items: [
+      {
+        label: 'Home',
+        value: 'home',
+        content: <VStack style={{ padding: '20px' }}><Text>Home</Text></VStack>,
+      },
+      {
+        label: 'Search',
+        value: 'search',
+        disabled: true,
+        content: <VStack style={{ padding: '20px' }}><Text>Search</Text></VStack>,
+      },
+      {
+        label: 'Profile',
+        value: 'profile',
+        content: <VStack style={{ padding: '20px' }}><Text>Profile</Text></VStack>,
+      },
+    ],
+    defaultSelection: 'home',
+  },
+}

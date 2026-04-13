@@ -87,5 +87,57 @@ describe('TabView', () => {
       expect(screen.getByRole('tab', { name: 'Search' })).toHaveAttribute('aria-selected', 'true')
       expect(screen.getByRole('tabpanel')).toHaveTextContent('Search panel')
     })
+
+    it('skips disabled tabs for click and keyboard selection', async () => {
+      const user = userEvent.setup()
+
+      render(
+        <TabView
+          aria-label="Main tabs"
+          items={[
+            items[0],
+            { ...items[1], disabled: true },
+            items[2],
+          ]}
+          defaultSelection="home"
+        />
+      )
+
+      const disabledTab = screen.getByRole('tab', { name: 'Search' })
+      const homeTab = screen.getByRole('tab', { name: 'Home' })
+
+      expect(disabledTab).toBeDisabled()
+
+      await user.click(disabledTab)
+      expect(homeTab).toHaveAttribute('aria-selected', 'true')
+
+      homeTab.focus()
+      await user.keyboard('{ArrowRight}')
+
+      expect(screen.getByRole('tab', { name: 'Profile' })).toHaveFocus()
+      expect(screen.getByRole('tab', { name: 'Profile' })).toHaveAttribute('aria-selected', 'true')
+      expect(screen.getByRole('tabpanel')).toHaveTextContent('Profile panel')
+    })
+
+    it('falls back to the next enabled tab when the current controlled selection disappears', () => {
+      const { rerender } = render(
+        <TabView
+          aria-label="Main tabs"
+          items={items}
+          selection="search"
+        />
+      )
+
+      rerender(
+        <TabView
+          aria-label="Main tabs"
+          items={[items[0], items[2]]}
+          selection="search"
+        />
+      )
+
+      expect(screen.getByRole('tab', { name: 'Home' })).toHaveAttribute('aria-selected', 'true')
+      expect(screen.getByRole('tabpanel')).toHaveTextContent('Home panel')
+    })
   })
 })

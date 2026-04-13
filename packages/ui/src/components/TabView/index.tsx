@@ -27,6 +27,10 @@ export interface ITabItem {
    * Stable selection value for this tab.
    */
   value?: TabValue
+  /**
+   * Whether the tab can be selected.
+   */
+  disabled?: boolean
 }
 
 /**
@@ -100,7 +104,10 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
     ...item,
     value: item.value ?? index,
   }))
-  const fallbackSelection = normalizedItems[initialIndex]?.value ?? normalizedItems[0]?.value ?? 0
+  const firstEnabledItem = normalizedItems.find((item) => !item.disabled)
+  const fallbackSelection = normalizedItems[initialIndex]?.disabled
+    ? firstEnabledItem?.value ?? 0
+    : normalizedItems[initialIndex]?.value ?? firstEnabledItem?.value ?? 0
   const controlledSelection = selection ?? (selectedIndex !== undefined ? normalizedItems[selectedIndex]?.value : undefined)
   const isControlled = controlledSelection !== undefined
   const [internalSelection, setInternalSelection] = useState<TabValue>(() => defaultSelection ?? fallbackSelection)
@@ -138,10 +145,21 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
   }
 
   const focusAndSelect = (nextIndex: number) => {
-    const boundedIndex = (nextIndex + normalizedItems.length) % normalizedItems.length
+    if (!normalizedItems.length) {
+      return
+    }
+
+    let boundedIndex = (nextIndex + normalizedItems.length) % normalizedItems.length
+    let attempts = 0
+
+    while (normalizedItems[boundedIndex]?.disabled && attempts < normalizedItems.length) {
+      boundedIndex = (boundedIndex + 1) % normalizedItems.length
+      attempts += 1
+    }
+
     const nextItem = normalizedItems[boundedIndex]
 
-    if (!nextItem) {
+    if (!nextItem || nextItem.disabled) {
       return
     }
 
@@ -196,9 +214,13 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
             role="tab"
             aria-selected={isActive}
             aria-controls={panelId}
+            disabled={item.disabled}
             tabIndex={isActive ? 0 : -1}
             className={`${prefixClass('tab-item')} ${isActive ? prefixClass('tab-item-active') : ''}`}
-            onClick={() => handleSelection(item.value)}
+            onClick={() => {
+              if (item.disabled) return
+              handleSelection(item.value)
+            }}
             onKeyDown={(event) => handleKeyDown(event, index)}
             type="button"
           >
