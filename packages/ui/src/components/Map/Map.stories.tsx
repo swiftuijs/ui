@@ -26,3 +26,22 @@ export const CityLandmark: Story = {
     title: 'Empire State Building',
   },
 }
+
+export const Region: Story = {
+  args: {
+    coordinateRegion: {
+      center: {
+        latitude: 37.3346,
+        longitude: -122.009,
+      },
+      span: {
+        latitudeDelta: 0.2,
+        longitudeDelta: 0.3,
+      },
+    },
+    latitude: 37.3346,
+    longitude: -122.009,
+    openLabel: 'Open in Maps',
+    title: 'Apple Park Region',
+  },
+}

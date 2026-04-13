@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
 import { Map } from '.'
 
@@ -23,5 +23,47 @@ describe('Map', () => {
     expect(link).toHaveAttribute('target', '_blank')
     expect(link.getAttribute('href')).toContain('40.7484')
     expect(link.getAttribute('href')).toContain('-73.9857')
+  })
+
+  it('prefers coordinateRegion bounds when provided', () => {
+    render(
+      <Map
+        coordinateRegion={{
+          center: { latitude: 37.3346, longitude: -122.009 },
+          span: { latitudeDelta: 0.2, longitudeDelta: 0.3 },
+        }}
+        latitude={0}
+        longitude={0}
+        title="Apple Park Region"
+      />,
+    )
+
+    const frame = screen.getByTitle('Apple Park Region')
+    const src = frame.getAttribute('src') ?? ''
+
+    expect(src).toContain('-122.159')
+    expect(src).toContain('37.2346')
+    expect(src).toContain('-121.859')
+    expect(src).toContain('37.4346')
+    expect(src).toContain('marker=37.3346%2C-122.009')
+  })
+
+  it('supports a custom open label and open callback', () => {
+    const handleOpen = vi.fn()
+
+    render(
+      <Map
+        latitude={37.3346}
+        longitude={-122.009}
+        onOpen={handleOpen}
+        openLabel="Open in Maps"
+        title="Apple Park"
+      />,
+    )
+
+    const link = screen.getByRole('link', { name: 'Open in Maps' })
+    fireEvent.click(link)
+
+    expect(handleOpen).toHaveBeenCalledTimes(1)
   })
 })

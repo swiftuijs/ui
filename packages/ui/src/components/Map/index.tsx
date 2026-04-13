@@ -15,14 +15,30 @@ export interface IMapProps extends IBaseComponent {
   longitude: number
   zoom?: number
   title?: string
+  coordinateRegion?: {
+    center: {
+      latitude: number
+      longitude: number
+    }
+    span?: {
+      latitudeDelta: number
+      longitudeDelta: number
+    }
+  }
+  openLabel?: string
+  onOpen?: () => void
 }
 
-function buildEmbedUrl(latitude: number, longitude: number, zoom: number) {
-  const bboxOffset = 0.08
-  const left = longitude - bboxOffset
-  const right = longitude + bboxOffset
-  const top = latitude + bboxOffset
-  const bottom = latitude - bboxOffset
+function buildEmbedUrl(latitude: number, longitude: number, zoom: number, span?: {
+  latitudeDelta: number
+  longitudeDelta: number
+}) {
+  const latitudeDelta = span?.latitudeDelta ?? 0.16
+  const longitudeDelta = span?.longitudeDelta ?? 0.16
+  const left = longitude - longitudeDelta / 2
+  const right = longitude + longitudeDelta / 2
+  const top = latitude + latitudeDelta / 2
+  const bottom = latitude - latitudeDelta / 2
   return `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&layer=mapnik&marker=${latitude}%2C${longitude}&zoom=${zoom}`
 }
 
@@ -31,12 +47,24 @@ function buildOpenUrl(latitude: number, longitude: number, zoom: number) {
 }
 
 export const Map = memo(function Map(props: IMapProps) {
-  const { latitude, longitude, title = 'Map', zoom = 13, ...restProps } = props
+  const {
+    coordinateRegion,
+    latitude,
+    longitude,
+    onOpen,
+    openLabel = 'Open map in new tab',
+    title = 'Map',
+    zoom = 13,
+    ...restProps
+  } = props
+  const centerLatitude = coordinateRegion?.center.latitude ?? latitude
+  const centerLongitude = coordinateRegion?.center.longitude ?? longitude
+  const span = coordinateRegion?.span
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('map'),
   })
-  const embedUrl = buildEmbedUrl(latitude, longitude, zoom)
-  const openUrl = buildOpenUrl(latitude, longitude, zoom)
+  const embedUrl = buildEmbedUrl(centerLatitude, centerLongitude, zoom, span)
+  const openUrl = buildOpenUrl(centerLatitude, centerLongitude, zoom)
 
   return (
     <div {...commonProps} {...finalRestProps} className={clsx(prefixClass('map'), commonProps.className)}>
@@ -44,10 +72,11 @@ export const Map = memo(function Map(props: IMapProps) {
       <a
         className={prefixClass('map-link')}
         href={openUrl}
+        onClick={() => onOpen?.()}
         rel="noreferrer"
         target="_blank"
       >
-        Open map in new tab
+        {openLabel}
       </a>
     </div>
   )
