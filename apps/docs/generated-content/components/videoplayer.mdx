@@ -13,3 +13,5 @@ VideoPlayer wraps the native browser video element while keeping SwiftUI's dedic
 
 - Playback UI comes from the browser's native video controls.
 - The component is intentionally thin and keeps the underlying `<video>` element available.
+- The player exposes a `data-state` attribute and `onPlaybackStateChange` callback for `loading`, `ready`, `playing`, `paused`, and `error`.
+- Empty or missing `src` is treated as an immediate error state instead of a perpetual loading placeholder.
