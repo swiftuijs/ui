@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
@@ -19,6 +19,10 @@ export interface IChartProps extends IBaseComponent {
   showValues?: boolean
   emptyState?: string
   height?: number
+  selectedDatumId?: string
+  defaultSelectedDatumId?: string
+  onSelectionChange?: (datum: IChartDatum) => void
+  valueFormatter?: (value: number, datum: IChartDatum) => string
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -29,13 +33,30 @@ export const Chart = memo(function Chart(props: IChartProps) {
   const {
     caption,
     data,
+    defaultSelectedDatumId,
     emptyState = 'No data available',
     height = 220,
     label,
     mark = 'bar',
+    onSelectionChange,
+    selectedDatumId,
     showValues = false,
+    valueFormatter,
     ...restProps
   } = props
+  const [uncontrolledSelection, setUncontrolledSelection] = useState<string | undefined>(defaultSelectedDatumId)
+  const isControlled = selectedDatumId !== undefined
+  const currentSelection = isControlled ? selectedDatumId : uncontrolledSelection
+  const normalizedData = useMemo(() => data.map((item, index) => ({
+    ...item,
+    chartId: item.id ?? item.label ?? `datum-${index}`,
+  })), [data])
+
+  useEffect(() => {
+    if (!isControlled) {
+      setUncontrolledSelection(defaultSelectedDatumId)
+    }
+  }, [defaultSelectedDatumId, isControlled])
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: [
@@ -66,6 +87,21 @@ export const Chart = memo(function Chart(props: IChartProps) {
   const pathData = linePoints
     .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
     .join(' ')
+  function formatValue(value: number, datum: IChartDatum) {
+    return valueFormatter ? valueFormatter(value, datum) : String(value)
+  }
+
+  function handleSelection(datum: IChartDatum & { chartId: string }) {
+    if (!isControlled) {
+      setUncontrolledSelection(datum.chartId)
+    }
+    const { chartId: _chartId, ...publicDatum } = datum
+    onSelectionChange?.(publicDatum)
+  }
+
+  function isSelected(datum: { chartId: string }) {
+    return currentSelection === datum.chartId
+  }
 
   return (
     <div {...commonProps} {...finalRestProps}>
@@ -84,13 +120,30 @@ export const Chart = memo(function Chart(props: IChartProps) {
           y2={chartHeight}
         />
         {mark === 'bar'
-          ? data.map((item, index) => {
+          ? normalizedData.map((item, index) => {
               const barHeight = clamp((item.value / safeMax) * (chartHeight - 12), 0, chartHeight - 12)
               const x = step * index + (step - barWidth) / 2
               const y = chartHeight - barHeight
+              const selected = isSelected(item)
+              const formattedValue = formatValue(item.value, item)
 
               return (
-                <g key={item.id ?? item.label}>
+                <g
+                  aria-label={`${item.label}: ${formattedValue}`}
+                  aria-pressed={selected}
+                  className={prefixClass('chart-mark')}
+                  data-selected={selected ? 'true' : 'false'}
+                  key={item.chartId}
+                  onClick={() => handleSelection(item)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      handleSelection(item)
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
                   <rect
                     className={prefixClass('chart-bar')}
                     data-testid="chart-bar"
@@ -108,7 +161,7 @@ export const Chart = memo(function Chart(props: IChartProps) {
                       x={x + barWidth / 2}
                       y={Math.max(y - 8, 12)}
                     >
-                      {item.value}
+                      {formattedValue}
                     </text>
                   ) : null}
                   <text
@@ -130,8 +183,29 @@ export const Chart = memo(function Chart(props: IChartProps) {
                 d={pathData}
                 fill="none"
               />
-              {linePoints.map((point, index) => (
-                <g key={data[index]?.id ?? data[index]?.label}>
+              {linePoints.map((point, index) => {
+                const datum = normalizedData[index]
+                if (!datum) return null
+                const selected = isSelected(datum)
+                const formattedValue = formatValue(datum.value, datum)
+
+                return (
+                <g
+                  aria-label={`${datum.label}: ${formattedValue}`}
+                  aria-pressed={selected}
+                  className={prefixClass('chart-mark')}
+                  data-selected={selected ? 'true' : 'false'}
+                  key={datum.chartId}
+                  onClick={() => handleSelection(datum)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      handleSelection(datum)
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
                   <circle
                     className={prefixClass('chart-point')}
                     cx={point.x}
@@ -145,7 +219,7 @@ export const Chart = memo(function Chart(props: IChartProps) {
                       x={point.x}
                       y={Math.max(point.y - 10, 12)}
                     >
-                      {data[index]?.value}
+                      {formattedValue}
                     </text>
                   ) : null}
                   <text
@@ -154,10 +228,10 @@ export const Chart = memo(function Chart(props: IChartProps) {
                     x={point.x}
                     y={height - 8}
                   >
-                    {data[index]?.label}
+                    {datum.label}
                   </text>
                 </g>
-              ))}
+              )})}
             </g>
             )}
       </svg>

@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import fg from 'fast-glob';
 import matter from 'gray-matter';
 
 import { loadComponentDocs, parseComponentDocTitle } from './component-docs';
@@ -10,6 +11,7 @@ import { writeComponentRegistry } from './component-doc-registry';
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const defaultContentDir = join(docsRoot, 'content');
 const defaultGeneratedContentDir = join(docsRoot, 'generated-content');
+const defaultGeneratedSourceDir = join(docsRoot, '.source');
 
 function normaliseWhitespace(value: string): string {
   return value.replace(/\n{3,}/g, '\n\n').trim();
@@ -143,10 +145,12 @@ export async function generateDocsContent(options?: {
   generatedContentDir?: string;
   componentsDir?: string;
   generatedCodeDir?: string;
+  generatedSourceDir?: string;
 }) {
   const contentDir = options?.contentDir ?? defaultContentDir;
   const generatedContentDir = options?.generatedContentDir ?? defaultGeneratedContentDir;
   const generatedCodeDir = options?.generatedCodeDir ?? join(docsRoot, '.generated');
+  const generatedSourceDir = options?.generatedSourceDir ?? defaultGeneratedSourceDir;
 
   await rm(generatedContentDir, { force: true, recursive: true });
   await mkdir(generatedContentDir, { recursive: true });
@@ -202,4 +206,58 @@ export async function generateDocsContent(options?: {
     outputPath: join(generatedCodeDir, 'component-docs.ts'),
     previewDir: join(generatedCodeDir, 'previews'),
   });
+
+  await writeGeneratedSource({
+    generatedContentDir,
+    generatedSourceDir,
+  });
+}
+
+async function writeGeneratedSource(options: {
+  generatedContentDir: string;
+  generatedSourceDir: string;
+}) {
+  const entries = await fg(['**/*.mdx', '**/meta.json'], {
+    cwd: options.generatedContentDir,
+    dot: false,
+    onlyFiles: true,
+  });
+
+  const pageEntries = entries.filter((entry) => entry.endsWith('.mdx')).sort();
+  const metaEntries = entries.filter((entry) => entry.endsWith('meta.json')).sort();
+
+  const lines = [
+    "import { server } from 'fumadocs-mdx/runtime/server';",
+    '',
+  ];
+
+  pageEntries.forEach((entry, index) => {
+    lines.push(`import * as doc_${index} from '../generated-content/${entry}';`);
+  });
+
+  metaEntries.forEach((entry, index) => {
+    lines.push(`import meta_${index} from '../generated-content/${entry}';`);
+  });
+
+  lines.push('', 'const create = server();', '');
+
+  const metaObject = metaEntries.length
+    ? `{\n${metaEntries.map((entry, index) => `  './${entry}': meta_${index},`).join('\n')}\n}`
+    : '{}';
+  const pageObject = pageEntries.length
+    ? `{\n${pageEntries.map((entry, index) => `  './${entry}': doc_${index},`).join('\n')}\n}`
+    : '{}';
+
+  lines.push(
+    "export const docs = await create.docs('docs', '../generated-content',",
+    `${metaObject},`,
+    `${pageObject},`,
+    ');',
+    '',
+  );
+
+  await mkdir(options.generatedSourceDir, { recursive: true });
+  await writeFile(join(options.generatedSourceDir, 'server.ts'), `${lines.join('\n')}\n`);
+  await writeFile(join(options.generatedSourceDir, 'browser.ts'), 'export {};\n');
+  await writeFile(join(options.generatedSourceDir, 'dynamic.ts'), 'export {};\n');
 }

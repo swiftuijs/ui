@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
 
 import { Chart } from './index'
 
@@ -43,5 +43,62 @@ describe('Chart', () => {
 
     expect(screen.getByText('No data')).toBeInTheDocument()
     expect(screen.queryByRole('img', { name: 'Revenue' })).not.toBeInTheDocument()
+  })
+
+  it('supports uncontrolled selection for chart marks', () => {
+    render(
+      <Chart
+        data={data}
+        defaultSelectedDatumId="jan"
+        label="Revenue"
+      />,
+    )
+
+    const janMark = screen.getByRole('button', { name: 'Jan: 12' })
+    const febMark = screen.getByRole('button', { name: 'Feb: 24' })
+
+    expect(janMark).toHaveAttribute('aria-pressed', 'true')
+    expect(febMark).toHaveAttribute('aria-pressed', 'false')
+
+    fireEvent.click(febMark)
+
+    expect(janMark).toHaveAttribute('aria-pressed', 'false')
+    expect(febMark).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('supports controlled selection callbacks without mutating local state', () => {
+    const handleSelectionChange = vi.fn()
+
+    render(
+      <Chart
+        data={data}
+        label="Revenue"
+        onSelectionChange={handleSelectionChange}
+        selectedDatumId="jan"
+      />,
+    )
+
+    const janMark = screen.getByRole('button', { name: 'Jan: 12' })
+    const febMark = screen.getByRole('button', { name: 'Feb: 24' })
+
+    fireEvent.click(febMark)
+
+    expect(handleSelectionChange).toHaveBeenCalledWith(data[1])
+    expect(janMark).toHaveAttribute('aria-pressed', 'true')
+    expect(febMark).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('uses the provided value formatter in visible labels and accessibility labels', () => {
+    render(
+      <Chart
+        data={data}
+        label="Revenue"
+        showValues
+        valueFormatter={(value) => `$${value}k`}
+      />,
+    )
+
+    expect(screen.getByText('$24k')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Feb: $24k' })).toBeInTheDocument()
   })
 })

@@ -46,3 +46,15 @@ export const Empty: Story = {
     label: 'Revenue',
   },
 }
+
+export const Selectable: Story = {
+  args: {
+    caption: 'Quarterly revenue',
+    data: monthlyRevenue,
+    defaultSelectedDatumId: 'feb',
+    label: 'Revenue',
+    mark: 'bar',
+    showValues: true,
+    valueFormatter: (value) => `$${value}k`,
+  },
+}

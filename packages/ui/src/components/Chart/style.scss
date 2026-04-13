@@ -31,6 +31,25 @@
   stroke-width: 1;
 }
 
+.sw-chart-mark {
+  cursor: pointer;
+  outline: none;
+}
+
+.sw-chart-mark[data-selected='true'] {
+  color: var(--sw-color-primary, var(--sw-color-accent, #007aff));
+}
+
+.sw-chart-mark[data-selected='false'] {
+  color: color-mix(in srgb, var(--sw-color-accent, #007aff) 72%, transparent);
+}
+
+.sw-chart-mark:focus-visible .sw-chart-bar,
+.sw-chart-mark:focus-visible .sw-chart-point {
+  stroke: var(--sw-color-primary, var(--sw-color-accent, #007aff));
+  stroke-width: 3;
+}
+
 .sw-chart-bar,
 .sw-chart-line,
 .sw-chart-point {
