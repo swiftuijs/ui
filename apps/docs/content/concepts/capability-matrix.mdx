@@ -1,0 +1,174 @@
+---
+title: Capability Matrix
+description: A grounded inventory of what SwiftUI.js currently supports, what is adapted, and what still needs deeper work.
+---
+
+# Capability Matrix
+
+This page is the current product inventory for SwiftUI.js.
+
+It exists to prevent two failure modes:
+
+- adding low-value wrappers just because the SwiftUI surface has another name
+- claiming parity when only the API shape exists but the interaction model is still shallow
+
+As of 2026-04-13, SwiftUI.js exports more than one hundred component entry points and has broad surface coverage. That is enough to stop optimizing for count. The next phase should optimize for depth, consistency, and honesty.
+
+## Current Shape
+
+| Area | Status | Notes |
+| --- | --- | --- |
+| Monorepo foundation | Strong | `packages/ui`, static `apps/docs`, and `apps/storybook` are in place and green in CI-equivalent local checks. |
+| Colocated assets | Strong | Most component folders now carry implementation, tests, stories, and docs together. |
+| Docs generation | Strong | Component docs are generated into the docs site automatically from colocated `*.docs.mdx`. |
+| Token and responsive foundation | Good | Size class and token infrastructure exist, but platform adaptation is still shallower than Apple frameworks. |
+| Component count | High | Breadth is no longer the bottleneck. |
+| Behavior parity | Mixed | Many components are intentionally marked as `adapted`, not native-equivalent. |
+| Interaction depth | Mixed | Core containers are better than before, but deep interaction parity is still incomplete. |
+
+## What Is In Good Shape
+
+### Foundation and layout
+
+- Stack and layout primitives are established: `HStack`, `VStack`, `ZStack`, `Spacer`, `Grid`, `GridRow`, `GeometryReader`.
+- Public docs, Storybook, tests, typecheck, and build pipelines are working together.
+- Responsive docs guidance and SwiftUI alignment guidance already exist.
+
+### Core control surface
+
+- Text and input primitives exist: `Text`, `TextField`, `SecureField`, `TextEditor`, `Toggle`, `Button`.
+- Basic value controls exist: `Picker`, `Slider`, `Stepper`, `DatePicker`, `MultiDatePicker`, `ColorPicker`, `SearchField`.
+- These components are usable today, but not all of them are equally deep in edge-case handling.
+
+### Navigation and presentation baseline
+
+- `NavigationStack`, `TabView`, `Sheet`, `Popover`, `ConfirmationDialog`, and `ContextMenu` are present.
+- `Sheet` now supports more presentation-facing parameters, including detents and dismiss gates.
+- The library now has enough container infrastructure to stop calling itself experimental at the architecture level.
+
+## What Exists But Is Only Adapted
+
+The following groups are present, but should be treated as web-adapted SwiftUI surfaces rather than high-fidelity parity:
+
+### Presentation and modifier wrappers
+
+- `PresentationBackground`
+- `PresentationCornerRadius`
+- `PresentationCompactAdaptation`
+- `PresentationDragIndicator`
+- `ScrollIndicators`
+- `ScrollBounceBehavior`
+- `DefaultScrollAnchor`
+- `ScrollClipDisabled`
+- `VisualEffect`
+- `MatchedGeometryEffect`
+- `ContentTransition`
+
+These are useful because they let app code stay SwiftUI-flavored, but most of them are still metadata wrappers rather than behavior-rich systems. They should not be the main focus of near-term work unless they unlock a deeper container implementation.
+
+### Web-platform bridges
+
+- `AsyncImage`
+- `VideoPlayer`
+- `PhotosPicker`
+- `FileImporter`
+- `Map`
+- `Chart`
+
+These are valuable, but each of them still needs sharper platform contracts, fallback rules, and interaction coverage to feel production-grade.
+
+## Highest-Value Gaps
+
+These are the places where more work changes product quality materially.
+
+### 1. Deep container parity
+
+Priority components:
+
+- `Sheet`
+- `NavigationSplitView`
+- `NavigationStack`
+- `TabView`
+- `Menu`
+
+What is missing:
+
+- richer state transitions
+- tighter selection/path modeling
+- stronger compact/regular adaptation rules
+- clearer focus and keyboard behavior contracts
+- more realistic integration tests
+
+### 2. Heavy interactive controls
+
+Priority components:
+
+- `Picker`
+- `DatePicker`
+- `MultiDatePicker`
+- `SwipeActions`
+- `ContextMenu`
+
+What is missing:
+
+- more complete keyboard and pointer behavior
+- better empty, disabled, and boundary-state handling
+- more honest docs about where browser-native behavior differs from SwiftUI
+
+### 3. Platform bridge quality
+
+Priority components:
+
+- `Chart`
+- `Map`
+- `AsyncImage`
+- `VideoPlayer`
+- `PhotosPicker`
+- `FileImporter`
+
+What is missing:
+
+- stronger API constraints
+- more explicit degraded behavior on unsupported platforms
+- more integration-level tests instead of only surface tests
+- clearer examples of recommended production usage
+
+## What To Stop Doing
+
+The project should stop optimizing for raw component-name coverage.
+
+Specifically:
+
+- do not keep adding low-value modifier wrappers just because SwiftUI has another similarly named modifier
+- do not treat a wrapper with data attributes as finished parity
+- do not let generated docs pages create a false impression that everything is equally mature
+
+## Next Focus
+
+The next deliberate phase should deepen a small set of high-value components instead of expanding breadth.
+
+Recommended order:
+
+1. `Sheet`
+2. `NavigationSplitView`
+3. `Chart`
+4. `Map`
+5. `AsyncImage`
+
+For each of these, the bar should be:
+
+- API review against SwiftUI naming and parameter intent
+- interaction review against Apple platform expectations where applicable
+- React and DOM implementation review for correctness and maintainability
+- colocated tests that exercise real behavior, not only metadata
+- docs that state what is aligned, adapted, and still unsupported
+
+## Decision Rule
+
+Before adding another new component, ask:
+
+1. Does it unlock a meaningful SwiftUI usage pattern that is currently impossible?
+2. Does it deepen a core container or interaction system?
+3. Will it be tested and documented honestly?
+
+If the answer is no, it should not take priority over deepening the components already in the library.
