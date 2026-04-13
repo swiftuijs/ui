@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { Map } from '.'
+import { MapView } from '.'
 
 const meta = {
-  title: 'SwiftUI/Map',
-  component: Map,
+  title: 'SwiftUI/MapView',
+  component: MapView,
   args: {
     latitude: 37.3346,
     longitude: -122.009,
     title: 'Apple Park',
     zoom: 14,
   },
-} satisfies Meta<typeof Map>
+} satisfies Meta<typeof MapView>
 
 export default meta
 

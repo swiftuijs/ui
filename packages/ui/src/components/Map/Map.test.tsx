@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-import { Map } from '.'
+import { MapView } from '.'
 
-describe('Map', () => {
+describe('MapView', () => {
   it('renders an embedded map iframe for the provided coordinates', () => {
-    render(<Map latitude={37.3346} longitude={-122.009} title="Apple Park" zoom={14} />)
+    render(<MapView latitude={37.3346} longitude={-122.009} title="Apple Park" zoom={14} />)
 
     const frame = screen.getByTitle('Apple Park')
 
@@ -16,7 +16,7 @@ describe('Map', () => {
   })
 
   it('renders a fallback link to open the location in a new tab', () => {
-    render(<Map latitude={40.7484} longitude={-73.9857} title="Empire State Building" />)
+    render(<MapView latitude={40.7484} longitude={-73.9857} title="Empire State Building" />)
 
     const link = screen.getByRole('link', { name: 'Open map in new tab' })
 
@@ -27,7 +27,7 @@ describe('Map', () => {
 
   it('prefers coordinateRegion bounds when provided', () => {
     render(
-      <Map
+      <MapView
         coordinateRegion={{
           center: { latitude: 37.3346, longitude: -122.009 },
           span: { latitudeDelta: 0.2, longitudeDelta: 0.3 },
@@ -52,7 +52,7 @@ describe('Map', () => {
     const handleOpen = vi.fn()
 
     render(
-      <Map
+      <MapView
         latitude={37.3346}
         longitude={-122.009}
         onOpen={handleOpen}
@@ -69,7 +69,7 @@ describe('Map', () => {
 
   it('supports uncontrolled annotation selection and updates the active marker', () => {
     render(
-      <Map
+      <MapView
         annotations={[
           { id: 'park', title: 'Apple Park', latitude: 37.3346, longitude: -122.009 },
           { id: 'visitor', title: 'Visitor Center', latitude: 37.3327, longitude: -122.0053 },
@@ -89,7 +89,7 @@ describe('Map', () => {
     const handleSelectionChange = vi.fn()
 
     render(
-      <Map
+      <MapView
         annotations={[
           { id: 'park', title: 'Apple Park', latitude: 37.3346, longitude: -122.009 },
           { id: 'visitor', title: 'Visitor Center', latitude: 37.3327, longitude: -122.0053 },

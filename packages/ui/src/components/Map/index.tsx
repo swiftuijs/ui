@@ -6,11 +6,11 @@ import { clsx, prefixClass, standardizeProps } from '@/common'
 import './style.scss'
 
 /**
- * Map embeds a web-friendly map surface for a coordinate pair.
+ * MapView embeds a web-friendly map surface for a coordinate pair.
  *
  * @see https://developer.apple.com/documentation/mapkit/map
  */
-export interface IMapProps extends IBaseComponent {
+export interface IMapViewProps extends IBaseComponent {
   latitude: number
   longitude: number
   zoom?: number
@@ -55,7 +55,7 @@ function buildOpenUrl(latitude: number, longitude: number, zoom: number) {
   return `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=${zoom}/${latitude}/${longitude}`
 }
 
-export const Map = memo(function Map(props: IMapProps) {
+export const MapView = memo(function MapView(props: IMapViewProps) {
   const {
     annotations = [],
     coordinateRegion,
