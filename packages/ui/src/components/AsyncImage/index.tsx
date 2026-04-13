@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, type ReactNode, type SyntheticEvent } from 'react'
+import { memo, useEffect, useRef, useState, type ReactNode, type SyntheticEvent } from 'react'
 
 import type { IBaseElementComponent } from '@/types'
 import { prefixClass, standardizeProps } from '@/common'
@@ -37,7 +37,9 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
     alt,
     ...restProps
   } = props
-  const [phase, setPhase] = useState<'loading' | 'success' | 'failure'>('loading')
+  const hasSource = Boolean(src)
+  const [phase, setPhase] = useState<'loading' | 'success' | 'failure'>(() => (hasSource ? 'loading' : 'failure'))
+  const previousPhaseRef = useRef<typeof phase | undefined>(undefined)
   const { commonProps, restProps: finalRestProps } = standardizeProps(
     { ...restProps, className },
     {
@@ -46,10 +48,15 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
   )
 
   useEffect(() => {
-    setPhase('loading')
-  }, [src])
+    setPhase(hasSource ? 'loading' : 'failure')
+  }, [hasSource, src])
 
   useEffect(() => {
+    if (previousPhaseRef.current === phase) {
+      return
+    }
+
+    previousPhaseRef.current = phase
     onPhaseChange?.(phase)
   }, [onPhaseChange, phase])
 
@@ -72,7 +79,7 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
           setPhase('success')
           onLoad?.(event)
         }}
-        src={src}
+        src={src || undefined}
         style={{
           display: phase === 'failure' ? 'none' : undefined,
           opacity: phase === 'success' ? 1 : 0,

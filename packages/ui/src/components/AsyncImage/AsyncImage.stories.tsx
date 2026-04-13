@@ -30,6 +30,14 @@ export const WithFallback: Story = {
   },
 }
 
+export const MissingSource: Story = {
+  args: {
+    src: '',
+    alt: 'Missing image',
+    fallback: 'Image unavailable',
+  },
+}
+
 function PhaseAwareDemo() {
   const [phase, setPhase] = useState('loading')
 

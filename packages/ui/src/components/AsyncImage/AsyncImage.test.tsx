@@ -35,6 +35,19 @@ describe('AsyncImage', () => {
     expect(screen.getByText('Image unavailable')).toBeInTheDocument()
   })
 
+  it('treats an empty src as an immediate failure state', () => {
+    const { container } = render(
+      <AsyncImage
+        src=""
+        alt="Missing"
+        fallback={<span>Image unavailable</span>}
+      />,
+    )
+
+    expect(screen.getByText('Image unavailable')).toBeInTheDocument()
+    expect(container.firstElementChild).toHaveAttribute('data-phase', 'failure')
+  })
+
   it('resets back to loading when the src changes after a successful load', () => {
     const { rerender } = render(
       <AsyncImage
@@ -90,5 +103,30 @@ describe('AsyncImage', () => {
     fireEvent.error(screen.getByRole('img', { name: 'Avatar' }))
 
     expect(onPhaseChange).toHaveBeenLastCalledWith('failure')
+  })
+
+  it('does not emit duplicate phase changes for unrelated rerenders', () => {
+    const onPhaseChange = vi.fn()
+
+    const { rerender } = render(
+      <AsyncImage
+        src="https://example.com/avatar.png"
+        alt="Avatar"
+        onPhaseChange={onPhaseChange}
+      />,
+    )
+
+    fireEvent.load(screen.getByRole('img', { name: 'Avatar' }))
+
+    rerender(
+      <AsyncImage
+        src="https://example.com/avatar.png"
+        alt="Avatar"
+        onPhaseChange={onPhaseChange}
+        title="stable rerender"
+      />,
+    )
+
+    expect(onPhaseChange.mock.calls).toEqual([['loading'], ['success']])
   })
 })
