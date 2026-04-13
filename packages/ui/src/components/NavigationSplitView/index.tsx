@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from 'react'
+import { memo, useEffect, useMemo, useState, type ReactNode } from 'react'
 
 import type { IBaseComponent } from '@/types'
 import { prefixClass, standardizeProps } from '@/common'
@@ -36,14 +36,52 @@ export interface INavigationSplitViewProps extends IBaseComponent {
    */
   compactColumn?: 'sidebar' | 'content' | 'detail'
   /**
+   * Initial compact column for uncontrolled usage.
+   *
+   * @default 'detail'
+   */
+  defaultCompactColumn?: 'sidebar' | 'content' | 'detail'
+  /**
+   * Called when the compact column is normalized by the component.
+   */
+  onCompactColumnChange?: (column: 'sidebar' | 'content' | 'detail') => void
+  /**
    * Controls which columns remain visible in regular presentation.
    *
    * @default 'automatic'
    */
   columnVisibility?: 'automatic' | 'all' | 'doubleColumn' | 'detailOnly'
+  /**
+   * Initial regular-layout column visibility for uncontrolled usage.
+   *
+   * @default 'automatic'
+   */
+  defaultColumnVisibility?: 'automatic' | 'all' | 'doubleColumn' | 'detailOnly'
 }
 
-function getCompactNode(props: Pick<INavigationSplitViewProps, 'sidebar' | 'content' | 'detail' | 'compactColumn'>) {
+function resolveCompactColumn(
+  compactColumn: 'sidebar' | 'content' | 'detail',
+  content?: ReactNode,
+): 'sidebar' | 'content' | 'detail' {
+  if (compactColumn === 'content' && content == null) {
+    return 'detail'
+  }
+
+  return compactColumn
+}
+
+function resolveColumnVisibility(
+  columnVisibility: 'automatic' | 'all' | 'doubleColumn' | 'detailOnly',
+  content?: ReactNode,
+): 'all' | 'doubleColumn' | 'detailOnly' {
+  if (columnVisibility === 'automatic') {
+    return content == null ? 'doubleColumn' : 'all'
+  }
+
+  return columnVisibility
+}
+
+function getCompactNode(props: Pick<INavigationSplitViewProps, 'sidebar' | 'content' | 'detail'> & { compactColumn: 'sidebar' | 'content' | 'detail' }) {
   switch (props.compactColumn) {
     case 'sidebar':
       return props.sidebar
@@ -61,13 +99,34 @@ export const NavigationSplitView = memo(function NavigationSplitView(props: INav
     content,
     detail,
     compact = false,
-    compactColumn = 'detail',
-    columnVisibility = 'automatic',
+    compactColumn: controlledCompactColumn,
+    defaultCompactColumn = 'detail',
+    onCompactColumnChange,
+    columnVisibility: controlledColumnVisibility,
+    defaultColumnVisibility = 'automatic',
     ...restProps
   } = props
-  const resolvedColumnVisibility = columnVisibility === 'automatic' ? 'all' : columnVisibility
-  const showSidebar = !compact && resolvedColumnVisibility === 'all'
+  const [internalCompactColumn] = useState<'sidebar' | 'content' | 'detail'>(defaultCompactColumn)
+  const [internalColumnVisibility] = useState<'automatic' | 'all' | 'doubleColumn' | 'detailOnly'>(defaultColumnVisibility)
+  const compactColumn = controlledCompactColumn ?? internalCompactColumn
+  const columnVisibility = controlledColumnVisibility ?? internalColumnVisibility
+  const resolvedCompactColumn = useMemo(
+    () => resolveCompactColumn(compactColumn, content),
+    [compactColumn, content],
+  )
+  const resolvedColumnVisibility = useMemo(
+    () => resolveColumnVisibility(columnVisibility, content),
+    [columnVisibility, content],
+  )
+  const showSidebar = !compact && (resolvedColumnVisibility === 'all' || (resolvedColumnVisibility === 'doubleColumn' && content == null))
   const showContent = !compact && content != null && resolvedColumnVisibility !== 'detailOnly'
+
+  useEffect(() => {
+    if (compact && compactColumn !== resolvedCompactColumn) {
+      onCompactColumnChange?.(resolvedCompactColumn)
+    }
+  }, [compact, compactColumn, onCompactColumnChange, resolvedCompactColumn])
+
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: [
       prefixClass('navigationsplitview'),
@@ -79,9 +138,13 @@ export const NavigationSplitView = memo(function NavigationSplitView(props: INav
 
   if (compact) {
     return (
-      <div {...commonProps} {...finalRestProps}>
+      <div
+        {...commonProps}
+        {...finalRestProps}
+        data-compact-column={resolvedCompactColumn}
+      >
         <main className={prefixClass('navigationsplitview-detail')} role="main">
-          {getCompactNode({ sidebar, content, detail, compactColumn })}
+          {getCompactNode({ sidebar, content, detail, compactColumn: resolvedCompactColumn })}
         </main>
       </div>
     )

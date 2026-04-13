@@ -13,9 +13,15 @@ NavigationSplitView presents sidebar, optional content, and detail columns with 
 
 <Canvas of={NavigationSplitViewStories.Default} />
 
+## Compact Column
+
+Use `defaultCompactColumn` or the controlled `compactColumn` prop to decide which column remains visible in compact layouts:
+
+<Canvas of={NavigationSplitViewStories.CompactSidebar} />
+
 ## Column Visibility
 
-Use `columnVisibility` to reduce the regular layout to the columns that matter for the current task:
+Use `defaultColumnVisibility` for uncontrolled regular layouts, or `columnVisibility` when external state owns the selection:
 
 <Canvas of={NavigationSplitViewStories.DoubleColumn} />
 

@@ -48,10 +48,22 @@ export const CompactDetail: Story = {
   ),
 }
 
+export const CompactSidebar: Story = {
+  render: () => (
+    <NavigationSplitView
+      compact
+      defaultCompactColumn="sidebar"
+      sidebar={<Text>Sidebar focus</Text>}
+      content={<Text>Content</Text>}
+      detail={<Text>Detail</Text>}
+    />
+  ),
+}
+
 export const DetailOnly: Story = {
   render: () => (
     <NavigationSplitView
-      columnVisibility="detailOnly"
+      defaultColumnVisibility="detailOnly"
       sidebar={<Text>Sidebar</Text>}
       content={<Text>Content</Text>}
       detail={<Text>Detail only focus</Text>}
