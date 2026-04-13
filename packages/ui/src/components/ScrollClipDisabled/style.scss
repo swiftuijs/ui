@@ -1,0 +1,9 @@
+@use '@style/base.scss' as *;
+
+@include component('scrollclipdisabled') {
+  display: block;
+}
+
+@include component('scrollclipdisabled-disabled') {
+  --sw-scroll-clip-disabled: true;
+}

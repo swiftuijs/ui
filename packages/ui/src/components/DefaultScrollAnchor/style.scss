@@ -1,0 +1,25 @@
+@use '@style/base.scss' as *;
+
+@include component('defaultscrollanchor') {
+  display: block;
+}
+
+@include component('defaultscrollanchor-top') {
+  --sw-default-scroll-anchor: top;
+}
+
+@include component('defaultscrollanchor-center') {
+  --sw-default-scroll-anchor: center;
+}
+
+@include component('defaultscrollanchor-bottom') {
+  --sw-default-scroll-anchor: bottom;
+}
+
+@include component('defaultscrollanchor-leading') {
+  --sw-default-scroll-anchor: leading;
+}
+
+@include component('defaultscrollanchor-trailing') {
+  --sw-default-scroll-anchor: trailing;
+}
