@@ -6,6 +6,28 @@
   gap: var(--sw-spacing-sm);
 }
 
+.sw-map-annotations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sw-spacing-xs);
+}
+
+.sw-map-annotation {
+  padding: var(--sw-spacing-xs) var(--sw-spacing-sm);
+  border: 1px solid var(--sw-color-separator);
+  border-radius: var(--sw-radius-pill, 999px);
+  background: var(--sw-color-background-secondary);
+  color: var(--sw-color-label-primary);
+  cursor: pointer;
+  font: inherit;
+}
+
+.sw-map-annotation-active {
+  border-color: var(--sw-color-tint);
+  background: var(--sw-color-tint);
+  color: var(--sw-color-white, #fff);
+}
+
 .sw-map-frame {
   width: 100%;
   min-height: 18rem;

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo, useState } from 'react'
 
 import type { IBaseComponent } from '@/types'
 import { clsx, prefixClass, standardizeProps } from '@/common'
@@ -15,6 +15,15 @@ export interface IMapProps extends IBaseComponent {
   longitude: number
   zoom?: number
   title?: string
+  annotations?: Array<{
+    id: string
+    title: string
+    latitude: number
+    longitude: number
+  }>
+  selection?: string
+  defaultSelection?: string
+  onSelectionChange?: (id: string) => void
   coordinateRegion?: {
     center: {
       latitude: number
@@ -48,17 +57,27 @@ function buildOpenUrl(latitude: number, longitude: number, zoom: number) {
 
 export const Map = memo(function Map(props: IMapProps) {
   const {
+    annotations = [],
     coordinateRegion,
+    defaultSelection,
     latitude,
     longitude,
     onOpen,
+    onSelectionChange,
     openLabel = 'Open map in new tab',
+    selection: controlledSelection,
     title = 'Map',
     zoom = 13,
     ...restProps
   } = props
-  const centerLatitude = coordinateRegion?.center.latitude ?? latitude
-  const centerLongitude = coordinateRegion?.center.longitude ?? longitude
+  const [internalSelection, setInternalSelection] = useState<string | undefined>(defaultSelection)
+  const selection = controlledSelection ?? internalSelection
+  const activeAnnotation = useMemo(
+    () => annotations.find((annotation) => annotation.id === selection),
+    [annotations, selection],
+  )
+  const centerLatitude = activeAnnotation?.latitude ?? coordinateRegion?.center.latitude ?? latitude
+  const centerLongitude = activeAnnotation?.longitude ?? coordinateRegion?.center.longitude ?? longitude
   const span = coordinateRegion?.span
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('map'),
@@ -66,9 +85,34 @@ export const Map = memo(function Map(props: IMapProps) {
   const embedUrl = buildEmbedUrl(centerLatitude, centerLongitude, zoom, span)
   const openUrl = buildOpenUrl(centerLatitude, centerLongitude, zoom)
 
+  const handleAnnotationSelect = (id: string) => {
+    if (controlledSelection === undefined) {
+      setInternalSelection(id)
+    }
+    onSelectionChange?.(id)
+  }
+
   return (
     <div {...commonProps} {...finalRestProps} className={clsx(prefixClass('map'), commonProps.className)}>
       <iframe className={prefixClass('map-frame')} loading="lazy" src={embedUrl} title={title} />
+      {annotations.length > 0 ? (
+        <div aria-label="Map annotations" className={prefixClass('map-annotations')} role="toolbar">
+          {annotations.map((annotation) => (
+            <button
+              key={annotation.id}
+              aria-pressed={annotation.id === activeAnnotation?.id}
+              className={clsx(
+                prefixClass('map-annotation'),
+                annotation.id === activeAnnotation?.id && prefixClass('map-annotation-active'),
+              )}
+              onClick={() => handleAnnotationSelect(annotation.id)}
+              type="button"
+            >
+              {annotation.title}
+            </button>
+          ))}
+        </div>
+      ) : null}
       <a
         className={prefixClass('map-link')}
         href={openUrl}

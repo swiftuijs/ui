@@ -66,4 +66,45 @@ describe('Map', () => {
 
     expect(handleOpen).toHaveBeenCalledTimes(1)
   })
+
+  it('supports uncontrolled annotation selection and updates the active marker', () => {
+    render(
+      <Map
+        annotations={[
+          { id: 'park', title: 'Apple Park', latitude: 37.3346, longitude: -122.009 },
+          { id: 'visitor', title: 'Visitor Center', latitude: 37.3327, longitude: -122.0053 },
+        ]}
+        defaultSelection="visitor"
+        latitude={37.3346}
+        longitude={-122.009}
+        title="Apple Campus"
+      />,
+    )
+
+    expect(screen.getByRole('button', { name: 'Visitor Center' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('link', { name: 'Open map in new tab' }).getAttribute('href')).toContain('37.3327')
+  })
+
+  it('reports controlled annotation selection changes without mutating locally', () => {
+    const handleSelectionChange = vi.fn()
+
+    render(
+      <Map
+        annotations={[
+          { id: 'park', title: 'Apple Park', latitude: 37.3346, longitude: -122.009 },
+          { id: 'visitor', title: 'Visitor Center', latitude: 37.3327, longitude: -122.0053 },
+        ]}
+        selection="park"
+        onSelectionChange={handleSelectionChange}
+        latitude={37.3346}
+        longitude={-122.009}
+        title="Apple Campus"
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Visitor Center' }))
+
+    expect(handleSelectionChange).toHaveBeenCalledWith('visitor')
+    expect(screen.getByRole('button', { name: 'Apple Park' })).toHaveAttribute('aria-pressed', 'true')
+  })
 })

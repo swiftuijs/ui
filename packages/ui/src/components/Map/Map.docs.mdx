@@ -16,10 +16,12 @@ Map embeds a coordinate-based map surface using a web map provider while keeping
 <Canvas of={MapStories.Default} />
 <Canvas of={MapStories.CityLandmark} />
 <Canvas of={MapStories.Region} />
+<Canvas of={MapStories.WithAnnotations} />
 
 ## Notes
 
 - The current implementation uses an embedded OpenStreetMap view.
 - Interactive controls come from the provider iframe rather than a custom renderer.
 - Prefer `coordinateRegion` when the surrounding screen already models a center/span region.
+- Use `annotations`, `selection`, and `defaultSelection` to model the currently selected place in a SwiftUI-like way.
 - Use `openLabel` and `onOpen` to align the fallback link with the rest of your UI copy and analytics.

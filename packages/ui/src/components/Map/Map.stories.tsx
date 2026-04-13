@@ -45,3 +45,16 @@ export const Region: Story = {
     title: 'Apple Park Region',
   },
 }
+
+export const WithAnnotations: Story = {
+  args: {
+    annotations: [
+      { id: 'park', title: 'Apple Park', latitude: 37.3346, longitude: -122.009 },
+      { id: 'visitor', title: 'Visitor Center', latitude: 37.3327, longitude: -122.0053 },
+    ],
+    defaultSelection: 'visitor',
+    latitude: 37.3346,
+    longitude: -122.009,
+    title: 'Apple Campus',
+  },
+}
