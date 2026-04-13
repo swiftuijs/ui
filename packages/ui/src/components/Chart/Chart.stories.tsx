@@ -58,3 +58,15 @@ export const Selectable: Story = {
     valueFormatter: (value) => `$${value}k`,
   },
 }
+
+export const LineSelectable: Story = {
+  args: {
+    caption: 'Quarterly revenue',
+    data: monthlyRevenue,
+    defaultSelectedDatumId: 'feb',
+    label: 'Revenue',
+    mark: 'line',
+    showValues: true,
+    valueFormatter: (value) => `$${value}k`,
+  },
+}

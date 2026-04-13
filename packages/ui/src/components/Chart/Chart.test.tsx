@@ -88,6 +88,47 @@ describe('Chart', () => {
     expect(febMark).toHaveAttribute('aria-pressed', 'false')
   })
 
+  it('does not emit selection changes when the selected datum is activated again', () => {
+    const handleSelectionChange = vi.fn()
+
+    render(
+      <Chart
+        data={data}
+        defaultSelectedDatumId="jan"
+        label="Revenue"
+        onSelectionChange={handleSelectionChange}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Jan: 12' }))
+
+    expect(handleSelectionChange).not.toHaveBeenCalled()
+  })
+
+  it('supports arrow-key navigation across chart marks in uncontrolled mode', () => {
+    render(
+      <Chart
+        data={data}
+        defaultSelectedDatumId="jan"
+        label="Revenue"
+      />,
+    )
+
+    const janMark = screen.getByRole('button', { name: 'Jan: 12' })
+    const febMark = screen.getByRole('button', { name: 'Feb: 24' })
+    const marMark = screen.getByRole('button', { name: 'Mar: 18' })
+
+    fireEvent.keyDown(janMark, { key: 'ArrowRight' })
+    expect(janMark).toHaveAttribute('aria-pressed', 'false')
+    expect(febMark).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.keyDown(febMark, { key: 'End' })
+    expect(marMark).toHaveAttribute('aria-pressed', 'true')
+
+    fireEvent.keyDown(marMark, { key: 'Home' })
+    expect(janMark).toHaveAttribute('aria-pressed', 'true')
+  })
+
   it('uses the provided value formatter in visible labels and accessibility labels', () => {
     render(
       <Chart

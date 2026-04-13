@@ -27,6 +27,10 @@ Chart presents numeric series as either bar or line marks.
 
 <Canvas of={ChartStories.Selectable} />
 
+## Line Selection
+
+<Canvas of={ChartStories.LineSelectable} />
+
 ## Notes
 
 - Use `mark="bar"` for category comparisons
@@ -34,3 +38,4 @@ Chart presents numeric series as either bar or line marks.
 - Use `showValues` when exact values should stay visible beside the graphic
 - Use `selectedDatumId` or `defaultSelectedDatumId` when the surrounding UI needs a highlighted datum
 - Use `valueFormatter` to keep visible values and accessibility labels aligned
+- Marks support keyboard selection with arrow keys, `Home`, and `End`

@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState, type ComponentRef, type KeyboardEvent } from 'react'
 
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
@@ -25,6 +25,8 @@ export interface IChartProps extends IBaseComponent {
   valueFormatter?: (value: number, datum: IChartDatum) => string
 }
 
+type ChartMarkElement = ComponentRef<'g'>
+
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
@@ -47,6 +49,7 @@ export const Chart = memo(function Chart(props: IChartProps) {
   const [uncontrolledSelection, setUncontrolledSelection] = useState<string | undefined>(defaultSelectedDatumId)
   const isControlled = selectedDatumId !== undefined
   const currentSelection = isControlled ? selectedDatumId : uncontrolledSelection
+  const markRefs = useRef<Array<ChartMarkElement | null>>([])
   const normalizedData = useMemo(() => data.map((item, index) => ({
     ...item,
     chartId: item.id ?? item.label ?? `datum-${index}`,
@@ -92,11 +95,61 @@ export const Chart = memo(function Chart(props: IChartProps) {
   }
 
   function handleSelection(datum: IChartDatum & { chartId: string }) {
+    if (currentSelection === datum.chartId) {
+      return
+    }
+
     if (!isControlled) {
       setUncontrolledSelection(datum.chartId)
     }
     const { chartId: _chartId, ...publicDatum } = datum
     onSelectionChange?.(publicDatum)
+  }
+
+  function focusAndSelect(nextIndex: number) {
+    if (!normalizedData.length) {
+      return
+    }
+
+    const boundedIndex = (nextIndex + normalizedData.length) % normalizedData.length
+    const nextDatum = normalizedData[boundedIndex]
+
+    if (!nextDatum) {
+      return
+    }
+
+    markRefs.current[boundedIndex]?.focus()
+    handleSelection(nextDatum)
+  }
+
+  function handleMarkKeyDown(event: KeyboardEvent<ChartMarkElement>, index: number) {
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        event.preventDefault()
+        focusAndSelect(index + 1)
+        break
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        event.preventDefault()
+        focusAndSelect(index - 1)
+        break
+      case 'Home':
+        event.preventDefault()
+        focusAndSelect(0)
+        break
+      case 'End':
+        event.preventDefault()
+        focusAndSelect(normalizedData.length - 1)
+        break
+      case 'Enter':
+      case ' ':
+        event.preventDefault()
+        handleSelection(normalizedData[index])
+        break
+      default:
+        break
+    }
   }
 
   function isSelected(datum: { chartId: string }) {
@@ -134,15 +187,13 @@ export const Chart = memo(function Chart(props: IChartProps) {
                   className={prefixClass('chart-mark')}
                   data-selected={selected ? 'true' : 'false'}
                   key={item.chartId}
-                  onClick={() => handleSelection(item)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault()
-                      handleSelection(item)
-                    }
+                  ref={(node) => {
+                    markRefs.current[index] = node
                   }}
+                  onClick={() => handleSelection(item)}
+                  onKeyDown={(event) => handleMarkKeyDown(event, index)}
                   role="button"
-                  tabIndex={0}
+                  tabIndex={selected || (!currentSelection && index === 0) ? 0 : -1}
                 >
                   <rect
                     className={prefixClass('chart-bar')}
@@ -196,15 +247,13 @@ export const Chart = memo(function Chart(props: IChartProps) {
                   className={prefixClass('chart-mark')}
                   data-selected={selected ? 'true' : 'false'}
                   key={datum.chartId}
-                  onClick={() => handleSelection(datum)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault()
-                      handleSelection(datum)
-                    }
+                  ref={(node) => {
+                    markRefs.current[index] = node
                   }}
+                  onClick={() => handleSelection(datum)}
+                  onKeyDown={(event) => handleMarkKeyDown(event, index)}
                   role="button"
-                  tabIndex={0}
+                  tabIndex={selected || (!currentSelection && index === 0) ? 0 : -1}
                 >
                   <circle
                     className={prefixClass('chart-point')}
