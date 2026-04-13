@@ -47,3 +47,25 @@ export const CompactDetail: Story = {
     />
   ),
 }
+
+export const DetailOnly: Story = {
+  render: () => (
+    <NavigationSplitView
+      columnVisibility="detailOnly"
+      sidebar={<Text>Sidebar</Text>}
+      content={<Text>Content</Text>}
+      detail={<Text>Detail only focus</Text>}
+    />
+  ),
+}
+
+export const DoubleColumn: Story = {
+  render: () => (
+    <NavigationSplitView
+      columnVisibility="doubleColumn"
+      sidebar={<Text>Sidebar</Text>}
+      content={<Text>Content</Text>}
+      detail={<Text>Detail</Text>}
+    />
+  ),
+}

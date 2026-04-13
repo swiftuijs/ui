@@ -43,4 +43,34 @@ describe('NavigationSplitView', () => {
     expect(screen.queryByText('Content')).not.toBeInTheDocument()
     expect(screen.getByRole('main')).toHaveTextContent('Detail')
   })
+
+  it('can hide the sidebar in double-column visibility when content is present', () => {
+    render(
+      <NavigationSplitView
+        columnVisibility="doubleColumn"
+        sidebar={<div>Sidebar</div>}
+        content={<div>Content</div>}
+        detail={<div>Detail</div>}
+      />,
+    )
+
+    expect(screen.queryByRole('complementary', { name: 'Sidebar' })).not.toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Content' })).toBeInTheDocument()
+    expect(screen.getByRole('main')).toHaveTextContent('Detail')
+  })
+
+  it('can reduce the layout to detail-only visibility', () => {
+    render(
+      <NavigationSplitView
+        columnVisibility="detailOnly"
+        sidebar={<div>Sidebar</div>}
+        content={<div>Content</div>}
+        detail={<div>Detail</div>}
+      />,
+    )
+
+    expect(screen.queryByRole('complementary', { name: 'Sidebar' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Content' })).not.toBeInTheDocument()
+    expect(screen.getByRole('main')).toHaveTextContent('Detail')
+  })
 })

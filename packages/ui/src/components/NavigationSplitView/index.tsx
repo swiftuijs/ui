@@ -35,6 +35,12 @@ export interface INavigationSplitViewProps extends IBaseComponent {
    * @default 'detail'
    */
   compactColumn?: 'sidebar' | 'content' | 'detail'
+  /**
+   * Controls which columns remain visible in regular presentation.
+   *
+   * @default 'automatic'
+   */
+  columnVisibility?: 'automatic' | 'all' | 'doubleColumn' | 'detailOnly'
 }
 
 function getCompactNode(props: Pick<INavigationSplitViewProps, 'sidebar' | 'content' | 'detail' | 'compactColumn'>) {
@@ -56,13 +62,18 @@ export const NavigationSplitView = memo(function NavigationSplitView(props: INav
     detail,
     compact = false,
     compactColumn = 'detail',
+    columnVisibility = 'automatic',
     ...restProps
   } = props
+  const resolvedColumnVisibility = columnVisibility === 'automatic' ? 'all' : columnVisibility
+  const showSidebar = !compact && resolvedColumnVisibility === 'all'
+  const showContent = !compact && content != null && resolvedColumnVisibility !== 'detailOnly'
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: [
       prefixClass('navigationsplitview'),
       compact && prefixClass('navigationsplitview-compact'),
-      content ? prefixClass('navigationsplitview-three-column') : prefixClass('navigationsplitview-two-column'),
+      showContent ? prefixClass('navigationsplitview-three-column') : prefixClass('navigationsplitview-two-column'),
+      prefixClass(`navigationsplitview-${resolvedColumnVisibility}`),
     ],
   })
 
@@ -77,15 +88,21 @@ export const NavigationSplitView = memo(function NavigationSplitView(props: INav
   }
 
   return (
-    <div {...commonProps} {...finalRestProps}>
-      <aside
-        aria-label="Sidebar"
-        className={prefixClass('navigationsplitview-sidebar')}
-        role="complementary"
-      >
-        {sidebar}
-      </aside>
-      {content ? (
+    <div
+      {...commonProps}
+      {...finalRestProps}
+      data-column-visibility={resolvedColumnVisibility}
+    >
+      {showSidebar ? (
+        <aside
+          aria-label="Sidebar"
+          className={prefixClass('navigationsplitview-sidebar')}
+          role="complementary"
+        >
+          {sidebar}
+        </aside>
+      ) : null}
+      {showContent ? (
         <section
           aria-label="Content"
           className={prefixClass('navigationsplitview-content')}
