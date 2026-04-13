@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, type CSSProperties } from 'react'
+import { forwardRef, useEffect, useState, type CSSProperties } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 import type { IPresentationDetent } from '@/types'
@@ -50,6 +50,14 @@ export interface ISheetProps extends IBaseComponent {
    * Currently selected detent.
    */
   selectedDetent?: IPresentationDetent
+  /**
+   * Initial detent when used in uncontrolled mode.
+   */
+  defaultSelectedDetent?: IPresentationDetent
+  /**
+   * Called when the selected detent changes.
+   */
+  onSelectedDetentChange?: (detent: IPresentationDetent) => void
   /**
    * Prevents interactive dismiss affordances like backdrop tap and Escape.
    * @default false
@@ -109,14 +117,21 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     cornerRadius,
     presentationDetents = ['large'],
     selectedDetent,
+    defaultSelectedDetent,
+    onSelectedDetentChange,
     interactiveDismissDisabled = false,
     children,
     ...restProps
   } = props
 
-  const resolvedDetent = selectedDetent ?? presentationDetents[0]
+  const [internalSelectedDetent, setInternalSelectedDetent] = useState<IPresentationDetent>(() => {
+    return defaultSelectedDetent ?? selectedDetent ?? presentationDetents[0]
+  })
+  const isDetentControlled = selectedDetent !== undefined
+  const resolvedDetent = isDetentControlled ? selectedDetent : internalSelectedDetent
   const resolvedDetentHeight = resolveDetentHeight(resolvedDetent)
   const canDismissInteractively = backgroundInteraction === 'dismiss' && !interactiveDismissDisabled
+  const canAdjustDetents = presentationDetents.length > 1
 
   useEffect(() => {
     if (!isPresented || !onDismiss || !canDismissInteractively) {
@@ -147,6 +162,24 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     if (e.target === e.currentTarget && onDismiss) {
       onDismiss()
     }
+  }
+
+  const handleDetentChange = (nextDetent: IPresentationDetent) => {
+    if (!isDetentControlled) {
+      setInternalSelectedDetent(nextDetent)
+    }
+    onSelectedDetentChange?.(nextDetent)
+  }
+
+  const handleDragIndicatorClick = () => {
+    if (!canAdjustDetents) {
+      return
+    }
+
+    const currentIndex = presentationDetents.findIndex((detent) => detent === resolvedDetent)
+    const fallbackIndex = currentIndex >= 0 ? currentIndex : 0
+    const nextIndex = (fallbackIndex + 1) % presentationDetents.length
+    handleDetentChange(presentationDetents[nextIndex])
   }
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
@@ -182,7 +215,14 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
         aria-modal="true"
       >
         {showDragIndicator && presentationStyle !== 'fullScreen' && (
-          <div className={prefixClass('sheet-drag-indicator')} data-testid="sheet-drag-indicator" />
+          <button
+            aria-label="Adjust sheet height"
+            className={prefixClass('sheet-drag-indicator')}
+            data-testid="sheet-drag-indicator"
+            disabled={!canAdjustDetents}
+            onClick={handleDragIndicatorClick}
+            type="button"
+          />
         )}
         <div className={prefixClass('sheet-content')}>
           {children}

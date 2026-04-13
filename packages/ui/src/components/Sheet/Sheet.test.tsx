@@ -93,6 +93,55 @@ describe('Sheet', () => {
     expect(dialog).toHaveStyle({ '--sw-sheet-height': '90%' })
   })
 
+  it('cycles through presentation detents in uncontrolled mode from the drag indicator control', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <Sheet
+        isPresented
+        presentationDetents={['medium', 'large']}
+      >
+        <div>Detented sheet</div>
+      </Sheet>,
+    )
+
+    const dialog = screen.getByRole('dialog')
+    const dragIndicator = screen.getByRole('button', { name: 'Adjust sheet height' })
+
+    expect(dialog).toHaveAttribute('data-selected-detent', 'medium')
+    expect(dialog).toHaveStyle({ '--sw-sheet-height': '60%' })
+
+    await user.click(dragIndicator)
+
+    expect(dialog).toHaveAttribute('data-selected-detent', 'large')
+    expect(dialog).toHaveStyle({ '--sw-sheet-height': '90%' })
+  })
+
+  it('emits detent changes in controlled mode without mutating local state', async () => {
+    const user = userEvent.setup()
+    const onSelectedDetentChange = vi.fn()
+
+    render(
+      <Sheet
+        isPresented
+        presentationDetents={['medium', 'large']}
+        selectedDetent="medium"
+        onSelectedDetentChange={onSelectedDetentChange}
+      >
+        <div>Controlled detent sheet</div>
+      </Sheet>,
+    )
+
+    const dialog = screen.getByRole('dialog')
+
+    await user.click(screen.getByRole('button', { name: 'Adjust sheet height' }))
+
+    expect(onSelectedDetentChange).toHaveBeenCalledTimes(1)
+    expect(onSelectedDetentChange).toHaveBeenCalledWith('large')
+    expect(dialog).toHaveAttribute('data-selected-detent', 'medium')
+    expect(dialog).toHaveStyle({ '--sw-sheet-height': '60%' })
+  })
+
   it('dismisses on Escape by default', async () => {
     const user = userEvent.setup()
     const onDismiss = vi.fn()

@@ -145,6 +145,7 @@ export const LockedBackdrop: Story = {
 
 function DetentSheet() {
   const [isPresented, setIsPresented] = useState(false)
+  const [selectedDetent, setSelectedDetent] = useState<'medium' | 'large'>('medium')
 
   return (
     <>
@@ -153,11 +154,17 @@ function DetentSheet() {
         isPresented={isPresented}
         onDismiss={() => setIsPresented(false)}
         presentationDetents={['medium', 'large']}
-        selectedDetent="medium"
+        selectedDetent={selectedDetent}
+        onSelectedDetentChange={(detent) => {
+          if (detent === 'medium' || detent === 'large') {
+            setSelectedDetent(detent)
+          }
+        }}
       >
         <VStack spacing={20} style={{ padding: '20px' }}>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Detent Sheet</Text>
-          <Text>This sheet starts at the medium detent.</Text>
+          <Text>This sheet starts at the medium detent and cycles when you activate the drag indicator.</Text>
+          <Text>Current detent: {selectedDetent}</Text>
           <Button onClick={() => setIsPresented(false)}>Dismiss</Button>
         </VStack>
       </Sheet>

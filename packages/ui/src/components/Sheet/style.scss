@@ -45,6 +45,39 @@
     box-shadow: none;
   }
 
+  &-drag-indicator {
+    appearance: none;
+    border: none;
+    cursor: default;
+    display: block;
+    margin: var(--sw-spacing-sm) auto 0;
+    padding: var(--sw-spacing-sm) var(--sw-spacing-md);
+    background: transparent;
+
+    &:disabled {
+      cursor: default;
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 5px;
+      border-radius: 999px;
+      background-color: var(--sw-color-separator);
+    }
+  }
+
+  &[data-presentation-detents*=','] .#{$ns}-sheet-drag-indicator {
+    cursor: pointer;
+  }
+
+  &[data-presentation-detents*=','] .#{$ns}-sheet-drag-indicator:focus-visible {
+    outline: 2px solid var(--sw-accent-color);
+    outline-offset: 2px;
+    border-radius: 999px;
+  }
+
   &-header {
     display: flex;
     align-items: center;
