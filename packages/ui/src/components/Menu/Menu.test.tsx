@@ -161,4 +161,26 @@ describe('Menu', () => {
     await user.keyboard('{ArrowLeft}')
     expect(screen.getByRole('menuitem', { name: 'More options' })).toHaveFocus()
   })
+
+  it('renders section labels and separators for grouped actions', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <Menu
+        trigger={<Button>Grouped</Button>}
+        items={[
+          { section: 'File', label: 'New', action: vi.fn() },
+          { section: 'File', label: 'Open', action: vi.fn() },
+          { section: 'Danger zone', label: 'Delete project', destructive: true, action: vi.fn() },
+        ]}
+      />
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Grouped' }))
+
+    expect(screen.getByText('File')).toBeInTheDocument()
+    expect(screen.getByText('Danger zone')).toBeInTheDocument()
+    expect(screen.getAllByRole('separator')).toHaveLength(1)
+    expect(screen.getByRole('menuitem', { name: 'Delete project' })).toHaveAttribute('data-destructive', 'true')
+  })
 })

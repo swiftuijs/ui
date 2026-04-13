@@ -81,3 +81,14 @@ export const WithSubmenu: Story = {
     ],
   },
 }
+
+export const GroupedActions: Story = {
+  args: {
+    trigger: <Button>Project actions</Button>,
+    items: [
+      { section: 'File', label: 'New file', action: () => alert('New file') },
+      { section: 'File', label: 'Open recent', action: () => alert('Open recent') },
+      { section: 'Danger zone', label: 'Delete project', destructive: true, action: () => alert('Delete project') },
+    ],
+  },
+}

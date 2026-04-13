@@ -40,10 +40,17 @@ Nested actions can be presented in a submenu:
 
 <Canvas of={MenuStories.WithSubmenu} />
 
+## Grouped Actions
+
+Sections and destructive actions can be expressed inline with the item list:
+
+<Canvas of={MenuStories.GroupedActions} />
+
 ## Notes
 
 - Menu requires a `trigger` element and an array of `items`
 - Each item can have a `label`, optional `icon`, and `action`
+- Items can opt into `section` headings and `destructive` styling
 - Items can be disabled with the `disabled` prop
 - Menu supports different placements (top, bottom, left, right)
 - Menu automatically handles positioning, Escape dismissal, and outside-click dismissal

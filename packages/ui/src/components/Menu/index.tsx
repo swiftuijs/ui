@@ -23,6 +23,10 @@ import './style.scss'
  */
 export interface IMenuItem {
   /**
+   * Optional section label shown before this item when the section changes.
+   */
+  section?: string
+  /**
    * Menu item label
    */
   label: string
@@ -38,6 +42,10 @@ export interface IMenuItem {
    * Whether the item is disabled
    */
   disabled?: boolean
+  /**
+   * Whether the item represents a destructive action.
+   */
+  destructive?: boolean
   /**
    * Submenu items (for nested menus)
    */
@@ -366,6 +374,24 @@ export function Menu(props: IMenuProps) {
     [activeSubmenuIndex, items],
   )
 
+  const groupedItems = useMemo(() => {
+    let previousSection: string | undefined
+
+    return items.map((item, index) => {
+      const showSectionLabel = item.section !== undefined && item.section !== previousSection
+      const showSeparator = index > 0 && showSectionLabel
+      previousSection = item.section
+
+      return {
+        item,
+        index,
+        showSectionLabel,
+        showSeparator,
+        sectionId: item.section ? `${menuId}-section-${index}` : undefined,
+      }
+    })
+  }, [items, menuId])
+
   useEffect(() => {
     if (!isOpen || activeSubmenuIndex === null) {
       setFocusedSubmenuIndex(-1)
@@ -467,44 +493,54 @@ export function Menu(props: IMenuProps) {
           role="menu"
           aria-labelledby={triggerId}
         >
-          {items.map((item, index) => (
-            <button
-              key={item.id || index}
-              ref={(node) => {
-                itemRefs.current[index] = node
-              }}
-              type="button"
-              role="menuitem"
-              className={clsx(
-                prefixClass('menu-item'),
-                item.disabled && prefixClass('menu-item-disabled'),
-                index === focusedItemIndex && prefixClass('menu-item-focused')
-              )}
-              tabIndex={index === focusedItemIndex ? 0 : -1}
-              disabled={item.disabled}
-              aria-disabled={item.disabled || undefined}
-              aria-expanded={item.submenu?.length ? activeSubmenuIndex === index : undefined}
-              aria-haspopup={item.submenu?.length ? 'menu' : undefined}
-              onClick={() => handleItemClick(item)}
-              onKeyDown={(event) => handleMenuItemKeyDown(event, index)}
-              onFocus={() => {
-                setFocusedItemIndex(index)
-                if (item.submenu?.length) {
-                  setActiveSubmenuIndex(index)
-                } else {
-                  setActiveSubmenuIndex(null)
-                }
-              }}
-              onMouseEnter={() => {
-                if (item.submenu?.length) {
-                  setActiveSubmenuIndex(index)
-                }
-              }}
-            >
-              {item.icon && <span className={prefixClass('menu-item-icon')} aria-hidden="true">{item.icon}</span>}
-              <span className={prefixClass('menu-item-label')}>{item.label}</span>
-              {item.submenu && <span className={prefixClass('menu-item-arrow')} aria-hidden="true">›</span>}
-            </button>
+          {groupedItems.map(({ item, index, showSectionLabel, showSeparator, sectionId }) => (
+            <div key={item.id || index} className={prefixClass('menu-entry')}>
+              {showSeparator ? <div className={prefixClass('menu-separator')} role="separator" /> : null}
+              {showSectionLabel && sectionId ? (
+                <div id={sectionId} className={prefixClass('menu-section-label')}>
+                  {item.section}
+                </div>
+              ) : null}
+              <button
+                ref={(node) => {
+                  itemRefs.current[index] = node
+                }}
+                type="button"
+                role="menuitem"
+                className={clsx(
+                  prefixClass('menu-item'),
+                  item.disabled && prefixClass('menu-item-disabled'),
+                  item.destructive && prefixClass('menu-item-destructive'),
+                  index === focusedItemIndex && prefixClass('menu-item-focused')
+                )}
+                tabIndex={index === focusedItemIndex ? 0 : -1}
+                disabled={item.disabled}
+                aria-disabled={item.disabled || undefined}
+                aria-describedby={showSectionLabel ? sectionId : undefined}
+                aria-expanded={item.submenu?.length ? activeSubmenuIndex === index : undefined}
+                aria-haspopup={item.submenu?.length ? 'menu' : undefined}
+                data-destructive={item.destructive ? 'true' : undefined}
+                onClick={() => handleItemClick(item)}
+                onKeyDown={(event) => handleMenuItemKeyDown(event, index)}
+                onFocus={() => {
+                  setFocusedItemIndex(index)
+                  if (item.submenu?.length) {
+                    setActiveSubmenuIndex(index)
+                  } else {
+                    setActiveSubmenuIndex(null)
+                  }
+                }}
+                onMouseEnter={() => {
+                  if (item.submenu?.length) {
+                    setActiveSubmenuIndex(index)
+                  }
+                }}
+              >
+                {item.icon && <span className={prefixClass('menu-item-icon')} aria-hidden="true">{item.icon}</span>}
+                <span className={prefixClass('menu-item-label')}>{item.label}</span>
+                {item.submenu && <span className={prefixClass('menu-item-arrow')} aria-hidden="true">›</span>}
+              </button>
+            </div>
           ))}
           {activeSubmenuIndex !== null && activeSubmenuItems.length > 0 ? (
             <div
