@@ -31,6 +31,26 @@ describe('DatePicker', () => {
       expect(handleValueChange).toHaveBeenCalledWith('2026-05-01')
     })
 
+    it('supports SwiftUI-style selection aliases in controlled mode', () => {
+      const handleSelectionChange = vi.fn()
+
+      render(
+        <DatePicker
+          aria-label="Start date"
+          selection="2026-04-10"
+          onSelectionChange={handleSelectionChange}
+        />
+      )
+
+      const input = screen.getByLabelText('Start date') as HTMLInputElement
+
+      expect(input).toHaveValue('2026-04-10')
+
+      fireEvent.change(input, { target: { value: '2026-05-01' } })
+
+      expect(handleSelectionChange).toHaveBeenCalledWith('2026-05-01')
+    })
+
     it('supports uncontrolled defaultValue and native form reset', async () => {
       const user = userEvent.setup()
       const { container } = render(
@@ -60,6 +80,24 @@ describe('DatePicker', () => {
         expect(input).toHaveValue('2026-04-10')
         expect(new globalThis.FormData(form).get('tripDate')).toBe('2026-04-10')
       })
+    })
+
+    it('supports an uncontrolled default selection alias', () => {
+      const { container } = render(
+        <form>
+          <DatePicker
+            aria-label="Trip date"
+            name="tripDate"
+            defaultSelection="2026-04-10"
+          />
+        </form>
+      )
+
+      const form = container.querySelector('form')!
+      const input = screen.getByLabelText('Trip date') as HTMLInputElement
+
+      expect(input).toHaveValue('2026-04-10')
+      expect(new globalThis.FormData(form).get('tripDate')).toBe('2026-04-10')
     })
 
     it('maps mode and displayedComponents to native input types', () => {

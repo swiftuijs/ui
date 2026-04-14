@@ -4,7 +4,11 @@ import { tmpdir } from 'node:os';
 
 import { describe, expect, it } from 'vitest';
 
-import { isGeneratedSourceModule, validateGeneratedSourceModule } from './fumadocs-source';
+import {
+  generateAndValidateSource,
+  isGeneratedSourceModule,
+  validateGeneratedSourceModule,
+} from './fumadocs-source';
 
 describe('fumadocs-source', () => {
   it('accepts generated source files that contain exports', async () => {
@@ -39,5 +43,25 @@ describe('fumadocs-source', () => {
     expect(isGeneratedSourceModule('  export { docs }\n')).toBe(true);
     expect(isGeneratedSourceModule('')).toBe(false);
     expect(isGeneratedSourceModule('// comment only')).toBe(false);
+  });
+
+  it('retries generation until the source file becomes a valid module', async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), 'fumadocs-source-'));
+    const sourceFile = join(tempDir, 'server.ts');
+    let attempts = 0;
+
+    await generateAndValidateSource(async () => {
+      attempts += 1;
+
+      if (attempts === 1) {
+        await writeFile(sourceFile, '', 'utf8');
+        return;
+      }
+
+      await writeFile(sourceFile, 'export const docs = {};\n', 'utf8');
+    }, sourceFile, 2);
+
+    expect(attempts).toBe(2);
+    await expect(validateGeneratedSourceModule(sourceFile)).resolves.toBeUndefined();
   });
 });

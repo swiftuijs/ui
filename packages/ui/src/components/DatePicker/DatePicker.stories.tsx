@@ -20,8 +20,8 @@ const ControlledDateDemo = () => {
       <Text>Selected: {date}</Text>
       <DatePicker
         aria-label="Controlled date"
-        value={date}
-        onValueChange={setDate}
+        selection={date}
+        onSelectionChange={setDate}
         mode="date"
       />
     </VStack>
@@ -48,8 +48,8 @@ const DateAndTimeDemo = () => {
       <Text>Selected: {value}</Text>
       <DatePicker
         aria-label="Scheduled start"
-        value={value}
-        onValueChange={setValue}
+        selection={value}
+        onSelectionChange={setValue}
         mode="dateAndTime"
       />
     </VStack>
@@ -63,8 +63,8 @@ const DisplayedComponentsDemo = () => {
       <Text>Selected: {value}</Text>
       <DatePicker
         aria-label="SwiftUI-style schedule"
-        value={value}
-        onValueChange={setValue}
+        selection={value}
+        onSelectionChange={setValue}
         displayedComponents={['date', 'hourAndMinute']}
       />
     </VStack>

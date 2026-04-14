@@ -57,9 +57,17 @@ export interface IDatePickerProps extends Omit<
   'type' | 'value' | 'defaultValue' | 'onChange' | 'children' | 'min' | 'max'
 > {
   /**
+   * SwiftUI-style alias for the current native input value.
+   */
+  selection?: string
+  /**
    * The current native input value.
    */
   value?: string
+  /**
+   * SwiftUI-style alias for the initial uncontrolled value.
+   */
+  defaultSelection?: string
   /**
    * The initial native input value when uncontrolled.
    */
@@ -68,6 +76,10 @@ export interface IDatePickerProps extends Omit<
    * Native input change handler.
    */
   onChange?: ChangeEventHandler<HTMLInputElement>
+  /**
+   * SwiftUI-style value-first change handler.
+   */
+  onSelectionChange?: (value: string) => void
   /**
    * Value-first change handler for SwiftUI-style ergonomics.
    */
@@ -112,9 +124,12 @@ export interface IDatePickerProps extends Omit<
 
 export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
   const {
+    selection,
     value,
+    defaultSelection,
     defaultValue,
     onChange,
+    onSelectionChange,
     onValueChange,
     min,
     max,
@@ -133,7 +148,9 @@ export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
 
   const resolvedMode = resolveMode(mode, displayedComponents)
   const inputType = resolveInputType(resolvedMode)
-  const isControlled = value !== undefined
+  const controlledValue = value ?? selection
+  const resolvedDefaultValue = defaultValue ?? defaultSelection
+  const isControlled = controlledValue !== undefined
   const resolvedMin = min ?? minimumDate
   const resolvedMax = max ?? maximumDate
   const resolvedStep =
@@ -144,6 +161,7 @@ export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange?.(event)
     onValueChange?.(event.currentTarget.value)
+    onSelectionChange?.(event.currentTarget.value)
   }
 
   return (
@@ -152,8 +170,8 @@ export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
       {...commonProps}
       {...finalRestProps}
       type={inputType}
-      value={isControlled ? value : undefined}
-      defaultValue={isControlled ? undefined : defaultValue}
+      value={isControlled ? controlledValue : undefined}
+      defaultValue={isControlled ? undefined : resolvedDefaultValue}
       onChange={handleChange}
       min={resolvedMin}
       max={resolvedMax}

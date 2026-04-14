@@ -33,9 +33,10 @@ DatePicker is a native `<input>`-backed control for selecting dates and times. I
 
 ## Notes
 
-- `value` and `defaultValue` use native input strings
+- `selection` and `defaultSelection` are the preferred SwiftUI-style value APIs
+- `value` and `defaultValue` remain available as React-friendly aliases
 - `onChange` forwards the native input event
-- `onValueChange` receives the latest string value
+- `onSelectionChange` and `onValueChange` receive the latest string value
 - Supported modes are `date`, `time`, and `dateAndTime`
 - `displayedComponents={['date', 'hourAndMinute']}` maps to `dateAndTime`
 - Use `min` and `max` for native bounds in the same string format as `value`

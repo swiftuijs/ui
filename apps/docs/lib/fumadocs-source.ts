@@ -21,3 +21,27 @@ export async function validateGeneratedSourceModule(filePath: string) {
     throw new Error(`Generated Fumadocs source is not a module: ${filePath}`);
   }
 }
+
+export async function generateAndValidateSource(
+  generate: () => Promise<void>,
+  filePath: string,
+  maxAttempts = 3,
+) {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      await generate();
+      await validateGeneratedSourceModule(filePath);
+      return;
+    } catch (error) {
+      lastError = error;
+
+      if (attempt === maxAttempts) {
+        break;
+      }
+    }
+  }
+
+  throw lastError;
+}

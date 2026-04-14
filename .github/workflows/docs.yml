@@ -8,6 +8,8 @@ on:
     paths:
       - apps/docs/**
       - apps/docs/public/**
+      - packages/ui/src/components/**/index.tsx
+      - packages/ui/src/components/**/*.stories.tsx
       - packages/ui/src/components/**/*.docs.mdx
       - package.json
       - pnpm-lock.yaml
@@ -20,6 +22,8 @@ on:
     paths:
       - apps/docs/**
       - apps/docs/public/**
+      - packages/ui/src/components/**/index.tsx
+      - packages/ui/src/components/**/*.stories.tsx
       - packages/ui/src/components/**/*.docs.mdx
       - package.json
       - pnpm-lock.yaml
