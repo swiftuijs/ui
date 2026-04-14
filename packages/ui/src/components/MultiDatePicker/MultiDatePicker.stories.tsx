@@ -63,3 +63,13 @@ export const Disabled: Story = {
     />
   ),
 }
+
+export const NormalizedSelection: Story = {
+  render: () => (
+    <MultiDatePicker
+      label="Normalized travel dates"
+      defaultValue={['2026-04-12', '2026-04-10', '2026-04-12']}
+      name="travelDates"
+    />
+  ),
+}

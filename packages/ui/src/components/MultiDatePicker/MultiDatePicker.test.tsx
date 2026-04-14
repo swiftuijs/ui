@@ -79,4 +79,42 @@ describe('MultiDatePicker', () => {
     expect(input).toHaveAttribute('min', '2026-04-01')
     expect(input).toHaveAttribute('max', '2026-04-30')
   })
+
+  it('normalizes duplicate and unsorted dates in uncontrolled mode', () => {
+    render(
+      <MultiDatePicker
+        defaultValue={['2026-04-12', '2026-04-10', '2026-04-12']}
+        label="Travel dates"
+        name="travelDates"
+      />,
+    )
+
+    expect(screen.getAllByText(/2026-04-/).map((node) => node.textContent)).toEqual([
+      '2026-04-10',
+      '2026-04-12',
+    ])
+
+    const hiddenInputs = screen.getAllByDisplayValue(/2026-04-/)
+    expect(hiddenInputs.map((input) => (input as HTMLInputElement).value)).toEqual([
+      '2026-04-10',
+      '2026-04-12',
+    ])
+  })
+
+  it('normalizes controlled values before emitting updates', () => {
+    const handleValueChange = vi.fn()
+
+    render(
+      <MultiDatePicker
+        label="Selected dates"
+        onValueChange={handleValueChange}
+        value={['2026-04-15', '2026-04-12', '2026-04-15']}
+      />,
+    )
+
+    const input = screen.getByLabelText('Selected dates')
+    fireEvent.change(input, { target: { value: '2026-04-20' } })
+
+    expect(handleValueChange).toHaveBeenCalledWith(['2026-04-12', '2026-04-15', '2026-04-20'])
+  })
 })

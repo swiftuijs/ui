@@ -6,8 +6,8 @@ import type { IBaseElementComponent } from '@/types'
 
 import './style.scss'
 
-function sortDates(values: string[]) {
-  return [...values].sort((left, right) => left.localeCompare(right))
+function normalizeDates(values: string[]) {
+  return [...new Set(values)].sort((left, right) => left.localeCompare(right))
 }
 
 function toggleDate(values: string[], nextValue: string) {
@@ -17,7 +17,7 @@ function toggleDate(values: string[], nextValue: string) {
 
   return values.includes(nextValue)
     ? values.filter((value) => value !== nextValue)
-    : sortDates([...values, nextValue])
+    : normalizeDates([...values, nextValue])
 }
 
 export interface IMultiDatePickerProps
@@ -90,21 +90,23 @@ export const MultiDatePicker = memo(function MultiDatePicker(props: IMultiDatePi
     ...restProps
   } = props
   const inputId = useId()
-  const [uncontrolledValue, setUncontrolledValue] = useState(() => sortDates(defaultValue))
+  const [uncontrolledValue, setUncontrolledValue] = useState(() => normalizeDates(defaultValue))
   const [draftValue, setDraftValue] = useState('')
   const isControlled = value !== undefined
-  const selectedDates = isControlled ? sortDates(value) : uncontrolledValue
+  const selectedDates = isControlled ? normalizeDates(value) : uncontrolledValue
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('multidatepicker'),
   })
 
   const commitDates = (nextValue: string[]) => {
+    const normalizedValue = normalizeDates(nextValue)
+
     if (!isControlled) {
-      setUncontrolledValue(nextValue)
+      setUncontrolledValue(normalizedValue)
     }
 
-    onValueChange?.(nextValue)
+    onValueChange?.(normalizedValue)
   }
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
