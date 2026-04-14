@@ -1,11 +1,14 @@
 import {
   cloneElement,
   isValidElement,
+  useCallback,
   useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
+  type ComponentRef,
   type MouseEvent as ReactMouseEvent,
   type ReactElement,
   type ReactNode,
@@ -69,6 +72,29 @@ export function ContextMenu(props: IContextMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [position, setPosition] = useState<MenuPosition>({ left: 0, top: 0 })
   const menuId = useId().replace(/:/g, '')
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const itemRefs = useRef<Array<ComponentRef<'button'> | null>>([])
+
+  const enabledItemIndexes = useMemo(
+    () =>
+      items.reduce<number[]>((result, item, index) => {
+        if (!item.disabled) {
+          result.push(index)
+        }
+
+        return result
+      }, []),
+    [items],
+  )
+
+  const focusItem = useCallback((index: number) => {
+    itemRefs.current[index]?.focus()
+  }, [])
+
+  const closeMenu = useCallback(() => {
+    setIsOpen(false)
+    triggerRef.current?.focus()
+  }, [])
 
   useEffect(() => {
     if (!isOpen) {
@@ -83,12 +109,12 @@ export function ContextMenu(props: IContextMenuProps) {
         return
       }
 
-      setIsOpen(false)
+      closeMenu()
     }
 
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setIsOpen(false)
+        closeMenu()
       }
     }
 
@@ -99,7 +125,19 @@ export function ContextMenu(props: IContextMenuProps) {
       document.removeEventListener('mousedown', handlePointerDown)
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isOpen, menuId])
+  }, [closeMenu, isOpen, menuId])
+
+  useEffect(() => {
+    if (!isOpen) {
+      return
+    }
+
+    const firstEnabledIndex = enabledItemIndexes[0]
+
+    if (firstEnabledIndex !== undefined) {
+      focusItem(firstEnabledIndex)
+    }
+  }, [enabledItemIndexes, focusItem, isOpen])
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('context-menu'),
@@ -122,6 +160,7 @@ export function ContextMenu(props: IContextMenuProps) {
         }
 
         event.preventDefault()
+        triggerRef.current = event.currentTarget
         setPosition({ left: event.clientX, top: event.clientY })
         setIsOpen(true)
       },
@@ -137,6 +176,38 @@ export function ContextMenu(props: IContextMenuProps) {
           {...finalRestProps}
           id={menuId}
           role="menu"
+          onKeyDown={(event) => {
+            const currentIndex = itemRefs.current.findIndex((item) => item === document.activeElement)
+
+            if (currentIndex === -1 || enabledItemIndexes.length === 0) {
+              return
+            }
+
+            const enabledPosition = enabledItemIndexes.indexOf(currentIndex)
+
+            if (enabledPosition === -1) {
+              return
+            }
+
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+              event.preventDefault()
+              const nextPosition =
+                event.key === 'ArrowDown'
+                  ? (enabledPosition + 1) % enabledItemIndexes.length
+                  : (enabledPosition - 1 + enabledItemIndexes.length) % enabledItemIndexes.length
+              focusItem(enabledItemIndexes[nextPosition]!)
+            }
+
+            if (event.key === 'Home') {
+              event.preventDefault()
+              focusItem(enabledItemIndexes[0]!)
+            }
+
+            if (event.key === 'End') {
+              event.preventDefault()
+              focusItem(enabledItemIndexes[enabledItemIndexes.length - 1]!)
+            }
+          }}
         >
           {items.map((item, index) => (
             <button
@@ -147,13 +218,16 @@ export function ContextMenu(props: IContextMenuProps) {
                 item.style === 'destructive' && prefixClass('context-menu-item-destructive'),
               )}
               disabled={item.disabled}
+              ref={(element) => {
+                itemRefs.current[index] = element
+              }}
               onClick={() => {
                 if (item.disabled) {
                   return
                 }
 
                 item.action?.()
-                setIsOpen(false)
+                closeMenu()
               }}
               role="menuitem"
               type="button"
