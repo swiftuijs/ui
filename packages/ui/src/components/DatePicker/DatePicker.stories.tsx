@@ -87,6 +87,17 @@ export const DisplayedComponents: Story = {
   render: () => <DisplayedComponentsDemo />,
 }
 
+export const MinuteInterval: Story = {
+  render: () => (
+    <DatePicker
+      aria-label="Quarter-hour time"
+      defaultValue="09:30"
+      minuteInterval={15}
+      mode="time"
+    />
+  ),
+}
+
 export const Disabled: Story = {
   render: () => (
     <DatePicker

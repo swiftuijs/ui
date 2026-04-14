@@ -27,6 +27,10 @@ DatePicker is a native `<input>`-backed control for selecting dates and times. I
 
 <Canvas of={DatePickerStories.DisplayedComponents} />
 
+## Minute Interval
+
+<Canvas of={DatePickerStories.MinuteInterval} />
+
 ## Notes
 
 - `value` and `defaultValue` use native input strings
@@ -35,6 +39,7 @@ DatePicker is a native `<input>`-backed control for selecting dates and times. I
 - Supported modes are `date`, `time`, and `dateAndTime`
 - `displayedComponents={['date', 'hourAndMinute']}` maps to `dateAndTime`
 - Use `min` and `max` for native bounds in the same string format as `value`
+- `minuteInterval` maps to the native `step` attribute for `time` and `dateAndTime` modes
 - `disabled` behaves like a native input prop
 
 ## Best Practices

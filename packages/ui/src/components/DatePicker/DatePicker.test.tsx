@@ -106,5 +106,19 @@ describe('DatePicker', () => {
 
       expect(handleValueChange).not.toHaveBeenCalled()
     })
+
+    it('maps minuteInterval to native step for time-based modes', () => {
+      render(
+        <>
+          <DatePicker aria-label="Date" minuteInterval={15} mode="date" />
+          <DatePicker aria-label="Time" minuteInterval={15} mode="time" />
+          <DatePicker aria-label="Date and time" minuteInterval={30} mode="dateAndTime" />
+        </>
+      )
+
+      expect(screen.getByLabelText('Date')).not.toHaveAttribute('step')
+      expect(screen.getByLabelText('Time')).toHaveAttribute('step', '900')
+      expect(screen.getByLabelText('Date and time')).toHaveAttribute('step', '1800')
+    })
   })
 })

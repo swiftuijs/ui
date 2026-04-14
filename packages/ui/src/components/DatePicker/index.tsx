@@ -99,6 +99,10 @@ export interface IDatePickerProps extends Omit<
    */
   displayedComponents?: DatePickerDisplayedComponent[]
   /**
+   * SwiftUI-style minute granularity for time-based pickers.
+   */
+  minuteInterval?: number
+  /**
    * Whether the date picker is disabled.
    *
    * @default false
@@ -118,6 +122,7 @@ export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
     maximumDate,
     mode = 'date',
     displayedComponents,
+    minuteInterval,
     disabled = false,
     ...restProps
   } = props
@@ -131,6 +136,10 @@ export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
   const isControlled = value !== undefined
   const resolvedMin = min ?? minimumDate
   const resolvedMax = max ?? maximumDate
+  const resolvedStep =
+    minuteInterval && (resolvedMode === 'time' || resolvedMode === 'dateAndTime')
+      ? String(minuteInterval * 60)
+      : undefined
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange?.(event)
@@ -148,6 +157,7 @@ export const DatePicker = memo(function DatePicker(props: IDatePickerProps) {
       onChange={handleChange}
       min={resolvedMin}
       max={resolvedMax}
+      step={resolvedStep}
       disabled={disabled}
     />
   )
