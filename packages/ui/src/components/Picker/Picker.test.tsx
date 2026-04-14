@@ -48,6 +48,52 @@ describe('Picker', () => {
       expect(handleValueChange).toHaveBeenCalledWith(2)
     })
 
+    it('supports SwiftUI-style selection aliases in controlled mode', async () => {
+      const user = userEvent.setup()
+      const handleSelectionChange = vi.fn()
+
+      render(
+        <Picker
+          aria-label="Priority"
+          options={[
+            { value: 1, label: 'One' },
+            { value: 2, label: 'Two' },
+          ]}
+          selection={1}
+          onSelectionChange={handleSelectionChange}
+        />
+      )
+
+      const select = screen.getByRole('combobox', { name: 'Priority' })
+
+      expect(select).toHaveValue('1')
+
+      await user.selectOptions(select, screen.getByRole('option', { name: 'Two' }))
+
+      expect(handleSelectionChange).toHaveBeenCalledWith(2)
+    })
+
+    it('supports an uncontrolled default selection alias', () => {
+      const { container } = render(
+        <form>
+          <Picker
+            aria-label="Status"
+            name="status"
+            options={[
+              { value: 'ready', label: 'Ready' },
+              { value: 'done', label: 'Done' },
+            ]}
+            defaultSelection="done"
+          />
+        </form>
+      )
+
+      const select = screen.getByRole('combobox', { name: 'Status' })
+
+      expect(select).toHaveValue('done')
+      expect(new globalThis.FormData(container.querySelector('form')!).get('status')).toBe('done')
+    })
+
     it('keeps the controlled selection in sync when the parent clears back to no selection', () => {
       const { container, rerender } = render(
         <form>

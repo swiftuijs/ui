@@ -18,10 +18,12 @@ Picker is a control for selecting from a set of mutually exclusive values. Picke
 ## Notes
 
 - Picker requires an array of options with `value` and `label`
-- Picker supports controlled mode with `selectedValue` and `onValueChange`
+- Picker supports SwiftUI-style controlled mode with `selection` and `onSelectionChange`
+- `selectedValue` and `onValueChange` remain available as React-friendly aliases
+- Use `defaultSelection` for an initial uncontrolled value
 - Picker can be disabled with the `disabled` prop
 - Use `placeholder` to indicate no selection; it is rendered as a hidden placeholder option
-- `onValueChange` returns the original option value type
+- Selection callbacks return the original option value type
 - Picker automatically handles option rendering and selection
 - Option values must be unique after string coercion
 - The empty string is reserved for the placeholder state and cannot be used as a real option value

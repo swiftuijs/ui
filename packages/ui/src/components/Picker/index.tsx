@@ -39,9 +39,25 @@ export interface IPickerProps extends Omit<
   'value' | 'defaultValue' | 'onChange' | 'children' | 'disabled' | 'multiple' | 'size'
 > {
   /**
+   * SwiftUI-style alias for the currently selected value.
+   */
+  selection?: string | number
+  /**
    * The currently selected value.
    */
   selectedValue?: string | number
+  /**
+   * SwiftUI-style alias for the initial uncontrolled selection.
+   */
+  defaultSelection?: string | number
+  /**
+   * The initial uncontrolled selection.
+   */
+  defaultSelectedValue?: string | number
+  /**
+   * SwiftUI-style alias fired when the selection changes.
+   */
+  onSelectionChange?: (value: string | number) => void
   /**
    * Callback fired when the selection changes.
    */
@@ -80,7 +96,11 @@ function validatePickerOptions(options: IPickerOption[]) {
 
 export const Picker = memo(function Picker(props: IPickerProps) {
   const {
+    selection,
     selectedValue,
+    defaultSelection,
+    defaultSelectedValue,
+    onSelectionChange,
     onValueChange,
     options,
     placeholder = 'Select an option',
@@ -90,21 +110,25 @@ export const Picker = memo(function Picker(props: IPickerProps) {
 
   validatePickerOptions(options)
 
-  const isControlled = selectedValue !== undefined
+  const controlledValue = selectedValue ?? selection
+  const defaultValue = defaultSelectedValue ?? defaultSelection
+  const isControlled = controlledValue !== undefined
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('picker')
   })
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (!onValueChange) {
+    const changeHandler = onValueChange ?? onSelectionChange
+
+    if (!changeHandler) {
       return
     }
 
     const option = options.find((item) => String(item.value) === event.currentTarget.value)
 
     if (option) {
-      onValueChange(option.value)
+      changeHandler(option.value)
     }
   }
 
@@ -113,8 +137,8 @@ export const Picker = memo(function Picker(props: IPickerProps) {
       key={isControlled ? 'controlled' : 'uncontrolled'}
       {...commonProps}
       {...finalRestProps}
-      value={isControlled ? String(selectedValue) : undefined}
-      defaultValue={isControlled ? undefined : ''}
+      value={isControlled ? String(controlledValue) : undefined}
+      defaultValue={isControlled ? undefined : defaultValue !== undefined ? String(defaultValue) : ''}
       onChange={handleChange}
       disabled={disabled}
     >

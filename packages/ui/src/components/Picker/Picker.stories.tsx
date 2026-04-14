@@ -25,14 +25,14 @@ const PickerDemo = () => {
     <VStack spacing={16}>
       <Text>Selected: {selected || 'None'}</Text>
       <Picker
-        selectedValue={selected}
-        onValueChange={setSelected}
+        selection={selected}
+        onSelectionChange={setSelected}
         options={options}
         placeholder="Choose an option"
       />
       <Picker
-        selectedValue={selected}
-        onValueChange={setSelected}
+        selection={selected}
+        onSelectionChange={setSelected}
         options={options}
         disabled
       />
@@ -43,4 +43,3 @@ const PickerDemo = () => {
 export const Default: Story = {
   render: () => <PickerDemo />,
 }
-
