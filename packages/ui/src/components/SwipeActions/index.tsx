@@ -1,5 +1,8 @@
 import {
   isValidElement,
+  useCallback,
+  useEffect,
+  useRef,
   useState,
   type ComponentPropsWithoutRef,
   type ReactNode,
@@ -58,17 +61,18 @@ export function SwipeActions(props: ISwipeActionsProps) {
     ...restProps
   } = props
   const [internalOpen, setInternalOpen] = useState(defaultOpen)
+  const rootRef = useRef<HTMLDivElement>(null)
   const isControlled = open !== undefined
   const isOpen = isControlled ? open : internalOpen
   const rowLabel = getNodeText(children).replace(/\s+/g, ' ').trim() || 'row'
 
-  const setOpen = (nextOpen: boolean) => {
+  const setOpen = useCallback((nextOpen: boolean) => {
     if (!isControlled) {
       setInternalOpen(nextOpen)
     }
 
     onOpenChange?.(nextOpen)
-  }
+  }, [isControlled, onOpenChange])
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: [
@@ -78,8 +82,34 @@ export function SwipeActions(props: ISwipeActionsProps) {
     ],
   })
 
+  useEffect(() => {
+    if (!isOpen) {
+      return
+    }
+
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+
+    const handlePointerDown = (event: globalThis.MouseEvent | globalThis.PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [isOpen, setOpen])
+
   return (
-    <div {...commonProps} {...finalRestProps}>
+    <div {...commonProps} {...finalRestProps} ref={rootRef}>
       <button
         aria-expanded={isOpen}
         aria-label={`${isOpen ? 'Hide' : 'Show'} actions for ${rowLabel}`}

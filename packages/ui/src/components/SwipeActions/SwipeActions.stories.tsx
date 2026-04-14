@@ -58,3 +58,17 @@ export const Destructive: Story = {
     </SwipeActions>
   ),
 }
+
+export const Controlled: Story = {
+  args: {
+    actions: [{ label: 'Mute' }, { label: 'Delete', tint: 'destructive' }],
+    open: true,
+  },
+  render: (args) => (
+    <SwipeActions {...args}>
+      <div style={{ padding: 16, border: '1px solid var(--sw-color-gray-4, #d1d5db)', borderRadius: 14 }}>
+        Controlled row
+      </div>
+    </SwipeActions>
+  ),
+}

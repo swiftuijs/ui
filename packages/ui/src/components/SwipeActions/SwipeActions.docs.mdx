@@ -22,3 +22,4 @@ SwipeActions adapts SwiftUI's swipe-revealed row actions into an explicit, acces
 
 - Use `edge="leading"` to place actions before the row content.
 - Use controlled `open` state when a surrounding list needs to coordinate which row is expanded.
+- Expanded actions close on `Escape` or when focus/pointer interaction moves outside the row, matching the temporary nature of swipe-revealed actions.

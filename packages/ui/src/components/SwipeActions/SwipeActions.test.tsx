@@ -66,4 +66,39 @@ describe('SwipeActions', () => {
     const actionGroup = screen.getByRole('group', { name: 'Swipe actions' })
     expect(actionGroup).toHaveAttribute('data-edge', 'leading')
   })
+
+  it('closes uncontrolled actions when Escape is pressed', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <SwipeActions actions={[{ label: 'Archive' }]}>
+        <div>Message row</div>
+      </SwipeActions>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Show actions for Message row' }))
+    expect(screen.getByRole('button', { name: 'Archive' })).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+
+    expect(screen.queryByRole('button', { name: 'Archive' })).not.toBeInTheDocument()
+  })
+
+  it('closes controlled actions when clicking outside', async () => {
+    const user = userEvent.setup()
+    const onOpenChange = vi.fn()
+
+    render(
+      <div>
+        <button type="button">Outside</button>
+        <SwipeActions actions={[{ label: 'Delete' }]} onOpenChange={onOpenChange} open>
+          <div>Draft row</div>
+        </SwipeActions>
+      </div>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Outside' }))
+
+    expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
 })
