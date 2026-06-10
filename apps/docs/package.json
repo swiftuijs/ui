@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "prepare-ui": "pnpm --dir ../.. --filter @swiftuijs/ui build",
     "prepare-content": "pnpm exec tsx ./scripts/generate-docs-content.ts",
     "prepare-docs": "pnpm exec tsx ./scripts/prepare-docs-source.ts",
     "prepare-types": "pnpm exec tsx ./scripts/prepare-docs-types.ts",
     "postinstall": "pnpm run prepare-docs",
-    "prebuild": "pnpm run prepare-docs",
+    "prebuild": "pnpm run prepare-ui && pnpm run prepare-docs",
     "build": "next build",
-    "pretypecheck": "pnpm run prepare-types",
+    "pretypecheck": "pnpm run prepare-ui && pnpm run prepare-types",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --config vitest.config.ts"
   },
