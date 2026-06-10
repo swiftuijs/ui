@@ -1,3 +1,7 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
+import fg from 'fast-glob';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -28,6 +32,63 @@ Useful guidance.
 `;
 
     expect(buildComponentDocBody(input)).toBe(`Useful guidance.
+`);
+  });
+
+  it('preserves JSX examples while stripping Storybook MDX syntax', () => {
+    const input = `import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+import * as PageStories from './StandardPage.stories'
+
+<Meta title="SwiftUI/StandardPage/Readme" />
+
+# StandardPage
+
+## Navigation Bar
+
+<Canvas of={PageStories.Default} />
+
+\`\`\`tsx
+<StandardPage
+  id="article"
+  navigationTitle="Article"
+  toolbarItems={
+    <HStack spacing={8}>
+      <Button onClick={handleBookmark}>Bookmark</Button>
+      <Button onClick={handleShare}>Share</Button>
+    </HStack>
+  }
+>
+  <ScrollView>...</ScrollView>
+</StandardPage>
+\`\`\`
+`;
+
+    expect(buildComponentDocBody(input)).toContain('toolbarItems={');
+    expect(buildComponentDocBody(input)).toContain('<Button onClick={handleShare}>Share</Button>');
+    expect(buildComponentDocBody(input)).not.toContain('<Canvas');
+    expect(buildComponentDocBody(input)).not.toContain('<Meta');
+  });
+
+  it('removes aliased Storybook Canvas blocks from components named Canvas', () => {
+    const input = `import { Canvas as StoryCanvas, Meta } from '@storybook/addon-docs/blocks'
+import * as CanvasStories from './Canvas.stories'
+
+<Meta title="SwiftUI/Canvas/Readme" />
+
+# Canvas
+
+## Examples
+
+<StoryCanvas of={CanvasStories.Default} />
+
+## Notes
+
+- Rendering is delegated to the supplied draw callback.
+`;
+
+    expect(buildComponentDocBody(input)).toBe(`## Notes
+
+- Rendering is delegated to the supplied draw callback.
 `);
   });
 
@@ -116,5 +177,18 @@ Button maps directly to SwiftUI.
         },
       ]),
     ).toContain('- [Button](/docs/components/button): Trigger actions.');
+  });
+
+  it('keeps colocated component docs on current component route paths', async () => {
+    const files = await fg('../../packages/ui/src/components/**/*.docs.mdx', {
+      cwd: process.cwd(),
+      onlyFiles: true,
+    });
+
+    const sources = await Promise.all(
+      files.map(async (file) => readFile(join(process.cwd(), file), 'utf8')),
+    );
+
+    expect(sources.join('\n')).not.toContain('/docs/components-');
   });
 });

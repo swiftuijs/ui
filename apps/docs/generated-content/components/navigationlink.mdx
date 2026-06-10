@@ -14,8 +14,9 @@ NavigationLink is a component that triggers navigation to a destination within a
 ### Standard Page
 
 ```tsx
-<NavigationLink 
-
+<NavigationLink
+  destination={DetailPage}
+  pageOptions={{ type: 'page' }}
 >
   <Text>Go to Detail</Text>
 </NavigationLink>
@@ -30,7 +31,7 @@ NavigationLink supports customizable transition animations through the `transiti
 By default, pages use a slide animation:
 
 ```tsx
-
+<NavigationLink destination={DetailPage} pageOptions={{ type: 'page' }}>
   <Button>Go to Detail</Button>
 </NavigationLink>
 ```
@@ -41,21 +42,38 @@ Use View Transitions API for smooth shared element animations. This requires set
 
 ```tsx
 // Source element (in list)
-<NavigationLink 
-
+<NavigationLink
+  destination={ProductDetail}
+  pageOptions={{
+    type: 'page',
+    transition: {
+      type: 'view-transition',
+      viewTransitionName: 'product-image'
+    }
   }}
 >
-
+  <div style={{ viewTransitionName: 'product-image' }}>
+    <Image src={product.thumbnail} />
+    <Text>{product.name}</Text>
   </div>
 </NavigationLink>
 
 // Target element (in ProductDetail page)
-
+function ProductDetail({ product }) {
+  return (
+    <StandardPage
+      id="product-detail"
+      navigationTitle={product.name}
+      transition={{
+        type: 'view-transition',
+        viewTransitionName: 'product-image'
+      }}
     >
-      <Image 
-
+      <Image
+        src={product.fullImage}
+        style={{ viewTransitionName: 'product-image' }}
       />
-
+      <Text>{product.description}</Text>
     </StandardPage>
   )
 }
@@ -66,8 +84,14 @@ Use View Transitions API for smooth shared element animations. This requires set
 Use fade animation for modal-like presentations:
 
 ```tsx
-<NavigationLink 
-
+<NavigationLink
+  destination={ModalPage}
+  pageOptions={{
+    type: 'actionsheet',
+    transition: {
+      type: 'fade',
+      duration: 200
+    }
   }}
 >
   <Button>Open Modal</Button>
@@ -79,8 +103,14 @@ Use fade animation for modal-like presentations:
 Use scale animation for popover-like presentations:
 
 ```tsx
-<NavigationLink 
-
+<NavigationLink
+  destination={PopoverPage}
+  pageOptions={{
+    type: 'actionsheet',
+    transition: {
+      type: 'scale',
+      duration: 250
+    }
   }}
 >
   <Button>Show Popover</Button>
@@ -90,8 +120,15 @@ Use scale animation for popover-like presentations:
 ### Custom Duration and Easing
 
 ```tsx
-<NavigationLink 
-
+<NavigationLink
+  destination={DetailPage}
+  pageOptions={{
+    type: 'page',
+    transition: {
+      type: 'slide',
+      duration: 400,
+      easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+    }
   }}
 >
   <Button>Go to Detail</Button>
@@ -101,8 +138,13 @@ Use scale animation for popover-like presentations:
 ### No Animation
 
 ```tsx
-<NavigationLink 
-
+<NavigationLink
+  destination={DetailPage}
+  pageOptions={{
+    type: 'page',
+    transition: {
+      type: 'none'
+    }
   }}
 >
   <Button>Instant Navigation</Button>
@@ -122,7 +164,14 @@ Use the `dismiss` prop to navigate back:
 Or use it programmatically:
 
 ```tsx
+import { useNaviContext } from '@swiftuijs/ui'
 
+function MyPage() {
+  const navi = useNaviContext()
+
+  return (
+    <StandardPage id="my-page">
+      <Button onClick={() => navi.dismiss()}>Go Back</Button>
     </StandardPage>
   )
 }
@@ -135,7 +184,7 @@ Or use it programmatically:
 | `destination` | `string \| ComponentType` | ❌ | - | Destination component or URL to navigate to |
 | `pageOptions` | `object` | ❌ | - | Options for page presentation |
 | `pageOptions.type` | `'page' \| 'actionsheet'` | ❌ | `'page'` | Type of page presentation |
-
+| `pageOptions.transition` | `ITransitionConfig` | ❌ | `{ type: 'slide' }` | Transition configuration |
 | `dismiss` | `boolean` | ❌ | `false` | If true, navigates back instead of forward |
 | `style` | `CSSProperties` | ❌ | - | Custom CSS styles |
 | `className` | `string` | ❌ | - | Custom CSS class name |
@@ -159,9 +208,13 @@ Or use it programmatically:
 // Master (List)
 <StandardPage id="products" navigationTitle="Products">
   <List>
-
+    {products.map(product => (
+      <NavigationLink
+        key={product.id}
+        destination={() => <ProductDetail product={product} />}
+        pageOptions={{ type: 'page' }}
       >
-
+        <ProductRow product={product} />
       </NavigationLink>
     ))}
   </List>
@@ -172,22 +225,33 @@ Or use it programmatically:
 
 ```tsx
 // List item with shared element
-<NavigationLink 
-
+<NavigationLink
+  destination={ProductDetail}
+  pageOptions={{
+    type: 'page',
+    transition: {
+      type: 'view-transition',
+      viewTransitionName: `product-${product.id}`
     }
   }}
 >
-
+  <Card style={{ viewTransitionName: `product-${product.id}` }}>
+    <Image src={product.thumbnail} />
+    <Text>{product.name}</Text>
   </Card>
 </NavigationLink>
 
 // Detail page with matching shared element
-<StandardPage 
+<StandardPage
   id="product-detail"
-
+  transition={{
+    type: 'view-transition',
+    viewTransitionName: `product-${product.id}`
   }}
 >
-
+  <Card style={{ viewTransitionName: `product-${product.id}` }}>
+    <Image src={product.fullImage} />
+    <Text>{product.description}</Text>
   </Card>
 </StandardPage>
 ```
@@ -195,17 +259,26 @@ Or use it programmatically:
 ### Conditional Navigation
 
 ```tsx
-
+function ProductList({ products }) {
+  const handleProductClick = (product) => {
+    if (product.available) {
+      // Navigate to detail
+    } else {
       // Show unavailable message
     }
   }
 
   return (
     <List>
-
+      {products.map(product => (
+        <NavigationLink
+          key={product.id}
+          destination={() => <ProductDetail product={product} />}
+          pageOptions={{ type: 'page' }}
         >
-          <ProductRow 
-
+          <ProductRow
+            product={product}
+            onClick={handleProductClick}
           />
         </NavigationLink>
       ))}
@@ -233,6 +306,6 @@ Or use it programmatically:
 
 ## Related Components
 
-- [NavigationStack](/docs/components-navigation-stack) - Container for navigation
-- [StandardPage](/docs/components-standard-page) - Default page container
-- [Button](/docs/components-button) - Often used as NavigationLink children
+- [NavigationStack](/docs/components/navigationstack) - Container for navigation
+- [StandardPage](/docs/components/page/standard-page/standardpage) - Default page container
+- [Button](/docs/components/button) - Often used as NavigationLink children

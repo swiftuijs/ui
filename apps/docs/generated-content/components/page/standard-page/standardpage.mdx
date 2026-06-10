@@ -18,16 +18,22 @@ When a page is not the root page, the back button appears automatically:
 ```tsx
 // In NavigationStack
 <NavigationStack>
-
+  {/* Root page - no back button */}
   <StandardPage id="home" navigationTitle="Home">
-
+    <NavigationLink destination={DetailPage}>
       <Button>Go to Detail</Button>
     </NavigationLink>
   </StandardPage>
 </NavigationStack>
 
 // Detail page - back button appears automatically
-
+function DetailPage() {
+  return (
+    <StandardPage id="detail" navigationTitle="Details">
+      <Text>Detail content</Text>
+    </StandardPage>
+  )
+}
 ```
 
 ### With Toolbar Items
@@ -37,10 +43,13 @@ Add action buttons to the navigation bar:
 ### Multiple Toolbar Items
 
 ```tsx
-<StandardPage 
-  id="article" 
+<StandardPage
+  id="article"
   navigationTitle="Article"
-
+  toolbarItems={
+    <HStack spacing={8}>
+      <Button onClick={handleBookmark}>🔖</Button>
+      <Button onClick={handleShare}>Share</Button>
     </HStack>
   }
 >
@@ -70,7 +79,9 @@ StandardPage uses flexbox layout. Content automatically fills available space:
 ```tsx
 <StandardPage id="products" navigationTitle="Products">
   <List>
-
+    {products.map(product => (
+      <Section key={product.id}>
+        <ProductRow product={product} />
       </Section>
     ))}
   </List>
@@ -80,12 +91,14 @@ StandardPage uses flexbox layout. Content automatically fills available space:
 ### Form Page
 
 ```tsx
-<StandardPage 
-  id="edit" 
+<StandardPage
+  id="edit"
   navigationTitle="Edit"
-
+  toolbarItems={<Button onClick={handleSave}>Save</Button>}
 >
-
+  <Form onSubmit={handleSubmit}>
+    <TextField label="Name" value={name} onChange={setName} />
+    <TextField label="Email" value={email} onChange={setEmail} />
   </Form>
 </StandardPage>
 ```
@@ -95,9 +108,12 @@ StandardPage uses flexbox layout. Content automatically fills available space:
 ```tsx
 <StandardPage id="detail" navigationTitle="Product Details">
   <ScrollView>
-
+    <VStack spacing={20}>
+      <Image src={product.image} />
+      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+        {product.name}
       </Text>
-
+      <Text>{product.description}</Text>
     </VStack>
   </ScrollView>
 </StandardPage>
@@ -108,7 +124,8 @@ StandardPage uses flexbox layout. Content automatically fills available space:
 ```tsx
 <StandardPage id="settings" navigationTitle="Settings">
   <List>
-
+    <Section header={<Text>Account</Text>}>
+      <NavigationLink destination={ProfilePage}>
         <HStack>
           <Text>Profile</Text>
           <Spacer />
@@ -116,7 +133,8 @@ StandardPage uses flexbox layout. Content automatically fills available space:
         </HStack>
       </NavigationLink>
     </Section>
-
+    <Section header={<Text>Preferences</Text>}>
+      <Toggle label="Notifications" value={notifications} onChange={setNotifications} />
     </Section>
   </List>
 </StandardPage>
@@ -130,8 +148,9 @@ StandardPage is designed to work within NavigationStack:
 <NavigationStack>
   <StandardPage id="home" navigationTitle="Home">
     <VStack>
-      <NavigationLink 
-
+      <NavigationLink
+        destination={DetailPage}
+        pageOptions={{ type: 'page' }}
       >
         <Button>Go to Detail</Button>
       </NavigationLink>
@@ -145,10 +164,10 @@ StandardPage is designed to work within NavigationStack:
 ### Custom Page Styles
 
 ```tsx
-<StandardPage 
-  id="custom" 
+<StandardPage
+  id="custom"
   navigationTitle="Custom"
-
+  style={{ backgroundColor: '#f5f5f5' }}
 >
   <VStack>...</VStack>
 </StandardPage>
@@ -159,7 +178,10 @@ StandardPage is designed to work within NavigationStack:
 Navigation bar styles can be customized via CSS variables:
 
 ```css
-
+:root {
+  --sw-color-background-primary: #FFFFFF;
+  --sw-color-separator: #C6C6C8;
+}
 ```
 
 ## Best Practices
@@ -172,7 +194,7 @@ Navigation bar styles can be customized via CSS variables:
 
 ## Related Components
 
-- [NavigationStack](/docs/components-navigation-stack) - Container for pages
-- [NavigationLink](/docs/components-navigation-link) - Navigate between pages
-- [NavigationBar](/docs/components-navigation-bar) - The navigation bar component
-- [ScrollView](/docs/components-scroll-view) - For scrollable content
+- [NavigationStack](/docs/components/navigationstack) - Container for pages
+- [NavigationLink](/docs/components/navigationlink) - Navigate between pages
+- [NavigationBar](/docs/components/navigationbar) - The navigation bar component
+- [ScrollView](/docs/components/scrollview) - For scrollable content

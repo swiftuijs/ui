@@ -73,15 +73,61 @@ function removeSection(markdown: string, heading: string) {
   );
 }
 
+function stripStorybookMdx(source: string): string {
+  const lines = source.split('\n');
+  const kept: string[] = [];
+  let inCodeFence = false;
+  let skippingBlock: string | null = null;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith('```')) {
+      inCodeFence = !inCodeFence;
+      kept.push(line);
+      continue;
+    }
+
+    if (inCodeFence) {
+      kept.push(line);
+      continue;
+    }
+
+    if (skippingBlock) {
+      if (trimmed.endsWith('/>') || trimmed === `</${skippingBlock}>`) {
+        skippingBlock = null;
+      }
+      continue;
+    }
+
+    if (/^import\s+/.test(trimmed)) {
+      continue;
+    }
+
+    const blockMatch = trimmed.match(/^<(Meta|Canvas|[A-Za-z][A-Za-z0-9]*Canvas)\b/);
+    if (blockMatch) {
+      if (!trimmed.endsWith('/>') && !trimmed.includes(`</${blockMatch[1]}>`)) {
+        skippingBlock = blockMatch[1];
+      }
+      continue;
+    }
+
+    if (/^\{[^}]+\}/.test(trimmed)) {
+      continue;
+    }
+
+    kept.push(line);
+  }
+
+  return kept.join('\n');
+}
+
 export function buildComponentDocBody(source: string): string {
   const withoutFrontmatter = matter(source).content;
-  const stripped = withoutFrontmatter
-    .replace(/^import\s+.*$/gm, '')
-    .replace(/^<Meta[\s\S]*?\/>\s*$/gm, '')
-    .replace(/^<Canvas[\s\S]*?\/>\s*$/gm, '')
-    .replace(/^<Canvas[\s\S]*?<\/Canvas>\s*$/gm, '')
-    .replace(/^.*\{[^}]+\}.*$/gm, '')
-    .replace(/\{[^}]+\}/g, '')
+  const stripped = stripStorybookMdx(withoutFrontmatter)
+    .split('\n')
+    .map((line) => line.trimEnd())
+    .join('\n')
     .replace(/^\s*$/gm, '\n');
   const cleaned = removeEmptyHeadings(removeSection(removeLeadingTitle(stripped), 'Usage'));
 
