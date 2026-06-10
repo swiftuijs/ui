@@ -1,0 +1,10 @@
+1:"$Sreact.fragment"
+2:I[20976,["/_next/static/chunks/0luqzbw2zupbb.js","/_next/static/chunks/0_jvo2zdo9x5i.js","/_next/static/chunks/0zkz2-sbpnr9s.js","/_next/static/chunks/10pij4kv7vlcd.js","/_next/static/chunks/0zq.mo312w70j.js","/_next/static/chunks/14uh_-55xjkrt.js"],"DocsPage"]
+3:I[20976,["/_next/static/chunks/0luqzbw2zupbb.js","/_next/static/chunks/0_jvo2zdo9x5i.js","/_next/static/chunks/0zkz2-sbpnr9s.js","/_next/static/chunks/10pij4kv7vlcd.js","/_next/static/chunks/0zq.mo312w70j.js","/_next/static/chunks/14uh_-55xjkrt.js"],"DocsTitle"]
+4:I[20976,["/_next/static/chunks/0luqzbw2zupbb.js","/_next/static/chunks/0_jvo2zdo9x5i.js","/_next/static/chunks/0zkz2-sbpnr9s.js","/_next/static/chunks/10pij4kv7vlcd.js","/_next/static/chunks/0zq.mo312w70j.js","/_next/static/chunks/14uh_-55xjkrt.js"],"DocsDescription"]
+5:I[2632,["/_next/static/chunks/0luqzbw2zupbb.js","/_next/static/chunks/0_jvo2zdo9x5i.js","/_next/static/chunks/0zkz2-sbpnr9s.js","/_next/static/chunks/10pij4kv7vlcd.js","/_next/static/chunks/0zq.mo312w70j.js","/_next/static/chunks/14uh_-55xjkrt.js"],"ComponentDocPage"]
+6:I[20976,["/_next/static/chunks/0luqzbw2zupbb.js","/_next/static/chunks/0_jvo2zdo9x5i.js","/_next/static/chunks/0zkz2-sbpnr9s.js","/_next/static/chunks/10pij4kv7vlcd.js","/_next/static/chunks/0zq.mo312w70j.js","/_next/static/chunks/14uh_-55xjkrt.js"],"DocsBody"]
+7:I[51091,["/_next/static/chunks/0luqzbw2zupbb.js","/_next/static/chunks/0_jvo2zdo9x5i.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"toc":[],"children":[["$","$L3",null,{"children":"AspectRatio"}],["$","$L4",null,{"children":"Constrains content to a target ratio, aligned with SwiftUI's aspectRatio modifier."}],["$","$L5",null,{"slug":["components","aspectratio"]}],["$","$L6",null,{}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/0zq.mo312w70j.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/14uh_-55xjkrt.js","async":true}]],["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-jlHyMNbEVCeMu6HzWA9M"}
+9:null

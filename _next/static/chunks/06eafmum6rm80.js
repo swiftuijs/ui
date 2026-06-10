@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,86641,e=>{"use strict";e.i(85069);let a=e.i(64804).Gauge;e.s(["Default",0,{args:{label:"Storage",value:64,min:0,max:128,currentValueLabel:"64 GB",minimumValueLabel:"0 GB",maximumValueLabel:"128 GB"}},"__DOCS_COMPONENT__",0,a])}]);

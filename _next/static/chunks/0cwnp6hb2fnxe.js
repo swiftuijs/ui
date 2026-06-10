@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,81664,t=>{"use strict";t.i(85069);let i=t.i(36155).SettingsLink;t.s(["Default",0,{args:{}},"DestinationOverride",0,{args:{href:"/settings/notifications",label:"Notification settings"}},"__DOCS_COMPONENT__",0,i])}]);
