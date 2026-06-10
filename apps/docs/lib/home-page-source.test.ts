@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -21,5 +22,17 @@ describe('docs home page styling', () => {
     expect(source).toContain('Align your UI structure, interaction patterns, and API design with SwiftUI');
     expect(source).not.toContain('documentation that ships as static files');
     expect(source).not.toContain('This app is built with Fumadocs on top of Next.js static export');
+  });
+
+  it('links to the kitchensink demo from the first-page product surface', async () => {
+    const source = await readFile(homePagePath, 'utf8');
+
+    expect(source).toContain('href="/kitchensink/"');
+    expect(source).toContain('Open kitchensink demo');
+  });
+
+  it('keeps the kitchensink demo as a docs static-export route', () => {
+    expect(existsSync(join(process.cwd(), 'app/kitchensink/page.tsx'))).toBe(true);
+    expect(existsSync(join(process.cwd(), 'app/kitchensink/kitchensink-client.tsx'))).toBe(true);
   });
 });

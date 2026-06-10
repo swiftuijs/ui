@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 
 import { RootProvider } from 'fumadocs-ui/provider/next';
 
+import '@swiftuijs/ui/style/index.css';
 import './global.css';
 
 const sans = Space_Grotesk({

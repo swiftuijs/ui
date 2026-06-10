@@ -55,6 +55,12 @@ export default async function HomePage() {
             >
               Start integrating
             </Link>
+            <Link
+              href="/kitchensink/"
+              className="rounded-full border border-fd-primary/50 px-5 py-3 text-sm font-medium text-fd-foreground transition hover:bg-fd-primary/10"
+            >
+              Open kitchensink demo
+            </Link>
           </div>
         </div>
         <div className="grid gap-4 rounded-[1.5rem] border border-fd-border bg-fd-card p-6 text-fd-card-foreground shadow-inner">

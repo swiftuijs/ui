@@ -27,13 +27,14 @@
       "types": "./dist/hooks/*.d.ts"
     },
     "./style/*": {
-      "import": "./dist/style/*.css"
+      "import": "./dist/style/*",
+      "default": "./dist/style/*"
     }
   },
   "files": ["dist"],
   "scripts": {
     "dev": "vite dev",
-    "build": "rimraf dist tsconfig.build.tsbuildinfo && vite build && tsc -p tsconfig.build.json",
+    "build": "rimraf dist tsconfig.build.tsbuildinfo && vite build && tsc -p tsconfig.build.json && tsx scripts/prepare-dts.ts",
     "lint": "eslint src --max-warnings 0",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
