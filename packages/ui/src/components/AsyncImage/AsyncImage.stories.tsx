@@ -15,7 +15,7 @@ type Story = StoryObj<IAsyncImageProps>
 
 export const Default: Story = {
   args: {
-    src: 'https://via.placeholder.com/320x180',
+    src: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E',
     alt: 'Remote image',
     placeholder: 'Loading image…',
   },
@@ -44,7 +44,7 @@ function PhaseAwareDemo() {
   return (
     <div style={{ display: 'grid', gap: 12 }}>
       <AsyncImage
-        src="https://via.placeholder.com/320x180"
+        src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E"
         alt="Phase aware image"
         placeholder="Loading image…"
         onPhaseChange={setPhase}

@@ -122,7 +122,7 @@ function stripStorybookMdx(source: string): string {
   return kept.join('\n');
 }
 
-export function buildComponentDocBody(source: string): string {
+export function buildComponentDocBody(source: string, description?: string | null): string {
   const withoutFrontmatter = matter(source).content;
   const stripped = stripStorybookMdx(withoutFrontmatter)
     .split('\n')
@@ -131,7 +131,10 @@ export function buildComponentDocBody(source: string): string {
     .replace(/^\s*$/gm, '\n');
   const cleaned = removeEmptyHeadings(removeSection(removeLeadingTitle(stripped), 'Usage'));
 
-  return `${normaliseWhitespace(cleaned)}\n`;
+  const body = description ? cleaned.split(/\n\s*\n/).filter(block =>
+    block.startsWith('```') || block.replace(/\s+/g, ' ').trim() !== description.replace(/\s+/g, ' ').trim(),
+  ).join('\n\n') : cleaned;
+  return `${normaliseWhitespace(removeEmptyHeadings(body))}\n`;
 }
 
 export function buildRootMeta(meta: { pages?: string[]; title?: string }) {
@@ -236,7 +239,7 @@ export async function generateDocsContent(options?: {
       const source = await readFile(doc.sourcePath, 'utf8');
       const title = parseComponentDocTitle(source, doc.slug);
       const description = doc.description ?? `${title} component documentation.`;
-      const body = buildComponentDocBody(source);
+      const body = buildComponentDocBody(source, doc.description);
       const targetPath = join(generatedContentDir, 'components', `${doc.slug}.mdx`);
 
       await mkdir(dirname(targetPath), { recursive: true });

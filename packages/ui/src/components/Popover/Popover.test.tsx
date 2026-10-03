@@ -88,3 +88,14 @@ describe('Popover', () => {
     expect(screen.getByRole('dialog')).toHaveStyle({ width: '0px' })
   })
 })
+
+it('keeps the popover open when its own controls are used', async () => {
+  const anchorRef = createRef<HTMLButtonElement>()
+  const dismiss = vi.fn(), action = vi.fn()
+  render(<><button ref={anchorRef}>Anchor</button><Popover anchorRef={anchorRef} isPresented onDismiss={dismiss}>
+    <button onClick={action}>Inside action</button>
+  </Popover></>)
+  await userEvent.click(screen.getByRole('button', { name: 'Inside action' }))
+  expect(action).toHaveBeenCalledOnce()
+  expect(dismiss).not.toHaveBeenCalled()
+})

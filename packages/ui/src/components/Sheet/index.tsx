@@ -1,7 +1,9 @@
-import { forwardRef, useEffect, useState, type CSSProperties } from 'react'
+import { forwardRef, useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 import type { IPresentationDetent } from '@/types'
+import { Modal } from '../_internal/Modal'
+import { useSheetDrag } from '../_internal/use-sheet-drag'
 
 import './style.scss'
 
@@ -9,6 +11,8 @@ import './style.scss'
  * Props for Sheet component
  */
 export interface ISheetProps extends IBaseComponent {
+  /** Accessible name for the sheet. */
+  title?: string
   /**
    * Whether the sheet is presented
    */
@@ -66,9 +70,11 @@ export interface ISheetProps extends IBaseComponent {
 }
 
 const DETENT_HEIGHT_MAP: Record<'medium' | 'large', string> = {
-  medium: '60%',
+  medium: '50%',
   large: '90%',
 }
+
+const DEFAULT_DETENTS: IPresentationDetent[] = ['large']
 
 function resolveDetentHeight(detent: IPresentationDetent | undefined) {
   if (detent == null) {
@@ -120,13 +126,14 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
 ) {
   const {
     isPresented,
+    title = 'Sheet',
     onDismiss,
     presentationStyle = 'pageSheet',
     showDragIndicator = true,
     backgroundInteraction = 'dismiss',
     backgroundStyle = 'automatic',
     cornerRadius,
-    presentationDetents = ['large'],
+    presentationDetents = DEFAULT_DETENTS,
     selectedDetent,
     defaultSelectedDetent,
     onSelectedDetentChange,
@@ -138,51 +145,27 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
   const [internalSelectedDetent, setInternalSelectedDetent] = useState<IPresentationDetent>(() => {
     return resolveAvailableDetent(defaultSelectedDetent ?? selectedDetent, presentationDetents)
   })
+  const availableDetents = presentationDetents.length ? presentationDetents : DEFAULT_DETENTS
   const isDetentControlled = selectedDetent !== undefined
   const resolvedDetent = resolveAvailableDetent(
     isDetentControlled ? selectedDetent : internalSelectedDetent,
-    presentationDetents
+    availableDetents
   )
   const resolvedDetentHeight = resolveDetentHeight(resolvedDetent)
   const canDismissInteractively = backgroundInteraction === 'dismiss' && !interactiveDismissDisabled
   const canAdjustDetents = presentationDetents.length > 1
+  const wasPresented = useRef(false)
 
   useEffect(() => {
-    if (!isPresented || !onDismiss || !canDismissInteractively) {
-      return
-    }
-
-    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onDismiss()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [canDismissInteractively, isPresented, onDismiss])
-
-  useEffect(() => {
+    const opening = isPresented && !wasPresented.current
     if (!isDetentControlled) {
-      setInternalSelectedDetent(resolveAvailableDetent(defaultSelectedDetent, presentationDetents))
+      setInternalSelectedDetent(current => resolveAvailableDetent(
+        opening ? defaultSelectedDetent : current,
+        presentationDetents,
+      ))
     }
+    wasPresented.current = isPresented
   }, [defaultSelectedDetent, isDetentControlled, isPresented, presentationDetents])
-
-  if (!isPresented) {
-    return null
-  }
-
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!canDismissInteractively) {
-      return
-    }
-
-    if (e.target === e.currentTarget && onDismiss) {
-      onDismiss()
-    }
-  }
 
   const handleDetentChange = (nextDetent: IPresentationDetent) => {
     if (!isDetentControlled) {
@@ -190,6 +173,17 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     }
     onSelectedDetentChange?.(nextDetent)
   }
+
+  const { consumeClick, ...dragHandlers } = useSheetDrag({
+    open: isPresented,
+    detents: availableDetents,
+    selectedDetent: resolvedDetent ?? 'large',
+    dismissDisabled: interactiveDismissDisabled,
+    onDismiss,
+    onDetentChange: handleDetentChange,
+  })
+
+  if (!isPresented) return null
 
   const handleDragIndicatorClick = () => {
     if (!canAdjustDetents) {
@@ -216,12 +210,13 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
   })
 
   return (
-    <div
-      className={prefixClass('sheet-backdrop')}
-      role="presentation"
-      onClick={handleBackdropClick}
-    >
-      <div
+    <Modal
+        open={isPresented}
+        onDismiss={onDismiss}
+        dismissOnEscape={!interactiveDismissDisabled}
+        dismissOnBackdrop={canDismissInteractively}
+        overlayClassName={prefixClass('sheet-backdrop')}
+        accessibleTitle={title}
         {...commonProps}
         {...finalRestProps}
         data-background-interaction={backgroundInteraction}
@@ -231,23 +226,21 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
         data-presentation-style={presentationStyle}
         data-selected-detent={resolvedDetent == null ? undefined : String(resolvedDetent)}
         ref={ref}
-        role="dialog"
-        aria-modal="true"
       >
+        <div className={prefixClass('sheet-content')}>
         {showDragIndicator && presentationStyle !== 'fullScreen' && (
           <button
             aria-label="Adjust sheet height"
             className={prefixClass('sheet-drag-indicator')}
             data-testid="sheet-drag-indicator"
-            disabled={!canAdjustDetents}
-            onClick={handleDragIndicatorClick}
+            disabled={!canAdjustDetents && interactiveDismissDisabled}
+            {...dragHandlers}
+            onClick={event => { if (!consumeClick(event.detail)) handleDragIndicatorClick() }}
             type="button"
           />
         )}
-        <div className={prefixClass('sheet-content')}>
-          {children}
+          <div className={prefixClass('sheet-body')}>{children}</div>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 })

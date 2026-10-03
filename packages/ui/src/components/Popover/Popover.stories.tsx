@@ -40,3 +40,15 @@ function DefaultPopover() {
 export const Default: Story = {
   render: () => <DefaultPopover />,
 }
+
+function EdgePopover() {
+  const anchorRef = useRef<HTMLButtonElement>(null)
+  const [isPresented, setIsPresented] = useState(false)
+  return <div style={{ height: 'calc(100dvh - 32px)', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+    <button className="sw-button" ref={anchorRef} onClick={() => setIsPresented(true)}>Edge popover</button>
+    <Popover anchorRef={anchorRef} arrowEdge="bottom" isPresented={isPresented} onDismiss={() => setIsPresented(false)}>
+      <Text>A popover placed above its anchor at the right viewport edge.</Text>
+    </Popover>
+  </div>
+}
+export const AtViewportEdge: Story = { render: () => <EdgePopover /> }

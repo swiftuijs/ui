@@ -78,7 +78,7 @@ export const DisclosureGroup = memo(function DisclosureGroup(props: IDisclosureG
       >
         <span className={prefixClass('disclosuregroup-label')}>{label}</span>
         <span className={prefixClass('disclosuregroup-icon')} aria-hidden="true">
-          {expanded ? '▼' : '▶'}
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="m4 2 4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </span>
       </button>
       {expanded && (

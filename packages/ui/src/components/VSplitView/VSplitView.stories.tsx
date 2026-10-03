@@ -18,13 +18,13 @@ export const Default: Story = {
   render: () => (
     <VSplitView fractions={[1, 2]}>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Top</Text>
           <Text>Top pane content</Text>
         </VStack>
       </Card>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Bottom</Text>
           <Text>Bottom pane content</Text>
         </VStack>
@@ -37,19 +37,19 @@ export const ThreePane: Story = {
   render: () => (
     <VSplitView fractions={[1, 1, 2]}>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Header</Text>
           <Text>Header pane</Text>
         </VStack>
       </Card>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Summary</Text>
           <Text>Summary pane</Text>
         </VStack>
       </Card>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Detail</Text>
           <Text>Detail pane</Text>
         </VStack>

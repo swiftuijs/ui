@@ -16,7 +16,7 @@ describe('Sheet', () => {
       </Sheet>,
     )
 
-    await user.click(screen.getByRole('presentation'))
+    await user.click(screen.getByRole('presentation', { hidden: true }))
 
     expect(onDismiss).toHaveBeenCalledTimes(1)
   })
@@ -52,7 +52,7 @@ describe('Sheet', () => {
       </Sheet>,
     )
 
-    await user.click(screen.getByRole('presentation'))
+    await user.click(screen.getByRole('presentation', { hidden: true }))
 
     expect(onDismiss).not.toHaveBeenCalled()
   })
@@ -109,7 +109,7 @@ describe('Sheet', () => {
     const dragIndicator = screen.getByRole('button', { name: 'Adjust sheet height' })
 
     expect(dialog).toHaveAttribute('data-selected-detent', 'medium')
-    expect(dialog).toHaveStyle({ '--sw-sheet-height': '60%' })
+    expect(dialog).toHaveStyle({ '--sw-sheet-height': '50%' })
 
     await user.click(dragIndicator)
 
@@ -139,7 +139,7 @@ describe('Sheet', () => {
     expect(onSelectedDetentChange).toHaveBeenCalledTimes(1)
     expect(onSelectedDetentChange).toHaveBeenCalledWith('large')
     expect(dialog).toHaveAttribute('data-selected-detent', 'medium')
-    expect(dialog).toHaveStyle({ '--sw-sheet-height': '60%' })
+    expect(dialog).toHaveStyle({ '--sw-sheet-height': '50%' })
   })
 
   it('resets uncontrolled detent state when the sheet is presented again', async () => {
@@ -179,7 +179,7 @@ describe('Sheet', () => {
     )
 
     expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
-    expect(screen.getByRole('dialog')).toHaveStyle({ '--sw-sheet-height': '60%' })
+    expect(screen.getByRole('dialog')).toHaveStyle({ '--sw-sheet-height': '50%' })
   })
 
   it('falls back to the first configured detent when a selected detent is unavailable', () => {
@@ -194,7 +194,7 @@ describe('Sheet', () => {
     )
 
     expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
-    expect(screen.getByRole('dialog')).toHaveStyle({ '--sw-sheet-height': '60%' })
+    expect(screen.getByRole('dialog')).toHaveStyle({ '--sw-sheet-height': '50%' })
   })
 
   it('dismisses on Escape by default', async () => {
@@ -226,10 +226,35 @@ describe('Sheet', () => {
       </Sheet>,
     )
 
-    await user.click(screen.getByRole('presentation'))
+    await user.click(screen.getByRole('presentation', { hidden: true }))
     await user.keyboard('{Escape}')
 
     expect(onDismiss).not.toHaveBeenCalled()
     expect(screen.getByRole('dialog')).toHaveAttribute('data-interactive-dismiss-disabled', 'true')
   })
+})
+
+
+it.each([
+  [240, '240px'],
+  ['42%', '42%'],
+])('supports custom detent %s without converting it to a preset', (detent, height) => {
+  render(<Sheet isPresented presentationDetents={[detent as 240 | '42%']}><button>Close</button></Sheet>)
+  expect(screen.getByRole('dialog')).toHaveStyle({ '--sw-sheet-height': height })
+})
+
+it('uses an explicit ARIA label supplied by the React consumer', () => {
+  render(<Sheet isPresented aria-label="Edit schedule"><button>Save schedule</button></Sheet>)
+  expect(screen.getByRole('dialog', { name: 'Edit schedule' })).toBeInTheDocument()
+})
+
+it('supports a visible title as its accessible label', () => {
+  render(<Sheet isPresented aria-labelledby="editor-heading"><h2 id="editor-heading">Edit workspace</h2></Sheet>)
+  expect(screen.getByRole('dialog', { name: 'Edit workspace' })).toBeInTheDocument()
+})
+
+it('allows an empty detent list to use the default presentation height', () => {
+  render(<Sheet isPresented presentationDetents={[]}><button>Close editor</button></Sheet>)
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'large')
+  expect(screen.getByRole('button', { name: 'Adjust sheet height' })).toBeEnabled()
 })

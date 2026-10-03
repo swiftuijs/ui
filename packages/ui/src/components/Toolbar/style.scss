@@ -1,3 +1,4 @@
+@use '../../style/glass.scss' as *;
 @use '@style/base.scss' as *;
 
 @include component('toolbar') {
@@ -44,3 +45,8 @@
     }
   }
 }
+
+.sw-toolbar-group:not(.sw-toolbar-group-center) { @include glass-surface; }
+
+.sw-toolbar:has([data-glass="on"]) { background: transparent; border: 0; }
+.sw-toolbar-group[data-glass="on"]:not(.sw-toolbar-group-center) { border-radius: var(--sw-radius-full); padding: 0 8px; }

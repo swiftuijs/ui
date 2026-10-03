@@ -34,7 +34,7 @@ function DetailPage() {
 
 export const Default: Story = {
   render: () => (
-    <NavigationStack>
+    <NavigationStack style={{ height: 420 }}>
       <VStack spacing={20}>
         <NavigationLink destination={DetailPage}>
           <Text>Go to Detail</Text>
@@ -46,7 +46,7 @@ export const Default: Story = {
 
 export const WithText: Story = {
   render: () => (
-    <NavigationStack>
+    <NavigationStack style={{ height: 420 }}>
       <VStack spacing={20}>
         <NavigationLink destination={DetailPage}>
           <Text>Navigate to Detail Page</Text>
@@ -58,7 +58,7 @@ export const WithText: Story = {
 
 export const Dismiss: Story = {
   render: () => (
-    <NavigationStack>
+    <NavigationStack style={{ height: 420 }}>
       <VStack spacing={20}>
         <NavigationLink destination={DetailPage}>
           <Text>Go to Detail</Text>
@@ -80,7 +80,7 @@ export const ActionSheet: Story = {
       )
     }
     return (
-      <NavigationStack>
+      <NavigationStack style={{ height: 420 }}>
         <VStack spacing={20}>
           <NavigationLink destination={SheetContent} pageOptions={{ type: 'actionsheet' }}>
             <Text>Show Action Sheet</Text>
@@ -110,7 +110,7 @@ export const MultipleLinks: Story = {
       )
     }
     return (
-      <NavigationStack>
+      <NavigationStack style={{ height: 420 }}>
         <VStack spacing={15}>
           <NavigationLink destination={Page1}>
             <Text>Go to Page 1</Text>

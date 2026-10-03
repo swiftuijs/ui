@@ -13,7 +13,7 @@ describe('Chart', () => {
   it('renders a bar chart by default', () => {
     render(<Chart data={data} label="Revenue" />)
 
-    expect(screen.getByRole('img', { name: 'Revenue' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'Revenue' })).toBeInTheDocument()
     expect(screen.getAllByTestId('chart-bar')).toHaveLength(3)
   })
 
@@ -42,7 +42,7 @@ describe('Chart', () => {
     render(<Chart data={[]} emptyState="No data" label="Revenue" />)
 
     expect(screen.getByText('No data')).toBeInTheDocument()
-    expect(screen.queryByRole('img', { name: 'Revenue' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('group', { name: 'Revenue' })).not.toBeInTheDocument()
   })
 
   it('supports uncontrolled selection for chart marks', () => {

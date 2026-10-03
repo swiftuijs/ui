@@ -13,11 +13,18 @@ describe('prepare-dts', () => {
     const declarationFile = join(distDir, 'components/Text/index.d.ts')
 
     await mkdir(join(distDir, 'components/Text'), { recursive: true })
+    for (const module of ['types/index', 'types/transition', 'contexts/index', 'tokens/index']) {
+      const target = join(distDir, `${module}.d.ts`)
+      await mkdir(join(target, '..'), { recursive: true })
+      await writeFile(target, 'export {}')
+    }
     await writeFile(
       declarationFile,
       [
         "import type { IBaseComponent } from '@/types';",
         "import type { ITransitionConfig } from '@/types/transition';",
+        "import type { INaviContext } from '@/contexts';",
+        "export type Tokens = import('@/tokens').TokenTree;",
         'export interface ITextProps extends IBaseComponent {}',
       ].join('\n'),
       'utf8',
@@ -25,7 +32,9 @@ describe('prepare-dts', () => {
 
     await rewriteDeclarationTypeAliases(distDir)
 
-    await expect(readFile(declarationFile, 'utf8')).resolves.toContain("from '../../types'")
-    await expect(readFile(declarationFile, 'utf8')).resolves.toContain("from '../../types/transition'")
+    await expect(readFile(declarationFile, 'utf8')).resolves.toContain("from '../../types/index.js'")
+    await expect(readFile(declarationFile, 'utf8')).resolves.toContain("from '../../types/transition.js'")
+    await expect(readFile(declarationFile, 'utf8')).resolves.toContain("from '../../contexts/index.js'")
+    await expect(readFile(declarationFile, 'utf8')).resolves.toContain("import('../../tokens/index.js')")
   })
 })

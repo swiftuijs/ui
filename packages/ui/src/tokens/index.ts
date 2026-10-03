@@ -23,7 +23,7 @@ export const RESPONSIVE_BREAKPOINTS = {
 } as const
 
 export const SIZE_CLASS_REGULAR_MIN = {
-  horizontal: RESPONSIVE_BREAKPOINTS.mobile,
+  horizontal: RESPONSIVE_BREAKPOINTS.tablet,
   vertical: 667,
 } as const
 

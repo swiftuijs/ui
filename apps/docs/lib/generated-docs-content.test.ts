@@ -192,3 +192,13 @@ Button maps directly to SwiftUI.
     expect(sources.join('\n')).not.toContain('/docs/components-');
   });
 });
+
+
+it('shows a component introduction once while retaining usage notes and code', () => {
+  const source = '# Button\n\n## Overview\n\nA native button with\nReact events.\n\n## Notes\n\nUse type="submit" inside forms.\n\n```tsx\n<Button>Save</Button>\n```';
+  const body = buildComponentDocBody(source, 'A native button with React events.');
+  expect(body).not.toContain('A native button');
+  expect(body).not.toContain('## Overview');
+  expect(body).toContain('Use type="submit"');
+  expect(body).toContain('<Button>Save</Button>');
+});

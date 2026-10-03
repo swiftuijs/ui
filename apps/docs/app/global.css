@@ -1,3 +1,6 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+:root { --color-fd-muted-foreground: #626262; }
+:root.dark { --color-fd-muted-foreground: #b8b8b8; }

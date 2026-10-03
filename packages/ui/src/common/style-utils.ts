@@ -1,4 +1,4 @@
-import type { IBaseComponent, IClsxArgs, IClsObj } from '@/types'
+import type { IBaseComponent, IClsxArgs, IClsObj, IFn } from '@/types'
 
 const CLSX_PREFIX = 'sw-'
 
@@ -113,4 +113,3 @@ export function mergeStyleData(options: IStyleDataProps,  computedOptions: IStyl
 export function standardizeUnit(value: number | string, unit: string = 'px') {
   return typeof value === 'number' ? value + unit : value
 }
-

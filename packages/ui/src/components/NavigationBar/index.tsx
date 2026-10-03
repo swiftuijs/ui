@@ -4,12 +4,13 @@ import { Button } from '../Button'
 import { HStack } from '../HStack'
 import { Text } from '../Text'
 
+import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
 /**
  * Props for NavigationBar component
  */
-export interface INavigationBarProps {
+export interface INavigationBarProps extends GlassSurfaceProps {
   /**
    * Navigation bar title
    */
@@ -54,12 +55,14 @@ export interface INavigationBarProps {
  * ```
  */
 export const NavigationBar = memo(function NavigationBar(props: INavigationBarProps) {
-  const { title, showBackButton = false, onBack, toolbarItems } = props
+  const { title, showBackButton = false, onBack, toolbarItems, glass } = props
+
+  const appearance = useGlassAppearance(glass)
 
   return (
     <div className={prefixClass('navigation-bar')}>
       {/* Back Button or Spacer */}
-      <div className={prefixClass('navigation-bar-leading')}>
+      <div {...appearance} className={prefixClass('navigation-bar-leading')}>
         {showBackButton ? (
           <Button
             className={prefixClass('navigation-bar-back')}
@@ -97,7 +100,7 @@ export const NavigationBar = memo(function NavigationBar(props: INavigationBarPr
       )}
 
       {/* Toolbar Items */}
-      <div className={prefixClass('navigation-bar-trailing')}>
+      <div {...appearance} className={prefixClass('navigation-bar-trailing')}>
         {toolbarItems}
       </div>
     </div>

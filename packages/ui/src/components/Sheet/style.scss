@@ -1,8 +1,15 @@
+@use '../_internal/modal.scss';
+@use '../_internal/grabber.scss' as *;
 @use '@style/base.scss' as *;
 
 @include component('sheet') {
   position: fixed;
-  inset: 0;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100% - 16px), 600px);
+  height: var(--sw-sheet-height, 90%);
+  max-height: calc(100dvh - 16px);
   z-index: var(--sw-z-modal);
   display: flex;
   align-items: flex-end;
@@ -11,6 +18,7 @@
   &-backdrop {
     position: fixed;
     inset: 0;
+    z-index: var(--sw-z-modal-backdrop);
     background-color: rgba(0, 0, 0, 0.4);
     animation: #{$ns}-fade-in var(--sw-transition-fast);
   }
@@ -18,16 +26,16 @@
   &-content {
     position: relative;
     width: 100%;
-    max-width: 600px;
-    max-height: var(--sw-sheet-height, 90%);
-    background-color: var(--sw-color-background-primary);
-    border-top-left-radius: var(--sw-sheet-corner-radius, var(--sw-radius-lg));
-    border-top-right-radius: var(--sw-sheet-corner-radius, var(--sw-radius-lg));
+    height: 100%;
+    max-height: 100%;
+    background-color: var(--sw-color-background-elevated);
+    border-radius: var(--sw-sheet-corner-radius, var(--sw-radius-sheet));
     box-shadow: var(--sw-shadow-lg);
     animation: #{$ns}-slide-in-bottom var(--sw-transition-normal);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    padding-top: 28px;
   }
 
   &-thinMaterial .#{$ns}-sheet-content {
@@ -45,38 +53,7 @@
     box-shadow: none;
   }
 
-  &-drag-indicator {
-    appearance: none;
-    border: none;
-    cursor: default;
-    display: block;
-    margin: var(--sw-spacing-sm) auto 0;
-    padding: var(--sw-spacing-sm) var(--sw-spacing-md);
-    background: transparent;
-
-    &:disabled {
-      cursor: default;
-    }
-
-    &::before {
-      content: '';
-      display: block;
-      width: 36px;
-      height: 5px;
-      border-radius: 999px;
-      background-color: var(--sw-color-separator);
-    }
-  }
-
-  &[data-presentation-detents*=','] .#{$ns}-sheet-drag-indicator {
-    cursor: pointer;
-  }
-
-  &[data-presentation-detents*=','] .#{$ns}-sheet-drag-indicator:focus-visible {
-    outline: 2px solid var(--sw-accent-color);
-    outline-offset: 2px;
-    border-radius: 999px;
-  }
+  &-drag-indicator { @include grabber; }
 
   &-header {
     display: flex;
@@ -105,7 +82,9 @@
 
   &-body {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: var(--sw-spacing-lg);
   }
 
@@ -114,3 +93,16 @@
     border-top: 1px solid var(--sw-color-separator);
   }
 }
+
+.sw-sheet-fullScreen { inset: 0; width: 100%; height: 100%; max-height: 100dvh; transform: none; }
+.sw-sheet-fullScreen .sw-sheet-content { border-radius: 0; }
+.sw-sheet-formSheet { width: min(calc(100% - 16px), 420px); }
+@media (min-width: 768px) {
+  .sw-sheet-formSheet { top: 50%; bottom: auto; height: var(--sw-sheet-height, 90%); max-height: min(640px, calc(100dvh - 16px)); transform: translate(-50%, -50%); }
+}
+
+.sw-sheet[data-dragging="true"] .sw-sheet-content { animation: none; }
+.sw-sheet[data-dragging="true"] .sw-sheet-drag-indicator { cursor: grabbing; }
+
+.sw-sheet-fullScreen .sw-sheet-content,
+.sw-sheet-content:not(:has(.sw-sheet-drag-indicator)) { padding-top: 0; }

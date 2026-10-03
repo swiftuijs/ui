@@ -3,7 +3,7 @@ import type { IPresentationDetent } from '@/types'
 import { viewportStore } from '@/contexts'
 
 const PERCENT_MAP = {
-  medium: '60%',
+  medium: '50%',
   large: '90%'
 }
 
@@ -19,13 +19,12 @@ export function useDetents(detents: IPresentationDetent[]) {
 
   return useMemo(() => {
     const screenHeight = viewportInfo?.height || DEFAULT_SCREEN_HEIGHT
-    const sizes = detents.map((detent) => {
+    const sizes = (detents.length ? detents : ['large'] as IPresentationDetent[]).map((detent) => {
       if (typeof detent === 'number') {
         return detent
       }
-      // @ts-expect-error fix this
-      const percent: string = PERCENT_MAP[detent] || detent
-      if (!/^\d+%$/.test(percent)) {
+      const percent = detent === 'medium' || detent === 'large' ? PERCENT_MAP[detent] : detent
+      if (!/^\d+(?:\.\d+)?%$/.test(percent)) {
         throw new Error(`Invalid detent size: ${detent}, should be a number or a percentage string like '60%'`)
       }
       return Math.floor(screenHeight * parseFloat(percent) / 100)

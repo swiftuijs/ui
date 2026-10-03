@@ -5,41 +5,17 @@ import * as LazyVStackStories from './LazyVStack.stories'
 
 # LazyVStack
 
-## Overview
+A measured, virtualized vertical stack. Only the viewport and a small overscan window mount, including when scrolling the page.
 
-LazyVStack is a container that arranges its children vertically, loading them lazily. LazyVStack is similar to VStack but only renders children that are visible in the viewport, improving performance for long lists.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `LazyVStack`.
-
-## Basic Usage
-
-<Canvas of={LazyVStackStories.Default} />
-
-## In ScrollView
+## Usage
 
 <Canvas of={LazyVStackStories.InScrollView} />
 
-## With Estimated Item Height
+## Behavior
 
-<Canvas of={LazyVStackStories.WithEstimatedHeight} />
-
-## With Alignment
-
-<Canvas of={LazyVStackStories.WithAlignment} />
-
-## Notes
-
-- LazyVStack supports all VStack props (spacing, alignment, etc.)
-- LazyVStack only renders visible items for better performance
-- Use `estimatedItemHeight` to optimize virtualization
-- LazyVStack is ideal for long lists and scrollable content
-- LazyVStack automatically handles viewport detection
-
-## Best Practices
-
-1. **Long lists**: Use LazyVStack for lists with many items
-2. **Performance**: LazyVStack improves performance for large datasets
-3. **Estimated height**: Provide estimatedItemHeight when possible
-4. **Keys**: Always provide unique keys for list items
-5. **ScrollView**: Use LazyVStack within ScrollView for scrollable lists
-
+- Use a bounded `ScrollView` or any ancestor with `overflow: auto`/`scroll`; otherwise the page is the scrolling surface.
+- `estimatedItemHeight` defaults to 48 pixels and is corrected with `ResizeObserver` measurements.
+- `overscan` defaults to four extra rows or columns on each side. Focused items and their neighbors remain mounted for keyboard navigation.
+- Use stable React keys. Keep editable state in your application: off-screen items unmount and their local state resets.
+- SSR renders an initial 640-pixel window with estimated dimensions; hydration measures the actual viewport and items. It does not emit every item into server HTML.
+- Creating the `children` array still costs O(n); virtualization limits mounted components and DOM nodes. For small collections, use ordinary stacks or grids.

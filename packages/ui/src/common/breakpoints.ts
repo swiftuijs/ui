@@ -30,10 +30,10 @@ export const BREAKPOINTS = {
 export const SIZECLASS_BREAKPOINTS = {
   /**
    * Horizontal SizeClass breakpoint
-   * - compact: < 375px
-   * - regular: >= 375px
+   * - compact: < 768px
+   * - regular: >= 768px
    */
-  horizontal: 375,
+  horizontal: 768,
   /**
    * Vertical SizeClass breakpoint
    * - compact: < 667px
@@ -79,4 +79,3 @@ export function getBreakpoint(width: number): 'mobile' | 'tablet' | 'desktop' | 
   }
   return 'mobile'
 }
-

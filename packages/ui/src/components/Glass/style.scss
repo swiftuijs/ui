@@ -1,0 +1,10 @@
+@use '../../style/glass.scss' as *;
+.sw-glass {
+  background: var(--sw-color-background-elevated);
+  display: flex;
+  align-items: center;
+  border-radius: var(--sw-radius-full);
+  padding: var(--sw-spacing-md) var(--sw-spacing-lg);
+  color: var(--sw-color-label-primary);
+  @include glass-surface;
+}

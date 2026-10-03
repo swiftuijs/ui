@@ -1,34 +1,14 @@
 import { memo } from 'react'
 import type { IVStackProps } from '../VStack'
-import { VStack } from '../VStack'
+import { VirtualLayout, type VirtualLayoutOptions } from '../_internal/VirtualLayout'
 
-/**
- * A container that arranges its children vertically, loading them lazily.
- * 
- * LazyVStack is similar to VStack but only renders children that are visible in the viewport,
- * improving performance for long lists.
- * 
- * @example
- * ```tsx
- * <LazyVStack spacing={10}>
- *   {items.map(item => <Text key={item.id}>{item.name}</Text>)}
- * </LazyVStack>
- * ```
- * 
- * @see https://developer.apple.com/documentation/swiftui/lazyvstack
- */
-export interface ILazyVStackProps extends IVStackProps {
-  /**
-   * Estimated height of each item for virtualization.
-   * Used to optimize rendering performance.
-   */
+/** A measured, virtualized vertical stack. */
+export interface ILazyVStackProps extends IVStackProps, Pick<VirtualLayoutOptions, 'overscan'> {
+  /** Initial item size in pixels, corrected after measurement. @default 48 */
   estimatedItemHeight?: number
 }
 
-export const LazyVStack = memo(function LazyVStack(props: ILazyVStackProps) {
-  // For now, LazyVStack is a simple wrapper around VStack
-  // Full virtualization can be implemented later using libraries like react-window
-  const { estimatedItemHeight, ...restProps } = props
-  return <VStack {...restProps} />
+export const LazyVStack = memo(function LazyVStack({ estimatedItemHeight, ...props }: ILazyVStackProps) {
+  return <VirtualLayout {...props} horizontal={false}
+    estimatedItemSize={estimatedItemHeight} layoutClass="lazyvstack" />
 })
-

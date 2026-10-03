@@ -3,9 +3,10 @@
 @include component('stepper') {
   display: inline-flex;
   align-items: center;
-  gap: var(--sw-spacing-sm);
-  border: 1px solid var(--sw-color-separator);
-  border-radius: var(--sw-radius-md);
+  gap: 0;
+  border: 0;
+  background: var(--sw-color-control-fill);
+  border-radius: var(--sw-radius-full);
   overflow: hidden;
 
   &-disabled {
@@ -13,18 +14,20 @@
   }
 
   &-button {
+    min-width: 44px;
+    min-height: 44px;
     appearance: none;
     border: none;
     background: transparent;
     padding: var(--sw-spacing-sm) var(--sw-spacing-md);
     cursor: pointer;
-    color: var(--sw-accent-color);
+    color: var(--sw-color-label-primary);
     font-size: var(--sw-font-size-body);
     transition: background-color var(--sw-transition-fast);
     -webkit-tap-highlight-color: transparent;
 
     &:hover:not(:disabled) {
-      background-color: var(--sw-color-background-secondary);
+      background-color: var(--sw-color-control-fill);
     }
 
     &:active:not(:disabled) {

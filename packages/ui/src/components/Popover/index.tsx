@@ -2,6 +2,8 @@ import {
   forwardRef,
   useEffect,
   useMemo,
+  useRef,
+  useImperativeHandle,
   useState,
   type CSSProperties,
   type RefObject,
@@ -10,6 +12,8 @@ import {
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
 
+import { useViewportFit } from '../_internal/use-viewport-fit'
+import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
 type PopoverRect = {
@@ -33,11 +37,13 @@ function readAnchorRect(anchor: HTMLElement | null): PopoverRect {
   }
 }
 
-export interface IPopoverProps extends IBaseComponent {
+export interface IPopoverProps extends IBaseComponent, GlassSurfaceProps {
   /**
    * Controls visibility.
    */
   isPresented: boolean
+  /** Accessible name for the popover. */
+  title?: string
   /**
    * Anchor element used to position the popover.
    */
@@ -65,16 +71,24 @@ export interface IPopoverProps extends IBaseComponent {
  */
 export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popover(props, ref) {
   const {
+    glass,
     anchorRef,
     arrowEdge = 'top',
     children,
     isPresented,
+    title = 'Popover',
     matchAnchorWidth = false,
     onDismiss,
     ...restProps
   } = props
 
+  const popoverRef = useRef<HTMLDivElement>(null)
+  useImperativeHandle(ref, () => popoverRef.current!, [])
+
+  const appearance = useGlassAppearance(glass)
   const [anchorRect, setAnchorRect] = useState<PopoverRect>(() => readAnchorRect(anchorRef.current))
+
+  useViewportFit(popoverRef, isPresented, anchorRect)
 
   useEffect(() => {
     if (!isPresented) {
@@ -98,7 +112,7 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
         return
       }
 
-      if (anchorRef.current?.contains(target)) {
+      if (anchorRef.current?.contains(target) || popoverRef.current?.contains(target)) {
         return
       }
 
@@ -123,6 +137,7 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
     const base: CSSProperties = {
       left: anchorRect.left,
       top: arrowEdge === 'bottom' ? anchorRect.top - 12 : anchorRect.top + anchorRect.height + 12,
+      transform: arrowEdge === 'bottom' ? 'translateY(-100%)' : undefined,
     }
 
     if (arrowEdge === 'leading') {
@@ -152,16 +167,18 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
       prefixClass('popover'),
       prefixClass(`popover-${arrowEdge}`),
     ],
-    style: positionStyle,
+    style: { ...appearance.style, ...positionStyle },
   })
 
   return (
     <div className={prefixClass('popover-layer')}>
       <div
+        {...appearance}
         {...commonProps}
         {...finalRestProps}
+        aria-label={title}
         aria-modal="false"
-        ref={ref}
+        ref={popoverRef}
         role="dialog"
       >
         <div className={prefixClass('popover-content')}>{children}</div>

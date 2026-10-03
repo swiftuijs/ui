@@ -1,0 +1,40 @@
+// HIG sheet grabber: the visible pill is independent of the transparent hit area.
+@mixin grabber {
+  appearance: none;
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  z-index: 1;
+  -webkit-tap-highlight-color: transparent;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--sw-color-grabber);
+  }
+
+  &:focus-visible::before {
+    outline: 2px solid var(--sw-color-label-secondary);
+    outline-offset: 4px;
+  }
+
+  &:active { cursor: grabbing; }
+  &:disabled { cursor: default; }
+}

@@ -44,7 +44,7 @@ describe('Alert', () => {
       const user = userEvent.setup()
       const handleDismiss = vi.fn()
 
-      const { container } = render(
+      render(
         <Alert
           title="Network issue"
           isVisible
@@ -52,7 +52,7 @@ describe('Alert', () => {
         />
       )
 
-      await user.click(container.querySelector('.sw-alert-backdrop') as HTMLElement)
+      await user.click(document.querySelector('.sw-alert-backdrop') as HTMLElement)
       expect(handleDismiss).toHaveBeenCalledTimes(1)
 
       await user.keyboard('{Escape}')

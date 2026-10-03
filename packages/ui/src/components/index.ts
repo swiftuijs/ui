@@ -111,3 +111,6 @@ export * from './PhaseAnimator'
 export * from './KeyframeAnimator'
 export * from './SymbolEffect'
 export * from './Unredacted'
+
+export * from './UIProvider'
+export * from './Glass'

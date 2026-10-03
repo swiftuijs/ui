@@ -15,7 +15,7 @@ describe('size-class', () => {
     ).toEqual({
       horizontal: 'compact',
       vertical: 'regular',
-      width: 374,
+      width: 767,
       height: 667,
     })
   })
@@ -29,12 +29,16 @@ describe('size-class', () => {
     ).toEqual({
       horizontal: 'regular',
       vertical: 'regular',
-      width: 375,
+      width: 768,
       height: 667,
     })
   })
 
   it('returns null when viewport data is unavailable', () => {
     expect(getSizeClassInfo(null)).toBeNull()
+  })
+
+  it('keeps a phone viewport compact', () => {
+    expect(getSizeClassInfo({ width: 390, height: 844 })?.horizontal).toBe('compact')
   })
 })

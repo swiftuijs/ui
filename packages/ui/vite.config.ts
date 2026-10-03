@@ -118,6 +118,10 @@ export default defineConfig((env) => {
             return false
           },
           output: {
+            // Preserve client boundaries in published component and hook entries.
+            banner: (chunk) => /^(index|components\/|contexts\/|hooks\/)/.test(chunk.name)
+              ? '"use client";'
+              : '',
             // 保持模块结构，不打包成单个文件
             preserveModules: true,
             preserveModulesRoot: 'src',

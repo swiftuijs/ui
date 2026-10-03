@@ -1,6 +1,7 @@
-import { memo, useEffect, useId } from 'react'
+import { memo } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
+import { Modal, ModalTitle, ModalDescription } from '../_internal/Modal'
 
 import './style.scss'
 
@@ -71,24 +72,6 @@ export const Alert = memo(function Alert(props: IAlertProps) {
     ...restProps
   } = props
 
-  const titleId = useId().replace(/:/g, '')
-  const descriptionId = useId().replace(/:/g, '')
-
-  // Match native alert dismissal expectations on web keyboards.
-  useEffect(() => {
-    if (!isVisible) {
-      return
-    }
-
-    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onDismiss()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isVisible, onDismiss])
 
   if (!isVisible) return null
 
@@ -97,19 +80,19 @@ export const Alert = memo(function Alert(props: IAlertProps) {
   })
 
   return (
-    <>
-      <div className={prefixClass('alert-backdrop')} onClick={onDismiss} />
-      <div
+      <Modal
+        open={isVisible}
+        onDismiss={onDismiss}
+        overlayClassName={prefixClass('alert-backdrop')}
         {...commonProps}
         {...finalRestProps}
         role="alertdialog"
         aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={message ? descriptionId : undefined}
+        hasDescription={Boolean(message)}
       >
         <div className={prefixClass('alert-content')}>
-          <div id={titleId} className={prefixClass('alert-title')}>{title}</div>
-          {message && <div id={descriptionId} className={prefixClass('alert-message')}>{message}</div>}
+          <ModalTitle asChild><div className={prefixClass('alert-title')}>{title}</div></ModalTitle>
+          {message && <ModalDescription asChild><div className={prefixClass('alert-message')}>{message}</div></ModalDescription>}
           <div className={prefixClass('alert-actions')}>
             {buttons.map((button, index) => (
               <button
@@ -126,7 +109,6 @@ export const Alert = memo(function Alert(props: IAlertProps) {
             ))}
           </div>
         </div>
-      </div>
-    </>
+      </Modal>
   )
 })

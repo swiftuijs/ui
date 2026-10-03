@@ -12,7 +12,7 @@ export const colors = {
   },
   label: {
     primary: '#000000',
-    secondary: '#8E8E93',
+    secondary: '#636366',
     tertiary: '#C7C7CC',
   },
   background: {

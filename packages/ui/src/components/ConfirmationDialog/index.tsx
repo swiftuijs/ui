@@ -1,7 +1,8 @@
-import { memo, useEffect, useId } from 'react'
+import { memo } from 'react'
 
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
+import { Modal, ModalTitle, ModalDescription } from '../_internal/Modal'
 
 import './style.scss'
 
@@ -54,23 +55,6 @@ export interface IConfirmationDialogProps extends IBaseComponent {
 export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfirmationDialogProps) {
   const { title, message, isVisible, onDismiss, actions, ...restProps } = props
 
-  const titleId = useId().replace(/:/g, '')
-  const descriptionId = useId().replace(/:/g, '')
-
-  useEffect(() => {
-    if (!isVisible) {
-      return
-    }
-
-    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onDismiss()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isVisible, onDismiss])
 
   if (!isVisible) {
     return null
@@ -81,13 +65,14 @@ export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfi
   })
 
   return (
-    <>
-      <div className={prefixClass('confirmation-dialog-backdrop')} onClick={onDismiss} />
-      <div
+      <Modal
+        open={isVisible}
+        onDismiss={onDismiss}
+        overlayClassName={prefixClass('confirmation-dialog-backdrop')}
+        accessibleTitle={title ? undefined : 'Confirm action'}
         {...commonProps}
         {...finalRestProps}
-        aria-describedby={message ? descriptionId : undefined}
-        aria-labelledby={title ? titleId : undefined}
+        hasDescription={Boolean(message)}
         aria-modal="true"
         role="dialog"
       >
@@ -95,14 +80,14 @@ export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfi
           {(title || message) ? (
             <div className={prefixClass('confirmation-dialog-header')}>
               {title ? (
-                <div className={prefixClass('confirmation-dialog-title')} id={titleId}>
+                <ModalTitle asChild><div className={prefixClass('confirmation-dialog-title')}>
                   {title}
-                </div>
+                </div></ModalTitle>
               ) : null}
               {message ? (
-                <div className={prefixClass('confirmation-dialog-message')} id={descriptionId}>
+                <ModalDescription asChild><div className={prefixClass('confirmation-dialog-message')}>
                   {message}
-                </div>
+                </div></ModalDescription>
               ) : null}
             </div>
           ) : null}
@@ -125,7 +110,6 @@ export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfi
             ))}
           </div>
         </div>
-      </div>
-    </>
+      </Modal>
   )
 })

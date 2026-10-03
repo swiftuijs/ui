@@ -1,5 +1,5 @@
-import { cp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
-import { dirname, join, relative, sep } from 'node:path'
+import { copyFile, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
+import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 async function findDeclarationFiles(directory: string): Promise<string[]> {
@@ -29,21 +29,22 @@ function toModuleSpecifier(fromFile: string, toModule: string) {
 
 export async function rewriteDeclarationTypeAliases(distDir: string) {
   const declarationFiles = await findDeclarationFiles(distDir)
+  const declarations = new Set(declarationFiles)
 
   await Promise.all(
     declarationFiles.map(async (file) => {
       const source = await readFile(file, 'utf8')
-      const typesSpecifier = toModuleSpecifier(file, join(distDir, 'types'))
-      const transitionSpecifier = toModuleSpecifier(file, join(distDir, 'types/transition'))
       const nextSource = source
-        .replaceAll("from '@/types/transition'", `from '${transitionSpecifier}'`)
-        .replaceAll('from "@/types/transition"', `from "${transitionSpecifier}"`)
-        .replaceAll("from '@/types'", `from '${typesSpecifier}'`)
-        .replaceAll('from "@/types"', `from "${typesSpecifier}"`)
-        .replaceAll('import("@/types/transition")', `import("${transitionSpecifier}")`)
-        .replaceAll("import('@/types/transition')", `import('${transitionSpecifier}')`)
-        .replaceAll('import("@/types")', `import("${typesSpecifier}")`)
-        .replaceAll("import('@/types')", `import('${typesSpecifier}')`)
+        .replace(/(['"])@\/([^'"]+)\1/g, (_match, quote: string, module: string) =>
+          `${quote}${toModuleSpecifier(file, join(distDir, module))}${quote}`,
+        )
+        .replace(/(['"])([^'"]+)\.scss\1/g, '$1$2.css$1')
+        .replace(/(['"])(\.[^'"]*)\1/g, (match, quote: string, module: string) => {
+          const target = resolve(dirname(file), module)
+          const declaration = declarations.has(`${target}.d.ts`) ? `${target}.d.ts`
+            : declarations.has(join(target, 'index.d.ts')) ? join(target, 'index.d.ts') : null
+          return declaration ? `${quote}${toModuleSpecifier(file, declaration.replace(/\.d\.ts$/, '.js'))}${quote}` : match
+        })
 
       if (nextSource !== source) {
         await writeFile(file, nextSource, 'utf8')
@@ -54,10 +55,12 @@ export async function rewriteDeclarationTypeAliases(distDir: string) {
 
 export async function copyTypeDeclarations(srcDir: string, distDir: string) {
   await mkdir(join(distDir, 'types'), { recursive: true })
-  await cp(join(srcDir, 'types'), join(distDir, 'types'), {
-    force: true,
-    recursive: true,
-  })
+  const files = await findDeclarationFiles(join(srcDir, 'types'))
+  await Promise.all(files.map(async file => {
+    const target = join(distDir, 'types', relative(join(srcDir, 'types'), file))
+    await mkdir(dirname(target), { recursive: true })
+    await copyFile(file, target)
+  }))
 }
 
 export async function prepareDeclarations(options?: { cwd?: string }) {

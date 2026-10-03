@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { render, screen } from '@/testing/render'
+import { render, screen, fireEvent } from '@/testing/render'
 import { Button } from '../Button'
+import { Sheet } from '../Sheet'
+import { UIProvider } from '../UIProvider'
 import { Menu } from './index'
 
 const items = [
@@ -183,4 +185,75 @@ describe('Menu', () => {
     expect(screen.getAllByRole('separator')).toHaveLength(1)
     expect(screen.getByRole('menuitem', { name: 'Delete project' })).toHaveAttribute('data-destructive', 'true')
   })
+})
+
+it('opens from ArrowUp, wraps focus and skips disabled actions at both ends', async () => {
+  const user = userEvent.setup()
+  render(<Menu trigger={<Button>Keyboard actions</Button>} items={[
+    { label: 'Unavailable first', disabled: true },
+    { label: 'Edit draft' },
+    { label: 'Share draft' },
+    { label: 'Unavailable last', disabled: true },
+  ]} />)
+  const trigger = screen.getByRole('button', { name: 'Keyboard actions' })
+  trigger.focus()
+  await user.keyboard('{ArrowUp}')
+  expect(screen.getByRole('menuitem', { name: 'Share draft' })).toHaveFocus()
+  await user.keyboard('{Home}')
+  expect(screen.getByRole('menuitem', { name: 'Edit draft' })).toHaveFocus()
+  await user.keyboard('{ArrowUp}')
+  expect(screen.getByRole('menuitem', { name: 'Share draft' })).toHaveFocus()
+  await user.keyboard('{ArrowDown}')
+  expect(screen.getByRole('menuitem', { name: 'Edit draft' })).toHaveFocus()
+  await user.keyboard('{End}')
+  expect(screen.getByRole('menuitem', { name: 'Share draft' })).toHaveFocus()
+  await user.keyboard('{Tab}')
+  expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+})
+
+it.each([{ entries: [] }, { entries: [{ label: 'Unavailable', disabled: true }] }])('handles a menu with no enabled actions without moving focus to a disabled item', async ({ entries }) => {
+  const user = userEvent.setup()
+  render(<Menu trigger={<Button>No actions</Button>} items={entries} />)
+  const trigger = screen.getByRole('button', { name: 'No actions' })
+  trigger.focus()
+  await user.keyboard('{ArrowDown}')
+  expect(trigger).toHaveFocus()
+  expect(screen.queryAllByRole('menuitem').every(item => item.hasAttribute('disabled'))).toBe(true)
+  await user.click(trigger)
+  expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+})
+
+it('escapes a clipping pane while retaining the nearest modal focus scope and local theme', async () => {
+  const user = userEvent.setup(), action = vi.fn()
+  render(<UIProvider theme="dark"><Sheet isPresented title="Editor">
+    <div style={{ overflow: 'hidden', height: 44 }}><Menu trigger={<Button>Editor actions</Button>} items={[{ label: 'Save draft', action }]} /></div>
+  </Sheet></UIProvider>)
+  await user.click(screen.getByRole('button', { name: 'Editor actions' }))
+  const menu = screen.getByRole('menu')
+  expect(menu.parentElement).toBe(screen.getByRole('dialog', { name: 'Editor' }))
+  expect(menu).toHaveAttribute('data-theme', 'dark')
+  expect(screen.getByRole('menuitem', { name: 'Save draft' })).toHaveFocus()
+  await user.click(screen.getByRole('menuitem', { name: 'Save draft' }))
+  expect(action).toHaveBeenCalledOnce()
+  expect(screen.getByRole('dialog', { name: 'Editor' })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Editor actions' })).toHaveFocus()
+})
+
+it.each([
+  ['top', '100px', '96px', 'translateY(-100%)'],
+  ['left', '96px', '100px', 'translateX(-100%)'],
+  ['right', '164px', '100px', 'none'],
+] as const)('keeps a %s menu anchored when its trigger scrolls', (placement, left, top, transform) => {
+  let anchorTop = 100
+  const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(() => ({
+    x: 100, y: anchorTop, left: 100, top: anchorTop, right: 160, bottom: anchorTop + 44, width: 60, height: 44,
+  }) as globalThis.DOMRect)
+  try {
+    render(<Menu isOpen placement={placement} trigger={<Button>Actions</Button>} items={[{ label: 'Edit' }]} />)
+    const menu = screen.getByRole('menu')
+    expect(menu).toHaveStyle({ position: 'fixed', left, top, transform })
+    anchorTop += 100
+    fireEvent.scroll(window)
+    expect(menu.style.top).toBe(`${parseFloat(top) + 100}px`)
+  } finally { rect.mockRestore() }
 })

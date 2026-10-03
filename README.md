@@ -1,51 +1,49 @@
 # SwiftUI.js
 
-SwiftUI.js is a monorepo for a React component library, a static documentation site, and a Storybook workbench.
-
-The goal is a production-ready foundation: a stable, test-backed component system that carries SwiftUI ideas into the web where they are honest and useful, not a promise of full platform parity.
-
-## Monorepo Structure
-
-- `packages/ui` contains the published component library and shared implementation.
-- `apps/docs` contains the public docs site. It is built with Next.js and static export, so it stays deployable to static hosts.
-- `apps/storybook` contains the Storybook workbench for developing, reviewing, and exercising components in isolation.
-- Root-level scripts coordinate the workspace with Turborepo and pnpm.
-
-## Docs Vs Storybook
-
-- The docs site is the public product surface. It explains the package, the concepts, and the supported path for adoption.
-- Storybook is an engineering workbench. It is useful for exploration, visual review, and regression checking, but it is not the public docs site.
-- Component docs stay colocated with the implementation so behavior, examples, and source evolve together.
-
-## Workspace Commands
-
-```bash
-pnpm install
-pnpm build
-pnpm test
-pnpm typecheck
-pnpm --filter docs dev
-pnpm --filter docs build
-pnpm --filter storybook dev
-pnpm --filter @swiftuijs/ui dev
-```
-
-## Contributing Expectations
-
-- New components should include tests, Storybook stories, and docs before they land.
-- Breaking rewrites are acceptable when they make the implementation more correct, more consistent, or easier to support.
-- Keep the public docs honest about maturity. If behavior is adapted, partial, or planned, say so directly.
-
-## Installing The Library
+SwiftUI-inspired composition for React 19: small layout primitives, native form controls, and focused interactions. The library is evolving; see the [capability matrix](apps/docs/content/concepts/capability-matrix.mdx) for supported behavior and experimental limits.
 
 ```bash
 pnpm add @swiftuijs/ui react react-dom
 ```
 
-Import the package stylesheet once near the app root:
+Import shared styles once, then compose ordinary React components:
 
 ```tsx
 import '@swiftuijs/ui/style/index.css';
+import { Button, Text, VStack } from '@swiftuijs/ui';
+
+<VStack spacing={12} alignment="leading">
+  <Text>Hello, SwiftUI.js.</Text>
+  <Button onClick={() => console.log('Continue')}>Continue</Button>
+</VStack>
 ```
 
-For component-level usage, start with the public docs and then use the colocated `*.docs.mdx` files next to each component implementation.
+Component subpaths reduce the CSS footprint: `@swiftuijs/ui/components/Button`. Published entries include Next.js client boundaries. State and event handlers belong in your application's client components; viewport hooks return `null` during SSR. Customize with standard props and CSS variables. Tailwind is optional for consuming applications.
+
+## Develop
+
+Node 22 and pnpm 10 are required.
+
+```bash
+pnpm install --frozen-lockfile
+pnpm dev:docs
+pnpm dev:storybook
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm --filter @swiftuijs/ui test:package
+pnpm build
+pnpm exec playwright install chromium
+pnpm test:browser
+pnpm test:components
+```
+
+- `packages/ui`: published components, tests and colocated stories/docs.
+- `apps/docs`: public reference and compact kitchensink workflow; static Next.js export.
+- `apps/storybook`: isolated development and visual review.
+
+Changes should include behavioral tests and accurate capability notes. The packed-consumer check verifies strict types, CSS retention, tree shaking, SSR and client boundaries. Chromium browser acceptance checks the kitchensink at 320, 390, 768 and 1440px, including touch/mouse detents, modal focus, accessibility and bounded long-list DOM. Broader cross-browser visual acceptance remains a release requirement; passing unit tests alone does not establish production readiness.
+
+`test:components` uses the built Storybook to check every component group's representative story in light/mobile and dark/desktop views, plus focused overlay, pointer, keyboard and material checks.
+
+Appearance can be scoped with `UIProvider` (`theme`, `accentColor`, CSS `tokens`, and optional `glass` preferences). Liquid Glass-inspired Web materials support intensity, per-component overrides and opaque accessibility fallbacks. See the [theming guide](apps/docs/content/concepts/theming.mdx).

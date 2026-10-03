@@ -113,6 +113,8 @@ export const NavigationLink = memo(function NavigationLink (props: INavigationLi
   }, [destination, navi, dismiss, pageOptions])
   
   return (
-    <div {...commonProps} {...restProps} onClick={onClick}>{children}</div>
+    typeof destination === 'string'
+      ? <a {...commonProps} {...restProps} href={destination}>{children}</a>
+      : <button {...commonProps} {...restProps} type="button" onClick={onClick}>{children}</button>
   )
 })

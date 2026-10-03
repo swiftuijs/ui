@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import type { ITransitionConfig } from './transition'
+import type { PartialOptional } from './utilities'
 
 /**
  * page type

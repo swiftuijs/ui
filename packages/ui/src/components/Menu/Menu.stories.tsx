@@ -92,3 +92,8 @@ export const GroupedActions: Story = {
     ],
   },
 }
+
+export const AtViewportEdge: Story = {
+  args: { trigger: <Button>Edge menu</Button>, items: [{ label: 'Edit' }, { label: 'Delete', destructive: true }] },
+  decorators: [(Story) => <div style={{ display: 'flex', justifyContent: 'flex-end' }}><Story /></div>],
+}

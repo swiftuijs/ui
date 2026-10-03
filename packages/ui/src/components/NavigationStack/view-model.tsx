@@ -1,12 +1,10 @@
-import { useMemo, useRef, useState, useEffect } from 'react'
+import { useMemo, useRef, useState, useEffect, useId } from 'react'
 import { flushSync } from 'react-dom'
 import type { IBaseComponent, IPageItem, ILoosePageItem } from '@/types'
-import { standardizeProps, generateUniqueId, eventBus, prefixClass } from '@/common'
+import { standardizeProps, scheduleIdle, eventBus, prefixClass } from '@/common'
 import { startViewTransition, isViewTransitionSupported } from '@/common/view-transition'
 import { INaviContext } from '@/contexts'
 import type { PageHandle } from '@/components/Page'
-
-const HOME_PAGE_ID = generateUniqueId('_index_')
 
 /**
  * Props for NavigationStack component.
@@ -33,10 +31,12 @@ function toPublicPath(path: IPageItem[]) {
 }
 
 export function useViewModel(props: INavigationStackProps) {
+  const instanceId = useId()
+  const homePageId = `_index_${instanceId}`
   const { defaultPath, onPathChange } = props
   const initialPath = useMemo(() => (defaultPath ?? []).map(normalizePage), [defaultPath])
   const paths = useRef<IPageItem[]>(initialPath)
-  const innerEventPrefix = useRef(`${generateUniqueId('navi')}`)
+  const innerEventPrefix = useRef(`navi-${instanceId}`)
   const contextValue = useRef<INaviContext>({
     eventPrefix: innerEventPrefix.current,
     append: (page: ILoosePageItem) => eventBus.emit(`${innerEventPrefix.current}.append`, page),
@@ -47,11 +47,11 @@ export function useViewModel(props: INavigationStackProps) {
   const pageInstances = useRef<Record<string, PageHandle | null>>({})
 
   const homePage: IPageItem = useMemo(() => ({
-    component: () => (<>{props.children}</>),
+    component: () => null,
     type: 'page',
-    id: HOME_PAGE_ID,
-    _id: `page$$${HOME_PAGE_ID}`,
-  }), [props.children])
+    id: homePageId,
+    _id: `page$$${homePageId}`,
+  }), [homePageId])
 
   const [shownPages, setShownPages] = useState(() => [initialPath[initialPath.length - 1] || homePage])
 
@@ -153,7 +153,7 @@ export function useViewModel(props: INavigationStackProps) {
       } else {
         setShownPages([nextPage, currentPage])
         // wait new page rendered, then exit last page
-        requestIdleCallback(() => {
+        scheduleIdle(() => {
           if (pageInstanceMap[currentPage._id]) {
             pageInstanceMap[currentPage._id]!.exitPage(() => {
               setShownPages([nextPage])
@@ -186,7 +186,7 @@ export function useViewModel(props: INavigationStackProps) {
     className: prefixClass('navigationstack')
   })
   return {
-    commonProps, restProps, pageInstances,
+    commonProps, restProps, pageInstances, homePageId,
     shownPages, contextValue,
   }
 }

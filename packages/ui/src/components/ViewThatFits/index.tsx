@@ -1,4 +1,4 @@
-import { Children, cloneElement, isValidElement, memo, type ReactElement, type ReactNode } from 'react'
+import { Children, cloneElement, isValidElement, memo, useEffect, useRef, useState, type ReactElement, type ReactNode } from 'react'
 
 import type { IBaseComponent } from '@/types'
 import { prefixClass, standardizeProps } from '@/common'
@@ -16,7 +16,7 @@ import './style.scss'
 export interface IViewThatFitsProps extends IBaseComponent {
   /**
    * Explicit width used to evaluate fitting children. When omitted the
-   * component behaves like a simple fallback container.
+   * component observes its container width after hydration.
    */
   width?: number
 }
@@ -57,7 +57,15 @@ export const ViewThatFits = memo(function ViewThatFits(props: IViewThatFitsProps
     className: prefixClass('viewthatfits'),
   })
 
-  const chosenChild = pickChild(children, width)
+  const container = useRef<HTMLDivElement>(null)
+  const [measuredWidth, setMeasuredWidth] = useState<number>()
+  useEffect(() => {
+    if (width !== undefined || !container.current || typeof ResizeObserver === 'undefined') return
+    const observer = new ResizeObserver(entries => setMeasuredWidth(entries[0]?.contentRect.width))
+    observer.observe(container.current)
+    return () => observer.disconnect()
+  }, [width])
+  const chosenChild = pickChild(children, width ?? measuredWidth)
   const renderedChild = isValidElement(chosenChild)
     ? cloneElement(chosenChild as ReactElement<Record<string, unknown>>, {
         'data-view-that-fits-active': 'true',
@@ -65,7 +73,7 @@ export const ViewThatFits = memo(function ViewThatFits(props: IViewThatFitsProps
     : chosenChild
 
   return (
-    <div {...commonProps} {...finalRestProps}>
+    <div ref={container} {...commonProps} {...finalRestProps}>
       {renderedChild}
     </div>
   )

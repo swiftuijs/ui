@@ -6,7 +6,12 @@
   @include flex-container(row, center);
   @include stack-spacing('--stack-spacing');
 
-  > .#{$prefix}-spacer {
+  > .#{$ns}-spacer {
     @include spacer-child(width);
   }
 }
+
+// HStack alignment acts on the vertical (cross) axis.
+.sw-hstack.sw-container[data-alignment='center'] { align-items: center; justify-content: flex-start; }
+.sw-hstack.sw-container[data-alignment='top'] { align-items: flex-start; justify-content: flex-start; }
+.sw-hstack.sw-container[data-alignment='bottom'] { align-items: flex-end; justify-content: flex-start; }

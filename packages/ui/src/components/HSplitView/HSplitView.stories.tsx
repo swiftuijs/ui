@@ -18,13 +18,13 @@ export const Default: Story = {
   render: () => (
     <HSplitView fractions={[1, 2]}>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Sidebar</Text>
           <Text>Navigation and filters</Text>
         </VStack>
       </Card>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Content</Text>
           <Text>Primary content surface</Text>
         </VStack>
@@ -37,19 +37,19 @@ export const ThreePane: Story = {
   render: () => (
     <HSplitView fractions={[1, 2, 1]}>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Leading</Text>
           <Text>Leading pane</Text>
         </VStack>
       </Card>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Center</Text>
           <Text>Center pane</Text>
         </VStack>
       </Card>
       <Card>
-        <VStack spacing={8} style={{ padding: '16px' }}>
+        <VStack spacing={8} style={{ padding: 0 }}>
           <Text style={{ fontWeight: 600 }}>Trailing</Text>
           <Text>Trailing pane</Text>
         </VStack>

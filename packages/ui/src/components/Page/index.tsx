@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
-import type { IPageType } from '@/types'
+import type { IPageType, IFn } from '@/types'
 import type { ITransitionConfig } from '@/types/transition'
 
 import { useNaviContext } from '@/contexts'

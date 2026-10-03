@@ -2,7 +2,9 @@
 
 @include component('toggle') {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -12,7 +14,7 @@
     cursor: not-allowed;
   }
 
-  &:focus-within &-track {
+  &:has(&-input:focus-visible) &-track {
     box-shadow: 0 0 0 3px color(from var(--sw-accent-color) srgb r g b / 0.1);
   }
 
@@ -27,6 +29,7 @@
 
   // toggle-track
   &-track {
+    pointer-events: none;
     position: relative;
     width: 51px;
     height: 31px;
@@ -37,7 +40,7 @@
 
   // toggle-on toggle-track
   &-on &-track {
-    background-color: var(--sw-accent-color);
+    background-color: var(--sw-color-switch-on);
   }
 
   // toggle-thumb
@@ -47,7 +50,7 @@
     left: 2px;
     width: 27px;
     height: 27px;
-    background-color: var(--sw-color-background-primary);
+    background-color: var(--sw-color-control-thumb);
     border-radius: var(--sw-radius-full);
     transition: transform var(--sw-transition-fast);
     box-shadow: var(--sw-shadow-sm);
@@ -60,6 +63,6 @@
 
   // toggle:active toggle-thumb
   &:active:not(.sw-toggle-disabled) &-thumb {
-    transform: scale(0.95);
+    scale: 0.95;
   }
 }

@@ -1,56 +1,53 @@
 ---
 title: Getting Started
-description: Install SwiftUI.js, include its shipped styles, and establish the first rendering baseline.
+description: Install, import styles, and compose your first view.
 ---
 
 # Getting Started
 
-SwiftUI.js is published as a component package. The docs site is separate and statically exported, but your application consumes only the UI package.
-
-## Install
+Requires React 19 and a bundler that supports CSS imports.
 
 ```bash
 pnpm add @swiftuijs/ui react react-dom
 ```
 
-## Include Styles
-
-The component package ships its compiled CSS alongside the React exports.
+Import shared styles once at your application root. Component styles are included by their JavaScript entries.
 
 ```tsx
 import '@swiftuijs/ui/style/index.css';
 ```
 
-Import the stylesheet once near the root of your application so token-driven defaults are available to every component.
-
-## Render Your First View
+Use normal React state and HTML props:
 
 ```tsx
+'use client';
+
+import { useState } from 'react';
 import { Button, Text, VStack } from '@swiftuijs/ui';
 
-export function Demo() {
+export function Counter() {
+  const [count, setCount] = useState(0);
   return (
-    <VStack spacing="md">
-      <Text variant="body">Hello from SwiftUI.js.</Text>
-      <Button>Continue</Button>
+    <VStack spacing={12} alignment="leading">
+      <Text>{count} clicks</Text>
+      <Button onClick={() => setCount(value => value + 1)}>Add one</Button>
     </VStack>
   );
 }
 ```
 
-## See An Integrated Demo
+For the smallest CSS footprint, import individual components:
 
-Open the [kitchensink demo](/kitchensink/) when you want to inspect the library as a composed interface. It is built from the shipped component package plus local prop values and app state, so it is a better evaluation target than a single isolated component.
+```tsx
+import { Button } from '@swiftuijs/ui/components/Button';
+```
 
-## Recommended Next Steps
+## Next.js and SSR
 
-1. Open the [kitchensink demo](/kitchensink/) to inspect the library as an app surface.
-2. Read [SwiftUI Alignment](/docs/concepts/swiftui-alignment/) to understand how stacks and alignment guides are expressed on the web.
-3. Read [Responsive Design](/docs/concepts/responsive-design/) before building adaptive layouts.
-4. Use the generated [component reference](/docs/components/) for individual props, examples, and maturity notes.
+Import shared styles in `app/layout.tsx`. Published component entries declare their client boundary, so server components can import them. Put state and event handlers in your own `'use client'` component. Viewport hooks initially return `null`; handle that state without reading `window` during rendering. Modal content uses portals and appears after mounting.
 
-## Contribution Expectations
+## Make it yours
 
-When you add a new component, ship the tests, Storybook story, and docs together so the implementation and the public narrative stay in sync.
+Pass `className`, `style`, HTML attributes and `aria-*` props. Override CSS variables at an application root or theme boundary; Tailwind can style your application without becoming a dependency of the component library.
 
-Breaking rewrites are allowed when they improve correctness, remove inconsistent behavior, or make the foundation easier to support. If a rewrite changes the public surface, document the difference instead of hiding it.
+Try the [workspace demo](/kitchensink/), read [responsive behavior](/docs/concepts/responsive-design/), and check the [capability matrix](/docs/concepts/capability-matrix/) before adopting experimental components.

@@ -2,6 +2,7 @@ import { memo, type ReactNode } from 'react'
 import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
+import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
 /**
@@ -31,7 +32,7 @@ export interface IToolbarItem {
 /**
  * Props for Toolbar component
  */
-export interface IToolbarProps extends IBaseElementComponent<'div'> {
+export interface IToolbarProps extends IBaseElementComponent<'div'>, GlassSurfaceProps {
   /**
    * Toolbar items
    */
@@ -58,10 +59,11 @@ export interface IToolbarProps extends IBaseElementComponent<'div'> {
  * @see https://developer.apple.com/documentation/swiftui/toolbar
  */
 export const Toolbar = memo(function Toolbar(props: IToolbarProps) {
-  const { items, ...restProps } = props
+  const { items, glass, ...restProps } = props
 
+  const appearance = useGlassAppearance(glass)
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
-    className: [prefixClass('toolbar')],
+    className: [prefixClass('toolbar')], style: appearance.style,
   })
 
   const groupedItems = items.reduce((acc, item) => {
@@ -81,7 +83,7 @@ export const Toolbar = memo(function Toolbar(props: IToolbarProps) {
     }
 
     return (
-      <div className={[prefixClass('toolbar-group'), className].filter(Boolean).join(' ')} data-placement={placement}>
+      <div {...appearance} className={[prefixClass('toolbar-group'), className].filter(Boolean).join(' ')} data-placement={placement}>
         {placementItems.map((item, index) => (
           <div
             key={item.id || `${placement}-${index}`}
@@ -99,6 +101,7 @@ export const Toolbar = memo(function Toolbar(props: IToolbarProps) {
 
   return (
     <div
+      {...appearance}
       {...commonProps}
       {...finalRestProps}
       role="toolbar"

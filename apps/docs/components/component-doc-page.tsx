@@ -36,7 +36,7 @@ function renderStory(previewModule: PreviewModule | null, exportName: string) {
   }
 
   if (typeof story.render === 'function') {
-    return story.render(story.args ?? {});
+    return createElement(story.render, story.args ?? {});
   }
 
   if (component) {
@@ -60,14 +60,19 @@ export function getComponentDocEntry(slug?: string[]) {
 }
 
 function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
+  const [previewState, setPreviewState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [attempt, setAttempt] = useState(0);
+  const [expandedExamples, setExpandedExamples] = useState<Record<string, boolean>>({});
   const [previewModule, setPreviewModule] = useState<PreviewModule | null>(null);
 
   useEffect(() => {
     const loadPreview = componentPreviewRegistry[entry.slug as keyof typeof componentPreviewRegistry];
     let cancelled = false;
+    setPreviewState('loading');
 
     if (!loadPreview) {
       setPreviewModule(null);
+      setPreviewState('error');
       return;
     }
 
@@ -75,18 +80,20 @@ function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
       .then((module) => {
         if (!cancelled) {
           setPreviewModule(module);
+          setPreviewState('ready');
         }
       })
       .catch(() => {
         if (!cancelled) {
           setPreviewModule(null);
+          setPreviewState('error');
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [entry.slug]);
+  }, [entry.slug, attempt]);
 
   return (
     <section className="my-6 grid gap-6">
@@ -103,25 +110,29 @@ function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
             </span>
           ) : null}
         </div>
-        {entry.description ? <p className="m-0 text-fd-muted-foreground">{entry.description}</p> : null}
       </div>
 
       {entry.examples.length > 0 ? (
         <section className="grid gap-4">
           <h2 className="m-0 text-fd-foreground">Examples</h2>
           <div className="grid gap-4">
-            {entry.examples.map((example) => (
+            {entry.examples.map((example, index) => (
               <article
                 className="grid min-w-0 gap-4 rounded-2xl border border-fd-border bg-fd-card p-4"
                 key={example.exportName}
               >
-                <header className="flex flex-wrap items-center justify-between gap-3">
-                  <h3 className="m-0 text-base text-fd-foreground">{example.title}</h3>
-                </header>
+                <details open={expandedExamples[example.exportName] ?? index === 0}
+                  onToggle={event => {
+                    const open = event.currentTarget.open;
+                    setExpandedExamples(current => current[example.exportName] === open ? current : { ...current, [example.exportName]: open });
+                  }}>
+                <summary className="cursor-pointer font-semibold text-fd-foreground">{example.title}</summary>
+                {(expandedExamples[example.exportName] ?? index === 0) && <>
                 <div className="grid gap-3 rounded-xl border border-fd-border bg-fd-card p-4 text-fd-foreground">
                   {renderStory(previewModule, example.exportName) ?? (
                     <p className="m-0 text-fd-muted-foreground">
-                      Preview unavailable for this example in the static docs build.
+                      {previewState === 'loading' ? 'Loading preview…' : "This preview couldn't be loaded."}
+                      {previewState === 'error' && <button type="button" className="ml-2 underline" onClick={() => setAttempt(value => value + 1)}>Retry</button>}
                     </p>
                   )}
                 </div>
@@ -135,6 +146,8 @@ function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
                     </pre>
                   </details>
                 ) : null}
+                </>}
+                </details>
               </article>
             ))}
           </div>
@@ -202,5 +215,5 @@ export function ComponentDocPage({ slug }: { slug?: string[] }) {
     return null;
   }
 
-  return <ComponentDocShell entry={entry} />;
+  return <ComponentDocShell key={entry.slug} entry={entry} />;
 }

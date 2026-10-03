@@ -1,0 +1,140 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { Sheet } from './index'
+
+beforeEach(() => {
+  vi.stubGlobal('PointerEvent', class extends MouseEvent {
+    pointerId: number
+    constructor(type: string, init: PointerEventInit = {}) { super(type, init); this.pointerId = init.pointerId ?? 1 }
+  })
+  vi.stubGlobal('innerHeight', 800)
+})
+afterEach(() => { vi.unstubAllGlobals() })
+function drag(from: number, to: number, cancel = false) {
+  const handle = screen.getByRole('button', { name: 'Adjust sheet height' })
+  fireEvent.pointerDown(handle, { button: 0, pointerId: 1, clientY: from })
+  fireEvent.pointerMove(handle, { pointerId: 1, clientY: to })
+  if (cancel) fireEvent.pointerCancel(handle, { pointerId: 1 })
+  else fireEvent.pointerUp(handle, { pointerId: 1, clientY: to })
+  return handle
+}
+it('resizes during drag, snaps to the nearest detent and suppresses the resulting click', () => {
+  const onChange = vi.fn()
+  render(<Sheet isPresented presentationDetents={['medium', 'large']} onSelectedDetentChange={onChange} />)
+  const handle = screen.getByRole('button', { name: 'Adjust sheet height' })
+  const panel = screen.getByRole('dialog')
+  fireEvent.pointerDown(handle, { button: 0, pointerId: 1, clientY: 400 })
+  fireEvent.pointerMove(handle, { pointerId: 1, clientY: 100 })
+  expect(panel.style.height).toBe('700px')
+  expect(panel).toHaveAttribute('data-dragging', 'true')
+  fireEvent.pointerUp(handle, { pointerId: 1 })
+  fireEvent.lostPointerCapture(handle, { pointerId: 1 })
+  fireEvent.click(handle, { detail: 1 })
+  expect(panel).toHaveAttribute('data-selected-detent', 'large')
+  expect(panel.style.height).toBe('')
+  expect(panel).not.toHaveAttribute('data-dragging')
+  expect(onChange).toHaveBeenCalledExactlyOnceWith('large')
+})
+it('dismisses when dragged below the smallest detent, including a single-detent sheet', () => {
+  const onDismiss = vi.fn()
+  render(<Sheet isPresented onDismiss={onDismiss} />)
+  expect(screen.getByRole('button', { name: 'Adjust sheet height' })).toBeEnabled()
+  drag(100, 600)
+  expect(onDismiss).toHaveBeenCalledTimes(1)
+})
+it('allows detent resizing but blocks drag dismissal when interactive dismissal is disabled', () => {
+  const onDismiss = vi.fn()
+  render(<Sheet isPresented presentationDetents={['medium', 'large']} interactiveDismissDisabled onDismiss={onDismiss} />)
+  drag(400, 100)
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'large')
+  drag(100, 780)
+  expect(onDismiss).not.toHaveBeenCalled()
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
+})
+it('does not dismiss when shrinking from large to medium', () => {
+  const onDismiss = vi.fn()
+  render(<Sheet isPresented presentationDetents={['medium', 'large']} defaultSelectedDetent="large" onDismiss={onDismiss} />)
+  drag(100, 400)
+  expect(onDismiss).not.toHaveBeenCalled()
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
+})
+it('snaps using the rendered form-sheet cap rather than uncapped viewport detents', () => {
+  vi.stubGlobal('innerHeight', 1000)
+  render(<Sheet isPresented presentationStyle="formSheet" presentationDetents={['medium', 'large']} />)
+  const panel = screen.getByRole('dialog')
+  vi.spyOn(panel, 'getBoundingClientRect').mockImplementation(() => ({
+    height: panel.style.height === '100dvh' ? 640 : 500,
+  }) as globalThis.DOMRect)
+  const handle = screen.getByRole('button', { name: 'Adjust sheet height' })
+  fireEvent.pointerDown(handle, { button: 0, pointerId: 1, clientY: 500 })
+  fireEvent.pointerMove(handle, { pointerId: 1, clientY: 370 })
+  expect(panel.style.height).toBe('630px')
+  fireEvent.pointerUp(handle, { pointerId: 1 })
+  expect(panel).toHaveAttribute('data-selected-detent', 'large')
+  expect(panel.style.height).toBe('')
+})
+it('emits changes without changing a controlled detent', () => {
+  const onChange = vi.fn()
+  render(<Sheet isPresented presentationDetents={['medium', 'large']} selectedDetent="medium" onSelectedDetentChange={onChange} />)
+  drag(400, 100)
+  expect(onChange).toHaveBeenCalledExactlyOnceWith('large')
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
+  expect(screen.getByRole('dialog').style.height).toBe('')
+})
+it('cancels cleanly and ignores unrelated pointer IDs, secondary clicks and movement below threshold', () => {
+  const onChange = vi.fn()
+  render(<Sheet isPresented presentationDetents={['medium', 'large']} onSelectedDetentChange={onChange} />)
+  const handle = screen.getByRole('button', { name: 'Adjust sheet height' })
+  fireEvent.pointerMove(handle, { pointerId: 4, clientY: 0 })
+  fireEvent.pointerUp(handle, { pointerId: 4 })
+  fireEvent.pointerDown(handle, { button: 2, pointerId: 1, clientY: 100 })
+  fireEvent.pointerMove(handle, { pointerId: 1, clientY: 0 })
+  expect(screen.getByRole('dialog').style.height).toBe('')
+  fireEvent.pointerDown(handle, { button: 0, pointerId: 1, clientY: 100 })
+  fireEvent.pointerDown(handle, { button: 0, pointerId: 2, clientY: 100 })
+  fireEvent.pointerMove(handle, { pointerId: 2, clientY: 0 })
+  fireEvent.pointerUp(handle, { pointerId: 2 })
+  fireEvent.pointerMove(handle, { pointerId: 1, clientY: 98 })
+  fireEvent.pointerUp(handle, { pointerId: 1 })
+  expect(onChange).not.toHaveBeenCalled()
+  drag(400, 100, true)
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'medium')
+  expect(screen.getByRole('dialog').style.height).toBe('')
+  expect(onChange).not.toHaveBeenCalled()
+  // Keyboard activation remains usable following a canceled drag.
+  fireEvent.click(handle, { detail: 0 })
+  expect(onChange).toHaveBeenCalledExactlyOnceWith('large')
+})
+it('uses pixel and percentage detents when snapping', () => {
+  render(<Sheet isPresented presentationDetents={[200, '75%']} />)
+  drag(600, 220)
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', '75%')
+})
+it('clamps upward dragging to the viewport and returns to the selected detent', () => {
+  const onChange = vi.fn()
+  render(<Sheet isPresented onSelectedDetentChange={onChange} />)
+  drag(600, -500)
+  expect(onChange).not.toHaveBeenCalled()
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'large')
+})
+it('permits drag dismissal when backdrop interaction is disabled', () => {
+  const onDismiss = vi.fn()
+  render(<Sheet isPresented backgroundInteraction="none" onDismiss={onDismiss} />)
+  drag(100, 700)
+  expect(onDismiss).toHaveBeenCalledTimes(1)
+})
+it('disables an unadjustable handle when all interactive dismissal is disabled', () => {
+  render(<Sheet isPresented interactiveDismissDisabled />)
+  expect(screen.getByRole('button', { name: 'Adjust sheet height' })).toBeDisabled()
+})
+
+it('starts a fresh gesture after closing and reopening mid-drag', () => {
+  const { rerender } = render(<Sheet isPresented presentationDetents={['medium', 'large']} />)
+  const handle = screen.getByRole('button', { name: 'Adjust sheet height' })
+  fireEvent.pointerDown(handle, { button: 0, pointerId: 1, clientY: 400 })
+  fireEvent.pointerMove(handle, { pointerId: 1, clientY: 100 })
+  rerender(<Sheet isPresented={false} presentationDetents={['medium', 'large']} />)
+  rerender(<Sheet isPresented presentationDetents={['medium', 'large']} />)
+  drag(400, 100)
+  expect(screen.getByRole('dialog')).toHaveAttribute('data-selected-detent', 'large')
+})

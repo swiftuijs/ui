@@ -26,3 +26,5 @@
 .sw-redacted-privacy.sw-redacted-active::after {
   background: color-mix(in srgb, var(--sw-color-secondary, #e5e7eb) 92%, transparent);
 }
+
+.sw-redacted-active .sw-unredacted { position: relative; z-index: 1; color: var(--sw-color-label-primary); background: var(--sw-color-background-primary); }

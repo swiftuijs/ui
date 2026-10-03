@@ -22,7 +22,8 @@ const featuredGuides = [
 
 export default async function HomePage() {
   const componentDocs = await loadComponentDocs();
-  const previewComponents = componentDocs.slice(0, 6);
+  const coreNames = ['Button', 'Text', 'VStack', 'TextField', 'Toggle', 'Sheet'];
+  const previewComponents = coreNames.flatMap(name => componentDocs.filter(component => component.title === name));
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-16 px-6 py-12 md:px-10 lg:px-12">
@@ -33,13 +34,12 @@ export default async function HomePage() {
           </p>
           <div className="space-y-4">
             <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-fd-foreground md:text-6xl">
-              SwiftUI-inspired React components for production web apps.
+              SwiftUI ideas. React simplicity.
             </h1>
             <p className="max-w-2xl text-base leading-7 text-fd-muted-foreground md:text-lg">
-              Align your UI structure, interaction patterns, and API design with SwiftUI
-              while keeping the implementation grounded in React and web platform best
-              practices. These docs are published as static files for straightforward
-              deployment on GitHub Pages, a CDN, or any other static host.
+              Compose adaptive interfaces with familiar React props, native form controls,
+              and SwiftUI-inspired layout. Start with the core; check capability notes
+              before adopting experimental components.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -66,18 +66,15 @@ export default async function HomePage() {
         <div className="grid gap-4 rounded-[1.5rem] border border-fd-border bg-fd-card p-6 text-fd-card-foreground shadow-inner">
           <div>
             <p className="text-sm uppercase tracking-[0.24em] text-fd-muted-foreground">
-              Build-time registry
+              Start with the essentials
             </p>
-            <p className="mt-2 text-3xl font-semibold">{componentDocs.length}</p>
             <p className="mt-2 text-sm leading-6 text-fd-muted-foreground">
-              colocated component docs discovered under
-              {' '}
-              <code className="font-mono text-[0.9em]">packages/ui/src/components</code>
+              Small building blocks for layouts, forms and focused interactions.
             </p>
           </div>
           <div className="grid gap-2 rounded-2xl border border-fd-border bg-fd-background p-4">
             {previewComponents.map((component) => (
-              <div
+              <Link href={component.href}
                 key={component.slug}
                 className="flex items-center justify-between gap-4 rounded-xl border border-fd-border bg-fd-card px-3 py-2"
               >
@@ -85,7 +82,7 @@ export default async function HomePage() {
                 <span className="font-mono text-xs uppercase tracking-[0.2em] text-fd-muted-foreground">
                   {component.slug}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

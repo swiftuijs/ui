@@ -1,6 +1,8 @@
 @use '@style/base.scss' as *;
 
 @include component('zstack') {
+  position: relative;
+  min-width: 0;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;

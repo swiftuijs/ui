@@ -5,6 +5,7 @@ import { LazyHStack, type ILazyHStackProps } from '.'
 const meta: Meta<typeof LazyHStack> = {
   title: 'SwiftUI/LazyHStack',
   component: LazyHStack,
+  decorators: [(Story) => <ScrollView direction="horizontal" style={{ width: '100%' }}><Story /></ScrollView>],
   tags: ['autodocs'],
   parameters: {
     docs: {
@@ -28,7 +29,7 @@ export const Default: Story = {
   args: {
     spacing: 10,
     children: items.map(item => (
-      <Text key={item.id} style={{ padding: '10px', backgroundColor: '#f0f0f0', borderRadius: '4px', whiteSpace: 'nowrap' }}>
+      <Text key={item.id} style={{ padding: '10px', backgroundColor: 'var(--sw-color-background-secondary)', borderRadius: '4px', whiteSpace: 'nowrap' }}>
         {item.name}
       </Text>
     ))
@@ -39,8 +40,8 @@ export const InScrollView: Story = {
   render: () => (
     <ScrollView direction="horizontal" style={{ width: '100%', height: '100px' }}>
       <LazyHStack spacing={10}>
-        {items.map(item => (
-          <Text key={item.id} style={{ padding: '15px', backgroundColor: '#f9f9f9', borderRadius: '8px', whiteSpace: 'nowrap' }}>
+        {Array.from({ length: 1000 }, (_, index) => ({ id: index + 1, name: `Item ${index + 1}` })).map(item => (
+          <Text key={item.id} style={{ padding: '15px', backgroundColor: 'var(--sw-color-background-secondary)', borderRadius: '8px', whiteSpace: 'nowrap' }}>
             {item.name}
           </Text>
         ))}
@@ -54,7 +55,7 @@ export const WithEstimatedWidth: Story = {
     spacing: 10,
     estimatedItemWidth: 100,
     children: items.slice(0, 20).map(item => (
-      <Text key={item.id} style={{ padding: '15px', backgroundColor: '#e8e8e8', borderRadius: '4px', whiteSpace: 'nowrap' }}>
+      <Text key={item.id} style={{ padding: '15px', backgroundColor: 'var(--sw-color-background-secondary)', borderRadius: '4px', whiteSpace: 'nowrap' }}>
         {item.name}
       </Text>
     ))
@@ -66,7 +67,7 @@ export const WithAlignment: Story = {
     spacing: 10,
     alignment: 'center',
     children: items.slice(0, 10).map(item => (
-      <Text key={item.id} style={{ padding: '10px', backgroundColor: '#f0f0f0', borderRadius: '4px', whiteSpace: 'nowrap' }}>
+      <Text key={item.id} style={{ padding: '10px', backgroundColor: 'var(--sw-color-background-secondary)', borderRadius: '4px', whiteSpace: 'nowrap' }}>
         {item.name}
       </Text>
     ))
