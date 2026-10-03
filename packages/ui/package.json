@@ -55,7 +55,24 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
-  "repository": "https://github.com/swiftuijs/ui.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swiftuijs/ui.git",
+    "directory": "packages/ui"
+  },
   "author": "Saiya",
-  "license": "MIT"
+  "license": "MIT",
+  "private": false,
+  "description": "SwiftUI-inspired React components with adaptive layouts, native controls, scoped themes and optional glass materials.",
+  "keywords": [
+    "react",
+    "swiftui",
+    "components",
+    "ui",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
