@@ -39,8 +39,36 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Test
-        run: pnpm test
+      - name: Test docs
+        run: pnpm --filter docs test
+
+      - name: Test UI with coverage
+        run: pnpm --filter @swiftuijs/ui test:coverage
+
+      - name: Verify published package
+        run: pnpm --filter @swiftuijs/ui test:package
 
       - name: Build
         run: pnpm build
+
+      - name: Install browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Browser acceptance
+        run: pnpm test:browser
+
+      - name: Documentation reading acceptance
+        run: pnpm test:docs-browser
+
+      - name: Component visual geometry acceptance
+        run: pnpm test:components
+
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-acceptance
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore

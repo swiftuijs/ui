@@ -49,7 +49,7 @@ describe('ConfirmationDialog', () => {
     const user = userEvent.setup()
     const dismiss = vi.fn()
 
-    const { container } = render(
+    render(
       <ConfirmationDialog
         title="Discard changes?"
         isVisible
@@ -58,7 +58,7 @@ describe('ConfirmationDialog', () => {
       />,
     )
 
-    await user.click(container.querySelector('.sw-confirmation-dialog-backdrop') as HTMLElement)
+    await user.click(document.querySelector('.sw-confirmation-dialog-backdrop') as HTMLElement)
     expect(dismiss).toHaveBeenCalledTimes(1)
 
     await user.keyboard('{Escape}')

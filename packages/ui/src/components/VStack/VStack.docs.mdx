@@ -5,11 +5,7 @@ import * as VStackStories from './VStack.stories'
 
 # VStack
 
-## Overview
-
-VStack is a view that arranges its children in a vertical line. A VStack is a container view that arranges its child views in a vertical line. You can customize the spacing between views and the alignment of views within the stack.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `VStack`.
+Arrange children vertically with configurable spacing and horizontal alignment.
 
 ## Basic Usage
 
@@ -17,13 +13,9 @@ VStack is a view that arranges its children in a vertical line. A VStack is a co
 
 ## Spacing
 
-Control the distance between child views:
-
 <Canvas of={VStackStories.WithSpacing} />
 
 ## Alignment
-
-Align children horizontally within the VStack:
 
 ### Leading Alignment
 
@@ -39,8 +31,6 @@ Align children horizontally within the VStack:
 
 ## With Spacer
 
-Use Spacer to create flexible space:
-
 <Canvas of={VStackStories.WithSpacer} />
 
 ## With Buttons
@@ -51,18 +41,9 @@ Use Spacer to create flexible space:
 
 <Canvas of={VStackStories.ComplexLayout} />
 
-## Notes
+## Usage and limitations
 
-- VStack arranges children vertically from top to bottom
-- Default alignment is based on container settings
-- Spacing applies uniformly between all adjacent children
-- VStack supports all standard React children (components, text, etc.)
-
-## Best Practices
-
-1. **Consistent spacing**: Use consistent spacing values throughout your app
-2. **Alignment**: Choose appropriate alignment based on content type
-3. **Nesting**: VStack can be nested with HStack and ZStack for complex layouts
-4. **Performance**: For long lists, consider using LazyVStack instead
-5. **Responsive**: VStack automatically adapts to container width
-
+- `alignment` is `leading`, `center`, or `trailing`; omitted alignment stretches children across the container; `spacing` applies between adjacent children.
+- Compose with `HStack` or `ZStack`; `Spacer` distributes available vertical space.
+- Allow the container and children to shrink on narrow screens; long content may need `ScrollView`.
+- For long scrolling lists, use `LazyVStack` and review its virtualization requirements.

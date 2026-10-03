@@ -25,7 +25,7 @@ import './style.scss'
 export type { INavigationStackProps } from './view-model'
 
 export function NavigationStack (props: INavigationStackProps) {
-  const { commonProps, restProps, shownPages, contextValue, pageInstances } = useViewModel(props)
+  const { commonProps, restProps, shownPages, contextValue, pageInstances, homePageId } = useViewModel(props)
 
   return (
     <NaviContext.Provider value={contextValue.current}>
@@ -43,7 +43,7 @@ export function NavigationStack (props: INavigationStackProps) {
                 type={page.type}
                 transition={page.transition}
               >
-                <PageComponent />
+                {page.id === homePageId ? props.children : <PageComponent />}
               </Page>
             )
           })

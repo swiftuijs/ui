@@ -1,13 +1,7 @@
 ---
 title: "TabView"
-description: "TabView is a view that switches between multiple child views using interactive tabs. TabView provides a tabbed interface for organizing content into separate sections."
+description: "Switch between named content panels."
 ---
-
-## Overview
-
-TabView is a view that switches between multiple child views using interactive tabs. TabView provides a tabbed interface for organizing content into separate sections.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `TabView`.
 
 ## With Icons
 
@@ -25,22 +19,9 @@ Control tab selection programmatically:
 
 Use badges to surface counts or short status labels on a tab item:
 
-## Notes
+## Usage and limitations
 
-- TabView requires an array of items with `label` and `content`
-- Each item can define a stable `value` used by `selection` and `defaultSelection`
-- Each item can opt into `disabled` to stay visible but non-selectable
-- Each item can provide an optional `badge` for counts or short status text
-- Each item can have an optional `icon`
-- Tab bar can be positioned at `top` or `bottom` (default)
-- TabView supports controlled mode with `selection` and `onSelectionChange`
-- Tabs expose proper `tablist`, `tab`, and `tabpanel` semantics
-- Arrow keys, Home, and End move between enabled tabs
-
-## Best Practices
-
-1. **Clear labels**: Use descriptive labels for each tab
-2. **Icons**: Use icons to improve visual recognition
-3. **Content**: Keep tab content focused and relevant
-4. **Selection**: Prefer stable `value` identifiers over relying on item order
-5. **Accessibility**: Ensure tabs are keyboard accessible
+- Provide items with `label` and `content`; optional `icon`, `badge`, and `disabled` customize each tab.
+- Give items stable `value` identifiers. Controlled: `selection`/`onSelectionChange`; uncontrolled: `defaultSelection`. Avoid depending on changing item order.
+- Tab bar position is `bottom` by default or `top`.
+- Uses tablist/tab/tabpanel semantics. Arrow keys, Home and End move between enabled tabs; use short, descriptive labels and focused panel content.

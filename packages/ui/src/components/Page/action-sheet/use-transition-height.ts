@@ -15,17 +15,22 @@ export interface IDragBarProps {
 export function useTransitionHeight(props: IDragBarProps) {
   const detentInfo = useDetents(props.presentationDetents)
   const detentIndex = useRef(detentInfo.sizes.indexOf(detentInfo.default))
+  const finishTransition = useRef<() => void>(() => {})
+  useEffect(() => () => finishTransition.current(), [])
   // update height with transition animation
   const updateHeight = useCallback((height: number) => {
     if (!props.container?.current) return
     const container = props.container.current!
+    finishTransition.current()
     const onTransitionEnd = () => {
       container.classList.remove('animate-height')
       container.removeEventListener('transitionend', onTransitionEnd)
     }
+    finishTransition.current = onTransitionEnd
     container.addEventListener('transitionend', onTransitionEnd)
     container.classList.add('animate-height')
     const nearestHeight = getNearestHeight(height, detentInfo.sizes)
+    detentIndex.current = detentInfo.sizes.indexOf(nearestHeight!)
     container.style.height = `${nearestHeight}px`
   }, [props.container, detentInfo])
 
@@ -33,18 +38,16 @@ export function useTransitionHeight(props: IDragBarProps) {
   useEffect(() => {
     if (!props.container?.current) return
     const container = props.container.current!
-    const height = detentInfo.sizes[detentIndex.current]
+    const height = detentInfo.sizes[Math.min(detentIndex.current, detentInfo.sizes.length - 1)]
     if (`${height}px` === container.style.height) return
     updateHeight(height)
   }, [props.container, detentInfo, updateHeight])
 
   // listen to event to change height
   useEffect(() => {
-    eventBus.on(props.eventToChangeDetent, (height: number) => {
-      updateHeight(height)
-    })
+    eventBus.on(props.eventToChangeDetent, updateHeight)
     return () => {
-      eventBus.off(props.eventToChangeDetent)
+      eventBus.off(props.eventToChangeDetent, updateHeight)
     }
   }, [props.eventToChangeDetent, updateHeight])
 }

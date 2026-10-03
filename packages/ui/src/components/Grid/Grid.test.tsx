@@ -8,7 +8,7 @@ import { GridRow } from '../GridRow'
 describe('Grid', () => {
   it('renders rows and cells inside a grid container', () => {
     render(
-      <Grid columns={2} spacing={12}>
+      <Grid data-testid="layout-grid" columns={2} spacing={12}>
         <GridRow>
           <div>One</div>
           <div>Two</div>
@@ -20,9 +20,10 @@ describe('Grid', () => {
       </Grid>,
     )
 
-    const grid = screen.getByRole('grid')
+    const grid = screen.getByTestId('layout-grid')
 
     expect(grid).toBeInTheDocument()
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument()
     expect(grid).toHaveStyle({
       '--grid-columns': '2',
       '--grid-spacing': '12px',

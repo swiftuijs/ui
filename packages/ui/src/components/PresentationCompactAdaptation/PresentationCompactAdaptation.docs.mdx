@@ -5,8 +5,6 @@ import * as PresentationCompactAdaptationStories from './PresentationCompactAdap
 
 # PresentationCompactAdaptation
 
-## Overview
-
 PresentationCompactAdaptation adapts SwiftUI's `presentationCompactAdaptation` modifier into an explicit wrapper.
 
 **Status**: adapted
@@ -18,3 +16,7 @@ PresentationCompactAdaptation adapts SwiftUI's `presentationCompactAdaptation` m
 ## Variants
 
 <Canvas of={PresentationCompactAdaptationStories.Variants} />
+
+## Usage and limitations
+
+- Sets classes and `data-presentation-compact-adaptation` only. It does not automatically turn a popover into a sheet/full-screen presentation on compact screens; choose the presentation in application code.

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useId } from 'react'
 import type { ReactNode } from 'react'
 import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
@@ -60,6 +60,7 @@ function clamp(value: number, min: number, max: number) {
 }
 
 export const ProgressView = memo(function ProgressView(props: IProgressViewProps) {
+  const labelId = useId()
   const {
     value,
     total,
@@ -116,7 +117,7 @@ export const ProgressView = memo(function ProgressView(props: IProgressViewProps
       {(label !== undefined || currentValueLabel !== undefined) && (
         <div className={prefixClass('progressview-labels')}>
           {label !== undefined && (
-            <span className={prefixClass('progressview-label')}>
+            <span id={labelId} className={prefixClass('progressview-label')}>
               {label}
             </span>
           )}
@@ -130,8 +131,8 @@ export const ProgressView = memo(function ProgressView(props: IProgressViewProps
       <div
         className={prefixClass(indeterminate ? 'progressview-indeterminate' : 'progressview-track')}
         role="progressbar"
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledby}
+        aria-label={ariaLabel ?? (label === undefined && !ariaLabelledby ? 'Progress' : undefined)}
+        aria-labelledby={ariaLabelledby ?? (!ariaLabel && label !== undefined ? labelId : undefined)}
         aria-valuemin={0}
         aria-valuemax={indeterminate ? undefined : safeMaximum}
         aria-valuenow={indeterminate ? undefined : clampedValue}

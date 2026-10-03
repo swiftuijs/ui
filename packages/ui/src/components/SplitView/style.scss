@@ -1,4 +1,4 @@
-@use '@/style/common.scss' as *;
+@use '@style/base.scss' as *;
 
 .sw-splitview {
   display: flex;
@@ -19,7 +19,7 @@
   display: flex;
   min-inline-size: 0;
   min-block-size: 0;
-  flex: 1 1 0;
+  flex: 1 1 auto;
 }
 
 .sw-hsplitview .sw-splitview-segment {

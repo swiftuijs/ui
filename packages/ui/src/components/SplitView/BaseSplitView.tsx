@@ -56,11 +56,11 @@ export const BaseSplitView = memo(function BaseSplitView(props: IBaseSplitViewIn
         const isLast = index === panes.length - 1
 
         return (
-          <div key={`pane-${index}`} className={prefixClass('splitview-segment')}>
+          <div key={`pane-${index}`} className={prefixClass('splitview-segment')} style={{ flexGrow: fraction, flexBasis: '0%' }}>
             <div
               className={prefixClass('splitview-pane')}
               data-testid="splitview-pane"
-              style={{ flexGrow: fraction, flexBasis: 0 }}
+              style={{ flexGrow: fraction, flexBasis: '0%' }}
             >
               {pane}
             </div>

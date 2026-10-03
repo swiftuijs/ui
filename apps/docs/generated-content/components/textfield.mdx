@@ -1,30 +1,14 @@
 ---
 title: "TextField"
-description: "TextField is a control that displays an editable text interface. TextField is used to collect single-line text input from users."
+description: "Edit a single line of text using a native input."
 ---
-
-## Overview
-
-TextField is a control that displays an editable text interface. TextField is used to collect single-line text input from users.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `TextField`.
 
 ## With Value
 
 Control the text field value:
 
-## Notes
+## Usage and limitations
 
-- TextField supports controlled and uncontrolled modes
-- Use `value` and `onChange` for controlled inputs
-- TextField supports common text-entry input types such as text, email, tel, url, search, and password
-- Use `placeholder` to provide hints about expected input
-- TextField can be disabled with the `disabled` prop
-
-## Best Practices
-
-1. **Labels**: Always provide labels or placeholders for text fields
-2. **Validation**: Validate input on blur or submit
-3. **Feedback**: Provide clear feedback for invalid inputs
-4. **Accessibility**: Use proper labels and ARIA attributes
-5. **Mobile**: Ensure text fields are properly sized for mobile keyboards
+- Controlled: `value` and `onValueChange` (string) or `onChange` (native event). Uncontrolled: `defaultValue`.
+- Supports native text-entry types such as text, email, tel, url, search and password, plus `disabled` and `placeholder`.
+- Provide a visible/accessible label; a placeholder is only a hint. Validate on blur or submit, explain errors, and check mobile keyboard/autofill behavior.

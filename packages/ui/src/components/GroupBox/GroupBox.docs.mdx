@@ -5,11 +5,7 @@ import * as GroupBoxStories from './GroupBox.stories'
 
 # GroupBox
 
-## Overview
-
-GroupBox is a container that visually groups related content with a border and optional label. GroupBox is similar to Group but adds visual styling with a border and background.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `GroupBox`.
+Visually group related content with an optional label.
 
 ## Basic Usage
 
@@ -31,18 +27,7 @@ GroupBox is a container that visually groups related content with a border and o
 
 <Canvas of={GroupBoxStories.WithButtons} />
 
-## Notes
+## Usage and limitations
 
-- GroupBox renders as a labeled `role="group"` region when `label` is provided.
-- GroupBox supports an optional `label` prop.
-- GroupBox is useful for organizing related content visually.
-- Use GroupBox when you need visual separation.
-- GroupBox provides consistent styling for grouped content.
-
-## Best Practices
-
-1. **Labels**: Use descriptive labels when appropriate
-2. **Content organization**: Group related content together
-3. **Visual hierarchy**: Use GroupBox to create visual hierarchy
-4. **Consistency**: Maintain consistent GroupBox styling
-5. **Accessibility**: Ensure GroupBox content is accessible
+- `label` is optional; a supplied label names a `role="group"` region.
+- Use a descriptive label and consistent spacing/styling. Children retain their own semantic structure and interaction requirements.

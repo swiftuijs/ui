@@ -5,71 +5,20 @@ import * as SheetStories from './Sheet.stories'
 
 # Sheet
 
-## Overview
+A modal presentation with a focus trap, background isolation and scroll lock. Set `isPresented` and close it from `onDismiss`.
 
-Sheet is a view that presents content as a modal sheet. Sheets slide up from the bottom of the screen and are commonly used for presenting forms, settings, or additional content. When `presentationStyle="fullScreen"`, the same component maps to SwiftUI's `.fullScreenCover()` mental model on the web.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `.sheet()` modifier.
-
-## Basic Usage
+## Usage
 
 <Canvas of={SheetStories.Default} />
-
-## Form Sheet
-
-Use form sheet style for forms and input:
-
 <Canvas of={SheetStories.FormSheet} />
-
-## Full Screen
-
-Present content in full screen:
-
-<Canvas of={SheetStories.FullScreen} />
-
-## Presentation Styling
-
-Customize material treatment and corner radius:
-
-<Canvas of={SheetStories.Material} />
-
-## Background Interaction
-
-Prevent backdrop taps from dismissing the sheet:
-
-<Canvas of={SheetStories.LockedBackdrop} />
-
-## Presentation Detents
-
-Configure the available sheet heights and choose the initial detent. When more than one detent is available, the drag indicator becomes an explicit control that can cycle between them:
-
 <Canvas of={SheetStories.Detents} />
 
-## Uncontrolled Detents
+## Usage and limitations
 
-Use `defaultSelectedDetent` when the sheet should reset to a known starting detent each time it is presented:
-
-<Canvas of={SheetStories.UncontrolledDetents} />
-
-## Interactive Dismiss
-
-Disable backdrop and keyboard dismissal when the presentation must stay locked until an explicit action:
-
-<Canvas of={SheetStories.InteractiveDismissDisabled} />
-
-## Notes
-
-- Sheet requires `isPresented` and `onDismiss` props
-- Sheet supports different presentation styles
-- Sheet automatically handles dismiss gestures
-- `defaultSelectedDetent` resets uncontrolled detent state on each new presentation
-- Use Sheet for modal presentations
-- Sheet can contain any React content
-
-## Best Practices
-
-1. **Dismiss handling**: Always provide `onDismiss` handler
-2. **Presentation style**: Choose appropriate style for your content
-3. **Drag indicator**: Show drag indicator for better UX
-4. **Content**: Keep sheet content focused and concise
-5. **Accessibility**: Ensure sheet content is accessible and keyboard navigable
+- Give the sheet a meaningful `title`, `aria-label`, or `aria-labelledby`.
+- Tab stays inside; Escape and backdrop clicks dismiss by default. Closing restores focus to the opener when it still exists.
+- `interactiveDismissDisabled` blocks Escape, backdrop and drag dismissal. `backgroundInteraction="none"` blocks backdrop dismissal only.
+- `presentationStyle="formSheet"` limits width to 420px; `fullScreen` fills the viewport.
+- Medium and large detents are 50% and 90% of viewport height. Numeric detents use pixels; percentage strings are also accepted. Content scrolls within the panel.
+- Drag the handle to resize and release to snap to the nearest detent. Drag below the smallest detent to dismiss; content remains independently scrollable. Click the handle or activate it with Enter/Space to cycle detents. `defaultSelectedDetent` resets each time an uncontrolled sheet opens.
+- Content is portaled after mounting and is absent from server HTML. Nested modals handle Escape at the top layer.

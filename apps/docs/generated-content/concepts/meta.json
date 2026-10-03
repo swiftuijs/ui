@@ -1,4 +1,9 @@
 {
   "title": "Concepts",
-  "pages": ["swiftui-alignment", "responsive-design", "capability-matrix"]
+  "pages": [
+    "swiftui-alignment",
+    "responsive-design",
+    "capability-matrix",
+    "theming"
+  ]
 }

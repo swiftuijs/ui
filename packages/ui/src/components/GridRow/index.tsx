@@ -18,14 +18,14 @@ export const GridRow = memo(function GridRow(props: IGridRowProps) {
   })
 
   return (
-    <div {...commonProps} {...finalRestProps} role="row">
+    <div {...commonProps} {...finalRestProps}>
       {Children.map(children, (child) => {
         if (!isValidElement(child)) {
           return child
         }
 
         return (
-          <div className={prefixClass('gridrow-cell')} role="gridcell">
+          <div className={prefixClass('gridrow-cell')}>
             {cloneElement(child as ReactElement<Record<string, unknown>>)}
           </div>
         )

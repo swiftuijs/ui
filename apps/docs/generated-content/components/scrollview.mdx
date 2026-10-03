@@ -1,13 +1,7 @@
 ---
 title: "ScrollView"
-description: "ScrollView is a scrollable view that allows users to scroll through content that exceeds the visible area. ScrollView supports both vertical and horizontal scrolling."
+description: "Scroll content vertically or horizontally inside a bounded container."
 ---
-
-## Overview
-
-ScrollView is a scrollable view that allows users to scroll through content that exceeds the visible area. ScrollView supports both vertical and horizontal scrolling.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `ScrollView`.
 
 ## Scroll Indicators
 
@@ -29,20 +23,10 @@ Apply custom styles to ScrollView:
 
 Drive a scroll view from state and scroll to anchors with `scrollPosition`:
 
-## Notes
+## Usage and limitations
 
-- ScrollView requires explicit dimensions (height for vertical, width for horizontal)
-- Default scroll direction is vertical
-- Scroll indicators can be hidden with `showsIndicators={false}`
-- ScrollView supports all standard React children
-- Use ScrollView for content that may exceed container bounds
-- Use `scrollPosition` to keep scroll location in React state or jump to a `ScrollTarget`
-- Use `onScrollPhaseChange` to react to active scrolling versus idle states
-
-## Best Practices
-
-1. **Dimensions**: Always provide explicit dimensions for ScrollView containers
-2. **Performance**: For long lists, consider using LazyVStack or LazyHStack instead
-3. **Nested scrolling**: Avoid nested ScrollViews in the same direction
-4. **Accessibility**: Ensure scrollable content is accessible via keyboard navigation
-5. **Mobile**: Test scrolling behavior on touch devices
+- Give the container a bounded height for vertical scrolling or width for horizontal scrolling; the bound may come from parent layout.
+- Vertical scrolling is the default. `showsIndicators={false}` hides indicators; ordinary React children are supported.
+- `scrollPosition` reads/sets position or jumps to a ScrollTarget; `onScrollPhaseChange` distinguishes scrolling from idle.
+- This does not virtualize children. Use LazyVStack/LazyHStack for large lists, and avoid nested scroll areas in the same direction.
+- Keep scrolling reachable with the keyboard and test touch interaction; add a focusable labeled region when the surrounding composition needs it.

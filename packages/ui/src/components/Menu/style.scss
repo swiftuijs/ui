@@ -1,3 +1,4 @@
+@use '../../style/glass.scss' as *;
 @use '@style/base.scss' as *;
 
 @include component('menu') {
@@ -17,14 +18,15 @@
 
   // menu (main)
   position: absolute;
-  background-color: var(--sw-color-background-primary, #FFFFFF);
-  border-radius: var(--sw-radius-md, 8px);
+  background-color: var(--sw-color-background-elevated);
+  border-radius: 20px;
   box-shadow: var(--sw-shadow-lg, 0 4px 16px rgba(0, 0, 0, 0.15));
-  min-width: 200px;
-  padding: var(--sw-spacing-xs, 4px);
+  min-width: 220px;
+  max-width: calc(100vw - 32px);
+  padding: 8px;
   z-index: var(--sw-z-dropdown, 1000);
   margin-top: 4px;
-  animation: #{$ns}-slide-in-top var(--sw-transition-fast, 0.15s ease-out);
+  animation: #{$ns}-fade-in var(--sw-transition-fast, 0.15s ease-out);
 
   // menu-bottom
   &-bottom {
@@ -85,11 +87,12 @@
   // menu-item
   &-item {
     width: 100%;
+    min-height: 44px;
     display: flex;
     align-items: center;
     padding: var(--sw-spacing-sm, 8px) var(--sw-spacing-md, 12px);
     cursor: pointer;
-    border-radius: var(--sw-radius-sm, 6px);
+    border-radius: 12px;
     border: none;
     background: transparent;
     appearance: none;
@@ -143,3 +146,7 @@
     }
   }
 }
+
+.sw-menu { translate: var(--sw-floating-shift-x, 0px) var(--sw-floating-shift-y, 0px); max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow: visible; }
+
+.sw-menu { @include glass-surface; }

@@ -1,0 +1,3 @@
+html, body { min-height: 100%; background: var(--sw-color-background-secondary); color: var(--sw-color-label-primary); font-family: var(--sw-font-family-sans); }
+body { margin: 0; }
+#storybook-root { min-width: 0; }

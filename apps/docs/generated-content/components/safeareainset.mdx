@@ -3,6 +3,6 @@ title: "SafeAreaInset"
 description: "SafeAreaInset adapts SwiftUI's `.safeAreaInset` modifier into an explicit layout container for the web."
 ---
 
-## Overview
+## Usage and limitations
 
-SafeAreaInset adapts SwiftUI's `.safeAreaInset` modifier into an explicit layout container for the web.
+- Uses CSS safe-area environment variables. Add `viewport-fit=cover` to your viewport meta tag when targeting notched mobile browsers; this does not emulate native system safe-area layout.

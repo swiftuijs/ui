@@ -1,13 +1,7 @@
 ---
 title: "Spacer"
-description: "Spacer is a flexible space that expands along the major axis of its parent container. Spacer is used to push content apart and create flexible layouts."
+description: "Distribute unused space along a stack’s main axis."
 ---
-
-## Overview
-
-Spacer is a flexible space that expands along the major axis of its parent container. Spacer is used to push content apart and create flexible layouts.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `Spacer`.
 
 ## In HStack
 
@@ -29,18 +23,8 @@ Push content to the trailing edge:
 
 Push content to the leading edge:
 
-## Notes
+## Usage and limitations
 
-- Spacer expands to fill available space in its parent container
-- Spacer works in both HStack (horizontal) and VStack (vertical) layouts
-- Use `minLength` to set a minimum size for the spacer
-- Multiple spacers divide available space equally
-- Spacer requires a parent container with defined dimensions
-
-## Best Practices
-
-1. **Parent dimensions**: Ensure parent container has explicit dimensions for Spacer to work
-2. **Multiple spacers**: Use multiple spacers to distribute space evenly
-3. **Min length**: Set appropriate minimum lengths to prevent content from being too close
-4. **Layout structure**: Use Spacer to create flexible, responsive layouts
-5. **Performance**: Spacer is lightweight and doesn't impact performance
+- Expands horizontally in HStack and vertically in VStack. Multiple spacers share the remaining space equally.
+- `minLength` sets a minimum; the parent needs available space, supplied by explicit dimensions or its layout.
+- Use it for flexible separation, and check narrow containers so minimum lengths do not crowd content.

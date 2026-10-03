@@ -18,8 +18,8 @@ describe('docs home page styling', () => {
   it('positions the hero around the product value instead of static hosting details', async () => {
     const source = await readFile(homePagePath, 'utf8');
 
-    expect(source).toContain('SwiftUI-inspired React components for production web apps.');
-    expect(source).toContain('Align your UI structure, interaction patterns, and API design with SwiftUI');
+    expect(source).not.toContain('for production web apps');
+    expect(source).toContain('/docs/getting-started/');
     expect(source).not.toContain('documentation that ships as static files');
     expect(source).not.toContain('This app is built with Fumadocs on top of Next.js static export');
   });

@@ -21,14 +21,14 @@ type Story = StoryObj<IImageProps>
 
 export const Default: Story = {
   args: {
-    src: 'https://via.placeholder.com/200x200',
+    src: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E',
     alt: 'Placeholder image'
   }
 }
 
 export const WithAltText: Story = {
   args: {
-    src: 'https://via.placeholder.com/300x200',
+    src: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E',
     alt: 'A sample image'
   }
 }
@@ -37,7 +37,7 @@ export const InHStack: Story = {
   render: () => (
     <HStack spacing={10}>
       <Text>Left</Text>
-      <Image src="https://via.placeholder.com/100x100" alt="Image" />
+      <Image src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E" alt="Image" />
       <Text>Right</Text>
     </HStack>
   )
@@ -47,7 +47,7 @@ export const InVStack: Story = {
   render: () => (
     <VStack spacing={10}>
       <Text>Above</Text>
-      <Image src="https://via.placeholder.com/200x150" alt="Image" />
+      <Image src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E" alt="Image" />
       <Text>Below</Text>
     </VStack>
   )
@@ -55,7 +55,7 @@ export const InVStack: Story = {
 
 export const WithCustomStyle: Story = {
   args: {
-    src: 'https://via.placeholder.com/250x250',
+    src: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E',
     alt: 'Styled image',
     style: {
       borderRadius: '8px',
@@ -67,7 +67,7 @@ export const WithCustomStyle: Story = {
 export const InZStack: Story = {
   render: () => (
     <ZStack style={{ width: '300px', height: '200px' }}>
-      <Image src="https://via.placeholder.com/300x200" alt="Background" />
+      <Image src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E" alt="Background" />
       <Text style={{ color: 'white', textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
         Overlay Text
       </Text>
@@ -77,7 +77,7 @@ export const InZStack: Story = {
 
 export const Responsive: Story = {
   args: {
-    src: 'https://via.placeholder.com/400x300',
+    src: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E',
     alt: 'Responsive image',
     style: {
       maxWidth: '100%',
@@ -89,9 +89,9 @@ export const Responsive: Story = {
 export const MultipleImages: Story = {
   render: () => (
     <VStack spacing={15}>
-      <Image src="https://via.placeholder.com/200x150" alt="Image 1" />
-      <Image src="https://via.placeholder.com/200x150" alt="Image 2" />
-      <Image src="https://via.placeholder.com/200x150" alt="Image 3" />
+      <Image src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E" alt="Image 1" />
+      <Image src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E" alt="Image 2" />
+      <Image src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27320%27 height=%27180%27 viewBox=%270 0 320 180%27%3E%3Crect width=%27320%27 height=%27180%27 fill=%27%2377b7df%27/%3E%3Cpath d=%27M0 180 100 65 165 130 235 45 320 180%27 fill=%27%23286356%27/%3E%3Ccircle cx=%2768%27 cy=%2740%27 r=%2716%27 fill=%27%23ffdc80%27/%3E%3C/svg%3E" alt="Image 3" />
     </VStack>
   )
 }

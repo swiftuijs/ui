@@ -1,11 +1,43 @@
 'use client';
 
-import { createElement, type ComponentType, type ReactNode, useEffect, useState } from 'react';
+import {
+  createElement,
+  type ComponentType,
+  type ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 
-import { componentDocRegistry, componentPreviewRegistry } from '../.generated/component-docs';
+import {
+  componentDocRegistry,
+  componentPreviewRegistry,
+} from '../.generated/component-docs';
 
-type ComponentRegistryEntry = (typeof componentDocRegistry)[keyof typeof componentDocRegistry];
+type ComponentRegistryEntry =
+  (typeof componentDocRegistry)[keyof typeof componentDocRegistry];
 type PreviewModule = Record<string, unknown>;
+
+function CopyCode({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+  const [failed, setFailed] = useState(false);
+  return (
+    <button
+      type="button"
+      className="mt-3 rounded-md border border-fd-border px-3 py-1 text-sm"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(code);
+          setCopied(true);
+          setFailed(false);
+        } catch {
+          setFailed(true);
+        }
+      }}
+    >
+      {failed ? 'Select code to copy' : copied ? 'Copied' : 'Copy code'}
+    </button>
+  );
+}
 
 function humaniseStatus(status: string | null) {
   if (!status) {
@@ -35,12 +67,16 @@ function renderStory(previewModule: PreviewModule | null, exportName: string) {
     return null;
   }
 
+  const args = {
+    ...((previewExports.__DOCS_ARGS__ as Record<string, unknown>) ?? {}),
+    ...story.args,
+  };
   if (typeof story.render === 'function') {
-    return story.render(story.args ?? {});
+    return createElement(story.render, args);
   }
 
   if (component) {
-    return createElement(component, story.args ?? {});
+    return createElement(component, args);
   }
 
   return null;
@@ -56,18 +92,99 @@ export function getComponentDocEntry(slug?: string[]) {
     return null;
   }
 
-  return componentDocRegistry[componentSlug as keyof typeof componentDocRegistry] ?? null;
+  return (
+    componentDocRegistry[componentSlug as keyof typeof componentDocRegistry] ??
+    null
+  );
 }
 
-function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
-  const [previewModule, setPreviewModule] = useState<PreviewModule | null>(null);
+function ExampleCard({
+  example,
+  primary = false,
+  previewModule,
+  previewState,
+  onRetry,
+}: {
+  example: ComponentRegistryEntry['examples'][number];
+  primary?: boolean;
+  previewModule: PreviewModule | null;
+  previewState: 'loading' | 'ready' | 'error';
+  onRetry: () => void;
+}) {
+  const [expanded, setExpanded] = useState(primary);
+  return (
+    <article className="min-w-0 rounded-2xl border border-fd-border bg-fd-card p-4">
+      <details
+        open={expanded}
+        onToggle={(event) => setExpanded(event.currentTarget.open)}
+      >
+        <summary className="cursor-pointer font-semibold text-fd-foreground">
+          {example.title}
+        </summary>
+        {expanded && (
+          <>
+            <div className="my-4 grid gap-3 rounded-xl border border-fd-border bg-fd-card p-4 text-fd-foreground">
+              {renderStory(previewModule, example.exportName) ?? (
+                <p className="m-0 text-fd-muted-foreground">
+                  {previewState === 'loading'
+                    ? 'Loading preview…'
+                    : "This preview couldn't be loaded."}
+                  {previewState === 'error' && (
+                    <button
+                      type="button"
+                      className="ml-2 underline"
+                      onClick={onRetry}
+                    >
+                      Retry
+                    </button>
+                  )}
+                </p>
+              )}
+            </div>
+            {example.code && (
+              <details open={primary} className="min-w-0 max-w-full">
+                <summary className="w-fit cursor-pointer text-sm font-semibold text-fd-foreground">
+                  {primary ? 'Code' : 'Show code'}
+                </summary>
+                <CopyCode code={example.code} />
+                <pre className="mt-3 max-h-80 max-w-full overflow-auto rounded-xl border border-fd-border bg-fd-secondary p-3.5 text-sm text-fd-foreground">
+                  <code>{example.code}</code>
+                </pre>
+              </details>
+            )}
+          </>
+        )}
+      </details>
+    </article>
+  );
+}
+
+function ComponentDocShell({
+  entry,
+  children,
+}: {
+  entry: ComponentRegistryEntry;
+  children?: ReactNode;
+}) {
+  const [previewState, setPreviewState] = useState<
+    'loading' | 'ready' | 'error'
+  >('loading');
+  const [attempt, setAttempt] = useState(0);
+  const [previewModule, setPreviewModule] = useState<PreviewModule | null>(
+    null,
+  );
 
   useEffect(() => {
-    const loadPreview = componentPreviewRegistry[entry.slug as keyof typeof componentPreviewRegistry];
+    const loadPreview =
+      componentPreviewRegistry[
+        entry.slug as keyof typeof componentPreviewRegistry
+      ];
     let cancelled = false;
+    setPreviewState('loading');
 
     if (!loadPreview) {
       setPreviewModule(null);
+      setPreviewState('error');
       return;
     }
 
@@ -75,74 +192,84 @@ function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
       .then((module) => {
         if (!cancelled) {
           setPreviewModule(module);
+          setPreviewState('ready');
         }
       })
       .catch(() => {
         if (!cancelled) {
           setPreviewModule(null);
+          setPreviewState('error');
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [entry.slug]);
+  }, [entry.slug, attempt]);
 
+  const retry = () => setAttempt((value) => value + 1);
   return (
-    <section className="my-6 grid gap-6">
-      <div className="grid gap-3 rounded-2xl border border-fd-border bg-fd-card p-5">
+    <section className="my-6 grid min-w-0 gap-6">
+      {(entry.status || entry.swiftui) && (
         <div className="flex flex-wrap gap-2">
-          {entry.status ? (
-            <span className="inline-flex items-center rounded-full bg-fd-secondary px-2.5 py-1 text-[0.8125rem] font-semibold text-fd-primary">
+          {entry.status && (
+            <span className="rounded-full bg-fd-secondary px-2.5 py-1 text-sm font-semibold">
               {humaniseStatus(entry.status)}
             </span>
-          ) : null}
-          {entry.swiftui ? (
-            <span className="inline-flex items-center rounded-full bg-fd-secondary px-2.5 py-1 text-[0.8125rem] font-semibold text-fd-foreground">
+          )}
+          {entry.swiftui && (
+            <span className="rounded-full bg-fd-secondary px-2.5 py-1 text-sm">
               SwiftUI: {entry.swiftui}
             </span>
-          ) : null}
+          )}
         </div>
-        {entry.description ? <p className="m-0 text-fd-muted-foreground">{entry.description}</p> : null}
-      </div>
-
-      {entry.examples.length > 0 ? (
-        <section className="grid gap-4">
-          <h2 className="m-0 text-fd-foreground">Examples</h2>
-          <div className="grid gap-4">
-            {entry.examples.map((example) => (
-              <article
-                className="grid min-w-0 gap-4 rounded-2xl border border-fd-border bg-fd-card p-4"
-                key={example.exportName}
-              >
-                <header className="flex flex-wrap items-center justify-between gap-3">
-                  <h3 className="m-0 text-base text-fd-foreground">{example.title}</h3>
-                </header>
-                <div className="grid gap-3 rounded-xl border border-fd-border bg-fd-card p-4 text-fd-foreground">
-                  {renderStory(previewModule, example.exportName) ?? (
-                    <p className="m-0 text-fd-muted-foreground">
-                      Preview unavailable for this example in the static docs build.
-                    </p>
-                  )}
-                </div>
-                {example.code ? (
-                  <details className="min-w-0 max-w-full">
-                    <summary className="w-fit cursor-pointer text-sm font-semibold text-fd-foreground">
-                      Show code
-                    </summary>
-                    <pre className="mt-3 max-w-full overflow-x-auto rounded-xl border border-fd-border bg-fd-secondary p-3.5 text-fd-foreground">
-                      <code>{example.code}</code>
-                    </pre>
-                  </details>
-                ) : null}
-              </article>
-            ))}
-          </div>
+      )}
+      {entry.examples[0] && (
+        <section className="grid min-w-0 gap-4">
+          <h2 id="example" className="m-0 scroll-mt-24 text-fd-foreground">
+            Example
+          </h2>
+          <p className="m-0 text-sm text-fd-muted-foreground">
+            Requires React 19 and shared styles.{' '}
+            <a className="underline" href="/docs/getting-started/">
+              See setup
+            </a>
+            .
+          </p>
+          <ExampleCard
+            example={entry.examples[0]}
+            primary
+            previewModule={previewModule}
+            previewState={previewState}
+            onRetry={retry}
+          />
         </section>
-      ) : null}
+      )}
+      {children}
+      {entry.examples.length > 1 && (
+        <section className="grid min-w-0 gap-4">
+          <h2
+            id="more-examples"
+            className="m-0 scroll-mt-24 text-fd-foreground"
+          >
+            More examples
+          </h2>
+          {entry.examples.slice(1).map((example) => (
+            <ExampleCard
+              key={example.exportName}
+              example={example}
+              previewModule={previewModule}
+              previewState={previewState}
+              onRetry={retry}
+            />
+          ))}
+        </section>
+      )}
 
-      <section className="grid gap-4">
-        <h2 className="m-0 text-fd-foreground">API</h2>
+      <section className="grid min-w-0 gap-4">
+        <h2 id="api" className="m-0 scroll-mt-24 text-fd-foreground">
+          API reference
+        </h2>
         {entry.props.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full rounded-xl border-collapse bg-fd-card">
@@ -163,9 +290,11 @@ function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
                     <td className="border-b border-fd-border px-3.5 py-3.5 text-left align-top">
                       <code>{prop.type}</code>
                     </td>
-                    <td className="border-b border-fd-border px-3.5 py-3.5 text-left align-top">{prop.required ? 'Yes' : 'No'}</td>
                     <td className="border-b border-fd-border px-3.5 py-3.5 text-left align-top">
-                      {prop.description ?? 'No description yet.'}
+                      {prop.required ? 'Yes' : 'No'}
+                    </td>
+                    <td className="border-b border-fd-border px-3.5 py-3.5 text-left align-top">
+                      {prop.description ?? '—'}
                       {prop.defaultValue ? (
                         <>
                           {' '}
@@ -187,7 +316,8 @@ function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
         )}
         {entry.inheritedPropsNote ? (
           <p className="text-[0.9375rem] text-fd-muted-foreground">
-            Inherits additional props from <code>{entry.inheritedPropsNote}</code>.
+            Inherits additional props from{' '}
+            <code>{entry.inheritedPropsNote}</code>.
           </p>
         ) : null}
       </section>
@@ -195,12 +325,22 @@ function ComponentDocShell({ entry }: { entry: ComponentRegistryEntry }) {
   );
 }
 
-export function ComponentDocPage({ slug }: { slug?: string[] }) {
+export function ComponentDocPage({
+  slug,
+  children,
+}: {
+  slug?: string[];
+  children?: ReactNode;
+}) {
   const entry = getComponentDocEntry(slug);
 
   if (!entry) {
     return null;
   }
 
-  return <ComponentDocShell entry={entry} />;
+  return (
+    <ComponentDocShell key={entry.slug} entry={entry}>
+      {children}
+    </ComponentDocShell>
+  );
 }

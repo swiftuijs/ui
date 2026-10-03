@@ -2,51 +2,77 @@
   "name": "@swiftuijs/ui",
   "version": "0.1.0",
   "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./components/*": {
-      "import": "./dist/components/*/index.js",
-      "types": "./dist/components/*/index.d.ts"
+      "types": "./dist/components/*/index.d.ts",
+      "import": "./dist/components/*/index.js"
     },
     "./common/*": {
-      "import": "./dist/common/*.js",
-      "types": "./dist/common/*.d.ts"
+      "types": "./dist/common/*.d.ts",
+      "import": "./dist/common/*.js"
     },
     "./contexts/*": {
-      "import": "./dist/contexts/*.js",
-      "types": "./dist/contexts/*.d.ts"
+      "types": "./dist/contexts/*.d.ts",
+      "import": "./dist/contexts/*.js"
     },
     "./hooks/*": {
-      "import": "./dist/hooks/*.js",
-      "types": "./dist/hooks/*.d.ts"
+      "types": "./dist/hooks/*.d.ts",
+      "import": "./dist/hooks/*.js"
     },
     "./style/*": {
       "import": "./dist/style/*",
       "default": "./dist/style/*"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite dev",
     "build": "rimraf dist tsconfig.build.tsbuildinfo && vite build && tsc -p tsconfig.build.json && tsx scripts/prepare-dts.ts",
     "lint": "eslint src --max-warnings 0",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:package": "pnpm build && node scripts/verify-package.mjs",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "plain-store": "^0.2.2"
+    "@radix-ui/react-dialog": "1.1.15",
+    "@tanstack/react-virtual": "3.13.12"
   },
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
-  "repository": "https://github.com/swiftuijs/ui.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swiftuijs/ui.git",
+    "directory": "packages/ui"
+  },
   "author": "Saiya",
-  "license": "MIT"
+  "license": "MIT",
+  "private": false,
+  "description": "SwiftUI-inspired React components with adaptive layouts, native controls, scoped themes and optional glass materials.",
+  "keywords": [
+    "react",
+    "swiftui",
+    "components",
+    "ui",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

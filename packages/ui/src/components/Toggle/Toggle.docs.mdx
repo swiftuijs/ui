@@ -5,28 +5,14 @@ import * as ToggleStories from './Toggle.stories'
 
 # Toggle
 
-## Overview
-
-Toggle is a control that switches between on and off states. Toggle is commonly used for boolean settings and preferences.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `Toggle`.
+Turn a boolean setting on or off.
 
 ## Basic Usage
 
 <Canvas of={ToggleStories.Default} />
 
-## Notes
+## Usage and limitations
 
-- Toggle requires `isOn` and `onChange` props for controlled state
-- Toggle can be disabled with the `disabled` prop
-- Toggle provides visual feedback for state changes
-- Use Toggle for binary choices (on/off, enabled/disabled)
-
-## Best Practices
-
-1. **Clear labels**: Provide clear labels that indicate what the toggle controls
-2. **State management**: Use controlled state for toggle values
-3. **Accessibility**: Ensure toggles are keyboard accessible
-4. **Visual feedback**: Toggle provides built-in visual feedback
-5. **Grouping**: Group related toggles together for better UX
-
+- Provide `isOn` and boolean `onChange`; state is controlled by the parent. `disabled` blocks interaction.
+- Use a clear visible label or `aria-label` naming the setting. Native keyboard activation and on/off feedback are provided.
+- Group related settings and keep their state in React.

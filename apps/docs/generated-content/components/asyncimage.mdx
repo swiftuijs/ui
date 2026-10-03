@@ -3,10 +3,6 @@ title: "AsyncImage"
 description: "AsyncImage loads remote images and exposes simple loading and failure phases, aligned with SwiftUI's `AsyncImage` mental model."
 ---
 
-## Overview
-
-AsyncImage loads remote images and exposes simple loading and failure phases, aligned with SwiftUI's `AsyncImage` mental model.
-
 ## Missing Source
 
 When `src` is empty, `AsyncImage` now enters the failure phase immediately instead of attempting a broken browser request:
@@ -15,7 +11,7 @@ When `src` is empty, `AsyncImage` now enters the failure phase immediately inste
 
 Use `onPhaseChange` when the surrounding UI needs to react to loading, success, or failure:
 
-## Notes
+## Usage and limitations
 
 - Use `placeholder` for loading UI.
 - Use `fallback` for failed requests.

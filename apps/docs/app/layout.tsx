@@ -20,18 +20,14 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   description:
-    'Static documentation for SwiftUI.js, covering setup, SwiftUI-aligned concepts, and the evolving component system.',
+    'SwiftUI-inspired React components: live examples, clear APIs, responsive layouts, themes and platform limits.',
   title: {
     default: 'SwiftUI.js Docs',
     template: '%s | SwiftUI.js Docs',
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
@@ -39,7 +35,11 @@ export default function RootLayout({
       className={`${sans.variable} ${mono.variable}`}
     >
       <body className="min-h-screen bg-fd-background text-fd-foreground antialiased">
-        <RootProvider>{children}</RootProvider>
+        <RootProvider
+          search={{ options: { type: 'static', api: '/api/search' } }}
+        >
+          {children}
+        </RootProvider>
       </body>
     </html>
   );

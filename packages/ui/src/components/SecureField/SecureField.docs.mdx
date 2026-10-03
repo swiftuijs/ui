@@ -5,29 +5,15 @@ import * as SecureFieldStories from './SecureField.stories'
 
 # SecureField
 
-## Overview
-
-SecureField is a control that displays a secure text input field. SecureField is used for password input and other sensitive information, automatically masking the input.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `SecureField`.
+Enter a password through a native, visually masked input.
 
 ## Basic Usage
 
 <Canvas of={SecureFieldStories.Default} />
 
-## Notes
+## Usage and limitations
 
-- SecureField automatically masks input for security
-- SecureField supports controlled and uncontrolled modes
-- Use `value` and `onChange` for controlled inputs
-- SecureField can be disabled with the `disabled` prop
-- Use `placeholder` to provide hints about expected input
-
-## Best Practices
-
-1. **Security**: Always use SecureField for password inputs
-2. **Validation**: Validate password strength and requirements
-3. **Placeholders**: Provide clear placeholder text
-4. **Accessibility**: Ensure SecureField is accessible
-5. **Mobile**: Test on mobile devices for proper keyboard behavior
-
+- Controlled: pass `value` and `onChange` (a React change event). Uncontrolled: use `defaultValue`.
+- Supports native input attributes such as `disabled`, `autoComplete`, and `placeholder`. Provide a visible label or `aria-label`; placeholders do not replace labels.
+- Masking hides text on screen; applications remain responsible for validation, transport security and safe credential handling.
+- Check password-manager autofill and mobile keyboard behavior in your target browsers.

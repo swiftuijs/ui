@@ -262,3 +262,25 @@ describe('NavigationStack', () => {
     expect(handlePathChange).toHaveBeenLastCalledWith([])
   })
 })
+
+
+it('updates root content from React props without remounting editable children', () => {
+  const { rerender, container } = render(<NavigationStack><input aria-label="Draft" defaultValue="Initial draft" /><span>First title</span></NavigationStack>)
+  const input = screen.getByRole('textbox', { name: 'Draft' })
+  fireEvent.change(input, { target: { value: 'Edited draft' } })
+  const id = container.querySelector('[data-page-type="page"]')?.id
+  rerender(<NavigationStack><input aria-label="Draft" defaultValue="New default" /><span>Updated title</span></NavigationStack>)
+  expect(screen.getByText('Updated title')).toBeInTheDocument()
+  expect(screen.queryByText('First title')).not.toBeInTheDocument()
+  expect(screen.getByRole('textbox', { name: 'Draft' })).toBe(input)
+  expect(input).toHaveValue('Edited draft')
+  expect(container.querySelector('[data-page-type="page"]')?.id).toBe(id)
+})
+
+it('gives independent navigation roots unique DOM IDs', () => {
+  const { container } = render(<><NavigationStack>First stack</NavigationStack><NavigationStack>Second stack</NavigationStack></>)
+  const ids = Array.from(container.querySelectorAll('[data-page-type="page"]')).map(element => element.id)
+  expect(ids).toHaveLength(2)
+  expect(ids.every(Boolean)).toBe(true)
+  expect(new Set(ids).size).toBe(2)
+})

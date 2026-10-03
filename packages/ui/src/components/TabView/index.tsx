@@ -2,6 +2,7 @@ import { memo, useEffect, useId, useRef, useState, type ComponentRef, type Keybo
 import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 
+import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
 export type TabValue = string | number
@@ -40,7 +41,7 @@ export interface ITabItem {
 /**
  * Props for TabView component
  */
-export interface ITabViewProps extends Omit<IBaseElementComponent<'div'>, 'children'> {
+export interface ITabViewProps extends Omit<IBaseElementComponent<'div'>, 'children'>, GlassSurfaceProps {
   /**
    * Tab items
    */
@@ -94,6 +95,7 @@ export interface ITabViewProps extends Omit<IBaseElementComponent<'div'>, 'child
  */
 export const TabView = memo(function TabView(props: ITabViewProps) {
   const {
+    glass,
     items,
     defaultSelection,
     selection,
@@ -104,6 +106,7 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
     ...restProps
   } = props
 
+  const appearance = useGlassAppearance(glass)
   const normalizedItems = items.map((item, index) => ({
     ...item,
     value: item.value ?? index,
@@ -205,6 +208,7 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
 
   const renderTabs = () => (
     <div
+      {...appearance}
       className={prefixClass('tab-bar')}
       role="tablist"
       aria-label={ariaLabel}

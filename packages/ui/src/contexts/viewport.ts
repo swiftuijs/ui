@@ -1,10 +1,6 @@
-/**
- * detect viewport related context
- */
-import { createStore } from 'plain-store'
-import { isInBrowser, throttle } from '@/common'
-import { eventBus } from '@/common/event-bus'
+'use client'
 
+import { useSyncExternalStore } from 'react'
 
 export interface IViewportInfo {
   /**
@@ -21,24 +17,34 @@ export interface IViewportInfo {
   landscape: boolean
 }
 
-export const viewportStore = createStore<IViewportInfo|null>(null)
+let snapshot: IViewportInfo | null = null
+const listeners = new Set<() => void>()
 
-if (isInBrowser) {
-  const updateViewport = () => {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const landscape = width > height
-    const info = {
-      width,
-      height,
-      landscape,
-    }
-    viewportStore.setStore(info)
-    // Emit event for other stores to listen
-    eventBus.emit('viewport:change', info)
-  }
-  window.addEventListener('resize', throttle(updateViewport), {
-    passive: true,
-  })
-  updateViewport()
+function updateViewport() {
+  const { innerWidth: width, innerHeight: height } = window
+  if (snapshot?.width === width && snapshot.height === height) return
+  snapshot = { width, height, landscape: width > height }
+  listeners.forEach(listener => listener())
 }
+
+function subscribe(listener: () => void) {
+  listeners.add(listener)
+  if (listeners.size === 1) {
+    window.addEventListener('resize', updateViewport, { passive: true })
+    updateViewport()
+  }
+  return () => {
+    listeners.delete(listener)
+    if (!listeners.size) window.removeEventListener('resize', updateViewport)
+  }
+}
+
+const getSnapshot = () => snapshot
+const getServerSnapshot = () => null
+
+/** Shares one resize listener and a stable null snapshot during hydration. */
+export function useViewport(): IViewportInfo | null {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+}
+
+export const viewportStore = { getStore: getSnapshot, useStore: useViewport }

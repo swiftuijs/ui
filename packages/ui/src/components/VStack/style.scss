@@ -6,7 +6,12 @@
   @include flex-container(column, stretch);
   @include stack-spacing('--stack-spacing');
 
-  > .#{$prefix}-spacer {
+  > .#{$ns}-spacer {
     @include spacer-child(height);
   }
 }
+
+// SwiftUI's VStack alignment acts on the horizontal (cross) axis.
+.sw-vstack.sw-container[data-alignment='leading'] { align-items: flex-start; justify-content: flex-start; }
+.sw-vstack.sw-container[data-alignment='center'] { align-items: center; justify-content: flex-start; }
+.sw-vstack.sw-container[data-alignment='trailing'] { align-items: flex-end; justify-content: flex-start; }

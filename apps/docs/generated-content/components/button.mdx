@@ -1,14 +1,11 @@
 ---
 title: "Button"
-description: "Button maps directly to SwiftUI's `Button` control: a label or icon triggers an action when activated. The React version keeps the same mental model while exposing standard HTML button behavior."
+description: "A native HTML button with SwiftUI-inspired styling. Pass ordinary button props and an `onClick` handler; use `type=\"submit\"` inside a form."
 ---
 
-## SwiftUI Alignment
+## Usage and limitations
 
-Button maps directly to SwiftUI's `Button` control: a label or icon triggers an action when activated. The React version keeps the same mental model while exposing standard HTML button behavior.
-
-## Notes
-
-- Use clear labels that describe the action
-- Keep disabled buttons visually distinct
-- Use custom styling sparingly so the component stays consistent with the design system
+- Defaults to `type="button"` so clicking does not submit a form accidentally.
+- Supports native keyboard activation, `disabled`, `aria-*`, `className`, and `style`.
+- Use a visible action label, or `aria-label` for an icon-only button.
+- Choose `buttonStyle="plain"`, `"bordered"`, or `"borderedProminent"`; the default `"automatic"` uses the plain appearance. Use `buttonRole="destructive"` for a destructive action.

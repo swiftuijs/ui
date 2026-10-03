@@ -1,4 +1,7 @@
-import type { ReactNode, CSSProperties, ComponentProps } from 'react'
+import type { ReactNode, CSSProperties, ComponentProps, ElementType, HTMLAttributes, AriaAttributes } from 'react'
+import type { IFn } from './utilities'
+
+export type { IFn, PartialOptional } from './utilities'
 
 export * from './navi'
 export * from './transition'
@@ -24,7 +27,8 @@ export type IChildren = string | ReactNode | ReactNode[]
 /**
  * component base props
  */
-export interface IBaseComponent {
+export interface IBaseComponent extends AriaAttributes, Pick<HTMLAttributes<HTMLElement>, 'id' | 'role' | 'tabIndex' | 'dir' | 'lang'> {
+  [key: `data-${string}`]: string | number | boolean | undefined
   /**
    * The style of the component.
    */
@@ -51,7 +55,7 @@ export interface IPageBaseComponent extends IBaseComponent {
 }
 
 
-export type IBaseElementComponent<T> = IBaseComponent & ComponentProps<T>
+export type IBaseElementComponent<T extends ElementType> = IBaseComponent & ComponentProps<T>
 
 export const enum EEdge {
   TOP = 'top',

@@ -183,3 +183,28 @@ describe('NavigationSplitView', () => {
     expect(screen.getByRole('region', { name: 'Content' })).toBeInTheDocument()
   })
 })
+
+it('adapts to its container and keeps every compact column reachable', async () => {
+  let resize: (entries: { contentRect: { width: number } }[]) => void = () => {}
+  const disconnect = vi.fn()
+  vi.stubGlobal('ResizeObserver', class {
+    constructor(callback: typeof resize) { resize = callback }
+    observe() {}
+    disconnect = disconnect
+  })
+  try {
+    const user = userEvent.setup()
+    const { unmount } = render(<NavigationSplitView sidebar={<div>Library navigation</div>} detail={<div>Selected detail</div>} />)
+    const { act } = await import('@testing-library/react')
+    act(() => resize([{ contentRect: { width: 390 } }]))
+    expect(screen.getByRole('navigation', { name: 'Columns' })).toBeInTheDocument()
+    expect(screen.queryByRole('complementary')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Navigation' }))
+    expect(screen.getByRole('main')).toHaveTextContent('Library navigation')
+    act(() => resize([{ contentRect: { width: 900 } }]))
+    expect(screen.getByRole('complementary')).toHaveTextContent('Library navigation')
+    expect(screen.getByRole('main')).toHaveTextContent('Selected detail')
+    unmount()
+    expect(disconnect).toHaveBeenCalledOnce()
+  } finally { vi.unstubAllGlobals() }
+})

@@ -21,8 +21,18 @@ function removeEmptyHeadings(markdown: string): string {
   const lines = markdown.split('\n');
   const kept: string[] = [];
 
+  let inFence = false;
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      kept.push(line);
+      continue;
+    }
+    if (inFence) {
+      kept.push(line);
+      continue;
+    }
     const headingMatch = line.match(/^(#{1,6})\s+.+$/);
 
     if (!headingMatch) {
@@ -65,14 +75,6 @@ function removeLeadingTitle(markdown: string): string {
   return markdown.replace(/^#\s+.+\n+/m, '').trim();
 }
 
-function removeSection(markdown: string, heading: string) {
-  const escaped = heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return markdown.replace(
-    new RegExp(`^##\\s+${escaped}\\n[\\s\\S]*?(?=^##\\s+|$)`, 'gm'),
-    '',
-  );
-}
-
 function stripStorybookMdx(source: string): string {
   const lines = source.split('\n');
   const kept: string[] = [];
@@ -104,7 +106,9 @@ function stripStorybookMdx(source: string): string {
       continue;
     }
 
-    const blockMatch = trimmed.match(/^<(Meta|Canvas|[A-Za-z][A-Za-z0-9]*Canvas)\b/);
+    const blockMatch = trimmed.match(
+      /^<(Meta|Canvas|[A-Za-z][A-Za-z0-9]*Canvas)\b/,
+    );
     if (blockMatch) {
       if (!trimmed.endsWith('/>') && !trimmed.includes(`</${blockMatch[1]}>`)) {
         skippingBlock = blockMatch[1];
@@ -122,16 +126,33 @@ function stripStorybookMdx(source: string): string {
   return kept.join('\n');
 }
 
-export function buildComponentDocBody(source: string): string {
+export function buildComponentDocBody(
+  source: string,
+  description?: string | null,
+): string {
   const withoutFrontmatter = matter(source).content;
   const stripped = stripStorybookMdx(withoutFrontmatter)
     .split('\n')
     .map((line) => line.trimEnd())
     .join('\n')
     .replace(/^\s*$/gm, '\n');
-  const cleaned = removeEmptyHeadings(removeSection(removeLeadingTitle(stripped), 'Usage'));
+  const cleaned = removeEmptyHeadings(removeLeadingTitle(stripped));
 
-  return `${normaliseWhitespace(cleaned)}\n`;
+  let inFence = false;
+  const body = cleaned
+    .split(/\n\s*\n/)
+    .filter((block) => {
+      const protectedBlock = inFence || block.startsWith('```');
+      if ((block.match(/^\s*```/gm)?.length ?? 0) % 2) inFence = !inFence;
+      return (
+        protectedBlock ||
+        !description ||
+        block.replace(/\s+/g, ' ').trim() !==
+          description.replace(/\s+/g, ' ').trim()
+      );
+    })
+    .join('\n\n');
+  return `${normaliseWhitespace(removeEmptyHeadings(body))}\n`;
 }
 
 export function buildRootMeta(meta: { pages?: string[]; title?: string }) {
@@ -148,7 +169,9 @@ export function buildRootMeta(meta: { pages?: string[]; title?: string }) {
 }
 
 export function buildComponentsMeta(
-  componentDocs: Array<Pick<Awaited<ReturnType<typeof loadComponentDocs>>[number], 'slug'>>,
+  componentDocs: Array<
+    Pick<Awaited<ReturnType<typeof loadComponentDocs>>[number], 'slug'>
+  >,
 ) {
   const pages = [
     'index',
@@ -167,17 +190,18 @@ export function buildComponentsOverview(
   const lines = [
     '---',
     'title: Components',
-    'description: Auto-generated component reference for SwiftUI.js.',
+    'description: Find a component, try its example, and check its requirements.',
     '---',
     '',
-    '# Components',
+    'Start with [Button](/docs/components/button), [TextField](/docs/components/textfield), [VStack](/docs/components/vstack), or [Sheet](/docs/components/sheet). Each reference includes a live example, code, requirements and the complete API.',
     '',
-    'Component pages are generated from colocated `*.docs.mdx` files under `packages/ui/src/components`.',
+    'Use search to find a component by name. Check the [capability matrix](/docs/concepts/capability-matrix/) for web adaptations and experimental features.',
     '',
-    '## Available Components',
+    '## All components',
     '',
     ...componentDocs.map((doc) => {
-      const description = doc.description ?? `${doc.title} component documentation.`;
+      const description =
+        doc.description ?? `${doc.title} component documentation.`;
       return `- [${doc.title}](${doc.href}): ${description}`;
     }),
     '',
@@ -194,9 +218,12 @@ export async function generateDocsContent(options?: {
   generatedSourceDir?: string;
 }) {
   const contentDir = options?.contentDir ?? defaultContentDir;
-  const generatedContentDir = options?.generatedContentDir ?? defaultGeneratedContentDir;
-  const generatedCodeDir = options?.generatedCodeDir ?? join(docsRoot, '.generated');
-  const generatedSourceDir = options?.generatedSourceDir ?? defaultGeneratedSourceDir;
+  const generatedContentDir =
+    options?.generatedContentDir ?? defaultGeneratedContentDir;
+  const generatedCodeDir =
+    options?.generatedCodeDir ?? join(docsRoot, '.generated');
+  const generatedSourceDir =
+    options?.generatedSourceDir ?? defaultGeneratedSourceDir;
 
   await rm(generatedContentDir, { force: true, recursive: true });
   await mkdir(generatedContentDir, { recursive: true });
@@ -215,7 +242,10 @@ export async function generateDocsContent(options?: {
     pages?: string[];
     title?: string;
   };
-  await writeFile(rootMetaPath, `${JSON.stringify(buildRootMeta(rootMeta), null, 2)}\n`);
+  await writeFile(
+    rootMetaPath,
+    `${JSON.stringify(buildRootMeta(rootMeta), null, 2)}\n`,
+  );
 
   const componentDocs = await loadComponentDocs({
     cwd: options?.componentsDir,
@@ -235,14 +265,19 @@ export async function generateDocsContent(options?: {
     componentDocs.map(async (doc) => {
       const source = await readFile(doc.sourcePath, 'utf8');
       const title = parseComponentDocTitle(source, doc.slug);
-      const description = doc.description ?? `${title} component documentation.`;
-      const body = buildComponentDocBody(source);
-      const targetPath = join(generatedContentDir, 'components', `${doc.slug}.mdx`);
+      const description =
+        doc.description ?? `${title} component documentation.`;
+      const body = buildComponentDocBody(source, doc.description);
+      const targetPath = join(
+        generatedContentDir,
+        'components',
+        `${doc.slug}.mdx`,
+      );
 
       await mkdir(dirname(targetPath), { recursive: true });
       await writeFile(
         targetPath,
-        `---\ntitle: ${JSON.stringify(title)}\ndescription: ${JSON.stringify(description)}\n---\n\n${body}`,
+        `---\ntitle: ${JSON.stringify(title)}\ndescription: ${JSON.stringify(description)}\n---${body.trim() ? `\n\n${body.trim()}` : ''}\n`,
       );
     }),
   );
@@ -270,15 +305,16 @@ async function writeGeneratedSource(options: {
   });
 
   const pageEntries = entries.filter((entry) => entry.endsWith('.mdx')).sort();
-  const metaEntries = entries.filter((entry) => entry.endsWith('meta.json')).sort();
+  const metaEntries = entries
+    .filter((entry) => entry.endsWith('meta.json'))
+    .sort();
 
-  const lines = [
-    "import { server } from 'fumadocs-mdx/runtime/server';",
-    '',
-  ];
+  const lines = ["import { server } from 'fumadocs-mdx/runtime/server';", ''];
 
   pageEntries.forEach((entry, index) => {
-    lines.push(`import * as doc_${index} from '../generated-content/${entry}';`);
+    lines.push(
+      `import * as doc_${index} from '../generated-content/${entry}';`,
+    );
   });
 
   metaEntries.forEach((entry, index) => {
@@ -303,7 +339,16 @@ async function writeGeneratedSource(options: {
   );
 
   await mkdir(options.generatedSourceDir, { recursive: true });
-  await writeFile(join(options.generatedSourceDir, 'server.ts'), `${lines.join('\n')}\n`);
-  await writeFile(join(options.generatedSourceDir, 'browser.ts'), 'export {};\n');
-  await writeFile(join(options.generatedSourceDir, 'dynamic.ts'), 'export {};\n');
+  await writeFile(
+    join(options.generatedSourceDir, 'server.ts'),
+    `${lines.join('\n')}\n`,
+  );
+  await writeFile(
+    join(options.generatedSourceDir, 'browser.ts'),
+    'export {};\n',
+  );
+  await writeFile(
+    join(options.generatedSourceDir, 'dynamic.ts'),
+    'export {};\n',
+  );
 }

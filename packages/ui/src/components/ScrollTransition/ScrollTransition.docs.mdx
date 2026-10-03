@@ -5,8 +5,6 @@ import * as ScrollTransitionStories from './ScrollTransition.stories'
 
 # ScrollTransition
 
-## Overview
-
 ScrollTransition adapts SwiftUI's `scrollTransition` modifier into an explicit wrapper for web layouts.
 
 **Status**: adapted
@@ -18,3 +16,7 @@ ScrollTransition adapts SwiftUI's `scrollTransition` modifier into an explicit w
 ## Variants
 
 <Canvas of={ScrollTransitionStories.Scale} />
+
+## Usage and limitations
+
+- Uses CSS effects driven by `phase` and `active` props. Scroll position is not observed automatically; update those props from application scroll logic.

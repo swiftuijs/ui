@@ -5,8 +5,6 @@ import * as PresentationDragIndicatorStories from './PresentationDragIndicator.s
 
 # PresentationDragIndicator
 
-## Overview
-
 PresentationDragIndicator adapts SwiftUI's `presentationDragIndicator` modifier into an explicit wrapper.
 
 **Status**: adapted
@@ -18,3 +16,7 @@ PresentationDragIndicator adapts SwiftUI's `presentationDragIndicator` modifier 
 ## Variants
 
 <Canvas of={PresentationDragIndicatorStories.VisibilityStates} />
+
+## Usage and limitations
+
+- Sets wrapper metadata only. It does not change a surrounding Sheet grabber; set `Sheet`'s `showDragIndicator` prop directly.

@@ -2,6 +2,8 @@
  * event bus for inner communication
  */
 
+import type { IFn } from '@/types'
+
 export const eventBus = {
   _events: {} as Record<string, Array<IFn>>,
   on(eventName: string, fn: IFn) {

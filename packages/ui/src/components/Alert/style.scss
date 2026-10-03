@@ -1,3 +1,4 @@
+@use '../_internal/modal.scss';
 @use '@style/base.scss' as *;
 
 // Alert 特有的动画：居中缩放滑入
@@ -31,15 +32,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: var(--sw-z-modal);
-  min-width: 270px;
+  width: min(320px, calc(100vw - 40px));
   max-width: 90%;
   animation: #{$ns}-alert-slide-scale-in var(--sw-transition-normal);
 
   // alert-content
   &-content {
-    background-color: var(--sw-color-background-primary);
-    border-radius: var(--sw-radius-lg);
-    padding: var(--sw-spacing-lg);
+    background-color: var(--sw-color-background-elevated);
+    border-radius: 32px;
+    padding: 20px;
     box-shadow: var(--sw-shadow-lg);
   }
 
@@ -49,7 +50,7 @@
     font-weight: var(--sw-font-weight-semibold);
     color: var(--sw-color-label-primary);
     margin-bottom: var(--sw-spacing-sm);
-    text-align: center;
+    text-align: start;
   }
 
   // alert-message
@@ -57,13 +58,14 @@
     font-size: var(--sw-font-size-body);
     color: var(--sw-color-label-secondary);
     margin-bottom: var(--sw-spacing-lg);
-    text-align: center;
+    text-align: start;
     line-height: var(--sw-line-height-relaxed);
   }
 
   // alert-actions
   &-actions {
     display: flex;
+    flex-direction: column;
     gap: var(--sw-spacing-sm);
     justify-content: center;
   }
@@ -73,7 +75,8 @@
     flex: 1;
     padding: var(--sw-spacing-sm) var(--sw-spacing-lg);
     border: none;
-    border-radius: var(--sw-radius-md);
+    border-radius: var(--sw-radius-full);
+    min-height: 44px;
     font-size: var(--sw-font-size-body);
     font-weight: var(--sw-font-weight-semibold);
     cursor: pointer;
@@ -81,8 +84,8 @@
     -webkit-tap-highlight-color: transparent;
 
     &-default {
-      background-color: var(--sw-accent-color);
-      color: var(--sw-color-background-primary);
+      background-color: var(--sw-color-action-fill);
+      color: #FFFFFF;
 
       &:hover {
         opacity: 0.9;
@@ -94,7 +97,7 @@
     }
 
     &-cancel {
-      background-color: var(--sw-color-background-secondary);
+      background-color: var(--sw-color-control-fill);
       color: var(--sw-color-label-primary);
 
       &:hover {
@@ -107,8 +110,8 @@
     }
 
     &-destructive {
-      background-color: #FF3B30;
-      color: var(--sw-color-background-primary);
+      background-color: var(--sw-color-control-fill);
+      color: var(--sw-color-red);
 
       &:hover {
         opacity: 0.9;

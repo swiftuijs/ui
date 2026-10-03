@@ -1,8 +1,7 @@
-import { useEffect, useRef, type RefObject } from 'react'
+import { useRef, type PointerEvent, type RefObject } from 'react'
 import type { IPresentationDetent } from '@/types'
-import { prefixClass, isMobile, eventBus,
-    EVENT_MOUSEDOWN, EVENT_MOUSEMOVE, EVENT_MOUSEUP } from '@/common'
-// import { viewportStore } from '@/contexts'
+import { prefixClass, eventBus } from '@/common'
+import { useDetents } from './use-detents'
 
 export interface IDragBarProps {
   eventToChangeDetent: string
@@ -10,50 +9,50 @@ export interface IDragBarProps {
   container: RefObject<HTMLDivElement | null>
 }
 
-export function DragBar(props: IDragBarProps) {
-  const dragRef = useRef<HTMLDivElement>(null)
-  const className = prefixClass('dragbar')
-
-  useEffect(() => {
-    if (!props.container?.current || !dragRef.current) return
-    const container = props.container.current
-    const dragbar = dragRef.current
-
-    let containerBottom = 0
-    let lastHeight = 0
-
-    const onDrag = (e: MouseEvent | TouchEvent) => {
-      // prevent to trigger pull down to refresh on iOS Safari, or other default behavior
-      e.preventDefault()
-      const clientY = isMobile ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY
-      // 20 is distance from top
-      // 200 is min height
-      lastHeight = Math.max(containerBottom - Math.max(20, clientY), 200)
-      container.style.height = `${lastHeight}px`
-    }
-    const onDragEnd = () => {
-      eventBus.emit(props.eventToChangeDetent, lastHeight)
-      document.removeEventListener(EVENT_MOUSEMOVE, onDrag)
-      document.removeEventListener(EVENT_MOUSEUP, onDragEnd)
-    }
-    const onDragStart = (e: MouseEvent | TouchEvent) => {
-      e.preventDefault()
-      // update container bottom position when start drag, to deal with dynamic content or window resize
-      containerBottom = container.getBoundingClientRect().bottom
-      document.addEventListener(EVENT_MOUSEMOVE, onDrag)
-      document.addEventListener(EVENT_MOUSEUP, onDragEnd)
-    }
-
-    dragbar.addEventListener(EVENT_MOUSEDOWN, onDragStart)
-
-    return () => {
-      dragbar.removeEventListener(EVENT_MOUSEDOWN, onDragStart)
-    }
-  }, [props.container, props.eventToChangeDetent, dragRef])
-
-  return (
-    <div className={className} ref={dragRef}>
-      <span className={prefixClass('dragbar-indicator')} />
-    </div>
-  )
+/** A small visual grabber with a separate, accessible touch target. */
+export function DragBar({ container, eventToChangeDetent, presentationDetents }: IDragBarProps) {
+  const { sizes } = useDetents(presentationDetents)
+  const drag = useRef<{ id: number; y: number; height: number; next: number; moved: boolean } | null>(null)
+  const suppressClick = useRef(false)
+  const changeHeight = (height: number) => eventBus.emit(eventToChangeDetent, height)
+  const finish = (event: PointerEvent<HTMLButtonElement>, cancelled = false) => {
+    const current = drag.current
+    if (!current || current.id !== event.pointerId) return
+    drag.current = null
+    suppressClick.current = current.moved
+    changeHeight(cancelled ? current.height : current.next)
+  }
+  return <button
+    type="button"
+    aria-label="Adjust sheet height"
+    className={prefixClass('dragbar')}
+    onPointerDown={event => {
+      if (event.button !== 0 || drag.current || !container.current) return
+      const height = container.current.getBoundingClientRect().height
+      drag.current = { id: event.pointerId, y: event.clientY, height, next: height, moved: false }
+      suppressClick.current = false
+      container.current.classList.remove('animate-height')
+      event.currentTarget.setPointerCapture?.(event.pointerId)
+    }}
+    onPointerMove={event => {
+      const current = drag.current
+      if (!current || current.id !== event.pointerId || !container.current) return
+      const delta = current.y - event.clientY
+      if (Math.abs(delta) > 4) current.moved = true
+      if (!current.moved) return
+      current.next = Math.max(sizes[0], Math.min(sizes[sizes.length - 1], current.height + delta))
+      container.current.style.height = `${current.next}px`
+    }}
+    onPointerUp={event => finish(event)}
+    onPointerCancel={event => finish(event, true)}
+    onLostPointerCapture={event => finish(event, true)}
+    onClick={event => {
+      const suppressed = event.detail !== 0 && suppressClick.current
+      suppressClick.current = false
+      if (suppressed || !container.current || sizes.length < 2) return
+      const height = container.current.getBoundingClientRect().height
+      const index = sizes.reduce((best, size, i) => Math.abs(size - height) < Math.abs(sizes[best] - height) ? i : best, 0)
+      changeHeight(sizes[(index + 1) % sizes.length])
+    }}
+  />
 }

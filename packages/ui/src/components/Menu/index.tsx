@@ -13,9 +13,13 @@ import {
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from 'react'
+import { createPortal } from 'react-dom'
 import type { IBaseComponent } from '@/types'
 import { clsx, standardizeProps, prefixClass } from '@/common'
 
+import { useViewportFit } from '../_internal/use-viewport-fit'
+import { useMenuAnchor } from '../_internal/use-menu-anchor'
+import { useUIConfig, themeStyle, useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
 /**
@@ -59,7 +63,7 @@ export interface IMenuItem {
 /**
  * Props for Menu component
  */
-export interface IMenuProps extends IBaseComponent {
+export interface IMenuProps extends IBaseComponent, GlassSurfaceProps {
   /**
    * Menu items
    */
@@ -118,6 +122,7 @@ type TriggerElementProps = {
  */
 export function Menu(props: IMenuProps) {
   const {
+    glass,
     items,
     trigger,
     placement = 'bottom',
@@ -126,6 +131,9 @@ export function Menu(props: IMenuProps) {
     ...restProps
   } = props
 
+  const appearance = useGlassAppearance(glass)
+  const config = useUIConfig()
+  const [portalHost, setPortalHost] = useState<HTMLElement | null>(null)
   const [internalIsOpen, setInternalIsOpen] = useState(false)
   const [focusedItemIndex, setFocusedItemIndex] = useState(-1)
   const [activeSubmenuIndex, setActiveSubmenuIndex] = useState<number | null>(null)
@@ -143,6 +151,12 @@ export function Menu(props: IMenuProps) {
 
   const isControlled = controlledIsOpen !== undefined
   const isOpen = isControlled ? controlledIsOpen : internalIsOpen
+  useEffect(() => {
+    setPortalHost(document.getElementById(triggerId)?.closest<HTMLElement>('[role="dialog"], [role="alertdialog"]') ?? document.body)
+  }, [triggerId])
+  useMenuAnchor(menuRef, triggerId, isOpen, portalHost, placement)
+  useViewportFit(menuRef, isOpen, portalHost)
+  useViewportFit(submenuRef, activeSubmenuIndex !== null, portalHost)
 
   const findNextEnabledIndexForItems = useCallback((targetItems: IMenuItem[], startIndex: number, direction: 1 | -1) => {
     if (!targetItems.length) {
@@ -367,7 +381,7 @@ export function Menu(props: IMenuProps) {
     const nextFocusIndex = pendingFocusIndexRef.current ?? findNextEnabledIndex(-1, 1)
     pendingFocusIndexRef.current = null
     focusItem(nextFocusIndex)
-  }, [findNextEnabledIndex, focusItem, focusTrigger, isOpen])
+  }, [findNextEnabledIndex, focusItem, focusTrigger, isOpen, portalHost])
 
   const activeSubmenuItems = useMemo(
     () => (activeSubmenuIndex === null ? [] : (items[activeSubmenuIndex]?.submenu ?? [])),
@@ -482,11 +496,11 @@ export function Menu(props: IMenuProps) {
     )
   }
 
-  return (
-    <div {...commonProps} {...finalRestProps}>
-      {renderTrigger()}
-      {isOpen && (
+  const menu = isOpen ? (
         <div
+          {...appearance}
+          {...(config.theme ? { 'data-theme': config.theme } : {})}
+          style={{ ...themeStyle(config), ...appearance.style }}
           id={menuId}
           ref={menuRef}
           className={`${prefixClass('menu')} ${prefixClass(`menu-${placement}`)}`}
@@ -544,6 +558,7 @@ export function Menu(props: IMenuProps) {
           ))}
           {activeSubmenuIndex !== null && activeSubmenuItems.length > 0 ? (
             <div
+              {...appearance}
               ref={submenuRef}
               className={`${prefixClass('menu')} ${prefixClass('menu-submenu')} ${prefixClass('menu-right')}`}
               role="menu"
@@ -583,7 +598,11 @@ export function Menu(props: IMenuProps) {
             </div>
           ) : null}
         </div>
-      )}
+      ) : null
+  return (
+    <div {...commonProps} {...finalRestProps}>
+      {renderTrigger()}
+      {menu && portalHost ? createPortal(menu, portalHost) : menu}
     </div>
   )
 }

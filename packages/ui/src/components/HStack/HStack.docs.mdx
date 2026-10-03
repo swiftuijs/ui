@@ -5,11 +5,7 @@ import * as HStackStories from './HStack.stories'
 
 # HStack
 
-## Overview
-
-HStack is a view that arranges its children in a horizontal line. An HStack is a container view that arranges its child views in a horizontal line. You can customize the spacing between views and the alignment of views within the stack.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `HStack`.
+Arrange children in a horizontal row with configurable spacing and vertical alignment.
 
 ## Basic Usage
 
@@ -17,13 +13,9 @@ HStack is a view that arranges its children in a horizontal line. An HStack is a
 
 ## Spacing
 
-Control the distance between child views:
-
 <Canvas of={HStackStories.WithSpacing} />
 
 ## Alignment
-
-Align children vertically within the HStack:
 
 ### Leading Alignment
 
@@ -39,8 +31,6 @@ Align children vertically within the HStack:
 
 ## With Spacer
 
-Use Spacer to create flexible space:
-
 <Canvas of={HStackStories.WithSpacer} />
 
 ## With Buttons
@@ -51,18 +41,9 @@ Use Spacer to create flexible space:
 
 <Canvas of={HStackStories.ComplexLayout} />
 
-## Notes
+## Usage and limitations
 
-- HStack arranges children horizontally from leading to trailing
-- Default alignment is 'center'
-- Spacing applies uniformly between all adjacent children
-- HStack supports all standard React children (components, text, etc.)
-
-## Best Practices
-
-1. **Consistent spacing**: Use consistent spacing values throughout your app
-2. **Alignment**: Choose appropriate alignment based on content type
-3. **Nesting**: HStack can be nested with VStack and ZStack for complex layouts
-4. **Performance**: For long lists, consider using LazyHStack instead
-5. **Responsive**: HStack automatically adapts to container width and may wrap on smaller screens
-
+- `alignment` is `top`, `center` (default), or `bottom`; `spacing` applies between adjacent children.
+- Compose with `VStack` or `ZStack`; `Spacer` distributes available horizontal space.
+- Children do not wrap automatically. Add `style={{ flexWrap: 'wrap' }}` or switch layouts for narrow containers.
+- For long scrolling lists, use `LazyHStack` and review its virtualization requirements.

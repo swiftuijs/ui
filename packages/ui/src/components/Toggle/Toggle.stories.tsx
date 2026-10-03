@@ -18,9 +18,9 @@ const ToggleDemo = () => {
   return (
     <VStack spacing={16}>
       <Text>Toggle is {isOn ? 'on' : 'off'}</Text>
-      <Toggle isOn={isOn} onChange={setIsOn} />
-      <Toggle isOn={true} onChange={() => {}} />
-      <Toggle isOn={false} onChange={() => {}} disabled />
+      <Toggle aria-label="Notifications" isOn={isOn} onChange={setIsOn} />
+      <Toggle aria-label="Enabled setting" isOn={true} onChange={() => {}} />
+      <Toggle aria-label="Disabled setting" isOn={false} onChange={() => {}} disabled />
     </VStack>
   )
 }

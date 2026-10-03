@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Text, Card, VStack } from '../'
+import { Text, Card, VStack, ScrollView } from '../'
 import { LazyVGrid, type ILazyVGridProps } from '.'
 
 const meta: Meta<typeof LazyVGrid> = {
@@ -102,3 +102,14 @@ export const LargeGrid: Story = {
   }
 }
 
+
+export const InScrollView: Story = {
+  render: () => (
+    <ScrollView style={{ height: 320 }}>
+      <LazyVGrid columns={2} spacing={8} estimatedItemHeight={64}>
+        {Array.from({ length: 1000 }, (_, index) => <div key={index}
+          style={{ padding: 16, minWidth: 120, background: 'var(--sw-color-background-secondary)' }}>Item {index + 1}</div>)}
+      </LazyVGrid>
+    </ScrollView>
+  ),
+}

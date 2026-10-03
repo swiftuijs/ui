@@ -5,13 +5,11 @@ import * as NavigationStackStories from './NavigationStack.stories'
 
 # NavigationStack
 
-## Overview
-
-NavigationStack is a container that manages a stack of views for navigation. NavigationStack provides navigation functionality similar to iOS navigation controllers, allowing users to navigate forward and backward through a hierarchy of views.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `NavigationStack`.
+Manage an in-memory stack of React pages with forward and back navigation.
 
 ## Basic Usage
+
+<Canvas of={NavigationStackStories.Default} />
 
 <Canvas of={NavigationStackStories.NavigationStackBetween} />
 
@@ -19,20 +17,10 @@ NavigationStack is a container that manages a stack of views for navigation. Nav
 
 <Canvas of={NavigationStackStories.PreloadedPath} />
 
-## Notes
+## Usage and limitations
 
-- NavigationStack manages the navigation hierarchy
-- Use NavigationLink to navigate between views
-- NavigationStack automatically handles back navigation
-- Pages can be StandardPage or custom components
-- NavigationStack supports different page types (page, actionsheet)
-- Use `defaultPath` to render an already-pushed destination on first load
-- Use `onPathChange` to observe the public stack shape without reading internal `_id` values
-
-## Best Practices
-
-1. **Page structure**: Use StandardPage for consistent page layouts
-2. **Navigation flow**: Design clear navigation flows that users can understand
-3. **Back navigation**: Back navigation is handled automatically
-4. **Deep linking**: Consider deep linking support for important views
-5. **State management**: Manage navigation state appropriately for your app
+- Give the stack a bounded height so pages and scroll areas have available space.
+- `NavigationLink` pushes component destinations. `StandardPage` adds a title, toolbar and an automatic back button; custom page components also work.
+- Use `defaultPath` for an initially pushed destination; `onPathChange` reports public page IDs without internal `_id` values. Keep identifiers stable.
+- `page` and legacy `actionsheet` presentations are supported. Use `Sheet` for a modal with focus trapping and background isolation.
+- Browser history, deep links and URL routing require application integration. Observe path changes to synchronize external navigation state.

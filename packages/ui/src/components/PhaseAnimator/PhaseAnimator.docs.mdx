@@ -5,13 +5,9 @@ import * as PhaseAnimatorStories from './PhaseAnimator.stories'
 
 # PhaseAnimator
 
-## Overview
-
 PhaseAnimator sequences a finite set of named phases and re-renders your content with the current phase value.
 
 **Status**: adapted
-
-**SwiftUI Correspondence**: Adapted from SwiftUI's `PhaseAnimator`.
 
 ## Automatic Progression
 
@@ -21,7 +17,7 @@ PhaseAnimator sequences a finite set of named phases and re-renders your content
 
 <Canvas of={PhaseAnimatorStories.OnDemand} />
 
-## Notes
+## Usage and limitations
 
 - `phases` is the ordered sequence of values exposed to the render function
 - `trigger="automatic"` advances on the configured interval

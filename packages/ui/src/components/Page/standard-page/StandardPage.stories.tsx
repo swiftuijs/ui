@@ -23,7 +23,7 @@ type Story = StoryObj<IStandardProps>
 
 export const Default: Story = {
   render: () => (
-    <NavigationStack>
+    <NavigationStack style={{ height: 420 }}>
       <StandardPage id="page-1">
         <VStack spacing={20}>
           <Text>Page Content</Text>
@@ -35,7 +35,7 @@ export const Default: Story = {
 
 export const WithNavigationTitle: Story = {
   render: () => (
-    <NavigationStack>
+    <NavigationStack style={{ height: 420 }}>
       <StandardPage id="page-1" navigationTitle="Home">
         <VStack spacing={20}>
           <Text>Page with Navigation Title</Text>
@@ -47,7 +47,7 @@ export const WithNavigationTitle: Story = {
 
 export const WithToolbarItems: Story = {
   render: () => (
-    <NavigationStack>
+    <NavigationStack style={{ height: 420 }}>
       <StandardPage 
         id="page-1" 
         navigationTitle="Edit Profile"
@@ -74,7 +74,7 @@ export const WithBackButton: Story = {
     }
     
     return (
-      <NavigationStack>
+      <NavigationStack style={{ height: 420 }}>
         <StandardPage id="home" navigationTitle="Home">
           <VStack spacing={20}>
             <NavigationLink destination={DetailPage}>
@@ -89,7 +89,7 @@ export const WithBackButton: Story = {
 
 export const ScrollableContent: Story = {
   render: () => (
-    <NavigationStack>
+    <NavigationStack style={{ height: 420 }}>
       <StandardPage id="page-1" navigationTitle="Scrollable Page">
         <ScrollView>
           <VStack spacing={20}>

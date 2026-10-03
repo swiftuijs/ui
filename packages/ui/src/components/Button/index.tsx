@@ -17,12 +17,17 @@ import './style.scss'
  * 
  * @see https://developer.apple.com/documentation/swiftui/button
  */
-export type IButtonProps = IBaseElementComponent<'button'>
+export interface IButtonProps extends IBaseElementComponent<'button'> {
+  /** SwiftUI-inspired appearance. Automatic is a plain contextual action. */
+  buttonStyle?: 'automatic' | 'plain' | 'bordered' | 'borderedProminent'
+  /** Destructive actions use the semantic danger color. */
+  buttonRole?: 'destructive' | 'cancel'
+}
 
 export function Button(props: IButtonProps) {
-  const { type = 'button', ...buttonProps } = props
+  const { type = 'button', buttonStyle = 'automatic', buttonRole, ...buttonProps } = props
   const { commonProps, restProps, children } = standardizeProps(buttonProps, {
-    className: prefixClass('button')
+    className: [prefixClass('button'), prefixClass(`button-${buttonStyle}`), buttonRole && prefixClass(`button-${buttonRole}`)]
   })
 
   return (

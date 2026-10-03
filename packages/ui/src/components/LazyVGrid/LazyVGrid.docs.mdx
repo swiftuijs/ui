@@ -5,45 +5,17 @@ import * as LazyVGridStories from './LazyVGrid.stories'
 
 # LazyVGrid
 
-## Overview
+A measured, virtualized vertical grid. Only the viewport and a small overscan window mount, including when scrolling the page.
 
-LazyVGrid is a container that arranges its children in a grid, loading them lazily. LazyVGrid creates a vertical grid layout with lazy loading for performance.
+## Usage
 
-**SwiftUI Correspondence**: Similar to SwiftUI's `LazyVGrid`.
+<Canvas of={LazyVGridStories.InScrollView} />
 
-## Basic Usage
+## Usage and limitations
 
-<Canvas of={LazyVGridStories.Default} />
-
-## Two Columns
-
-<Canvas of={LazyVGridStories.TwoColumns} />
-
-## Four Columns
-
-<Canvas of={LazyVGridStories.FourColumns} />
-
-## With Images
-
-<Canvas of={LazyVGridStories.WithImages} />
-
-## Large Grid
-
-<Canvas of={LazyVGridStories.LargeGrid} />
-
-## Notes
-
-- LazyVGrid requires a `columns` prop to specify the number of columns
-- LazyVGrid supports `spacing` prop for item spacing
-- LazyVGrid only renders visible items for better performance
-- LazyVGrid is ideal for grid layouts with many items
-- Default columns is 2 if not specified
-
-## Best Practices
-
-1. **Columns**: Choose appropriate number of columns for your layout
-2. **Spacing**: Use consistent spacing between grid items
-3. **Performance**: LazyVGrid improves performance for large grids
-4. **Keys**: Always provide unique keys for grid items
-5. **Responsive**: Consider responsive column counts for different screen sizes
-
+- Use a bounded `ScrollView` or any ancestor with `overflow: auto`/`scroll`; otherwise the page is the scrolling surface.
+- `estimatedItemHeight` defaults to 48 pixels and is corrected with `ResizeObserver` measurements. A grid virtualizes complete rows or columns; their size is the largest item in that group.
+- `overscan` defaults to four extra rows or columns on each side. Focused items and their neighbors remain mounted for keyboard navigation.
+- Use stable React keys. Keep editable state in your application: off-screen items unmount and their local state resets.
+- SSR renders an initial 640-pixel window with estimated dimensions; hydration measures the actual viewport and items. It does not emit every item into server HTML.
+- Creating the `children` array still costs O(n); virtualization limits mounted components and DOM nodes. For small collections, use ordinary stacks or grids.

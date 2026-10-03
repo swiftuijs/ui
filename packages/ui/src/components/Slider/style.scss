@@ -3,7 +3,7 @@
 @include component('slider') {
   width: 100%;
   display: block;
-  height: 32px;
+  height: 44px;
   margin: 0;
   background: transparent;
   color: var(--sw-accent-color);
@@ -29,20 +29,20 @@
   }
 
   &::-webkit-slider-runnable-track {
-    height: 4px;
+    height: 6px;
     border: 0;
     border-radius: var(--sw-radius-full);
-    background-color: var(--sw-color-gray-lighter);
+    background: linear-gradient(to right, var(--sw-accent-color) 0 var(--sw-slider-progress, 50%), var(--sw-color-gray-lighter) var(--sw-slider-progress, 50%) 100%);
   }
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    margin-top: -8px;
+    width: 28px;
+    height: 28px;
+    margin-top: -11px;
     border: 1px solid var(--sw-color-separator);
     border-radius: var(--sw-radius-full);
-    background-color: var(--sw-color-background-primary);
+    background-color: var(--sw-color-control-thumb);
     box-shadow: var(--sw-shadow-sm);
     transition:
       transform var(--sw-transition-fast),
@@ -55,24 +55,24 @@
   }
 
   &::-moz-range-track {
-    height: 4px;
+    height: 6px;
     border: 0;
     border-radius: var(--sw-radius-full);
     background-color: var(--sw-color-gray-lighter);
   }
 
   &::-moz-range-progress {
-    height: 4px;
+    height: 6px;
     border-radius: var(--sw-radius-full);
     background-color: var(--sw-accent-color);
   }
 
   &::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
     border: 1px solid var(--sw-color-separator);
     border-radius: var(--sw-radius-full);
-    background-color: var(--sw-color-background-primary);
+    background-color: var(--sw-color-control-thumb);
     cursor: pointer;
     box-shadow: var(--sw-shadow-sm);
     transition:

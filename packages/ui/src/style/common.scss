@@ -11,11 +11,18 @@ textarea {
   color: inherit;
 }
 
+// Scoped defaults keep host page typography untouched; inline styles and tokens override these.
+:where([class^="sw-"], [class*=" sw-"]) {
+  font-family: var(--sw-font-family-sans);
+}
+
 // iOS Design System Variables
 // Based on iOS Human Interface Guidelines and SwiftUI design tokens
 
 :root,
-[data-theme='light'] {
+[data-theme='light'],
+[data-theme='dark'],
+[data-theme='system'] {
   color-scheme: light;
   // Token source of truth variables
   --sw-color-blue-base: #007AFF;
@@ -26,7 +33,7 @@ textarea {
   --sw-color-gray-lighter: #E5E5EA;
   --sw-color-gray-dark: #636366;
   --sw-color-label-primary: #000000;
-  --sw-color-label-secondary: #8E8E93;
+  --sw-color-label-secondary: #636366;
   --sw-color-label-tertiary: #C7C7CC;
   --sw-color-background-primary: #FFFFFF;
   --sw-color-background-secondary: #F2F2F7;
@@ -68,11 +75,46 @@ textarea {
   --sw-motion-transition-normal: 0.25s ease-out;
   --sw-motion-transition-slow: 0.35s ease-out;
 
+  --sw-color-grabber: rgba(0, 0, 0, 0.2);
+  --sw-radius-sheet: 32px;
+  --sw-color-action: #0062CC;
+  --sw-color-action-fill: #0062CC;
+  --sw-color-accent: var(--sw-accent-color);
+  --sw-color-primary: var(--sw-accent-color);
+  --sw-color-secondary-label: var(--sw-color-label-secondary);
+  --sw-color-border: var(--sw-color-separator);
+  --sw-color-red: #C22424;
+  --sw-color-fill-quaternary: var(--sw-color-background-secondary);
+
+  --sw-color-background: var(--sw-color-background-primary);
+  --sw-color-text: var(--sw-color-label-primary);
+  --sw-color-text-primary: var(--sw-color-label-primary);
+  --sw-color-secondary: var(--sw-color-gray-lighter);
+  --sw-color-surface: var(--sw-color-background-secondary);
+  --sw-color-surface-secondary: var(--sw-color-background-secondary);
+  --sw-color-surface-elevated: var(--sw-color-background-tertiary);
+  --sw-color-surface-prominent: var(--sw-color-background-tertiary);
+  --sw-color-fill-tertiary: var(--sw-color-gray-lighter);
+  --sw-color-tint: var(--sw-accent-color);
+  --sw-color-gray-4: var(--sw-color-gray-light);
+  --sw-color-green: #248A3D;
+  --sw-color-orange: #A65300;
+  --sw-color-white: #FFFFFF;
+  --sw-color-error: var(--sw-color-red);
+  --sw-color-red-1: var(--sw-color-red);
+  --sw-color-red-4: var(--sw-color-red);
+  --sw-color-red-7: var(--sw-color-red);
+  --sw-radius-pill: var(--sw-radius-full);
+  --sw-color-control-thumb: #FFFFFF;
+  --sw-color-control-fill: #E5E5EA;
+  --sw-color-switch-on: #34C759;
+  --sw-color-background-elevated: #FFFFFF;
+
   // Compatibility aliases for existing component styles
-  --sw-color-blue: var(--sw-color-blue-base);
+  --sw-color-blue: var(--sw-color-action);
   --sw-color-gray: var(--sw-color-gray-base);
   --sw-color-separator: var(--sw-color-separator-default);
-  --sw-accent-color: var(--sw-color-blue-base);
+  --sw-accent-color: var(--sw-color-action);
   --sw-font-family-sans: var(--sw-typography-font-family-sans);
   --sw-font-size-large-title: var(--sw-typography-font-size-large-title);
   --sw-font-size-title-1: var(--sw-typography-font-size-title1);
@@ -120,11 +162,16 @@ textarea {
   --sw-z-tooltip: 1070;
 }
 
-:root.dark,
-[data-theme='dark'],
-.dark {
+@mixin dark-palette {
   color-scheme: dark;
 
+  --sw-color-grabber: rgba(255, 255, 255, 0.22);
+  --sw-color-action: #64A8FF;
+  --sw-color-green: #30D158;
+  --sw-color-orange: #FF9F0A;
+  --sw-color-background-elevated: #1C1C1E;
+  --sw-color-control-fill: #3A3A3C;
+  --sw-color-red: #FF6961;
   --sw-color-blue-base: #0A84FF;
   --sw-color-blue-dark: #409CFF;
   --sw-color-blue-light: #64D2FF;
@@ -141,8 +188,17 @@ textarea {
   --sw-color-separator-default: #38383A;
   --sw-color-separator-opaque: #545458;
 
-  --sw-color-blue: var(--sw-color-blue-base);
+  --sw-color-blue: var(--sw-color-action);
   --sw-color-gray: var(--sw-color-gray-base);
   --sw-color-separator: var(--sw-color-separator-default);
-  --sw-accent-color: var(--sw-color-blue-base);
+  --sw-accent-color: var(--sw-color-action);
+
+}
+:root.dark, [data-theme='dark'], .dark { @include dark-palette; }
+@media (prefers-color-scheme: dark) {
+  [data-theme='system'] { @include dark-palette; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class^="sw-"], [class*=" sw-"] { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, forwardRef, useEffect, useImperativeHandle, useRef, useState, type CSSProperties } from 'react'
 import type { ChangeEvent } from 'react'
 import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
@@ -68,7 +68,7 @@ export interface ISliderProps extends Omit<
   disabled?: boolean
 }
 
-export const Slider = memo(function Slider(props: ISliderProps) {
+export const Slider = memo(forwardRef<HTMLInputElement, ISliderProps>(function Slider(props, ref) {
   const {
     value,
     defaultValue,
@@ -86,8 +86,21 @@ export const Slider = memo(function Slider(props: ISliderProps) {
   })
 
   const isControlled = value !== undefined
+  const inputRef = useRef<HTMLInputElement>(null)
+  useImperativeHandle(ref, () => inputRef.current!, [])
+  const initialValue = defaultValue ?? (min + max) / 2
+  const [internalValue, setInternalValue] = useState(initialValue)
+  useEffect(() => {
+    const form = inputRef.current?.form
+    const reset = () => setInternalValue(initialValue)
+    form?.addEventListener('reset', reset)
+    return () => form?.removeEventListener('reset', reset)
+  }, [initialValue])
+  const currentValue = isControlled ? value : internalValue
+  const progress = max <= min ? 0 : Math.max(0, Math.min(100, (currentValue - min) / (max - min) * 100))
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!isControlled) setInternalValue(event.currentTarget.valueAsNumber)
     onChange?.(event)
     onValueChange?.(event.currentTarget.valueAsNumber)
   }
@@ -97,6 +110,8 @@ export const Slider = memo(function Slider(props: ISliderProps) {
       key={isControlled ? 'controlled' : 'uncontrolled'}
       {...commonProps}
       {...finalRestProps}
+      ref={inputRef}
+      style={{ ...commonProps.style, '--sw-slider-progress': `${progress}%` } as CSSProperties}
       type="range"
       min={min}
       max={max}
@@ -107,4 +122,4 @@ export const Slider = memo(function Slider(props: ISliderProps) {
       disabled={disabled}
     />
   )
-})
+}))

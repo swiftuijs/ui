@@ -1,34 +1,14 @@
 import { memo } from 'react'
 import type { IHStackProps } from '../HStack'
-import { HStack } from '../HStack'
+import { VirtualLayout, type VirtualLayoutOptions } from '../_internal/VirtualLayout'
 
-/**
- * A container that arranges its children horizontally, loading them lazily.
- * 
- * LazyHStack is similar to HStack but only renders children that are visible in the viewport,
- * improving performance for long lists.
- * 
- * @example
- * ```tsx
- * <LazyHStack spacing={10}>
- *   {items.map(item => <Text key={item.id}>{item.name}</Text>)}
- * </LazyHStack>
- * ```
- * 
- * @see https://developer.apple.com/documentation/swiftui/lazyhstack
- */
-export interface ILazyHStackProps extends IHStackProps {
-  /**
-   * Estimated width of each item for virtualization.
-   * Used to optimize rendering performance.
-   */
+/** A measured, virtualized horizontal stack. */
+export interface ILazyHStackProps extends IHStackProps, Pick<VirtualLayoutOptions, 'overscan'> {
+  /** Initial item size in pixels, corrected after measurement. @default 48 */
   estimatedItemWidth?: number
 }
 
-export const LazyHStack = memo(function LazyHStack(props: ILazyHStackProps) {
-  // For now, LazyHStack is a simple wrapper around HStack
-  // Full virtualization can be implemented later using libraries like react-window
-  const { estimatedItemWidth, ...restProps } = props
-  return <HStack {...restProps} />
+export const LazyHStack = memo(function LazyHStack({ estimatedItemWidth, ...props }: ILazyHStackProps) {
+  return <VirtualLayout {...props} horizontal={true}
+    estimatedItemSize={estimatedItemWidth} layoutClass="lazyhstack" />
 })
-

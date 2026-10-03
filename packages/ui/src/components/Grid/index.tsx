@@ -36,7 +36,7 @@ export const Grid = memo(function Grid(props: IGridProps) {
   })
 
   return (
-    <div {...commonProps} {...finalRestProps} role="grid">
+    <div {...commonProps} {...finalRestProps}>
       {children}
     </div>
   )

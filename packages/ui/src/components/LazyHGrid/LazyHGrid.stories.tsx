@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Text, Card, VStack } from '../'
+import { Text, Card, VStack, ScrollView } from '../'
 import { LazyHGrid, type ILazyHGridProps } from '.'
 
 const meta: Meta<typeof LazyHGrid> = {
   title: 'SwiftUI/LazyHGrid',
   component: LazyHGrid,
+  decorators: [(Story) => <ScrollView direction="horizontal" style={{ width: '100%' }}><Story /></ScrollView>],
   tags: ['autodocs'],
   parameters: {
     docs: {
@@ -102,3 +103,14 @@ export const LargeGrid: Story = {
   }
 }
 
+
+export const InScrollView: Story = {
+  render: () => (
+    <ScrollView direction="horizontal" style={{ height: 320 }}>
+      <LazyHGrid rows={2} spacing={8} estimatedItemWidth={64}>
+        {Array.from({ length: 1000 }, (_, index) => <div key={index}
+          style={{ padding: 16, minWidth: 120, background: 'var(--sw-color-background-secondary)' }}>Item {index + 1}</div>)}
+      </LazyHGrid>
+    </ScrollView>
+  ),
+}

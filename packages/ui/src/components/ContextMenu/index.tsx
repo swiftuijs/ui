@@ -17,6 +17,8 @@ import {
 import { clsx, prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
 
+import { useViewportFit } from '../_internal/use-viewport-fit'
+import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
 export interface IContextMenuItem {
@@ -44,7 +46,7 @@ export interface IContextMenuItem {
   disabled?: boolean
 }
 
-export interface IContextMenuProps extends IBaseComponent {
+export interface IContextMenuProps extends IBaseComponent, GlassSurfaceProps {
   /**
    * Menu items.
    */
@@ -68,9 +70,12 @@ type ContextMenuTriggerProps = {
  * A menu of contextual actions presented from a right-click interaction.
  */
 export function ContextMenu(props: IContextMenuProps) {
-  const { children, items, ...restProps } = props
+  const { children, items, glass, ...restProps } = props
+  const appearance = useGlassAppearance(glass)
+  const menuRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [position, setPosition] = useState<MenuPosition>({ left: 0, top: 0 })
+  useViewportFit(menuRef, isOpen)
   const menuId = useId().replace(/:/g, '')
   const triggerRef = useRef<HTMLElement | null>(null)
   const itemRefs = useRef<Array<ComponentRef<'button'> | null>>([])
@@ -142,6 +147,7 @@ export function ContextMenu(props: IContextMenuProps) {
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('context-menu'),
     style: {
+      ...appearance.style,
       left: `${position.left}px`,
       top: `${position.top}px`,
     } satisfies CSSProperties,
@@ -172,9 +178,11 @@ export function ContextMenu(props: IContextMenuProps) {
       {trigger}
       {isOpen ? (
         <div
+          {...appearance}
           {...commonProps}
           {...finalRestProps}
           id={menuId}
+          ref={menuRef}
           role="menu"
           onKeyDown={(event) => {
             const currentIndex = itemRefs.current.findIndex((item) => item === document.activeElement)

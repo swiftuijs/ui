@@ -89,3 +89,12 @@ export const MultipleButtons: Story = {
     </VStack>
   )
 }
+
+export const Styles: Story = {
+  render: () => <VStack spacing={12}>
+    <Button>Plain action</Button>
+    <Button buttonStyle="bordered">Secondary action</Button>
+    <Button buttonStyle="borderedProminent">Primary action</Button>
+    <Button buttonStyle="bordered" buttonRole="destructive">Delete</Button>
+  </VStack>,
+}

@@ -5,11 +5,7 @@ import * as RoundedRectangleStories from './RoundedRectangle.stories'
 
 # RoundedRectangle
 
-## Overview
-
-RoundedRectangle is a rectangular shape with rounded corners. RoundedRectangle is commonly used for cards, buttons, and modern UI elements.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `RoundedRectangle`.
+Draw a rectangle with rounded corners.
 
 ## Basic Usage
 
@@ -21,19 +17,7 @@ Adjust the corner radius:
 
 <Canvas of={RoundedRectangleStories.DifferentRadius} />
 
-## Notes
+## Usage and limitations
 
-- RoundedRectangle requires `fill` and `cornerRadius` props
-- RoundedRectangle requires explicit dimensions via `style` prop
-- `cornerRadius` controls the roundness of corners
-- RoundedRectangle supports optional `stroke` and `strokeWidth` props
-- Use RoundedRectangle for cards, buttons, and modern UI elements
-
-## Best Practices
-
-1. **Corner radius**: Use consistent corner radius values
-2. **Dimensions**: Always provide explicit dimensions
-3. **Fill color**: Always provide a fill color
-4. **Modern design**: RoundedRectangle is ideal for modern, friendly designs
-5. **Accessibility**: Ensure rounded rectangles have sufficient contrast
-
+- Set width and height explicitly. `fill` and `cornerRadius` are optional; corner radius defaults to 8.
+- Use `stroke`/`strokeWidth` for a border. Keep corner radii consistent and check contrast when used behind controls or content.

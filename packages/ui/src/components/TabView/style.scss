@@ -1,3 +1,4 @@
+@use '../../style/glass.scss' as *;
 @use '@style/base.scss' as *;
 
 @include component('tab-view') {
@@ -8,19 +9,19 @@
   position: relative;
 
   &-top {
-    .#{$prefix}-bar {
+    .#{$ns}-tab-bar {
       order: 1;
     }
-    .#{$prefix}-content {
+    .#{$ns}-tab-content {
       order: 2;
     }
   }
 
   &-bottom {
-    .#{$prefix}-bar {
+    .#{$ns}-tab-bar {
       order: 2;
     }
-    .#{$prefix}-content {
+    .#{$ns}-tab-content {
       order: 1;
     }
   }
@@ -29,9 +30,13 @@
 @include component('tab-bar') {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: calc(100% - 24px);
+  margin: 8px 12px;
+  padding: 4px;
+  border-radius: var(--sw-radius-full);
+  box-shadow: var(--sw-shadow-md);
   background-color: var(--sw-color-background-primary, #FFFFFF);
-  border-top: 1px solid var(--sw-color-separator, #C6C6C8);
+  border: 1px solid color-mix(in srgb, var(--sw-color-separator) 35%, transparent);
   z-index: 10;
 }
 
@@ -48,6 +53,7 @@
   color: var(--sw-color-label-secondary, #8E8E93);
   transition: color var(--sw-transition-fast, 0.15s ease-out);
   min-height: 48px;
+  border-radius: var(--sw-radius-full);
   gap: 2px;
 
   &:hover {
@@ -64,6 +70,7 @@
   }
 
   &-active {
+    background: var(--sw-color-background-secondary);
     color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
   }
 }
@@ -86,8 +93,8 @@
   min-width: 18px;
   padding: 0 6px;
   border-radius: 999px;
-  background-color: var(--sw-accent-color, var(--sw-color-blue, #007AFF));
-  color: var(--sw-color-background-primary, #FFFFFF);
+  background-color: var(--sw-color-red);
+  color: #FFFFFF;
   font-size: 11px;
   font-weight: var(--sw-font-weight-semibold, 600);
   line-height: 18px;
@@ -100,3 +107,5 @@
   overflow: auto;
   position: relative;
 }
+
+.sw-tab-bar { @include glass-surface; }

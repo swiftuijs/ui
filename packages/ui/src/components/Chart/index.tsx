@@ -64,7 +64,7 @@ export const Chart = memo(function Chart(props: IChartProps) {
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: [
       prefixClass('chart'),
-      prefixClass(`chart-${mark}`),
+      prefixClass(`chart-mode-${mark}`),
     ],
   })
 
@@ -162,7 +162,7 @@ export const Chart = memo(function Chart(props: IChartProps) {
       <svg
         aria-label={label}
         className={prefixClass('chart-canvas')}
-        role="img"
+        role="group"
         viewBox={`0 0 ${width} ${height}`}
       >
         <line

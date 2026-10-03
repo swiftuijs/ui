@@ -9,14 +9,14 @@ describe('GridRow', () => {
   it('renders a row group with its child cells', () => {
     render(
       <Grid columns={2}>
-        <GridRow>
+        <GridRow data-testid="layout-row">
           <div>Left</div>
           <div>Right</div>
         </GridRow>
       </Grid>,
     )
 
-    const row = screen.getByRole('row')
+    const row = screen.getByTestId('layout-row')
 
     expect(row).toBeInTheDocument()
     expect(screen.getByText('Left')).toBeInTheDocument()

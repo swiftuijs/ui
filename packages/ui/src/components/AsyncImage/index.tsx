@@ -38,7 +38,11 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
     ...restProps
   } = props
   const hasSource = Boolean(src)
-  const [phase, setPhase] = useState<'loading' | 'success' | 'failure'>(() => (hasSource ? 'loading' : 'failure'))
+  type Phase = 'loading' | 'success' | 'failure'
+  const [loadState, setLoadState] = useState<{ src: typeof src; phase: Phase }>(() => ({ src, phase: hasSource ? 'loading' : 'failure' }))
+  if (loadState.src !== src) setLoadState({ src, phase: hasSource ? 'loading' : 'failure' })
+  const phase = loadState.phase
+  const setPhase = (phase: Phase) => setLoadState({ src, phase })
   const previousPhaseRef = useRef<typeof phase | undefined>(undefined)
   const { commonProps, restProps: finalRestProps } = standardizeProps(
     { ...restProps, className },
@@ -46,10 +50,6 @@ export const AsyncImage = memo(function AsyncImage(props: IAsyncImageProps) {
       className: prefixClass('asyncimage'),
     },
   )
-
-  useEffect(() => {
-    setPhase(hasSource ? 'loading' : 'failure')
-  }, [hasSource, src])
 
   useEffect(() => {
     if (previousPhaseRef.current === phase) {

@@ -1,3 +1,4 @@
+@use '../../style/glass.scss' as *;
 @use '@style/base.scss' as *;
 
 @include component('navigation-bar') {
@@ -41,3 +42,6 @@
     z-index: 1;
   }
 }
+
+.sw-navigation-bar:has([data-glass="on"]) { background: transparent; border: 0; }
+.sw-navigation-bar-leading:not(:empty), .sw-navigation-bar-trailing:not(:empty) { border-radius: var(--sw-radius-full); padding: 0 8px; @include glass-surface; }

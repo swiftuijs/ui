@@ -1,26 +1,10 @@
 ---
 title: "ActivityIndicator"
-description: "ActivityIndicator is a view that displays a spinning indicator to show that a task is in progress. ActivityIndicator is commonly used to indicate loading states."
+description: "Show that an asynchronous task is in progress."
 ---
 
-## Overview
+## Usage and limitations
 
-ActivityIndicator is a view that displays a spinning indicator to show that a task is in progress. ActivityIndicator is commonly used to indicate loading states.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `ProgressView` with indeterminate style.
-
-## Notes
-
-- ActivityIndicator displays an animated spinning indicator
-- Use ActivityIndicator to show that a task is in progress
-- ActivityIndicator supports different sizes (small, medium, large)
-- Custom colors can be applied via the `color` prop
-- ActivityIndicator is non-interactive and purely visual
-
-## Best Practices
-
-1. **Loading states**: Use ActivityIndicator to indicate async operations
-2. **Placement**: Place ActivityIndicator where users expect to see content
-3. **Size**: Choose appropriate size based on context
-4. **Accessibility**: Provide text labels for screen readers
-5. **Performance**: ActivityIndicator is lightweight and doesn't impact performance
+- Sizes are `small`, `medium`, or `large`; `color` overrides the spinner color.
+- The spinner is visual and non-interactive. Provide nearby task text and an accessible status label.
+- Place it where the awaited content will appear; use ProgressView when you know the amount completed.

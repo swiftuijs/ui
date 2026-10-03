@@ -4,7 +4,7 @@ import { KitchensinkClient } from './kitchensink-client';
 
 export const metadata: Metadata = {
   description:
-    'A full product-style demonstration of SwiftUI.js components running inside the static documentation export.',
+    'An adaptive workspace settings demo built with SwiftUI.js core components.',
   title: 'Kitchensink Demo',
 };
 

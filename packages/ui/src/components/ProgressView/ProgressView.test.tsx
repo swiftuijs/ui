@@ -63,3 +63,8 @@ describe('ProgressView', () => {
     })
   })
 })
+
+ it('uses its visible label as the progressbar accessible name', () => {
+   render(<ProgressView label="Uploading files" value={0.5} />)
+   expect(screen.getByRole('progressbar', { name: 'Uploading files' })).toHaveAttribute('aria-valuenow', '0.5')
+ })

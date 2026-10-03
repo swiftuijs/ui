@@ -3,6 +3,8 @@
  */
 
 
+import type { IFn } from '@/types'
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const global: any
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,4 +43,12 @@ export function throttle(fn: IFn, delay = 200) {
  */
 export function generateUniqueId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2)}`
+}
+
+/** Schedule work without changing browser or server globals. */
+export function scheduleIdle(callback: () => void) {
+  if (typeof requestIdleCallback === 'function') {
+    return requestIdleCallback(callback)
+  }
+  return setTimeout(callback, 0)
 }

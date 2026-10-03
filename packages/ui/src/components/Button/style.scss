@@ -2,12 +2,13 @@
 
 @include component('button') {
   appearance: none;
-  border: 1px solid var(--sw-accent-color);
+  border: 0;
+  min-height: 44px;
   background: transparent;
   color: var(--sw-accent-color);
   cursor: pointer;
   padding: var(--sw-spacing-sm) var(--sw-spacing-lg);
-  border-radius: var(--sw-radius-md);
+  border-radius: var(--sw-radius-full);
   font-size: var(--sw-font-size-body);
   font-weight: var(--sw-font-weight-medium);
   line-height: var(--sw-line-height-normal);
@@ -22,8 +23,7 @@
   }
   
   &:active:not([disabled]) {
-    background-color: var(--sw-accent-color);
-    color: var(--sw-color-background-primary);
+    opacity: 0.75;
     transform: scale(0.98);
   }
 
@@ -33,3 +33,9 @@
     pointer-events: none;
   }
 }
+
+.sw-button-bordered { background: var(--sw-color-control-fill); }
+.sw-button-borderedProminent { background: var(--sw-color-action-fill); color: #FFFFFF; }
+.sw-button-borderedProminent:hover:not([disabled]) { background: color-mix(in srgb, var(--sw-color-action-fill) 90%, black); }
+.sw-button-destructive { color: var(--sw-color-red); }
+.sw-button-destructive.sw-button-borderedProminent { background: var(--sw-color-red); color: #FFFFFF; }

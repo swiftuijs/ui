@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { NavigationLink, VStack, Section, HStack, ScrollView, Text, Spacer, Button, ZStack  } from '../'
+import { NavigationLink, StandardPage, VStack, Section, HStack, ScrollView, Text, Spacer, Button, ZStack  } from '../'
 import { useNaviContext } from '../../contexts'
 import { NavigationStack, INavigationStackProps } from '.'
 
@@ -10,36 +10,12 @@ const meta: Meta<typeof NavigationStack> = {
 
 export default meta
 
-const style = `
-  html {
-    font-family: system-ui, sans-serif;
-    width: 100%;
-    height: 100%;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-  }
-  #storybook-root {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`
-
-document.head.insertAdjacentHTML('beforeend', `<style>${style}</style>`)
-
-
 type Story = StoryObj<INavigationStackProps>
 
 export const NavigationStackBetween: Story = {
   render() {
     return (
-      <NavigationStack>
+      <NavigationStack style={{ height: 640 }}>
         <VStack spacing={20}>
           <NavigationLink destination={Messages}>Message</NavigationLink>
           <NavigationLink destination={About}>About</NavigationLink>
@@ -104,7 +80,7 @@ export const PreloadedPath: Story = {
   },
   render(args) {
     return (
-      <NavigationStack {...args}>
+      <NavigationStack {...args} style={{ height: 640 }}>
         <VStack spacing={20}>
           <NavigationLink destination={Messages}>Message</NavigationLink>
           <NavigationLink destination={About}>About</NavigationLink>
@@ -139,4 +115,23 @@ function ZStackView() {
       </HStack>
     </ZStack>
   )
+}
+
+export const ResizableActionSheet: Story = {
+  render: () => <NavigationStack style={{ height: 'calc(100dvh - 32px)' }}>
+    <NavigationLink destination={About} pageOptions={{ type: 'actionsheet' }}>Open ActionSheet</NavigationLink>
+  </NavigationStack>,
+}
+
+export const Default: Story = {
+  render: () => {
+    function Details() {
+      return <StandardPage id="details" navigationTitle="Details"><Text>Detail content</Text></StandardPage>
+    }
+    return <NavigationStack style={{ height: 320 }}>
+      <StandardPage id="home" navigationTitle="Home">
+        <NavigationLink destination={Details}>Open details</NavigationLink>
+      </StandardPage>
+    </NavigationStack>
+  },
 }

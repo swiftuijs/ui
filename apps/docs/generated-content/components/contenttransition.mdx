@@ -3,6 +3,6 @@ title: "ContentTransition"
 description: "ContentTransition adapts SwiftUI's content-transition modifiers into an explicit wrapper that annotates changing content on the web."
 ---
 
-## Overview
+## Usage and limitations
 
-ContentTransition adapts SwiftUI's content-transition modifiers into an explicit wrapper that annotates changing content on the web.
+- Uses CSS classes and transitions for opacity, saturation or scale. It does not interpolate changing text/numbers or diff content like native SwiftUI; control `active` yourself.

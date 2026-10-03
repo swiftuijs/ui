@@ -67,7 +67,11 @@ function prettifyExportName(name: string) {
     .trim();
 }
 
-function parseCanvasExamples(source: string, storySource: string | null, componentName: string | null): ComponentExampleDoc[] {
+function parseCanvasExamples(
+  source: string,
+  storySource: string | null,
+  componentName: string | null,
+): ComponentExampleDoc[] {
   const lines = source.split('\n');
   const headings: Array<{ level: number; value: string }> = [];
   const examples: ComponentExampleDoc[] = [];
@@ -85,7 +89,9 @@ function parseCanvasExamples(source: string, storySource: string | null, compone
       continue;
     }
 
-    const canvasMatch = line.match(/^<Canvas\s+of=\{([^}]+)\}\s*\/>$/);
+    const canvasMatch = line.match(
+      /^<(?:Canvas|[A-Za-z][A-Za-z0-9]*Canvas)\s+of=\{([^}]+)\}\s*\/>$/,
+    );
     if (!canvasMatch) {
       continue;
     }
@@ -95,63 +101,25 @@ function parseCanvasExamples(source: string, storySource: string | null, compone
     const heading = headings
       .slice()
       .reverse()
-      .find((entry) => !/^usage$/i.test(entry.value));
+      .find(
+        (entry) =>
+          !/^(usage|basic usage|examples|variants)$/i.test(entry.value),
+      );
 
     examples.push({
-      code: storySource ? extractStoryCode(storySource, exportName, componentName ?? undefined) : '',
+      code: storySource
+        ? extractRunnableStoryCode(
+            storySource,
+            exportName,
+            componentName ?? undefined,
+          )
+        : '',
       exportName,
       title: heading?.value ?? prettifyExportName(exportName),
     });
   }
 
   return examples;
-}
-
-function unwrapRenderBody(body: ts.ConciseBody, sourceFile: ts.SourceFile) {
-  if (ts.isBlock(body)) {
-    const returnStatement = body.statements.find(ts.isReturnStatement);
-    const expression = returnStatement?.expression;
-    return expression ? expression.getText(sourceFile).trim().replace(/^\(([\s\S]*)\)$/, '$1').trim() : '';
-  }
-
-  return body.getText(sourceFile).trim().replace(/^\(([\s\S]*)\)$/, '$1').trim();
-}
-
-function getDemoComponentName(body: ts.ConciseBody) {
-  if (!ts.isJsxSelfClosingElement(body) && !ts.isJsxElement(body)) {
-    return null;
-  }
-
-  const openingElement = ts.isJsxElement(body) ? body.openingElement : body;
-  if (!ts.isIdentifier(openingElement.tagName) || openingElement.attributes.properties.length > 0) {
-    return null;
-  }
-
-  return openingElement.tagName.text;
-}
-
-function extractLocalComponentSource(sourceFile: ts.SourceFile, componentName: string) {
-  for (const statement of sourceFile.statements) {
-    if (ts.isFunctionDeclaration(statement) && statement.name?.text === componentName) {
-      return statement.getText(sourceFile).trim();
-    }
-
-    if (!ts.isVariableStatement(statement)) {
-      continue;
-    }
-
-    for (const declaration of statement.declarationList.declarations) {
-      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== componentName || !declaration.initializer) {
-        continue;
-      }
-
-      if (ts.isArrowFunction(declaration.initializer) || ts.isFunctionExpression(declaration.initializer)) {
-        return statement.getText(sourceFile).trim();
-      }
-    }
-  }
-
-  return null;
 }
 
 function isRenderFunction(
@@ -176,7 +144,11 @@ function isRenderProperty(
 function isRenderMethod(
   property: ts.ObjectLiteralElementLike,
 ): property is ts.MethodDeclaration {
-  return ts.isMethodDeclaration(property) && ts.isIdentifier(property.name) && property.name.text === 'render';
+  return (
+    ts.isMethodDeclaration(property) &&
+    ts.isIdentifier(property.name) &&
+    property.name.text === 'render'
+  );
 }
 
 function isArgsProperty(
@@ -192,7 +164,11 @@ function isArgsProperty(
   );
 }
 
-function formatJsxAttribute(name: string, value: ts.Expression, sourceFile: ts.SourceFile) {
+function formatJsxAttribute(
+  name: string,
+  value: ts.Expression,
+  sourceFile: ts.SourceFile,
+) {
   if (value.kind === ts.SyntaxKind.TrueKeyword) {
     return name;
   }
@@ -204,18 +180,36 @@ function formatJsxAttribute(name: string, value: ts.Expression, sourceFile: ts.S
   return `${name}={${value.getText(sourceFile)}}`;
 }
 
-function buildArgsStoryCode(componentName: string, argsLiteral: ts.ObjectLiteralExpression, sourceFile: ts.SourceFile) {
+function buildArgsStoryCode(
+  componentName: string,
+  argsLiteral: ts.ObjectLiteralExpression,
+  sourceFile: ts.SourceFile,
+) {
   const attributes: string[] = [];
   let children: string | null = null;
 
+  const properties = new Map<string, ts.ObjectLiteralElementLike>();
   for (const property of argsLiteral.properties) {
-    if (!ts.isPropertyAssignment(property) || !ts.isIdentifier(property.name)) {
+    if (property.name)
+      properties.set(
+        property.name.getText(sourceFile).replace(/['"]/g, ''),
+        property,
+      );
+  }
+  for (const property of properties.values()) {
+    if (
+      !ts.isPropertyAssignment(property) ||
+      !(ts.isIdentifier(property.name) || ts.isStringLiteral(property.name))
+    ) {
       continue;
     }
 
     const propName = property.name.text;
     if (propName === 'children') {
-      if (ts.isStringLiteral(property.initializer) || ts.isNoSubstitutionTemplateLiteral(property.initializer)) {
+      if (
+        ts.isStringLiteral(property.initializer) ||
+        ts.isNoSubstitutionTemplateLiteral(property.initializer)
+      ) {
         children = property.initializer.text;
       } else {
         children = `{${property.initializer.getText(sourceFile)}}`;
@@ -223,70 +217,218 @@ function buildArgsStoryCode(componentName: string, argsLiteral: ts.ObjectLiteral
       continue;
     }
 
-    attributes.push(formatJsxAttribute(propName, property.initializer, sourceFile));
+    attributes.push(
+      formatJsxAttribute(propName, property.initializer, sourceFile),
+    );
   }
 
-  const openingTag = attributes.length > 0 ? `<${componentName} ${attributes.join(' ')}>` : `<${componentName}>`;
-  return children === null ? `${openingTag}</${componentName}>` : `${openingTag}${children}</${componentName}>`;
+  const openingTag =
+    attributes.length > 0
+      ? `<${componentName} ${attributes.join(' ')}>`
+      : `<${componentName}>`;
+  return children === null
+    ? `${openingTag}</${componentName}>`
+    : `${openingTag}${children}</${componentName}>`;
 }
 
-export function extractStoryCode(storySource: string, exportName: string, componentName?: string) {
-  const sourceFile = ts.createSourceFile('story.tsx', storySource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-
+function extractMetaArgs(sourceFile: ts.SourceFile) {
   for (const statement of sourceFile.statements) {
-    if (!ts.isVariableStatement(statement)) {
-      continue;
-    }
+    if (!ts.isVariableStatement(statement)) continue;
+    const declaration = statement.declarationList.declarations.find(
+      (item) => ts.isIdentifier(item.name) && item.name.text === 'meta',
+    );
+    let initializer = declaration?.initializer;
+    if (initializer && ts.isSatisfiesExpression(initializer))
+      initializer = initializer.expression;
+    if (initializer && ts.isObjectLiteralExpression(initializer))
+      return initializer.properties.find(isArgsProperty)?.initializer;
+  }
+  return undefined;
+}
 
-    if (!statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
-      continue;
-    }
-
-    for (const declaration of statement.declarationList.declarations) {
-      if (!ts.isIdentifier(declaration.name) || declaration.name.text !== exportName || !declaration.initializer) {
-        continue;
+/** Build a standalone React example, retaining state and referenced local helpers. */
+export function extractRunnableStoryCode(
+  storySource: string,
+  exportName: string,
+  componentName?: string,
+) {
+  const sourceFile = ts.createSourceFile(
+    'story.tsx',
+    storySource,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const declarations = new Map<string, ts.Statement>();
+  let story: ts.ObjectLiteralExpression | undefined;
+  for (const statement of sourceFile.statements) {
+    if (ts.isVariableStatement(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (!ts.isIdentifier(declaration.name)) continue;
+        declarations.set(declaration.name.text, statement);
+        if (
+          declaration.name.text === exportName &&
+          declaration.initializer &&
+          ts.isObjectLiteralExpression(declaration.initializer)
+        )
+          story = declaration.initializer;
       }
-
-      if (!ts.isObjectLiteralExpression(declaration.initializer)) {
-        return declaration.initializer.getText(sourceFile).trim();
-      }
-
-      const renderProperty = declaration.initializer.properties.find(isRenderProperty);
-      const renderMethod = declaration.initializer.properties.find(isRenderMethod);
-
-      if (renderProperty) {
-        const demoComponentName = getDemoComponentName(renderProperty.initializer.body);
-        if (demoComponentName) {
-          const localComponentSource = extractLocalComponentSource(sourceFile, demoComponentName);
-          if (localComponentSource) {
-            return localComponentSource;
-          }
-        }
-
-        return unwrapRenderBody(renderProperty.initializer.body, sourceFile);
-      }
-
-      if (renderMethod && renderMethod.body) {
-        const demoComponentName = getDemoComponentName(renderMethod.body);
-        if (demoComponentName) {
-          const localComponentSource = extractLocalComponentSource(sourceFile, demoComponentName);
-          if (localComponentSource) {
-            return localComponentSource;
-          }
-        }
-
-        return unwrapRenderBody(renderMethod.body, sourceFile);
-      }
-
-      const argsProperty = declaration.initializer.properties.find(isArgsProperty);
-
-      if (argsProperty && componentName) {
-        return buildArgsStoryCode(componentName, argsProperty.initializer, sourceFile);
-      }
+    } else if (
+      (ts.isFunctionDeclaration(statement) ||
+        ts.isTypeAliasDeclaration(statement) ||
+        ts.isInterfaceDeclaration(statement)) &&
+      statement.name
+    ) {
+      declarations.set(statement.name.text, statement);
     }
   }
+  if (!story) return '';
+  const render =
+    story.properties.find(isRenderProperty)?.initializer ??
+    story.properties.find(isRenderMethod);
+  const storyArgs = story.properties.find(isArgsProperty)?.initializer;
+  const metaArgs = extractMetaArgs(sourceFile);
+  const argsText = `{${[metaArgs, storyArgs]
+    .filter(Boolean)
+    .map((value) => value!.getText(sourceFile).slice(1, -1))
+    .join(',')}}`;
+  const boundArgsText =
+    metaArgs && storyArgs
+      ? `{...${metaArgs.getText(sourceFile)}, ...${storyArgs.getText(sourceFile)}}`
+      : argsText;
+  const argsTree = ts.createSourceFile(
+    'args.tsx',
+    `const args = ${argsText}`,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const argsLiteral = (argsTree.statements[0] as ts.VariableStatement)
+    .declarationList.declarations[0].initializer as ts.ObjectLiteralExpression;
+  let needsPropsType = false;
+  let example: string;
+  if (render?.body) {
+    const body = render.body;
+    const parameters = render.parameters
+      .map((parameter) => parameter.getText(sourceFile))
+      .join(', ');
+    // Storybook args are fixture data, not a required input to a copied example.
+    needsPropsType = !!parameters && !!componentName;
+    const binding = parameters
+      ? `const ${parameters.replace(/:\s*[\w<>]+$/, '')}${componentName ? `: ComponentProps<typeof ${componentName}>` : ''} = ${boundArgsText};\n`
+      : '';
+    const content = ts.isBlock(body)
+      ? body.getText(sourceFile).slice(1, -1).trim()
+      : `return (${body.getText(sourceFile)});`;
+    example = `export default function Example() {\n${binding}${content}\n}`;
+  } else if (componentName) {
+    example = `export default function Example() {\n  return (${buildArgsStoryCode(componentName, argsLiteral, argsTree)});\n}`;
+  } else return '';
 
-  return '';
+  const identifiers = new Set<string>();
+  function collect(source: string) {
+    const tree = ts.createSourceFile(
+      'example.tsx',
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TSX,
+    );
+    function visit(node: ts.Node) {
+      if (ts.isIdentifier(node)) identifiers.add(node.text);
+      ts.forEachChild(node, visit);
+    }
+    visit(tree);
+  }
+  collect(example);
+  const selected = new Set<ts.Statement>();
+  const forbidden = new Set(['meta', 'Story', exportName]);
+  // References may chain through helper components, data, and local types.
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const name of identifiers) {
+      const statement = declarations.get(name);
+      if (!statement || selected.has(statement) || forbidden.has(name))
+        continue;
+      // Other exported Storybook objects are not application dependencies.
+      if (
+        ts.isVariableStatement(statement) &&
+        statement.declarationList.declarations.some(
+          (declaration) =>
+            declaration.initializer &&
+            ts.isObjectLiteralExpression(declaration.initializer) &&
+            declaration.initializer.properties.some(
+              (property) =>
+                isRenderProperty(property) ||
+                isArgsProperty(property) ||
+                isRenderMethod(property),
+            ),
+        )
+      )
+        continue;
+      selected.add(statement);
+      collect(statement.getText(sourceFile));
+      changed = true;
+    }
+  }
+  const imports: string[] = needsPropsType
+    ? ["import type { ComponentProps } from 'react';"]
+    : [];
+  // The component type used for Storybook args may not appear in the JSX tag itself.
+  if (needsPropsType && componentName) identifiers.add(componentName);
+  for (const statement of sourceFile.statements) {
+    if (
+      !ts.isImportDeclaration(statement) ||
+      !ts.isStringLiteral(statement.moduleSpecifier)
+    )
+      continue;
+    const moduleName = statement.moduleSpecifier.text;
+    if (moduleName.startsWith('@storybook') || moduleName.endsWith('.mdx'))
+      continue;
+    const clause = statement.importClause;
+    if (!clause) continue;
+    const parts: string[] = [];
+    if (clause.name && identifiers.has(clause.name.text))
+      parts.push(clause.name.text);
+    if (clause.namedBindings && ts.isNamedImports(clause.namedBindings)) {
+      const names = clause.namedBindings.elements
+        .filter((element) => identifiers.has(element.name.text))
+        .map((element) => element.getText(sourceFile));
+      if (names.length) parts.push(`{ ${names.join(', ')} }`);
+    } else if (
+      clause.namedBindings &&
+      identifiers.has(clause.namedBindings.name.text)
+    )
+      parts.push(`* as ${clause.namedBindings.name.text}`);
+    if (parts.length)
+      imports.push(
+        `import ${clause.isTypeOnly ? 'type ' : ''}${parts.join(', ')} from '${moduleName.startsWith('.') || moduleName.startsWith('@/components') ? '@swiftuijs/ui' : moduleName}';`,
+      );
+  }
+  const helpers = sourceFile.statements
+    .filter((statement) => selected.has(statement))
+    .map((statement) => statement.getText(sourceFile));
+  const exampleSource = [
+    "'use client';",
+    ...imports,
+    '',
+    ...helpers,
+    '',
+    example,
+  ].join('\n');
+  return ts
+    .createPrinter({ newLine: ts.NewLineKind.LineFeed })
+    .printFile(
+      ts.createSourceFile(
+        'example.tsx',
+        exampleSource,
+        ts.ScriptTarget.Latest,
+        true,
+        ts.ScriptKind.TSX,
+      ),
+    )
+    .trim();
 }
 
 function rewriteImportSpecifiers(specifiers: string) {
@@ -316,7 +458,10 @@ async function resolveTsModulePath(basePath: string, specifier: string) {
   return null;
 }
 
-async function collectExportsFromSourceFile(filePath: string, visited = new Set<string>()) {
+async function collectExportsFromSourceFile(
+  filePath: string,
+  visited = new Set<string>(),
+) {
   if (visited.has(filePath)) {
     return new Set<string>();
   }
@@ -327,13 +472,23 @@ async function collectExportsFromSourceFile(filePath: string, visited = new Set<
     return new Set<string>();
   }
 
-  const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const sourceFile = ts.createSourceFile(
+    filePath,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
   const exports = new Set<string>();
 
   for (const statement of sourceFile.statements) {
     if (
-      (ts.isVariableStatement(statement) || ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement))
-      && statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
+      (ts.isVariableStatement(statement) ||
+        ts.isFunctionDeclaration(statement) ||
+        ts.isClassDeclaration(statement)) &&
+      statement.modifiers?.some(
+        (modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword,
+      )
     ) {
       if (ts.isVariableStatement(statement)) {
         for (const declaration of statement.declarationList.declarations) {
@@ -350,7 +505,9 @@ async function collectExportsFromSourceFile(filePath: string, visited = new Set<
       continue;
     }
 
-    const specifier = ts.isStringLiteral(statement.moduleSpecifier) ? statement.moduleSpecifier.text : null;
+    const specifier = ts.isStringLiteral(statement.moduleSpecifier)
+      ? statement.moduleSpecifier.text
+      : null;
     if (!specifier?.startsWith('.')) {
       continue;
     }
@@ -367,7 +524,10 @@ async function collectExportsFromSourceFile(filePath: string, visited = new Set<
       continue;
     }
 
-    const nestedExports = await collectExportsFromSourceFile(resolvedPath, visited);
+    const nestedExports = await collectExportsFromSourceFile(
+      resolvedPath,
+      visited,
+    );
     for (const exportedName of nestedExports) {
       exports.add(exportedName);
     }
@@ -377,7 +537,10 @@ async function collectExportsFromSourceFile(filePath: string, visited = new Set<
 }
 
 async function loadUiRootExports(previewDir: string) {
-  const sourceIndexPath = join(previewDir, '../../../../packages/ui/src/index.tsx');
+  const sourceIndexPath = join(
+    previewDir,
+    '../../../../packages/ui/src/index.tsx',
+  );
   if (await fileExists(sourceIndexPath)) {
     const sourceExports = await collectExportsFromSourceFile(sourceIndexPath);
     if (sourceExports.size > 0) {
@@ -385,7 +548,10 @@ async function loadUiRootExports(previewDir: string) {
     }
   }
 
-  const distIndexPath = join(previewDir, '../../../../packages/ui/dist/index.js');
+  const distIndexPath = join(
+    previewDir,
+    '../../../../packages/ui/dist/index.js',
+  );
   const distSource = await readFile(distIndexPath, 'utf8').catch(() => null);
   if (!distSource) {
     return new Set<string>();
@@ -409,7 +575,10 @@ async function loadUiRootExports(previewDir: string) {
 function extractUiImports(source: string, uiImportPath: string) {
   const imports = new Set<string>();
   const escapedPath = uiImportPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const importPattern = new RegExp(`import\\s+\\{([^}]+)\\}\\s+from\\s+['"]${escapedPath}['"]`, 'g');
+  const importPattern = new RegExp(
+    `import\\s+\\{([^}]+)\\}\\s+from\\s+['"]${escapedPath}['"]`,
+    'g',
+  );
 
   for (const match of source.matchAll(importPattern)) {
     const specifiers = match[1]
@@ -428,27 +597,40 @@ function extractUiImports(source: string, uiImportPath: string) {
   return imports;
 }
 
-export function transformStorySourceForDocs(source: string, uiImportPath: string) {
+export function transformStorySourceForDocs(
+  source: string,
+  uiImportPath: string,
+) {
   return source
-    .replace(/^import\s+type\s+\{[^}]+\}\s+from\s+['"]@storybook\/react(?:-vite)?['"]\s*;?\s*$/gm, '')
-    .replace(/^import\s+\{[^}]+\}\s+from\s+['"]@storybook\/react(?:-vite)?['"]\s*;?\s*$/gm, '')
+    .replace(
+      /^import\s+type\s+\{[^}]+\}\s+from\s+['"]@storybook\/react(?:-vite)?['"]\s*;?\s*$/gm,
+      '',
+    )
+    .replace(
+      /^import\s+\{[^}]+\}\s+from\s+['"]@storybook\/react(?:-vite)?['"]\s*;?\s*$/gm,
+      '',
+    )
     .replace(/^import\s+.+from\s+['"][^'"]+\.mdx['"]\s*;?\s*$/gm, '')
     .replace(
       /^import\s+\{([^}]+)\}\s+from\s+['"](\.{1,2}\/[^'"]*|\.)['"]\s*;?\s*$/gm,
       (_, specifiers: string) => {
         const rewritten = rewriteImportSpecifiers(specifiers);
-        return rewritten ? `import { ${rewritten} } from '${uiImportPath}'` : '';
+        return rewritten
+          ? `import { ${rewritten} } from '${uiImportPath}'`
+          : '';
       },
     )
     .replace(
       /^import\s+\{([^}]+)\}\s+from\s+['"]@\/components(?:\/index)?['"]\s*;?\s*$/gm,
       (_, specifiers: string) => {
         const rewritten = rewriteImportSpecifiers(specifiers);
-        return rewritten ? `import { ${rewritten} } from '${uiImportPath}'` : '';
+        return rewritten
+          ? `import { ${rewritten} } from '${uiImportPath}'`
+          : '';
       },
     )
     .replace(/^const meta:\s*Meta<[\s\S]*?^export default meta\s*$/gm, '')
-    .replace(/^type Story\s*=\s*StoryObj<[\s\S]*?^\s*$/gm, '')
+    .replace(/^type Story\s*=\s*StoryObj<[^\n]+>\s*;?$/gm, '')
     .replace(/export const (\w+)\s*:\s*Story\s*=/g, 'export const $1 =')
     .trim();
 }
@@ -492,7 +674,10 @@ function getNodeDefaultValue(node: ts.Node) {
       continue;
     }
 
-    const value = typeof tag.comment === 'string' ? tag.comment : tag.comment?.map((part) => part.text).join('');
+    const value =
+      typeof tag.comment === 'string'
+        ? tag.comment
+        : tag.comment?.map((part) => part.text).join('');
     const normalised = value?.trim();
     if (normalised) {
       return normalised;
@@ -502,7 +687,10 @@ function getNodeDefaultValue(node: ts.Node) {
   return null;
 }
 
-function extractPropsFromComponentSource(sourcePath: string, componentName: string) {
+function extractPropsFromComponentSource(
+  sourcePath: string,
+  componentName: string,
+) {
   const source = ts.sys.readFile(sourcePath);
   if (!source) {
     return {
@@ -511,9 +699,16 @@ function extractPropsFromComponentSource(sourcePath: string, componentName: stri
     };
   }
 
-  const sourceFile = ts.createSourceFile(sourcePath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const sourceFile = ts.createSourceFile(
+    sourcePath,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
   const targetNames = new Set([
     `I${componentName.replace(/\s+/g, '')}Props`,
+    ...(componentName === 'StandardPage' ? ['IStandardProps'] : []),
     `${componentName.replace(/\s+/g, '')}Props`,
   ]);
 
@@ -521,11 +716,16 @@ function extractPropsFromComponentSource(sourcePath: string, componentName: stri
   const props: ComponentPropDoc[] = [];
 
   const visit = (node: ts.Node) => {
-    if ((ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) && targetNames.has(node.name.text)) {
+    if (
+      (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) &&
+      targetNames.has(node.name.text)
+    ) {
       if (ts.isInterfaceDeclaration(node)) {
         inheritedPropsNote =
           node.heritageClauses
-            ?.flatMap((clause) => clause.types.map((typeNode) => typeNode.getText(sourceFile)))
+            ?.flatMap((clause) =>
+              clause.types.map((typeNode) => typeNode.getText(sourceFile)),
+            )
             .join(', ') ?? null;
 
         for (const member of node.members) {
@@ -555,6 +755,24 @@ function extractPropsFromComponentSource(sourcePath: string, componentName: stri
             type: member.type?.getText(sourceFile) ?? 'unknown',
           });
         }
+      } else if (ts.isIntersectionTypeNode(node.type)) {
+        inheritedPropsNote = node.type.types
+          .filter((type) => !ts.isTypeLiteralNode(type))
+          .map((type) => type.getText(sourceFile))
+          .join(', ');
+        for (const type of node.type.types) {
+          if (!ts.isTypeLiteralNode(type)) continue;
+          for (const member of type.members) {
+            if (!ts.isPropertySignature(member) || !member.name) continue;
+            props.push({
+              defaultValue: getNodeDefaultValue(member),
+              description: getNodeDescription(member),
+              name: member.name.getText(sourceFile).replace(/['"]/g, ''),
+              required: !member.questionToken,
+              type: member.type?.getText(sourceFile) ?? 'unknown',
+            });
+          }
+        }
       } else {
         inheritedPropsNote = node.type.getText(sourceFile);
       }
@@ -565,6 +783,33 @@ function extractPropsFromComponentSource(sourcePath: string, componentName: stri
 
   visit(sourceFile);
 
+  const inherited = inheritedPropsNote as string | null;
+  if (inherited?.includes('GlassSurfaceProps')) {
+    props.push({
+      name: 'glass',
+      type: "boolean | { enabled?: boolean; intensity?: number; variant?: 'regular' | 'clear' }",
+      required: false,
+      defaultValue: 'Inherited from UIProvider; off without a provider',
+      description:
+        'Local material override. Intensity is clamped to 0–1; zero uses an opaque surface.',
+    });
+  }
+  if (inherited?.includes('IPageBaseComponent')) {
+    props.unshift({
+      name: 'id',
+      type: 'string',
+      required: true,
+      defaultValue: null,
+      description: 'Unique, stable page identifier.',
+    });
+    props.push({
+      name: 'noEnteringAnimation',
+      type: 'boolean',
+      required: false,
+      defaultValue: 'false',
+      description: 'Skip the page entry animation.',
+    });
+  }
   return {
     inheritedPropsNote,
     props,
@@ -581,11 +826,17 @@ async function buildComponentRegistryEntries(componentDocs: ComponentDoc[]) {
       const fallbackIndexPath = join(componentDir, 'index.ts');
       const typesPath = join(componentDir, 'types.ts');
 
-      const resolvedSourcePath = (await fileExists(indexPath)) ? indexPath : fallbackIndexPath;
+      const resolvedSourcePath = (await fileExists(indexPath))
+        ? indexPath
+        : fallbackIndexPath;
       const hasStory = await fileExists(storyPath);
       const storySource = hasStory ? await readFile(storyPath, 'utf8') : null;
-      const storyComponent = storySource ? extractMetaComponent(storySource) : null;
-      const typesSource = (await fileExists(typesPath)) ? await readFile(typesPath, 'utf8') : '';
+      const storyComponent = storySource
+        ? extractMetaComponent(storySource)
+        : null;
+      const typesSource = (await fileExists(typesPath))
+        ? await readFile(typesPath, 'utf8')
+        : '';
       const { props, inheritedPropsNote } = extractPropsFromComponentSource(
         resolvedSourcePath,
         doc.title,
@@ -594,7 +845,11 @@ async function buildComponentRegistryEntries(componentDocs: ComponentDoc[]) {
       return {
         description: doc.description,
         docsPath: doc.sourcePath,
-        examples: parseCanvasExamples(docsSource, storySource, storyComponent ?? doc.title),
+        examples: parseCanvasExamples(
+          docsSource,
+          storySource,
+          storyComponent ?? doc.title,
+        ),
         href: doc.href,
         inheritedPropsNote,
         props,
@@ -610,7 +865,10 @@ async function buildComponentRegistryEntries(componentDocs: ComponentDoc[]) {
   );
 }
 
-async function buildPreviewModules(entries: GeneratedComponentRegistryEntry[], previewDir: string) {
+async function buildPreviewModules(
+  entries: GeneratedComponentRegistryEntry[],
+  previewDir: string,
+) {
   const previews: PreviewModuleEntry[] = [];
   const uiRootExports = await loadUiRootExports(previewDir);
   const uiImportPath = '@swiftuijs/ui';
@@ -621,10 +879,7 @@ async function buildPreviewModules(entries: GeneratedComponentRegistryEntry[], p
     }
 
     const storySource = await readFile(entry.storyPath, 'utf8');
-    const transformed = transformStorySourceForDocs(
-      storySource,
-      uiImportPath,
-    );
+    const transformed = transformStorySourceForDocs(storySource, uiImportPath);
     const importedSymbols = extractUiImports(transformed, uiImportPath);
     const metaComponent = extractMetaComponent(storySource);
 
@@ -639,7 +894,9 @@ async function buildPreviewModules(entries: GeneratedComponentRegistryEntry[], p
     previews.push({
       slug: entry.slug,
       source: `// @ts-nocheck\n'use client';\n\n${transformed}${
-        metaComponent ? `\n\nexport const __DOCS_COMPONENT__ = ${metaComponent};` : ''
+        metaComponent
+          ? `\n\nexport const __DOCS_COMPONENT__ = ${metaComponent};\nexport const __DOCS_ARGS__ = ${extractMetaArgs(ts.createSourceFile('story.tsx', storySource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX))?.getText() ?? '{}'};`
+          : ''
       }`,
     });
   }
@@ -654,14 +911,26 @@ export async function writeComponentRegistry(options: {
 }) {
   const entries = await buildComponentRegistryEntries(options.componentDocs);
   const previews = await buildPreviewModules(entries, options.previewDir);
-  const previewLookup = new Map(previews.map((preview) => [preview.slug, `() => import('./previews/${preview.slug}')`]));
-  const registryObject = Object.fromEntries(entries.map((entry) => [entry.slug, entry]));
+  const previewLookup = new Map(
+    previews.map((preview) => [
+      preview.slug,
+      `() => import('./previews/${preview.slug}')`,
+    ]),
+  );
+  const registryObject = Object.fromEntries(
+    entries.map((entry) => [entry.slug, entry]),
+  );
 
   await mkdir(options.previewDir, { recursive: true });
   await Promise.all(
     previews.map(async (preview) => {
-      await mkdir(join(options.previewDir, dirname(preview.slug)), { recursive: true });
-      await writeFileAtomic(join(options.previewDir, `${preview.slug}.tsx`), `${preview.source}\n`);
+      await mkdir(join(options.previewDir, dirname(preview.slug)), {
+        recursive: true,
+      });
+      await writeFileAtomic(
+        join(options.previewDir, `${preview.slug}.tsx`),
+        `${preview.source}\n`,
+      );
     }),
   );
 

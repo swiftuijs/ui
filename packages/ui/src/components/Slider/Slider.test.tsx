@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { fireEvent } from '@testing-library/react'
+import { fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { render, screen } from '@/testing/render'
 import { Slider } from './index'
@@ -47,11 +47,13 @@ describe('Slider', () => {
 
       fireEvent.change(slider, { target: { value: '70' } })
       expect(slider.value).toBe('70')
+      expect(slider.style.getPropertyValue('--sw-slider-progress')).toBe('70%')
 
-      form.reset()
+      act(() => form.reset())
 
       expect(slider.value).toBe('30')
       expect(new globalThis.FormData(form).get('brightness')).toBe('30')
+      expect(slider.style.getPropertyValue('--sw-slider-progress')).toBe('30%')
     })
 
     it('forwards disabled to the native range input', async () => {
@@ -98,4 +100,12 @@ describe('Slider', () => {
       expect(handleValueChange).toHaveBeenCalledWith(42)
     })
   })
+})
+
+it('maps arbitrary slider ranges and safely handles collapsed ranges', () => {
+  const { rerender } = render(<Slider aria-label="Range" value={15} min={10} max={30} />)
+  const slider = screen.getByRole('slider')
+  expect(slider.style.getPropertyValue('--sw-slider-progress')).toBe('25%')
+  rerender(<Slider aria-label="Range" value={5} min={10} max={10} />)
+  expect(slider.style.getPropertyValue('--sw-slider-progress')).toBe('0%')
 })

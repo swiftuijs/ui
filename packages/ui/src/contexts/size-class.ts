@@ -2,11 +2,9 @@
  * SizeClass system for responsive design
  * Similar to SwiftUI's SizeClass concept
  */
-import { createStore } from 'plain-store'
-import { isInBrowser } from '@/common'
+import { useMemo } from 'react'
 import { SIZE_CLASS_REGULAR_MIN } from '@/tokens'
-import { viewportStore } from './viewport'
-import { eventBus } from '@/common/event-bus'
+import { viewportStore, useViewport } from './viewport'
 
 /**
  * SizeClass type: compact or regular
@@ -62,24 +60,9 @@ export function getSizeClassInfo(viewport: { width: number; height: number } | n
 /**
  * SizeClass store
  */
-export const sizeClassStore = createStore<ISizeClassInfo | null>(null)
-
-/**
- * Initialize SizeClass system
- */
-if (isInBrowser) {
-  // Listen to viewport changes via event bus
-  eventBus.on('viewport:change', (viewport: { width: number; height: number } | null) => {
-    const sizeClass = getSizeClassInfo(viewport)
-    sizeClassStore.setStore(sizeClass)
-  })
-
-  // Initialize with current viewport
-  const initialViewport = viewportStore.getStore()
-  if (initialViewport) {
-    const initialSizeClass = getSizeClassInfo(initialViewport)
-    sizeClassStore.setStore(initialSizeClass)
-  }
+export const sizeClassStore = {
+  getStore: () => getSizeClassInfo(viewportStore.getStore()),
+  useStore: useSizeClass,
 }
 
 /**
@@ -100,7 +83,8 @@ if (isInBrowser) {
  * ```
  */
 export function useSizeClass(): ISizeClassInfo | null {
-  return sizeClassStore.useStore()
+  const viewport = useViewport()
+  return useMemo(() => getSizeClassInfo(viewport), [viewport])
 }
 
 export { SIZE_CLASS_REGULAR_MIN }
