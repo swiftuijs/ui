@@ -5,11 +5,7 @@ import * as BadgeStories from './Badge.stories'
 
 # Badge
 
-## Overview
-
-Badge is a view that displays a badge, typically used to show counts, status, or labels. Badges are commonly used in navigation items, buttons, and list items.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `badge()` modifier.
+Display a short count or status beside related content.
 
 ## Basic Usage
 
@@ -21,19 +17,8 @@ Badge supports different visual variants:
 
 <Canvas of={BadgeStories.Styles} />
 
-## Notes
+## Usage and limitations
 
-- Badge displays a small label or count
-- Badge supports different variants (primary, success, warning, error)
-- Badge can contain text or numbers
-- Badge is commonly used with navigation items and buttons
-- Custom styles can be applied via the `style` prop
-
-## Best Practices
-
-1. **Counts**: Use badges to display notification counts
-2. **Status**: Use variant colors to indicate status
-3. **Size**: Keep badge content concise
-4. **Placement**: Place badges in consistent locations
-5. **Accessibility**: Provide appropriate labels for screen readers
-
+- Variants are `primary`, `success`, `warning`, and `error`; content can be text or a number.
+- Keep content short and place it consistently beside the item it describes. Do not communicate status through color alone.
+- Supply an accessible label when the number or icon needs context; customize appearance with `style`.

@@ -1,29 +1,31 @@
 ---
 title: Responsive Design
-description: Responsive behavior in SwiftUI.js should be deliberate, token-driven, and compatible with the web platform.
+description: Container-aware layouts and predictable server rendering.
 ---
 
-# Responsive Design
+Stacks and grids use CSS layout. Give containers room to shrink, wrap long text, and avoid fixed widths larger than the available space.
 
-Responsive behavior in SwiftUI.js is not a late-stage patch. It belongs in the same foundation as tokens, layout primitives, and composition patterns.
+## Adaptive split navigation
 
-## Principles
+`NavigationSplitView` observes its own container. Two columns collapse below 768px; three collapse below 1024px. Compact navigation lets users reach every column. Set `defaultCompactColumn` to choose the initial screen, or control `compactColumn` and `onCompactColumnChange` with React state. Set `compact` explicitly to override automatic adaptation.
 
-- Prefer tokenized spacing and sizing over hard-coded pixel exceptions.
-- Let containers adapt first before introducing per-component overrides.
-- Keep breakpoints understandable and few enough to reason about.
-- Match responsive changes to user-facing layout goals, not arbitrary viewport trivia.
+```tsx
+<NavigationSplitView
+  defaultCompactColumn="content"
+  sidebar={<Navigation />}
+  content={<Settings />}
+  detail={<Preview />}
+/>
+```
 
-## A Good Mental Model
+`ViewThatFits` also observes its container, but requires `data-min-width` hints. Order variants from spacious to compact. Explicit `width` overrides observation; intrinsic content measurement is not implemented.
 
-Think in terms of **content pressure**:
+## Viewport hooks
 
-- When content is comfortable, preserve hierarchy and whitespace.
-- When space tightens, reduce density in a controlled way.
-- When a layout must change shape, do it at clear boundaries rather than through a long tail of one-off exceptions.
+`useViewport` and `useSizeClass` share one resize subscription, removed when the last subscriber unmounts. A viewport narrower than 768px is horizontally compact. These are web breakpoints, not Apple's device classification rules.
 
-## What This Means In Practice
+Both hooks return `null` on the server and during initial hydration. Prefer CSS for visual adaptation; when rendering depends on a hook, provide a stable fallback for `null`.
 
-SwiftUI.js should expose responsive helpers that compose with the design tokens already in the package. Components should not each invent their own breakpoint language.
+## Check your composition
 
-As the component system grows, the docs app can add richer examples and recipes, but the baseline rule remains simple: responsive behavior should be centralized, predictable, and visible in the API.
+Test narrow phones, tablets and desktop containers, including long labels, enlarged text, keyboard navigation and dark mode. Container width can be much smaller than viewport width when a component appears in a sidebar or dialog.

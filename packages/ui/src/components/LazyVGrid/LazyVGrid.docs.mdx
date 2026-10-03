@@ -11,7 +11,7 @@ A measured, virtualized vertical grid. Only the viewport and a small overscan wi
 
 <Canvas of={LazyVGridStories.InScrollView} />
 
-## Behavior
+## Usage and limitations
 
 - Use a bounded `ScrollView` or any ancestor with `overflow: auto`/`scroll`; otherwise the page is the scrolling surface.
 - `estimatedItemHeight` defaults to 48 pixels and is corrected with `ResizeObserver` measurements. A grid virtualizes complete rows or columns; their size is the largest item in that group.

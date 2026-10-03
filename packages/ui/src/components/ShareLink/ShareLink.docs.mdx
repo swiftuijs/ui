@@ -5,15 +5,15 @@ import * as ShareLinkStories from './ShareLink.stories'
 
 # ShareLink
 
-## Overview
-
 ShareLink presents a platform share action. On the web it uses the Web Share API when available and falls back to opening shareable URLs.
 
 ## Usage
 
 <Canvas of={ShareLinkStories.Default} />
 
-## Notes
+## Usage and limitations
 
 - Use `item` for the canonical URL or text payload.
 - `subject` and `message` map to the web share title and text fields.
+
+- Web Share and clipboard fallback depend on browser support, a secure context and a user gesture. HTTP(S) URLs open in a new tab when Web Share is unavailable; non-URL text uses the clipboard when available. Applications should handle share rejection/cancellation.

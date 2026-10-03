@@ -5,8 +5,6 @@ import * as ContentTransitionStories from './ContentTransition.stories'
 
 # ContentTransition
 
-## Overview
-
 ContentTransition adapts SwiftUI's content-transition modifiers into an explicit wrapper that annotates changing content on the web.
 
 ## Usage
@@ -16,3 +14,7 @@ ContentTransition adapts SwiftUI's content-transition modifiers into an explicit
 ## Variants
 
 <Canvas of={ContentTransitionStories.Scale} />
+
+## Usage and limitations
+
+- Uses CSS classes and transitions for opacity, saturation or scale. It does not interpolate changing text/numbers or diff content like native SwiftUI; control `active` yourself.

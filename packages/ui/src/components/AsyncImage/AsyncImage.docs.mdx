@@ -5,8 +5,6 @@ import * as AsyncImageStories from './AsyncImage.stories'
 
 # AsyncImage
 
-## Overview
-
 AsyncImage loads remote images and exposes simple loading and failure phases, aligned with SwiftUI's `AsyncImage` mental model.
 
 ## Usage
@@ -25,7 +23,7 @@ Use `onPhaseChange` when the surrounding UI needs to react to loading, success, 
 
 <Canvas of={AsyncImageStories.PhaseAware} />
 
-## Notes
+## Usage and limitations
 
 - Use `placeholder` for loading UI.
 - Use `fallback` for failed requests.

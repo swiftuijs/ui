@@ -35,6 +35,7 @@ pnpm --filter @swiftuijs/ui test:package
 pnpm build
 pnpm exec playwright install chromium
 pnpm test:browser
+pnpm test:docs-browser
 pnpm test:components
 ```
 
@@ -43,6 +44,8 @@ pnpm test:components
 - `apps/storybook`: isolated development and visual review.
 
 Changes should include behavioral tests and accurate capability notes. The packed-consumer check verifies strict types, CSS retention, tree shaking, SSR and client boundaries. Chromium browser acceptance checks the kitchensink at 320, 390, 768 and 1440px, including touch/mouse detents, modal focus, accessibility and bounded long-list DOM. Broader cross-browser visual acceptance remains a release requirement; passing unit tests alone does not establish production readiness.
+
+`test:docs-browser` checks mobile/desktop reading, preview interaction, code copying, every component link and static search. Component documentation examples are compiled against the public API during docs tests.
 
 `test:components` uses the built Storybook to check every component group's representative story in light/mobile and dark/desktop views, plus focused overlay, pointer, keyboard and material checks.
 

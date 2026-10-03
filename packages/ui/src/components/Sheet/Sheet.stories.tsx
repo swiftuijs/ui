@@ -26,7 +26,7 @@ function DefaultSheet() {
   return (
     <>
       <Button onClick={() => setIsPresented(true)}>Show Sheet</Button>
-      <Sheet isPresented={isPresented} onDismiss={() => setIsPresented(false)}>
+      <Sheet title="Sheet title" isPresented={isPresented} onDismiss={() => setIsPresented(false)}>
         <VStack spacing={20}>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Sheet Title</Text>
           <Text>This is a sheet presentation</Text>
@@ -50,6 +50,7 @@ function FormSheetComponent() {
       <Sheet
         isPresented={isPresented}
         onDismiss={() => setIsPresented(false)}
+        title="Form sheet"
         presentationStyle="formSheet"
       >
         <VStack spacing={20}>

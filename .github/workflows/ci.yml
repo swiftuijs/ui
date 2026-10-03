@@ -57,6 +57,9 @@ jobs:
       - name: Browser acceptance
         run: pnpm test:browser
 
+      - name: Documentation reading acceptance
+        run: pnpm test:docs-browser
+
       - name: Component visual geometry acceptance
         run: pnpm test:components
 

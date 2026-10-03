@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { NavigationLink, VStack, Section, HStack, ScrollView, Text, Spacer, Button, ZStack  } from '../'
+import { NavigationLink, StandardPage, VStack, Section, HStack, ScrollView, Text, Spacer, Button, ZStack  } from '../'
 import { useNaviContext } from '../../contexts'
 import { NavigationStack, INavigationStackProps } from '.'
 
@@ -121,4 +121,17 @@ export const ResizableActionSheet: Story = {
   render: () => <NavigationStack style={{ height: 'calc(100dvh - 32px)' }}>
     <NavigationLink destination={About} pageOptions={{ type: 'actionsheet' }}>Open ActionSheet</NavigationLink>
   </NavigationStack>,
+}
+
+export const Default: Story = {
+  render: () => {
+    function Details() {
+      return <StandardPage id="details" navigationTitle="Details"><Text>Detail content</Text></StandardPage>
+    }
+    return <NavigationStack style={{ height: 320 }}>
+      <StandardPage id="home" navigationTitle="Home">
+        <NavigationLink destination={Details}>Open details</NavigationLink>
+      </StandardPage>
+    </NavigationStack>
+  },
 }

@@ -5,11 +5,7 @@ import * as TextStories from './Text.stories'
 
 # Text
 
-## Overview
-
-Text is a view that displays one or more lines of read-only text. Use Text to display a string in your app's user interface. The Text view draws a string in a given font, with support for multiple lines, text truncation, and wrapping.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `Text`.
+Display inline text with optional line truncation.
 
 ## Basic Usage
 
@@ -47,18 +43,8 @@ Apply custom styles to text:
 
 <Canvas of={TextStories.TextInHStack} />
 
-## Notes
+## Usage and limitations
 
-- Text automatically wraps when it exceeds the container width
-- Use `lineLimit` to control text truncation
-- Text supports all standard CSS text styling properties
-- Text can contain other React components as children
-
-## Best Practices
-
-1. **Readability**: Ensure sufficient contrast between text and background colors
-2. **Line limits**: Use `lineLimit` appropriately to prevent layout issues with long text
-3. **Responsive**: Text automatically adapts to container width
-4. **Accessibility**: Use semantic HTML and proper heading hierarchy
-5. **Performance**: Avoid excessive nested text components for better performance
-
+- Wraps within available width; `lineLimit` truncates positive numbers of lines. Native CSS text styles and React children are supported.
+- Renders a `span`, not a heading. Use semantic HTML headings for document hierarchy and avoid nesting block elements inside it.
+- Ensure contrast and check long text on compact containers.

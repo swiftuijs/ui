@@ -1,46 +1,21 @@
 ---
 title: Overview
-description: Learn how SwiftUI.js maps SwiftUI-inspired APIs to a practical React component system.
+description: SwiftUI-inspired composition, built for React and the web.
 ---
 
-# SwiftUI.js Documentation
+Build screens with ordinary React state, HTML props and composable layout components.
 
-SwiftUI.js is a React component library that borrows SwiftUI's mental model without pretending the web is iOS.
+| Start here | What you will find |
+| --- | --- |
+| [Getting started](/docs/getting-started/) | Installation, required styles and a working first component |
+| [Components](/docs/components/) | Live examples, copyable code, requirements and complete APIs |
+| [Responsive layouts](/docs/concepts/responsive-design/) | Container breakpoints, layout hints and SSR fallbacks |
+| [Themes and materials](/docs/concepts/theming/) | Scoped appearance, tokens and optional glass |
+| [Capability matrix](/docs/concepts/capability-matrix/) | Supported behavior, experimental features and platform limits |
+| [Kitchensink](/kitchensink/) | An integrated form, navigation and modal workflow |
 
-Use these docs to understand:
+## Read the limits first
 
-- how to install the package cleanly
-- how layout and alignment concepts map onto the DOM
-- how responsive behavior is expressed through tokens and composition
-- which parts of the system are aligned, adapted, partial, or still planned
+SwiftUI.js uses browser rendering. It does not reproduce every native SwiftUI API or Apple system behavior. Read a component's usage notes before adopting it; experimental exports may change.
 
-## Start Here
-
-If you are evaluating the library for the first time, begin with [Getting Started](/docs/getting-started/).
-
-Then open the [kitchensink demo](/kitchensink/) to see the same package used as an integrated app surface instead of isolated examples.
-
-After that, move into the concept guides:
-
-- [SwiftUI Alignment](/docs/concepts/swiftui-alignment/)
-- [Responsive Design](/docs/concepts/responsive-design/)
-- [Capability Matrix](/docs/concepts/capability-matrix/)
-
-## Maturity
-
-Production-ready here means the foundation is stable enough for real app use: documented, tested, and predictable in the browser. It does not mean every SwiftUI concept has a one-to-one web equivalent.
-
-- `aligned` means the API and behavior map closely to SwiftUI intent and are ready to use as documented.
-- `adapted` means the feature keeps the SwiftUI mental model but uses web-native behavior where the platform differs.
-- `partial` means the concept is useful and shipped, but some related behavior, edge cases, or companion APIs are still in progress.
-- `planned` means the idea is part of the roadmap, not a promise of current parity.
-
-When a feature is marked anything other than `aligned`, the docs should say what is different so users can make an informed call.
-
-## What Lives Here
-
-The public docs app owns product-level guidance and conceptual documentation.
-
-Component-level docs remain colocated with each component under `packages/ui/src/components/**/**.docs.mdx`, which keeps implementation, stories, and docs aligned as the library evolves.
-
-The kitchensink route lives in the docs app so every static docs deployment also includes a working product-style demo.
+Status terms: **aligned** follows SwiftUI intent closely; **adapted** uses browser-specific behavior; **partial** has documented gaps; **planned** is not shipped behavior. These describe scope, not a guarantee of production acceptance. Validate the components you use in your target browsers.

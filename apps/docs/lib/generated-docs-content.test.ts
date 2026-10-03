@@ -31,7 +31,9 @@ import { buttonMeta } from './types'
 Useful guidance.
 `;
 
-    expect(buildComponentDocBody(input)).toBe(`Useful guidance.
+    expect(buildComponentDocBody(input)).toBe(`## Usage
+
+Useful guidance.
 `);
   });
 
@@ -64,7 +66,9 @@ import * as PageStories from './StandardPage.stories'
 `;
 
     expect(buildComponentDocBody(input)).toContain('toolbarItems={');
-    expect(buildComponentDocBody(input)).toContain('<Button onClick={handleShare}>Share</Button>');
+    expect(buildComponentDocBody(input)).toContain(
+      '<Button onClick={handleShare}>Share</Button>',
+    );
     expect(buildComponentDocBody(input)).not.toContain('<Canvas');
     expect(buildComponentDocBody(input)).not.toContain('<Meta');
   });
@@ -193,12 +197,24 @@ Button maps directly to SwiftUI.
   });
 });
 
-
 it('shows a component introduction once while retaining usage notes and code', () => {
-  const source = '# Button\n\n## Overview\n\nA native button with\nReact events.\n\n## Notes\n\nUse type="submit" inside forms.\n\n```tsx\n<Button>Save</Button>\n```';
-  const body = buildComponentDocBody(source, 'A native button with React events.');
+  const source =
+    '# Button\n\n## Overview\n\nA native button with\nReact events.\n\n## Notes\n\nUse type="submit" inside forms.\n\n```tsx\n<Button>Save</Button>\n```';
+  const body = buildComponentDocBody(
+    source,
+    'A native button with React events.',
+  );
   expect(body).not.toContain('A native button');
   expect(body).not.toContain('## Overview');
   expect(body).toContain('Use type="submit"');
   expect(body).toContain('<Button>Save</Button>');
+});
+
+it('preserves multi-paragraph requirements and complete fenced examples under Usage', () => {
+  const source =
+    '# Example\n\n## Usage\n\nRequires React 19.\n\nSSR renders an initial window only.\n\n```tsx\n// Heading-like code must remain intact\nconst text = `\n## Usage\n\nRequires React 19.\n`;\n```\n\n## Limits\n\nKeep off-screen state outside rows.';
+  const body = buildComponentDocBody(source, 'Requires React 19.');
+  expect(body).toContain('SSR renders an initial window only.');
+  expect(body).toContain('const text = `\n## Usage\n\nRequires React 19.\n`;');
+  expect(body).toContain('Keep off-screen state outside rows.');
 });

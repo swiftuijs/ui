@@ -5,19 +5,15 @@ import * as ScrollViewReaderStories from './ScrollViewReader.stories'
 
 # ScrollViewReader
 
-## Overview
-
 ScrollViewReader exposes a proxy that can scroll to child `ScrollTarget` anchors by identifier.
 
 **Status**: adapted
-
-**SwiftUI Correspondence**: Adapted from SwiftUI's `ScrollViewReader`.
 
 ## Basic Usage
 
 <Canvas of={ScrollViewReaderStories.Default} />
 
-## Notes
+## Usage and limitations
 
 - `scrollTo(id)` resolves descendants marked with `ScrollTarget`
 - the current web adaptation uses `scrollIntoView()` under the hood

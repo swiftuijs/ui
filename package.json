@@ -12,7 +12,8 @@
     "dev:storybook": "pnpm --filter storybook dev",
     "dev:ui": "pnpm --filter @swiftuijs/ui dev",
     "test:browser": "tsc -p e2e/tsconfig.json && playwright test --config e2e/playwright.config.ts",
-    "test:components": "tsc -p e2e/tsconfig.json && playwright test --config e2e/components.config.ts"
+    "test:components": "tsc -p e2e/tsconfig.json && playwright test --config e2e/components.config.ts",
+    "test:docs-browser": "tsc -p e2e/tsconfig.json && playwright test --config e2e/docs.config.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",

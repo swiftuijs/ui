@@ -5,11 +5,7 @@ import * as CircleStories from './Circle.stories'
 
 # Circle
 
-## Overview
-
-Circle is a circular shape. Circle is used to create circular visual elements, such as avatars, badges, and indicators.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `Circle`.
+Draw a circular shape.
 
 ## Basic Usage
 
@@ -21,19 +17,7 @@ Add a stroke to the circle:
 
 <Canvas of={CircleStories.WithStroke} />
 
-## Notes
+## Usage and limitations
 
-- Circle requires `fill` prop for fill color
-- Circle requires explicit dimensions via `style` prop (width and height should be equal)
-- Circle supports optional `stroke` and `strokeWidth` props
-- Circle is always perfectly round
-- Use Circle for avatars, badges, and circular indicators
-
-## Best Practices
-
-1. **Dimensions**: Use equal width and height for perfect circles
-2. **Fill color**: Always provide a fill color
-3. **Stroke**: Use stroke for borders and outlines
-4. **Consistency**: Maintain consistent circle sizes
-5. **Accessibility**: Ensure circles have sufficient contrast
-
+- Set equal width and height for a predictable circle. `fill` is optional; it controls the CSS fill color.
+- Use optional `stroke`/`strokeWidth` for a border. Keep size and contrast consistent when used as a badge, avatar or indicator.

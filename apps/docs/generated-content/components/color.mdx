@@ -1,30 +1,14 @@
 ---
 title: "Color"
-description: "Color is a view that displays a solid color. Color is used to display color swatches, backgrounds, and visual color indicators."
+description: "Render a CSS color swatch or background."
 ---
-
-## Overview
-
-Color is a view that displays a solid color. Color is used to display color swatches, backgrounds, and visual color indicators.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `Color`.
 
 ## Color Palette
 
 Display multiple colors:
 
-## Notes
+## Usage and limitations
 
-- Color requires a `color` prop (hex, rgb, or named color)
-- Color requires explicit dimensions via `style` prop
-- Color can be used as a background or visual indicator
-- Color supports all CSS color formats
-- Use Color for color swatches and visual indicators
-
-## Best Practices
-
-1. **Dimensions**: Always provide explicit dimensions
-2. **Color formats**: Use consistent color formats (hex recommended)
-3. **Accessibility**: Ensure sufficient contrast when using Color
-4. **Visual indicators**: Use Color for visual feedback and indicators
-5. **Consistency**: Use consistent colors throughout your app
+- Provide `color` in any CSS color format, such as hex, rgb or a named color.
+- Set width and height explicitly; an empty swatch has no content-derived size.
+- Use consistent color tokens and sufficient contrast. Add text when color communicates a status.

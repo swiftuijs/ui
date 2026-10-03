@@ -1,36 +1,30 @@
 ---
-title: SwiftUI Alignment
-description: Alignment in SwiftUI.js should preserve SwiftUI intent while remaining honest about DOM layout behavior.
+title: Layout and alignment
+description: Choose a direction, cross-axis alignment and spacing.
 ---
 
-# SwiftUI Alignment
+SwiftUI.js stacks use CSS flexbox; grids use CSS grid. They follow SwiftUI's composition model with browser layout rules.
 
-SwiftUI alignment is about intent, not a literal port of Apple's layout engine.
+| Container | Direction | Cross-axis alignment |
+| --- | --- | --- |
+| `HStack` | Horizontal row | `top`, `center`, `bottom` |
+| `VStack` | Vertical column | `leading`, `center`, `trailing` |
+| `ZStack` | Overlapping layers | Combined horizontal/vertical alignment |
 
-SwiftUI.js keeps the public mental model familiar:
+```tsx
+import { HStack, Spacer, Text } from '@swiftuijs/ui';
 
-- stacks express layout direction
-- alignment communicates how children should line up
-- spacing remains a first-class decision instead of an incidental margin
+<HStack alignment="center" spacing={12}>
+  <Text>Account</Text>
+  <Spacer />
+  <Text>Settings</Text>
+</HStack>
+```
 
-## The Web Constraint
+## Usage and limitations
 
-On the web, alignment is implemented through CSS layout systems like flexbox and grid.
-
-That means SwiftUI.js should prefer APIs that map cleanly onto those systems instead of emulating hidden measurement behavior that would be fragile in React.
-
-## Practical Rule
-
-When you reach for alignment in SwiftUI.js, think in two layers:
-
-1. **Intent layer:** what edge, axis, or reading order should the layout communicate?
-2. **Implementation layer:** which DOM layout system can deliver that behavior predictably?
-
-This keeps the API SwiftUI-flavored while keeping the implementation stable and testable.
-
-## Guidance
-
-- Use stack alignment to control cross-axis behavior.
-- Use tokenized spacing instead of ad hoc one-off gaps.
-- Prefer semantic composition over deeply nested wrappers created only to force layout tricks.
-- Treat layout behavior as observable product behavior and test it at the component boundary.
+- `spacing` controls gaps between adjacent children; use shared tokens for consistent spacing.
+- `Spacer` expands only when the parent has available space along the stack's main axis.
+- A row does not wrap automatically. Allow wrapping explicitly or switch composition for compact containers.
+- CSS shrink/stretch rules apply. Avoid deeply nested wrappers added only to force alignment; check long labels and enlarged text.
+- Native layout proposals and measurement behavior are not emulated. See [responsive layouts](/docs/concepts/responsive-design/) for container adaptation.

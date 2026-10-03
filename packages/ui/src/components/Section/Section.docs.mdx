@@ -5,11 +5,7 @@ import * as SectionStories from './Section.stories'
 
 # Section
 
-## Overview
-
-Section is a container view that groups related content. Sections are commonly used in Lists to organize items into logical groups with optional headers.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `Section`.
+Group related rows under an optional header.
 
 ## Basic Usage
 
@@ -43,19 +39,7 @@ Apply custom styles to Section:
 
 <Canvas of={SectionStories.CustomStyle} />
 
-## Notes
+## Usage and limitations
 
-- Sections are commonly used within List components
-- Headers are optional but recommended for better organization
-- Sections support all standard React children
-- Use sections to group related content logically
-- Sections can be nested, though it's not common
-
-## Best Practices
-
-1. **Clear headers**: Use descriptive headers that clearly indicate section content
-2. **Logical grouping**: Group related items together in sections
-3. **Consistent styling**: Maintain consistent section styling throughout your app
-4. **Accessibility**: Ensure section headers are properly marked up for screen readers
-5. **Spacing**: Use appropriate spacing between sections for visual clarity
-
+- Commonly used in List; accepts ordinary React children and optional nested sections.
+- Use descriptive headers, consistent spacing and appropriate heading markup for screen-reader navigation.

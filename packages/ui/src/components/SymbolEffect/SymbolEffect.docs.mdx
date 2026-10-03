@@ -5,8 +5,6 @@ import * as SymbolEffectStories from './SymbolEffect.stories'
 
 # SymbolEffect
 
-## Overview
-
 SymbolEffect adapts SwiftUI's symbol animation modifiers into an explicit wrapper component for the web.
 
 ## Usage
@@ -17,3 +15,7 @@ SymbolEffect adapts SwiftUI's symbol animation modifiers into an explicit wrappe
 
 <Canvas of={SymbolEffectStories.Bounce} />
 <Canvas of={SymbolEffectStories.Appear} />
+
+## Usage and limitations
+
+- CSS animations affect the whole child element; native SF Symbol layers and effect options are not implemented.

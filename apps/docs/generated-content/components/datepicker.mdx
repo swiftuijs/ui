@@ -1,30 +1,12 @@
 ---
 title: "DatePicker"
-description: "DatePicker is a native `<input>`-backed control for selecting dates and times. It keeps standard form semantics, browser validation, and keyboard behavior."
+description: "Select a date or time using the browser’s native input."
 ---
 
-## Overview
+## Usage and limitations
 
-DatePicker is a native `<input>`-backed control for selecting dates and times. It keeps standard form semantics, browser validation, and keyboard behavior.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `DatePicker`.
-
-## Notes
-
-- `selection` and `defaultSelection` are the preferred SwiftUI-style value APIs
-- `value` and `defaultValue` remain available as React-friendly aliases
-- `onChange` forwards the native input event
-- `onSelectionChange` and `onValueChange` receive the latest string value
-- Supported modes are `date`, `time`, and `dateAndTime`
-- `displayedComponents={['date', 'hourAndMinute']}` maps to `dateAndTime`
-- Use `min` and `max` for native bounds in the same string format as `value`
-- `minuteInterval` maps to the native `step` attribute for `time` and `dateAndTime` modes
-- `disabled` behaves like a native input prop
-
-## Best Practices
-
-1. **Mode selection**: Choose `date`, `time`, or `dateAndTime` based on the required granularity
-2. **String values**: Keep the value in the browser's native input format for the selected mode
-3. **Bounds**: Use `min` and `max` to constrain user input
-4. **Labels**: Provide an accessible label or visible label
-5. **Localization**: Let the browser handle localized rendering of the native control
+- Controlled: `selection` and `onSelectionChange`; uncontrolled: `defaultSelection`. React aliases are `value`, `defaultValue`, and `onValueChange`. `onChange` receives the native event.
+- `date` uses `YYYY-MM-DD`, `time` uses `HH:MM`, and `dateAndTime` uses `YYYY-MM-DDTHH:MM`. The browser localizes display, not the stored string.
+- `displayedComponents={['date', 'hourAndMinute']}` selects `dateAndTime`; a single component selects its respective mode.
+- `min`/`max` use the same native string format. `minuteInterval` sets native step for time/date-time modes; `disabled` is a native input prop.
+- Provide a visible label or `aria-label`; test native picker behavior on your target mobile browsers.

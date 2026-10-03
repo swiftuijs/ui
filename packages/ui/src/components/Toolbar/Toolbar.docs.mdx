@@ -5,11 +5,7 @@ import * as ToolbarStories from './Toolbar.stories'
 
 # Toolbar
 
-## Overview
-
-Toolbar is a view that displays toolbar items. Toolbar provides a consistent way to display actions and controls, typically at the bottom of the screen.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `.toolbar()` modifier.
+Arrange actions in a horizontal toolbar.
 
 ## Basic Usage
 
@@ -21,20 +17,9 @@ Include destructive actions:
 
 <Canvas of={ToolbarStories.WithDestructive} />
 
-## Notes
+## Usage and limitations
 
-- Toolbar renders as a horizontal `role="toolbar"` region.
-- Use `aria-label` or `aria-labelledby` so assistive technology can describe the toolbar purpose.
-- Toolbar requires an array of items with `content` and `placement`.
-- Placement options: `navigation`, `cancellationAction`, `principal`, `automatic`, `confirmationAction`, `destructiveAction`.
-- Toolbar groups items by placement and keeps the placement order stable.
-- Toolbar is commonly used at the bottom of screens.
-- Toolbar provides consistent spacing and alignment.
-
-## Best Practices
-
-1. **Placement**: Use appropriate placement for each action
-2. **Consistency**: Maintain consistent toolbar patterns
-3. **Destructive actions**: Use `destructiveAction` placement for dangerous actions
-4. **Accessibility**: Ensure toolbar items are accessible
-5. **Mobile**: Consider mobile interaction patterns when designing toolbars
+- Provide `items` with `content` and optional `placement`; placement defaults to `automatic`.
+- Placements are `navigation`, `cancellationAction`, `principal`, `automatic`, `confirmationAction`, and `destructiveAction`, rendered in that stable group order.
+- Uses `role="toolbar"`; supply `aria-label` or `aria-labelledby` and accessible action labels.
+- Use destructive placement for dangerous actions, keep actions consistent and reachable on mobile, and set a local `glass` override when needed.

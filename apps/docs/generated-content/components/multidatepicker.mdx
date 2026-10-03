@@ -3,15 +3,9 @@ title: "MultiDatePicker"
 description: "MultiDatePicker adapts SwiftUI's multi-date selection model to the web by combining a native date input with an ordered list of selected dates."
 ---
 
-## Overview
-
-MultiDatePicker adapts SwiftUI's multi-date selection model to the web by combining a native date input with an ordered list of selected dates.
-
 **Status**: adapted
 
-**SwiftUI Correspondence**: Adapted from SwiftUI's `MultiDatePicker`.
-
-## Notes
+## Usage and limitations
 
 - `value` and `defaultValue` use native `YYYY-MM-DD` date strings
 - `onValueChange` receives a normalized, ordered selection after every toggle
@@ -19,8 +13,6 @@ MultiDatePicker adapts SwiftUI's multi-date selection model to the web by combin
 - When `name` is provided, the control serializes each selected date as a repeated form field
 - Removing selected dates stays in the same control instead of opening a second editor
 - Duplicate dates are collapsed automatically so the selection behaves like a date set, not a raw array
-
-## Best Practices
 
 1. Use ordered date arrays so selections remain deterministic across renders.
 2. Keep labels explicit because the control includes both a date entry field and a selected-date list.

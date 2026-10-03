@@ -5,15 +5,13 @@ import * as ViewThatFitsStories from './ViewThatFits.stories'
 
 # ViewThatFits
 
-## Overview
-
 ViewThatFits picks the first layout variant that fits the available width. The web version uses `data-min-width` hints on child views to choose an appropriate variant.
 
 ## Usage
 
 <Canvas of={ViewThatFitsStories.Default} />
 
-## Notes
+## Usage and limitations
 
 - Order children from most spacious to most compact.
 - Use `width` when you want deterministic layout selection in docs or tests.

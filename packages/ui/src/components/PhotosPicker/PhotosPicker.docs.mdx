@@ -9,15 +9,13 @@ PhotosPicker opens an image-only asset chooser and forwards selected files, keep
 
 **Status**: adapted
 
-**SwiftUI Correspondence**: Adapted from SwiftUI's `PhotosPicker`.
-
 ## Examples
 
 <Canvas of={PhotosPickerStories.Default} />
 <Canvas of={PhotosPickerStories.MultipleSelection} />
 <Canvas of={PhotosPickerStories.VideoSelection} />
 
-## Notes
+## Usage and limitations
 
 - The current web implementation selects image files via a hidden `input[type="file"]`.
 - `maxSelectionCount` and `matching` are the preferred SwiftUI-aligned props.

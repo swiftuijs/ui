@@ -9,15 +9,13 @@ VideoPlayer wraps the native browser video element while keeping SwiftUI's dedic
 
 **Status**: adapted
 
-**SwiftUI Correspondence**: Adapted from AVKit's `VideoPlayer`.
-
 ## Examples
 
 <Canvas of={VideoPlayerStories.Default} />
 <Canvas of={VideoPlayerStories.WithFallback} />
 <Canvas of={VideoPlayerStories.WithPoster} />
 
-## Notes
+## Usage and limitations
 
 - Playback UI comes from the browser's native video controls.
 - The component is intentionally thin and keeps the underlying `<video>` element available.

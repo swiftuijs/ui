@@ -1,13 +1,7 @@
 ---
 title: "GeometryReader"
-description: "GeometryReader is a view that provides geometry information to its children, allowing you to create responsive layouts based on container size. GeometryReader gives you access to the size and position of the container."
+description: "Read a container’s size and viewport position through a render function."
 ---
-
-## Overview
-
-GeometryReader is a view that provides geometry information to its children, allowing you to create responsive layouts based on container size. GeometryReader gives you access to the size and position of the container.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `GeometryReader`.
 
 ## Responsive Layout
 
@@ -21,18 +15,8 @@ Size elements based on container dimensions:
 
 Center content using geometry information:
 
-## Notes
+## Usage and limitations
 
-- GeometryReader provides a render prop with geometry information
-- Geometry includes `width`, `height`, `x`, and `y` properties
-- GeometryReader fills its parent container
-- Use GeometryReader for responsive layouts and dynamic sizing
-- GeometryReader is useful for complex layout calculations
-
-## Best Practices
-
-1. **Responsive design**: Use GeometryReader for responsive layouts
-2. **Performance**: Avoid excessive calculations in render functions
-3. **Layout calculations**: Use geometry for dynamic sizing and positioning
-4. **Nesting**: Be careful with nested GeometryReaders
-5. **Accessibility**: Ensure responsive layouts remain accessible
+- Children receive `width`, `height`, `x`, and `y` in pixels; the reader fills its parent.
+- Initial geometry is zero during SSR and before measurement. Provide a stable initial layout and give the parent measurable space.
+- Use measurements for sizing or positioning. Avoid expensive render calculations and circular size dependencies, especially with nested readers.

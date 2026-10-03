@@ -1,31 +1,14 @@
 ---
 title: "Slider"
-description: "Slider is a control for selecting a value from a bounded linear range of values. Slider is built on a native `<input type=\"range\">`, so it keeps standard keyboard support, focus behavior, and form participation."
+description: "Select a numeric value with a native range input."
 ---
-
-## Overview
-
-Slider is a control for selecting a value from a bounded linear range of values. Slider is built on a native `<input type="range">`, so it keeps standard keyboard support, focus behavior, and form participation.
-
-**SwiftUI Correspondence**: Similar to SwiftUI's `Slider`.
 
 ## Uncontrolled Usage
 
 Use `defaultValue` when the browser should own the current value after mount.
 
-## Notes
+## Usage and limitations
 
-- Slider supports controlled mode with `value` and `onValueChange`
-- Slider supports uncontrolled mode with `defaultValue`
-- Slider also forwards the native `onChange` event for web-native integrations
-- Slider supports `min`, `max`, `step`, and `disabled`
-- Slider participates in native form submission because it renders a real range input
-- Use Slider for continuous value selection
-
-## Best Practices
-
-1. **Range**: Set appropriate `min` and `max` values
-2. **Step**: Use `step` for discrete value selection
-3. **Feedback**: Show the current value to the user when it matters
-4. **Accessibility**: Provide a label through `aria-label`, `aria-labelledby`, or a visible label
-5. **Mobile**: Test slider interaction on touch devices
+- Controlled: `value`/`onValueChange`; uncontrolled: `defaultValue`. `onChange` also receives the native event.
+- Set `min`, `max`, and `step` for the required range/granularity; supports `disabled` and native form submission.
+- Provide `aria-label`, `aria-labelledby`, or an associated label, and display the current value when it matters. Check keyboard and touch interaction.

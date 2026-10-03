@@ -5,8 +5,6 @@ import * as SafeAreaInsetStories from './SafeAreaInset.stories'
 
 # SafeAreaInset
 
-## Overview
-
 SafeAreaInset adapts SwiftUI's `.safeAreaInset` modifier into an explicit layout container for the web.
 
 ## Usage
@@ -16,3 +14,7 @@ SafeAreaInset adapts SwiftUI's `.safeAreaInset` modifier into an explicit layout
 ## Variants
 
 <Canvas of={SafeAreaInsetStories.Top} />
+
+## Usage and limitations
+
+- Uses CSS safe-area environment variables. Add `viewport-fit=cover` to your viewport meta tag when targeting notched mobile browsers; this does not emulate native system safe-area layout.

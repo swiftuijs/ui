@@ -1,4 +1,22 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as UIProviderStories from './UIProvider.stories'
+
+<Meta title="SwiftUI/UIProvider/Readme" />
+
 # UIProvider
 
-Scope theme, accent color, design tokens and material preferences to a React subtree.
-See [theming and materials](/docs/concepts/theming/) for setup, nesting and accessibility behavior.
+Configure theme, accent color, design tokens and glass for a React subtree.
+
+## Examples
+
+<Canvas of={UIProviderStories.Default} />
+<Canvas of={UIProviderStories.SystemTheme} />
+
+## Usage and limitations
+
+- `theme` accepts `light`, `dark`, or `system` (default). System appearance uses CSS media queries, including during SSR.
+- Nested providers inherit omitted settings; token overrides merge with the parent. Sibling providers stay independent.
+- Pass CSS variables through `tokens`; shared styles must still be imported once at the application root.
+- Glass is opt-in: pass `glass` or an options object. `glass={false}` disables it within a subtree.
+- Menus, popovers and modal portals retain the originating theme and material preferences.
+- See [theming and materials](/docs/concepts/theming/) for a minimal setup and supported tokens.
