@@ -72,3 +72,23 @@ jobs:
             playwright-report/
             test-results/
           if-no-files-found: ignore
+
+  react-compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        react: ['18.2.0', '18.3.1', '19']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @swiftuijs/ui build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify packed consumer types, SSR, hydration and interactions
+        run: pnpm --filter @swiftuijs/ui exec node scripts/verify-package.mjs ${{ matrix.react }}

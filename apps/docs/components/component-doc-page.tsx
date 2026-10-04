@@ -230,7 +230,7 @@ function ComponentDocShell({
             Example
           </h2>
           <p className="m-0 text-sm text-fd-muted-foreground">
-            Requires React 19 and shared styles.{' '}
+            Requires React 18.2+ or 19 and shared styles.{' '}
             <a className="underline" href="/docs/getting-started/">
               See setup
             </a>
