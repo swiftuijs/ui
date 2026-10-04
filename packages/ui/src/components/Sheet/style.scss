@@ -100,7 +100,9 @@
   }
 }
 
-@media (min-width: 768px) {
+// Wide touch devices with compact height (phone landscape) keep the bottom
+// sheet. Fine-pointer desktop windows retain their centered presentation.
+@media (min-width: 768px) and (min-height: 500px), (min-width: 768px) and (pointer: fine) {
   .sw-sheet-pageSheet,
   .sw-sheet-formSheet {
     top: 50%;

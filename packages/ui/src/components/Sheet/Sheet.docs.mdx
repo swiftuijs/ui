@@ -18,7 +18,7 @@ A modal presentation with a focus trap, background isolation and scroll lock. Se
 - Give the sheet a meaningful `title`, `aria-label`, or `aria-labelledby`.
 - Tab stays inside; Escape and backdrop clicks dismiss by default. Closing restores focus to the opener when it still exists.
 - `interactiveDismissDisabled` blocks Escape, backdrop and drag dismissal. `backgroundInteraction="none"` blocks backdrop dismissal only.
-- Below 768px, page and form sheets fill the width and attach to the bottom, with rounded top corners. At 768px and above, both center in the viewport: page sheets cap at 600px, form sheets at 420px. `fullScreen` fills the viewport at every size.
+- Below 768px, or on short touch screens under 500px high, page and form sheets fill the width and attach to the bottom, with rounded top corners. Wider presentations center in the viewport: page sheets cap at 600px, form sheets at 420px. `fullScreen` fills the viewport at every size.
 - Content scrolls and adds safe-area padding for notches and home indicators. Set `viewport-fit=cover` in the page's viewport meta tag to expose browser safe-area insets; embedded hosts can override `--safe-area-top`, `--safe-area-right`, `--safe-area-bottom`, and `--safe-area-left` in CSS.
 - Medium and large detents are 50% and 90% of viewport height. Numeric detents use pixels; percentage strings are also accepted. Content scrolls within the panel.
 - Drag the handle to resize and release to snap to the nearest detent. Drag below the smallest detent to dismiss; content remains independently scrollable. Click the handle or activate it with Enter/Space to cycle detents. `defaultSelectedDetent` resets each time an uncontrolled sheet opens.

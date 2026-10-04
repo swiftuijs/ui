@@ -421,7 +421,7 @@ for (const [width, height] of [[320, 844], [390, 844], [600, 844], [768, 844], [
       await expect(sheet).toBeVisible()
       await page.waitForFunction(() => document.getAnimations().every(a => a.playState !== 'running'))
       const box = (await sheet.boundingBox())!
-      if (cap === 0 || width < 768) {
+      if (cap === 0 || width < 768 || (info.project.use.hasTouch && height < 500)) {
         expect(box.x).toBe(0)
         expect(box.width).toBe(width)
         expect(Math.abs(box.y + box.height - height)).toBeLessThan(1)
