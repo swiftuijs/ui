@@ -2,5 +2,24 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
-:root { --color-fd-muted-foreground: #626262; }
-:root.dark { --color-fd-muted-foreground: #b8b8b8; }
+:root {
+  --color-fd-background: #ffffff;
+  --color-fd-card: #fafafa;
+  --color-fd-muted-foreground: #626262;
+  --color-fd-ring: #707070;
+}
+:root.dark {
+  --color-fd-background: #121212;
+  --color-fd-card: #191919;
+  --color-fd-muted-foreground: #b8b8b8;
+  --color-fd-ring: #9d9d9d;
+}
+
+@layer base {
+  a:focus-visible,
+  summary:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-fd-ring);
+    outline-offset: 3px;
+  }
+}
