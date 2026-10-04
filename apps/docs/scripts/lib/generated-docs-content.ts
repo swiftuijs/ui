@@ -5,10 +5,10 @@ import { fileURLToPath } from 'node:url';
 import fg from 'fast-glob';
 import matter from 'gray-matter';
 
-import { loadComponentDocs, parseComponentDocTitle } from './component-docs';
+import { loadComponentDocs, parseComponentDocTitle } from '../../lib/component-docs';
 import { writeComponentRegistry } from './component-doc-registry';
 
-const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const defaultContentDir = join(docsRoot, 'content');
 const defaultGeneratedContentDir = join(docsRoot, 'generated-content');
 const defaultGeneratedSourceDir = join(docsRoot, '.source');

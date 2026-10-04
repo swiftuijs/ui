@@ -7,7 +7,7 @@ import {
   extractMetaComponent,
   extractRunnableStoryCode,
   transformStorySourceForDocs,
-} from './component-doc-registry';
+} from '../scripts/lib/component-doc-registry';
 
 it('typechecks every documented example against the public package API', async () => {
   const examples = new Map<string, string>();

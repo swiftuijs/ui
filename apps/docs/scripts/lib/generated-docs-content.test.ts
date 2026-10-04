@@ -10,7 +10,7 @@ import {
   buildComponentDocBody,
   buildRootMeta,
 } from './generated-docs-content';
-import { parseComponentDocTitle } from './component-docs';
+import { parseComponentDocTitle } from '../../lib/component-docs';
 
 describe('generated docs content', () => {
   it('removes storybook-specific imports and canvas blocks from component docs', () => {

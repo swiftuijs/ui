@@ -57,7 +57,7 @@ export default async function DocPage({
     isComponent && entry
       ? `packages/ui/${entry.docsPath.split('/packages/ui/')[1]}`
       : isComponentIndex
-        ? 'apps/docs/lib/generated-docs-content.ts'
+        ? 'apps/docs/scripts/lib/generated-docs-content.ts'
         : `apps/docs/content/${slug?.length ? slug.join('/') : 'index'}.mdx`;
   return (
     <DocsPage

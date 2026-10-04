@@ -9,9 +9,10 @@ on:
       - apps/docs/**
       - apps/docs/public/**
       - packages/ui/package.json
-      - packages/ui/src/components/**/index.tsx
-      - packages/ui/src/components/**/*.stories.tsx
-      - packages/ui/src/components/**/*.docs.mdx
+      - packages/ui/src/**
+      - packages/ui/vite.config.ts
+      - packages/ui/tsconfig*.json
+      - packages/ui/scripts/prepare-dts.ts
       - package.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
@@ -24,9 +25,10 @@ on:
       - apps/docs/**
       - apps/docs/public/**
       - packages/ui/package.json
-      - packages/ui/src/components/**/index.tsx
-      - packages/ui/src/components/**/*.stories.tsx
-      - packages/ui/src/components/**/*.docs.mdx
+      - packages/ui/src/**
+      - packages/ui/vite.config.ts
+      - packages/ui/tsconfig*.json
+      - packages/ui/scripts/prepare-dts.ts
       - package.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
@@ -64,6 +66,15 @@ jobs:
       - name: Build docs
         run: pnpm --filter docs build
 
+      - name: Upload verified docs site
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: apps/docs/out
+          include-hidden-files: true
+          if-no-files-found: error
+
   deploy-docs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -73,21 +84,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Download verified docs site
+        uses: actions/download-artifact@v4
         with:
-          node-version: 22
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build docs
-        run: pnpm --filter docs build
+          name: docs-site
+          path: apps/docs/out
 
       - name: Deploy docs to gh-pages
         uses: peaceiris/actions-gh-pages@v4
