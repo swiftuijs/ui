@@ -1,6 +1,6 @@
 # SwiftUI.js
 
-SwiftUI-inspired composition for React 19: small layout primitives, native form controls, and focused interactions. The library is evolving; see the [capability matrix](apps/docs/content/concepts/capability-matrix.mdx) for supported behavior and experimental limits.
+SwiftUI-inspired composition for React 18.2+ or 19: small layout primitives, native form controls, and focused interactions. The library is evolving; see the [capability matrix](apps/docs/content/concepts/capability-matrix.mdx) for supported behavior and experimental limits.
 
 ```bash
 pnpm add @swiftuijs/ui react react-dom
@@ -32,6 +32,7 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm --filter @swiftuijs/ui test:package
+pnpm --filter @swiftuijs/ui exec node scripts/verify-package.mjs 18.2.0
 pnpm build
 pnpm exec playwright install chromium
 pnpm test:browser
@@ -43,7 +44,7 @@ pnpm test:components
 - `apps/docs`: public reference and compact kitchensink workflow; static Next.js export.
 - `apps/storybook`: isolated development and visual review.
 
-Changes should include behavioral tests and accurate capability notes. The packed-consumer check verifies strict types, CSS retention, tree shaking, SSR and client boundaries. Chromium browser acceptance checks the kitchensink at 320, 390, 768 and 1440px, including touch/mouse detents, modal focus, accessibility and bounded long-list DOM. Broader cross-browser visual acceptance remains a release requirement; passing unit tests alone does not establish production readiness.
+Changes should include behavioral tests and accurate capability notes. The packed-consumer check verifies strict types, CSS retention, tree shaking, SSR and client boundaries. CI also installs the archive with React 18.2.0, 18.3.1 and the latest React 19, checking strict public types and Chromium hydration, refs, forms, menus, sheets, popovers, navigation and virtual scrolling at mobile/desktop widths. Chromium browser acceptance checks the kitchensink at 320, 390, 768 and 1440px, including touch/mouse detents, modal focus, accessibility and bounded long-list DOM. Broader cross-browser visual acceptance remains a release requirement; passing unit tests alone does not establish production readiness.
 
 `test:docs-browser` checks mobile/desktop reading, preview interaction, code copying, every component link and static search. Component documentation examples are compiled against the public API during docs tests.
 

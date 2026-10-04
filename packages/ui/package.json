@@ -1,6 +1,6 @@
 {
   "name": "@swiftuijs/ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -52,8 +52,8 @@
     "@tanstack/react-virtual": "3.13.12"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
   },
   "repository": {
     "type": "git",

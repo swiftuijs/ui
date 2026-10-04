@@ -1,6 +1,6 @@
 # @swiftuijs/ui
 
-SwiftUI-inspired components for React 19: adaptive layouts, native controls, scoped themes and optional glass materials.
+SwiftUI-inspired components for React 18.2+ or 19: adaptive layouts, native controls, scoped themes and optional glass materials.
 
 ## Install
 
@@ -8,7 +8,7 @@ SwiftUI-inspired components for React 19: adaptive layouts, native controls, sco
 npm install @swiftuijs/ui react react-dom
 ```
 
-Requires React 19 and a bundler that supports CSS imports. Import shared styles once at your application root; component styles are included by their JavaScript entries.
+Requires React 18.2+ or 19 and a bundler that supports CSS imports. Keep `react` and `react-dom` on the same version; TypeScript projects should use their matching `@types` major versions. Import shared styles once at your application root; component styles are included by their JavaScript entries.
 
 ```tsx
 import '@swiftuijs/ui/style/index.css';

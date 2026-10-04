@@ -103,7 +103,8 @@ test('readers can navigate from onboarding to requirements and search for a comp
 }) => {
   await page.goto('/docs/getting-started/')
   await expect(page.locator('h1')).toHaveText('Getting Started')
-  await expect(page.locator('#nd-page')).toContainText('Requires React 19')
+  await expect(page.locator('#nd-page')).toContainText('Requires React 18.2+ or 19')
+  await expect(page.locator('#nd-page')).toContainText('Keep react and react-dom on the same version')
   await page
     .locator('#nd-page')
     .getByRole('link', { name: 'capability matrix', exact: true })

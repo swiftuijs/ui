@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, readdirSync, mkdirSync, writeFileSync, symlinkSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, readdirSync, mkdirSync, writeFileSync, copyFileSync, symlinkSync, rmSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -13,6 +13,7 @@ const require = createRequire(join(workspace, 'package.json'))
 const ts = require('typescript')
 const esbuild = createRequire(require.resolve('vite'))('esbuild')
 const fixture = mkdtempSync(join(tmpdir(), 'swiftuijs-consumer-'))
+const reactVersion = process.argv[2]
 const pkg = JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8'))
 
 try {
@@ -24,15 +25,30 @@ try {
     mkdirSync(dirname(link), { recursive: true })
     symlinkSync(target, link, 'dir')
   }
-  linkPackage('@swiftuijs/ui', join(fixture, 'package'))
-  for (const dependency of Object.keys(pkg.dependencies)) linkPackage(dependency, join(packageDir, 'node_modules', dependency))
-  for (const dependency of ['react', 'react-dom', '@types/react', '@types/react-dom']) linkPackage(dependency, join(workspace, 'node_modules', dependency))
-  writeFileSync(join(fixture, 'package.json'), '{"type":"module"}')
+  writeFileSync(join(fixture, 'package.json'), JSON.stringify({ private: true, type: 'module' }))
+  if (reactVersion) {
+    assert.match(reactVersion, /^(18\.2\.0|18\.3\.1|19)$/)
+    const major = reactVersion.split('.')[0]
+    // Install the archive and its dependencies as a real consumer: no workspace React leaks.
+    execFileSync('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--registry=https://registry.npmjs.org/',
+      join(fixture, archive), `react@${reactVersion}`, `react-dom@${reactVersion}`,
+      `@types/react@${major}`, `@types/react-dom@${major}`], { cwd: fixture, stdio: 'pipe' })
+  } else {
+    linkPackage('@swiftuijs/ui', join(fixture, 'package'))
+    for (const dependency of Object.keys(pkg.dependencies)) linkPackage(dependency, join(packageDir, 'node_modules', dependency))
+    for (const dependency of ['react', 'react-dom', '@types/react', '@types/react-dom']) linkPackage(dependency, join(workspace, 'node_modules', dependency))
+  }
   const consumer = join(fixture, 'consumer.tsx')
   writeFileSync(consumer, `import { Button, Text, NavigationStack, Sheet, NavigationSplitView, LazyVStack, LazyHGrid, UIProvider, Glass } from '@swiftuijs/ui';
 import { Button as DirectButton } from '@swiftuijs/ui/components/Button';
 export const view = <UIProvider theme="system" glass={{ enabled: true, intensity: 0.6 }} tokens={{ "--sw-radius-sheet": "28px" }}><Glass glass={false}>Controls</Glass><NavigationStack><Text aria-label="Greeting">Hello</Text><Button onClick={event => event.currentTarget.focus()}>Save</Button><DirectButton>Direct</DirectButton><LazyVStack estimatedItemHeight={40} overscan={3}><Text>Row</Text></LazyVStack><LazyHGrid rows={2} estimatedItemWidth={80}><Text>Cell</Text></LazyHGrid><Sheet title="Editor" isPresented={false} /><NavigationSplitView sidebar="Menu" detail="Details" /></NavigationStack></UIProvider>;`)
-  const program = ts.createProgram([consumer], { strict: true, skipLibCheck: false, noEmit: true, jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.NodeNext, moduleResolution: ts.ModuleResolutionKind.NodeNext, target: ts.ScriptTarget.ES2022, types: ['react', 'react-dom'], typeRoots: [join(fixture, 'node_modules/@types')] })
+  const typeInputs = [consumer]
+  if (reactVersion) {
+    const app = join(fixture, 'app.tsx')
+    copyFileSync(join(packageDir, 'scripts/fixtures/react-consumer.tsx'), app)
+    typeInputs.push(app)
+  }
+  const program = ts.createProgram(typeInputs, { strict: true, skipLibCheck: false, noEmit: true, jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.NodeNext, moduleResolution: ts.ModuleResolutionKind.NodeNext, target: ts.ScriptTarget.ES2022, types: ['react', 'react-dom'], typeRoots: [join(fixture, 'node_modules/@types')] })
   const diagnostics = ts.getPreEmitDiagnostics(program)
   assert.equal(diagnostics.length, 0, ts.formatDiagnosticsWithColorAndContext(diagnostics, { getCurrentDirectory: () => fixture, getCanonicalFileName: file => file, getNewLine: () => '\n' }))
   for (const entry of ['index.js', 'components/Button/index.js', 'components/NavigationStack/index.js', 'components/LazyVStack/index.js', 'components/_internal/VirtualLayout.js', 'contexts/viewport.js', 'components/UIProvider/index.js', 'components/Glass/index.js']) {
@@ -59,6 +75,10 @@ export const view = <UIProvider theme="system" glass={{ enabled: true, intensity
   assert.match(server, /\[null,null\]/, 'Viewport hooks must return a stable server snapshot')
   assert.ok((server.match(/data-lazy-item=/g) ?? []).length < 30, 'SSR lazy list must emit a bounded window')
   assert.ok(!server.includes('data-lazy-item="999"'), 'SSR must not eagerly mount the whole list')
+  if (reactVersion) {
+    const { verifyReactRuntime } = await import('./verify-react-runtime.mjs')
+    await verifyReactRuntime({ fixture, esbuild, workspace })
+  }
   console.log('Package consumer: strict declarations, client boundaries, CSS, tree shaking and SSR passed.')
   console.table(bundles)
 } finally {
