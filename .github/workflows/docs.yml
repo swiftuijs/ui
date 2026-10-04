@@ -8,6 +8,7 @@ on:
     paths:
       - apps/docs/**
       - apps/docs/public/**
+      - packages/ui/package.json
       - packages/ui/src/components/**/index.tsx
       - packages/ui/src/components/**/*.stories.tsx
       - packages/ui/src/components/**/*.docs.mdx
@@ -22,6 +23,7 @@ on:
     paths:
       - apps/docs/**
       - apps/docs/public/**
+      - packages/ui/package.json
       - packages/ui/src/components/**/index.tsx
       - packages/ui/src/components/**/*.stories.tsx
       - packages/ui/src/components/**/*.docs.mdx
