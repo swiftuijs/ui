@@ -12,14 +12,17 @@
 
 .sw-confirmation-dialog {
   position: fixed;
-  inset-inline: 16px;
-  bottom: 16px;
+  left: max(16px, var(--safe-area-left, env(safe-area-inset-left, 0px)));
+  right: max(16px, var(--safe-area-right, env(safe-area-inset-right, 0px)));
+  bottom: calc(16px + var(--safe-area-bottom, env(safe-area-inset-bottom, 0px)));
   z-index: var(--sw-z-modal);
   @include motion.presence(sw-sheet-in, sw-sheet-out);
   display: grid;
   justify-items: stretch;
-  max-height: calc(100dvh - 32px);
+  max-height: calc(100dvh - 32px - var(--safe-area-top, env(safe-area-inset-top, 0px)) - var(--safe-area-bottom, env(safe-area-inset-bottom, 0px)));
   overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
 }
 
 .sw-confirmation-dialog-content {
@@ -100,6 +103,7 @@
   }
 }
 
+.sw-confirmation-dialog { border-radius: 32px; }
 .sw-confirmation-dialog-content { background: var(--sw-color-background-elevated); border-radius: 32px; padding: 12px; }
 .sw-confirmation-dialog-header { border: 0; background: transparent; backdrop-filter: none; }
 .sw-confirmation-dialog-actions { border: 0; background: transparent; backdrop-filter: none; gap: 8px; }

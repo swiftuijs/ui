@@ -132,6 +132,7 @@ describe('Menu', () => {
 
     const submenu = screen.getByRole('menu', { name: 'More options' })
     expect(submenu).toBeInTheDocument()
+    expect(screen.getByRole('menuitem', { name: 'Duplicate' })).not.toHaveFocus()
 
     await user.click(screen.getByRole('menuitem', { name: 'Duplicate' }))
 

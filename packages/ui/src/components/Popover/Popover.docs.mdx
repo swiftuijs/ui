@@ -16,3 +16,5 @@ Popover presents lightweight content anchored to another control. It aligns with
 - Use `anchorRef` to position the popover relative to a trigger.
 - `arrowEdge` controls which side of the anchor the popover appears on.
 - The popover dismisses on outside click or `Escape`.
+- It portals to the page body, or to the enclosing modal when its anchor is inside one, to avoid clipping by scrolling content. Scoped theme and material settings follow the originating provider.
+- Narrow screens keep the anchored popover; automatic native-style adaptation to a Sheet is not implemented.

@@ -1,4 +1,5 @@
 import { useEffect, type RefObject } from 'react'
+import { fixedPositionOrigin } from './fixed-position-origin'
 
 /** A portaled menu follows its trigger without inheriting a scroll pane's clipping. */
 export function useMenuAnchor(ref: RefObject<HTMLElement | null>, triggerId: string,
@@ -9,8 +10,7 @@ export function useMenuAnchor(ref: RefObject<HTMLElement | null>, triggerId: str
     const update = () => {
       const anchor = trigger.getBoundingClientRect()
       // Dialogs can establish a fixed-position containing block with transform.
-      const transform = getComputedStyle(host).transform
-      const origin = transform && transform !== 'none' ? host.getBoundingClientRect() : { left: 0, top: 0 }
+      const origin = fixedPositionOrigin(host)
       const x = placement === 'right' ? anchor.right + 4 : placement === 'left' ? anchor.left - 4 : anchor.left
       const y = placement === 'bottom' ? anchor.bottom + 4 : placement === 'top' ? anchor.top - 4 : anchor.top
       Object.assign(node.style, {

@@ -50,7 +50,10 @@ test('adaptive form saves, resets and keeps modal focus isolated', async ({ heal
   await accessible(page)
   const sheet = await review(page)
   const box = (await sheet.boundingBox())!, width = page.viewportSize()!.width
-  expect(box.width).toBeLessThanOrEqual(420)
+  if (width < 768) {
+    expect(box.width).toBe(width)
+    expect(box.y + box.height).toBe(page.viewportSize()!.height)
+  } else expect(box.width).toBeLessThanOrEqual(420)
   expect(Math.abs(box.x + box.width / 2 - width / 2)).toBeLessThan(1)
   for (let index = 0; index < 8; index++) {
     await page.keyboard.press('Tab')
@@ -121,9 +124,13 @@ test('sheet pointer dragging snaps, dismisses and preserves keyboard activation'
   const touch = Boolean(testInfo.project.use.hasTouch)
   await drag(page, handle, -360, touch)
   await expect(sheet).toHaveAttribute('data-selected-detent', 'large')
+  // Selection changes before the height transition settles. Start the next
+  // gesture at the settled detent, then retry geometry rather than sleeping.
+  const largeHeight = page.viewportSize()!.width < 768 ? 900 : 640
+  await expect.poll(async () => Math.abs((await sheet.boundingBox())!.height - largeHeight)).toBeLessThan(2)
   await drag(page, handle, (await sheet.boundingBox())!.height - 500, touch)
   await expect(sheet).toHaveAttribute('data-selected-detent', 'medium')
-  expect(Math.abs((await sheet.boundingBox())!.height - 500)).toBeLessThan(2)
+  await expect.poll(async () => Math.abs((await sheet.boundingBox())!.height - 500)).toBeLessThan(2)
   await handle.focus()
   await page.keyboard.press('Enter')
   await expect(sheet).toHaveAttribute('data-selected-detent', 'large')

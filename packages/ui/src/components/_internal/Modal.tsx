@@ -2,7 +2,7 @@
 
 import { useUIConfig, themeStyle } from '@/contexts/ui-config'
 import * as Dialog from '@radix-ui/react-dialog'
-import { forwardRef, useRef, type ComponentPropsWithoutRef } from 'react'
+import { forwardRef, useCallback, useRef, type ComponentPropsWithoutRef } from 'react'
 
 
 interface ModalProps extends ComponentPropsWithoutRef<typeof Dialog.Content> {
@@ -34,6 +34,12 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal({
   }
   const appearance = useUIConfig()
   const returnFocus = useRef<HTMLElement | null>(null)
+  const contentRef = useRef<HTMLDivElement | null>(null)
+  const setContentRef = useCallback((node: HTMLDivElement | null) => {
+    contentRef.current = node
+    if (typeof ref === 'function') ref(node)
+    else if (ref) ref.current = node
+  }, [ref])
 
   return (
     <Dialog.Root open={open} onOpenChange={nextOpen => { if (!nextOpen) onDismiss?.() }}>
@@ -52,14 +58,19 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal({
           {...contentAttributes}
           {...(appearance.theme ? { 'data-theme': appearance.theme } : {})}
           style={{ color: 'var(--sw-color-label-primary)', ...themeStyle(appearance), ...contentAttributes.style }}
-          ref={ref}
+          ref={setContentRef}
           aria-hidden={!open || undefined}
           onOpenAutoFocus={() => { returnFocus.current = document.activeElement as HTMLElement | null }}
           onCloseAutoFocus={event => {
             event.preventDefault()
             if (returnFocus.current?.isConnected) returnFocus.current.focus()
           }}
-          onEscapeKeyDown={event => { if (!dismissOnEscape) event.preventDefault() }}
+          onEscapeKeyDown={event => {
+            // Let the nested floating surface handle Escape first, including
+            // popovers whose keyboard focus may still be on their anchor.
+            const floating = contentRef.current?.querySelector('.sw-menu[data-state="open"], .sw-popover[data-state="open"], .sw-context-menu[data-state="open"]')
+            if (!dismissOnEscape || floating) event.preventDefault()
+          }}
           onPointerDownOutside={event => { event.preventDefault() }}
           onInteractOutside={event => { event.preventDefault() }}
         >

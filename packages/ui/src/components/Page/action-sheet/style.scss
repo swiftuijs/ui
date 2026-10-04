@@ -30,11 +30,11 @@
   &[data-page-type='actionsheet'] {
     top: auto;
     height: 50%;
-    border-radius: var(--sw-radius-sheet);
+    border-radius: var(--sw-radius-sheet) var(--sw-radius-sheet) 0 0;
     background-color: var(--sw-color-background-elevated);
     padding-top: 44px;
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: calc(16px + var(--safe-area-right, env(safe-area-inset-right, 0px)));
+    padding-left: calc(16px + var(--safe-area-left, env(safe-area-inset-left, 0px)));
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 20px;
 
 

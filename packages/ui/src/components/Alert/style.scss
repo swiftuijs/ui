@@ -21,8 +21,14 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: var(--sw-z-modal);
-  width: min(320px, calc(100vw - 40px));
+  width: min(320px, calc(100vw - 40px - var(--safe-area-left, env(safe-area-inset-left, 0px)) - var(--safe-area-right, env(safe-area-inset-right, 0px))));
   max-width: 90%;
+  max-height: calc(100dvh - 32px - var(--safe-area-top, env(safe-area-inset-top, 0px)) - var(--safe-area-bottom, env(safe-area-inset-bottom, 0px)));
+  top: calc(50% + (var(--safe-area-top, env(safe-area-inset-top, 0px)) - var(--safe-area-bottom, env(safe-area-inset-bottom, 0px))) / 2);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+  border-radius: 32px;
   @include motion.presence;
 
   // alert-content
@@ -62,6 +68,7 @@
   // alert-button
   &-button {
     flex: 1;
+    flex-shrink: 0;
     padding: var(--sw-spacing-sm) var(--sw-spacing-lg);
     border: none;
     border-radius: var(--sw-radius-full);
