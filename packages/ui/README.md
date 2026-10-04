@@ -2,6 +2,8 @@
 
 SwiftUI-inspired components for React 18.2+ or 19: adaptive layouts, native controls, scoped themes and optional glass materials.
 
+[Documentation](https://swiftuijs.evecalm.com/docs/) · [Getting started](https://swiftuijs.evecalm.com/docs/getting-started/) · [Components](https://swiftuijs.evecalm.com/docs/components/) · [Live demo](https://swiftuijs.evecalm.com/kitchensink/)
+
 ## Install
 
 ```bash
@@ -46,6 +48,6 @@ import { Button } from '@swiftuijs/ui/components/Button';
 - Lazy layouts unmount off-screen items. Keep persistent editable state outside rows. Experimental presentation and animation wrappers may provide metadata without native SwiftUI behavior.
 - Applications provide input labels, validation, persistence, routing and integration checks for browser-dependent media and file APIs.
 
-Read the [getting started guide](https://github.com/swiftuijs/ui/blob/main/apps/docs/content/getting-started.mdx), [component reference sources](https://github.com/swiftuijs/ui/tree/main/packages/ui/src/components), [capability matrix](https://github.com/swiftuijs/ui/blob/main/apps/docs/content/concepts/capability-matrix.mdx), and [theming guide](https://github.com/swiftuijs/ui/blob/main/apps/docs/content/concepts/theming.mdx).
+Read the [getting started guide](https://swiftuijs.evecalm.com/docs/getting-started/), [component reference](https://swiftuijs.evecalm.com/docs/components/), [capability matrix](https://swiftuijs.evecalm.com/docs/concepts/capability-matrix/), and [theming guide](https://swiftuijs.evecalm.com/docs/concepts/theming/).
 
 MIT licensed.

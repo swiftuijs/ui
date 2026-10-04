@@ -1,6 +1,8 @@
 # SwiftUI.js
 
-SwiftUI-inspired composition for React 18.2+ or 19: small layout primitives, native form controls, and focused interactions. The library is evolving; see the [capability matrix](apps/docs/content/concepts/capability-matrix.mdx) for supported behavior and experimental limits.
+SwiftUI-inspired composition for React 18.2+ or 19: small layout primitives, native form controls, and focused interactions. The library is evolving; see the [capability matrix](https://swiftuijs.evecalm.com/docs/concepts/capability-matrix/) for supported behavior and experimental limits.
+
+[Documentation](https://swiftuijs.evecalm.com/docs/) · [Getting started](https://swiftuijs.evecalm.com/docs/getting-started/) · [Components](https://swiftuijs.evecalm.com/docs/components/) · [Live demo](https://swiftuijs.evecalm.com/kitchensink/)
 
 ```bash
 pnpm add @swiftuijs/ui react react-dom
@@ -50,4 +52,4 @@ Changes should include behavioral tests and accurate capability notes. The packe
 
 `test:components` uses the built Storybook to check every component group's representative story in light/mobile and dark/desktop views, plus focused overlay, pointer, keyboard and material checks.
 
-Appearance can be scoped with `UIProvider` (`theme`, `accentColor`, CSS `tokens`, and optional `glass` preferences). Liquid Glass-inspired Web materials support intensity, per-component overrides and opaque accessibility fallbacks. See the [theming guide](apps/docs/content/concepts/theming.mdx).
+Appearance can be scoped with `UIProvider` (`theme`, `accentColor`, CSS `tokens`, and optional `glass` preferences). Liquid Glass-inspired Web materials support intensity, per-component overrides and opaque accessibility fallbacks. See the [theming guide](https://swiftuijs.evecalm.com/docs/concepts/theming/).
