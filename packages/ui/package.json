@@ -45,6 +45,7 @@
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:package": "pnpm build && node scripts/verify-package.mjs",
+    "test:performance": "pnpm build && node scripts/verify-performance.mjs",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {

@@ -109,8 +109,10 @@ export const NavigationSplitView = memo(function NavigationSplitView(props: INav
   const [internalCompactColumn, setInternalCompactColumn] = useState<'sidebar' | 'content' | 'detail'>(defaultCompactColumn)
   const [internalColumnVisibility] = useState<'automatic' | 'all' | 'doubleColumn' | 'detailOnly'>(defaultColumnVisibility)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [containerWidth, setContainerWidth] = useState<number | null>(null)
-  const compact = compactOverride ?? (containerWidth !== null && containerWidth < (content == null ? 768 : 1024))
+  const [containerCompact, setContainerCompact] = useState(false)
+  const lastContainerCompact = useRef(false)
+  const compactThreshold = content == null ? 768 : 1024
+  const compact = compactOverride ?? containerCompact
 
   useEffect(() => {
     if (compactOverride !== undefined || typeof ResizeObserver === 'undefined') return
@@ -118,11 +120,16 @@ export const NavigationSplitView = memo(function NavigationSplitView(props: INav
     if (!container) return
     const observer = new ResizeObserver(entries => {
       const width = entries[0]?.contentRect.width
-      if (width !== undefined) setContainerWidth(width)
+      if (width === undefined) return
+      const next = width < compactThreshold
+      if (next !== lastContainerCompact.current) {
+        lastContainerCompact.current = next
+        setContainerCompact(next)
+      }
     })
     observer.observe(container)
     return () => observer.disconnect()
-  }, [compactOverride])
+  }, [compactOverride, compactThreshold])
 
   const compactColumn = controlledCompactColumn ?? internalCompactColumn
   const columnVisibility = controlledColumnVisibility ?? internalColumnVisibility

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { render, screen, fireEvent } from '@/testing/render'
+import { render, screen, fireEvent, waitFor } from '@/testing/render'
 import { Button } from '../Button'
 import { Sheet } from '../Sheet'
 import { UIProvider } from '../UIProvider'
@@ -244,7 +244,7 @@ it.each([
   ['top', '100px', '96px', 'translateY(-100%)'],
   ['left', '96px', '100px', 'translateX(-100%)'],
   ['right', '164px', '100px', 'none'],
-] as const)('keeps a %s menu anchored when its trigger scrolls', (placement, left, top, transform) => {
+] as const)('keeps a %s menu anchored when its trigger scrolls', async (placement, left, top, transform) => {
   let anchorTop = 100
   const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(() => ({
     x: 100, y: anchorTop, left: 100, top: anchorTop, right: 160, bottom: anchorTop + 44, width: 60, height: 44,
@@ -255,6 +255,6 @@ it.each([
     expect(menu).toHaveStyle({ position: 'fixed', left, top, transform })
     anchorTop += 100
     fireEvent.scroll(window)
-    expect(menu.style.top).toBe(`${parseFloat(top) + 100}px`)
+    await waitFor(() => expect(menu.style.top).toBe(`${parseFloat(top) + 100}px`))
   } finally { rect.mockRestore() }
 })

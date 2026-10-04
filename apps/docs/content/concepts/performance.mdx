@@ -1,0 +1,32 @@
+---
+title: Performance
+description: Smaller imports, focused subscriptions and predictable scrolling.
+---
+
+## Import what you use
+
+The root entry is convenient and includes component styles across the library. JavaScript tree shaking removes unused components, but CSS remains. For a smaller stylesheet, use component subpaths and import shared styles once:
+
+```tsx
+import '@swiftuijs/ui/style/index.css';
+import { Button } from '@swiftuijs/ui/components/Button';
+import { VStack } from '@swiftuijs/ui/components/VStack';
+```
+
+Hooks can also use their module subpath, such as `@swiftuijs/ui/contexts/size-class`, without loading the root entry's styles. Importing anything else from the root entry still brings those styles into the bundle. No Tailwind setup is required.
+
+## Subscribe to the state you need
+
+Use `useHorizontalSizeClass` or `useVerticalSizeClass` for breakpoint decisions. They return `null` during SSR and initial hydration and update only when the selected axis changes classification. Use `useViewport` or `useSizeClass` when you need current pixel dimensions. Prefer CSS for purely visual adaptation.
+
+Layout contexts keep a stable value until their direction changes. React can skip expensive children when their props are stable; memoization still depends on your application's props and children.
+
+## Keep long collections bounded
+
+Lazy stacks and grids virtualize mounted rows. Keep editable state outside rows, use stable keys and choose an estimate close to the real item size. `List` and `Table` render all their children or rows. Lazy layouts still receive the complete `children` collection: creating those React elements can remain expensive for very large data sets.
+
+Floating controls coalesce scroll, resize and observer bursts into animation frames. Their opening position is measured immediately; closing removes pending work. Large glass surfaces, blur and height-changing animations can still cost layout or painting time. Glass is opt-in; measure realistic content and device sizes before increasing its intensity or repeating it throughout a page.
+
+## Validate your application
+
+Profile a production build while typing, resizing, opening overlays and scrolling large collections. Check React commits and browser layout/paint time on your target devices. The repository's `test:performance` command checks render counts, shared subscriptions and geometry-read budgets; `test:package` checks JavaScript tree shaking and CSS gzip budgets. These checks prevent specific regressions and do not guarantee a frame rate on every browser or device.

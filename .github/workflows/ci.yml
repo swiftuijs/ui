@@ -54,6 +54,9 @@ jobs:
       - name: Install browser
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Verify production runtime performance budgets
+        run: pnpm --filter @swiftuijs/ui exec node scripts/verify-performance.mjs
+
       - name: Browser acceptance
         run: pnpm test:browser
 
