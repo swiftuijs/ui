@@ -39,16 +39,16 @@
 
 
     &[data-page-status='entering'] {
-      animation: #{$ns}-actionsheet-slide-up 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      animation: #{$ns}-actionsheet-slide-up var(--sw-page-duration, var(--sw-motion-duration-enter)) var(--sw-page-easing, var(--sw-motion-easing-enter)) both;
     }
 
     &[data-page-status='exiting'] {
       opacity: 0;
-      animation: #{$ns}-actionsheet-slide-down 0.3s cubic-bezier(0, 0.8, 0.5, 1);
+      animation: #{$ns}-actionsheet-slide-down var(--sw-page-duration, var(--sw-motion-duration-exit)) var(--sw-page-easing, var(--sw-motion-easing-exit)) both;
     }
 
     &.animate-height {
-      transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: height var(--sw-transition-slow);
     }
 
     &.hide-dragbar {

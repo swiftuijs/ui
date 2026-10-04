@@ -1,0 +1,10 @@
+// Use individual scale/translate properties so positioning transforms stay intact.
+@mixin presence($enter: sw-surface-in, $exit: sw-surface-out) {
+  &[data-state='open'] {
+    animation: $enter var(--sw-motion-duration-enter) var(--sw-motion-easing-enter) both;
+  }
+  &[data-state='closed'] {
+    pointer-events: none;
+    animation: $exit var(--sw-motion-duration-exit) var(--sw-motion-easing-exit) both;
+  }
+}

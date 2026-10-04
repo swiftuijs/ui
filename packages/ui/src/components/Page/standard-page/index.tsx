@@ -71,6 +71,9 @@ export const StandardPage = forwardRef<HTMLDivElement, IStandardProps>(function 
   useEffect(() => {
     if (containerRef.current && transition) {
       TransitionManager.applyTransitionConfig(containerRef.current, transition)
+      if (transition.type === 'view-transition' && TransitionManager.getTransitionMode(transition) === 'css') {
+        containerRef.current.dataset.transitionType = 'slide'
+      }
     }
   }, [transition])
 

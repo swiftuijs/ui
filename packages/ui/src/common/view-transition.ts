@@ -1,3 +1,4 @@
+import { prefersReducedMotion } from './motion'
 import type { ITransitionOptions } from './view-transition-types'
 
 export type { ITransitionOptions, TransitionDirection } from './view-transition-types'
@@ -14,7 +15,7 @@ export interface IViewTransitionOptions extends ITransitionOptions {
  * Check if View Transitions API is supported
  */
 export function isViewTransitionSupported(): boolean {
-  return typeof document !== 'undefined' && 'startViewTransition' in document
+  return typeof document !== 'undefined' && typeof document.startViewTransition === 'function'
 }
 
 /**
@@ -35,7 +36,7 @@ export function isViewTransitionSupported(): boolean {
 export async function startViewTransition(
   options: IViewTransitionOptions
 ): Promise<void> {
-  if (!isViewTransitionSupported()) {
+  if (!isViewTransitionSupported() || prefersReducedMotion()) {
     options.update()
     return
   }

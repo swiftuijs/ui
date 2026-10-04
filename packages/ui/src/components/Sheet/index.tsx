@@ -183,7 +183,6 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     onDetentChange: handleDetentChange,
   })
 
-  if (!isPresented) return null
 
   const handleDragIndicatorClick = () => {
     if (!canAdjustDetents) {

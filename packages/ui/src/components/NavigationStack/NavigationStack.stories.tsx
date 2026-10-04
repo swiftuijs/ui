@@ -135,3 +135,19 @@ export const Default: Story = {
     </NavigationStack>
   },
 }
+
+export const TransitionTypes: Story = {
+  render: () => {
+    function Detail() {
+      return <VStack><Text>Transition detail</Text><NavigationLink dismiss>Return home</NavigationLink></VStack>
+    }
+    return <NavigationStack style={{ height: 400 }}>
+      <VStack>
+        {(['slide', 'fade', 'scale', 'none', 'view-transition'] as const).map(type =>
+          <NavigationLink key={type} destination={Detail} pageOptions={{ transition: { type, duration: 450, easing: 'linear' } }}>
+            Open {type}
+          </NavigationLink>)}
+      </VStack>
+    </NavigationStack>
+  },
+}

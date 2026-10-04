@@ -4,6 +4,7 @@
     "swiftui-alignment",
     "responsive-design",
     "capability-matrix",
-    "theming"
+    "theming",
+    "motion"
   ]
 }

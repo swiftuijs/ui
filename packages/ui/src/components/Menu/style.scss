@@ -1,3 +1,4 @@
+@use '../../style/mixins/motion.scss' as motion;
 @use '../../style/glass.scss' as *;
 @use '@style/base.scss' as *;
 
@@ -26,7 +27,8 @@
   padding: 8px;
   z-index: var(--sw-z-dropdown, 1000);
   margin-top: 4px;
-  animation: #{$ns}-fade-in var(--sw-transition-fast, 0.15s ease-out);
+  @include motion.presence;
+  transform-origin: top left;
 
   // menu-bottom
   &-bottom {
@@ -150,3 +152,6 @@
 .sw-menu { translate: var(--sw-floating-shift-x, 0px) var(--sw-floating-shift-y, 0px); max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow: visible; }
 
 .sw-menu { @include glass-surface; }
+
+.sw-menu-top { transform-origin: bottom left; }
+.sw-menu-left { transform-origin: top right; }

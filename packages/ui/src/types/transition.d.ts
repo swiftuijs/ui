@@ -52,7 +52,7 @@ export type TransitionDirection =
 export interface ITransitionConfig {
   /**
    * Transition type
-   * @default 'slide' for pages, 'fade' for modals
+   * @default 'slide'
    */
   type?: TransitionType
   
@@ -92,14 +92,13 @@ export interface ITransitionConfig {
   
   /**
    * Custom animation duration in milliseconds
-   * @default 300
+   * @default 350 for pages, 320 for action-sheet entry
    */
   duration?: number
   
   /**
    * Custom easing function
-   * @default 'cubic-bezier(0.075, 0.82, 0.165, 1)' for slide
-   * @default 'ease-out' for fade
+   * @default 'cubic-bezier(0.32, 0.72, 0, 1)'
    */
   easing?: string
 }

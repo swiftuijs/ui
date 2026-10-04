@@ -152,7 +152,7 @@ describe('NavigationStack', () => {
     expect(screen.queryByText('Page A')).not.toBeInTheDocument()
   })
 
-  it('fires page-entered once and completes the non-view-transition enter and exit lifecycle', async () => {
+  it('fires page-entered once and completes navigation when no animation CSS is loaded', async () => {
     vi.useFakeTimers()
 
     Object.defineProperty(globalThis, 'requestIdleCallback', {
@@ -179,7 +179,7 @@ describe('NavigationStack', () => {
     expect(screen.getByText('Plain Page A')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Open plain page A' })).toBeInTheDocument()
 
-    fireEvent.animationEnd(plainPage!)
+    await act(async () => { await vi.advanceTimersByTimeAsync(0) })
 
     const pageEnteredCalls = emitSpy.mock.calls.filter(
       ([eventName, pageId]) => eventName.toString().endsWith('.page-entered') && pageId === 'page$$plain-page-a',
@@ -190,14 +190,9 @@ describe('NavigationStack', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Dismiss plain page' }))
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(0)
+      await vi.advanceTimersByTimeAsync(1)
     })
 
-    const exitingPage = document.getElementById('page$$plain-page-a')
-    expect(exitingPage).toHaveAttribute('data-page-status', 'exiting')
-    expect(screen.getByRole('button', { name: 'Open plain page A' })).toBeInTheDocument()
-
-    fireEvent.animationEnd(exitingPage!)
 
     expect(screen.getByRole('button', { name: 'Open plain page A' })).toBeInTheDocument()
     expect(screen.queryByText('Plain Page A')).not.toBeInTheDocument()

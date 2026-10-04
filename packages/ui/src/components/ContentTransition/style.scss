@@ -2,7 +2,7 @@
 
 @include component('contenttransition') {
   display: inline-flex;
-  transition: opacity 0.18s ease, transform 0.18s ease, filter 0.18s ease;
+  transition: opacity var(--sw-transition-normal), transform var(--sw-transition-normal), filter var(--sw-transition-normal);
 }
 
 @include component('contenttransition-opacity') {
@@ -25,6 +25,5 @@
   filter: saturate(1.05);
 }
 
-.sw-contenttransition-active.sw-contenttransition-scale {
-  transform: scale(1.02);
-}
+// Changed content settles at its authored size; the update animation is handled
+// with Web Animations so rapid updates cancel and replace the previous feedback.

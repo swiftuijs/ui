@@ -5,11 +5,11 @@ import * as ContentTransitionStories from './ContentTransition.stories'
 
 # ContentTransition
 
-ContentTransition adapts SwiftUI's content-transition modifiers into an explicit wrapper that annotates changing content on the web.
+ContentTransition adapts SwiftUI's content-transition modifiers into brief feedback when its content changes.
 
 ## Usage
 
-<Canvas of={ContentTransitionStories.Opacity} />
+<Canvas of={ContentTransitionStories.ChangingContent} />
 
 ## Variants
 
@@ -17,4 +17,6 @@ ContentTransition adapts SwiftUI's content-transition modifiers into an explicit
 
 ## Usage and limitations
 
-- Uses CSS classes and transitions for opacity, saturation or scale. It does not interpolate changing text/numbers or diff content like native SwiftUI; control `active` yourself.
+- Changed content fades in; `transition="scale"` also settles from 96% to its authored size. Rapid updates replace the previous feedback.
+- `active={false}` and the system's Reduce Motion setting disable feedback. Browsers without Web Animations show the updated content immediately.
+- `interpolate` falls back to opacity. Text/number interpolation and an outgoing-content crossfade are not implemented.

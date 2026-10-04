@@ -1,3 +1,4 @@
+@use '../../style/mixins/motion.scss' as motion;
 @use '../_internal/modal.scss';
 @use '@style/base.scss' as *;
 
@@ -6,6 +7,7 @@
   inset: 0;
   z-index: var(--sw-z-modal-backdrop);
   background: rgba(0, 0, 0, 0.32);
+  @include motion.presence(sw-fade-in, sw-fade-out);
 }
 
 .sw-confirmation-dialog {
@@ -13,6 +15,7 @@
   inset-inline: 16px;
   bottom: 16px;
   z-index: var(--sw-z-modal);
+  @include motion.presence(sw-sheet-in, sw-sheet-out);
   display: grid;
   justify-items: stretch;
   max-height: calc(100dvh - 32px);
@@ -69,7 +72,7 @@
   font-size: var(--sw-font-size-body);
   min-height: 54px;
   padding: 14px 18px;
-  transition: background-color 150ms ease;
+  transition: background-color var(--sw-transition-normal);
 }
 
 .sw-confirmation-dialog-button:first-child {

@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react'
 
 import type { IBaseComponent } from '@/types'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 export type PhaseAnimatorTrigger = 'automatic' | 'onDemand'
 
@@ -54,6 +55,7 @@ export const PhaseAnimator = memo(function PhaseAnimator<TPhase>(props: IPhaseAn
     repeat = true,
     trigger = 'automatic',
   } = props
+  const reducedMotion = useReducedMotion()
   const [phaseIndex, setPhaseIndex] = useState(0)
   const safePhases = useMemo(() => (phases.length > 0 ? phases : [null] as TPhase[]), [phases])
   const lastIndex = safePhases.length - 1
@@ -73,7 +75,7 @@ export const PhaseAnimator = memo(function PhaseAnimator<TPhase>(props: IPhaseAn
   }
 
   useEffect(() => {
-    if (trigger !== 'automatic' || safePhases.length <= 1) {
+    if (reducedMotion || trigger !== 'automatic' || safePhases.length <= 1 || (!repeat && phaseIndex >= lastIndex)) {
       return undefined
     }
 
@@ -85,12 +87,12 @@ export const PhaseAnimator = memo(function PhaseAnimator<TPhase>(props: IPhaseAn
 
         return current + 1
       })
-    }, interval)
+    }, Math.max(16, Number.isFinite(interval) ? interval : 1000))
 
     return () => {
       window.clearInterval(timer)
     }
-  }, [interval, lastIndex, repeat, safePhases.length, trigger])
+  }, [interval, lastIndex, repeat, safePhases.length, trigger, reducedMotion, phaseIndex])
 
   const clampedIndex = Math.min(phaseIndex, lastIndex)
   const phase = safePhases[clampedIndex]

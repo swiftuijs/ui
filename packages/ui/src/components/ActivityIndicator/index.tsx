@@ -45,7 +45,7 @@ export const ActivityIndicator = memo(function ActivityIndicator(props: IActivit
   const style = color ? { '--indicator-color': color } : undefined
 
   return (
-    <div {...commonProps} {...finalRestProps} style={{ ...commonProps.style, ...style }}>
+    <div role="progressbar" aria-label="Loading" {...commonProps} {...finalRestProps} style={{ ...commonProps.style, ...style }}>
       <div className={prefixClass('activityindicator-spinner')}>
         <div className={prefixClass('activityindicator-circle')} />
         <div className={prefixClass('activityindicator-circle')} />
@@ -59,4 +59,3 @@ export const ActivityIndicator = memo(function ActivityIndicator(props: IActivit
     </div>
   )
 })
-

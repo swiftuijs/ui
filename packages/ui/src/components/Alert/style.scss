@@ -1,17 +1,6 @@
+@use '../../style/mixins/motion.scss' as motion;
 @use '../_internal/modal.scss';
 @use '@style/base.scss' as *;
-
-// Alert 特有的动画：居中缩放滑入
-@keyframes #{$ns}-alert-slide-scale-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
 
 @include component('alert') {
   // alert-backdrop
@@ -23,7 +12,7 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
     z-index: var(--sw-z-modal-backdrop);
-    animation: #{$ns}-fade-in var(--sw-transition-fast);
+    @include motion.presence(sw-fade-in, sw-fade-out);
   }
 
   // alert (main)
@@ -34,7 +23,7 @@
   z-index: var(--sw-z-modal);
   width: min(320px, calc(100vw - 40px));
   max-width: 90%;
-  animation: #{$ns}-alert-slide-scale-in var(--sw-transition-normal);
+  @include motion.presence;
 
   // alert-content
   &-content {

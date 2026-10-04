@@ -1,3 +1,4 @@
+@use '../../style/mixins/motion.scss' as motion;
 @use '../_internal/modal.scss';
 @use '../_internal/grabber.scss' as *;
 @use '@style/base.scss' as *;
@@ -14,13 +15,15 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  @include motion.presence(sw-sheet-in, sw-sheet-out);
+  transition: height var(--sw-transition-slow);
 
   &-backdrop {
     position: fixed;
     inset: 0;
     z-index: var(--sw-z-modal-backdrop);
     background-color: rgba(0, 0, 0, 0.4);
-    animation: #{$ns}-fade-in var(--sw-transition-fast);
+    @include motion.presence(sw-fade-in, sw-fade-out);
   }
 
   &-content {
@@ -31,7 +34,7 @@
     background-color: var(--sw-color-background-elevated);
     border-radius: var(--sw-sheet-corner-radius, var(--sw-radius-sheet));
     box-shadow: var(--sw-shadow-lg);
-    animation: #{$ns}-slide-in-bottom var(--sw-transition-normal);
+
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -101,8 +104,11 @@
   .sw-sheet-formSheet { top: 50%; bottom: auto; height: var(--sw-sheet-height, 90%); max-height: min(640px, calc(100dvh - 16px)); transform: translate(-50%, -50%); }
 }
 
-.sw-sheet[data-dragging="true"] .sw-sheet-content { animation: none; }
+.sw-sheet[data-dragging="true"] { transition: none; }
+.sw-sheet[data-state="open"][data-enter-interrupted="true"] { animation: none; }
 .sw-sheet[data-dragging="true"] .sw-sheet-drag-indicator { cursor: grabbing; }
 
 .sw-sheet-fullScreen .sw-sheet-content,
 .sw-sheet-content:not(:has(.sw-sheet-drag-indicator)) { padding-top: 0; }
+
+@media (min-width: 768px) { .sw-sheet-formSheet { @include motion.presence; } }

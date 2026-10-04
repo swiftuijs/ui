@@ -70,10 +70,14 @@ textarea {
   --sw-motion-duration-fast: 0.15s;
   --sw-motion-duration-normal: 0.25s;
   --sw-motion-duration-slow: 0.35s;
-  --sw-motion-easing-standard: ease-out;
-  --sw-motion-transition-fast: 0.15s ease-out;
-  --sw-motion-transition-normal: 0.25s ease-out;
-  --sw-motion-transition-slow: 0.35s ease-out;
+  --sw-motion-duration-enter: 0.32s;
+  --sw-motion-duration-exit: 0.2s;
+  --sw-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --sw-motion-easing-enter: cubic-bezier(0.32, 0.72, 0, 1);
+  --sw-motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --sw-motion-transition-fast: 0.15s cubic-bezier(0.2, 0, 0, 1);
+  --sw-motion-transition-normal: 0.25s cubic-bezier(0.2, 0, 0, 1);
+  --sw-motion-transition-slow: 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 
   --sw-color-grabber: rgba(0, 0, 0, 0.2);
   --sw-radius-sheet: 32px;
@@ -200,5 +204,11 @@ textarea {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [class^="sw-"], [class*=" sw-"] { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  [class^="sw-"], [class*=" sw-"],
+  [class^="sw-"]::before, [class^="sw-"]::after,
+  [class*=" sw-"]::before, [class*=" sw-"]::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

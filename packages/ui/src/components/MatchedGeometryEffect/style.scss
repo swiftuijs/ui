@@ -2,7 +2,7 @@
 
 @include component('matchedgeometryeffect') {
   display: inline-flex;
-  transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.22s ease;
+  transition: transform var(--sw-transition-normal), opacity var(--sw-transition-normal), box-shadow var(--sw-transition-normal);
   will-change: transform, opacity;
 }
 

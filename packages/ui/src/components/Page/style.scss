@@ -33,11 +33,11 @@
   // Standard page slide animations
   &[data-page-type='page'] {
     &[data-page-status='entering'] {
-      animation: #{$ns}-page-slide-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      animation: #{$ns}-page-slide-in var(--sw-page-duration, var(--sw-motion-duration-slow)) var(--sw-page-easing, var(--sw-motion-easing-enter)) both;
     }
 
     &[data-page-status='exiting'] {
-      animation: #{$ns}-page-slide-out 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      animation: #{$ns}-page-slide-out var(--sw-page-duration, var(--sw-motion-duration-slow)) var(--sw-page-easing, var(--sw-motion-easing-enter)) both;
     }
   }
 
@@ -63,12 +63,12 @@
 // Forward navigation (push): new page slides in from right, old page slides left
 html.forwards {
   &::view-transition-old(root) {
-    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-left;
+    animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both slide-to-left;
     z-index: 1;
   }
 
   &::view-transition-new(root) {
-    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-right;
+    animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both slide-from-right;
     z-index: 2;
   }
 }
@@ -76,32 +76,32 @@ html.forwards {
 // Backward navigation (pop): old page slides out to right, new page slides in from left
 html.backwards {
   &::view-transition-old(root) {
-    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-right;
+    animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both slide-to-right;
     z-index: 2;
   }
 
   &::view-transition-new(root) {
-    animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-left;
+    animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both slide-from-left;
     z-index: 1;
   }
 }
 
 // Default (no direction class)
 ::view-transition-old(root) {
-  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-to-left;
+  animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both slide-to-left;
   z-index: 1;
 }
 
 ::view-transition-new(root) {
-  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both slide-from-right;
+  animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both slide-from-right;
   z-index: 2;
 }
 
 // Shared element transitions (for elements with view-transition-name)
 // These elements will smoothly morph between old and new positions/sizes
 ::view-transition-group(*) {
-  animation-duration: 0.35s;
-  animation-timing-function: cubic-bezier(0.36, 0.66, 0.04, 1);
+  animation-duration: var(--sw-motion-duration-slow);
+  animation-timing-function: var(--sw-motion-easing-enter);
   // Ensure shared elements are on top of everything
   z-index: 1000;
 }
@@ -115,14 +115,14 @@ html.backwards {
 // The browser automatically handles position and size interpolation
 ::view-transition-old(*) {
   // Fade out the old element
-  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both fade-out;
+  animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both fade-out;
   // Ensure it doesn't block interaction
   mix-blend-mode: normal;
 }
 
 ::view-transition-new(*) {
   // Fade in the new element
-  animation: 0.35s cubic-bezier(0.36, 0.66, 0.04, 1) both fade-in;
+  animation: var(--sw-motion-duration-slow) var(--sw-motion-easing-enter) both fade-in;
   mix-blend-mode: normal;
 }
 
@@ -178,5 +178,21 @@ html.backwards {
   }
   to {
     transform: translateX(100%);
+  }
+}
+
+// Honor the advertised CSS fallback types and explicit slide direction.
+.sw-page[data-page-type='page'] {
+  &[data-transition-type='fade'][data-page-status='entering'] { animation-name: sw-fade-in; }
+  &[data-transition-type='fade'][data-page-status='exiting'] { animation-name: sw-fade-out; }
+  &[data-transition-type='scale'][data-page-status='entering'] { animation-name: sw-surface-in; }
+  &[data-transition-type='scale'][data-page-status='exiting'] { animation-name: sw-surface-out; }
+  &[data-transition-type='none'] { animation: none; }
+  &[data-transition-type='slide'][data-transition-direction='backwards'][data-page-status='entering'] { animation-name: slide-from-left; }
+  &[data-transition-type='slide'][data-transition-direction='backwards'][data-page-status='exiting'] { animation-name: slide-to-left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
+    animation: none !important;
   }
 }

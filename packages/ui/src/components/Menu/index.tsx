@@ -1,3 +1,4 @@
+import { useMotionPresence } from '../_internal/use-motion-presence'
 import {
   cloneElement,
   isValidElement,
@@ -151,6 +152,7 @@ export function Menu(props: IMenuProps) {
 
   const isControlled = controlledIsOpen !== undefined
   const isOpen = isControlled ? controlledIsOpen : internalIsOpen
+  const present = useMotionPresence(isOpen, menuRef)
   useEffect(() => {
     setPortalHost(document.getElementById(triggerId)?.closest<HTMLElement>('[role="dialog"], [role="alertdialog"]') ?? document.body)
   }, [triggerId])
@@ -496,7 +498,7 @@ export function Menu(props: IMenuProps) {
     )
   }
 
-  const menu = isOpen ? (
+  const menu = present ? (
         <div
           {...appearance}
           {...(config.theme ? { 'data-theme': config.theme } : {})}
@@ -504,6 +506,8 @@ export function Menu(props: IMenuProps) {
           id={menuId}
           ref={menuRef}
           className={`${prefixClass('menu')} ${prefixClass(`menu-${placement}`)}`}
+          data-state={isOpen ? 'open' : 'closed'}
+          aria-hidden={!isOpen || undefined}
           role="menu"
           aria-labelledby={triggerId}
         >
@@ -561,6 +565,7 @@ export function Menu(props: IMenuProps) {
               {...appearance}
               ref={submenuRef}
               className={`${prefixClass('menu')} ${prefixClass('menu-submenu')} ${prefixClass('menu-right')}`}
+              data-state="open"
               role="menu"
               aria-label={items[activeSubmenuIndex]?.label}
             >

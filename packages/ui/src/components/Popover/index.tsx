@@ -12,6 +12,7 @@ import {
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
 
+import { useMotionPresence } from '../_internal/use-motion-presence'
 import { useViewportFit } from '../_internal/use-viewport-fit'
 import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
@@ -83,6 +84,7 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
   } = props
 
   const popoverRef = useRef<HTMLDivElement>(null)
+  const present = useMotionPresence(isPresented, popoverRef)
   useImperativeHandle(ref, () => popoverRef.current!, [])
 
   const appearance = useGlassAppearance(glass)
@@ -158,7 +160,7 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
     return base
   }, [anchorRect, arrowEdge, matchAnchorWidth])
 
-  if (!isPresented) {
+  if (!present) {
     return null
   }
 
@@ -176,6 +178,8 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
         {...appearance}
         {...commonProps}
         {...finalRestProps}
+        data-state={isPresented ? 'open' : 'closed'}
+        aria-hidden={!isPresented || undefined}
         aria-label={title}
         aria-modal="false"
         ref={popoverRef}

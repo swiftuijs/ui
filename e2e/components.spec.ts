@@ -2,6 +2,45 @@ import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+const controlledClocks = new WeakSet<Page>()
+
+async function freezeMotion(page: Page, selector: string) {
+  let sample: { name: string; opacity: number; translate: string; duration: string } | undefined
+  await expect.poll(async () => {
+    sample = await page.locator(selector).evaluate(node => {
+    const animations = node.getAnimations()
+    if (!animations.length) return undefined
+    for (const animation of animations) {
+      animation.pause()
+      animation.currentTime = Number(animation.effect!.getTiming().duration) / 2
+    }
+    const style = getComputedStyle(node)
+    return { name: style.animationName, opacity: Number(style.opacity), translate: style.translate, duration: style.animationDuration }
+    })
+    return Boolean(sample)
+  }).toBe(true)
+  return sample!
+}
+async function armMotion(page: Page, selector: string, controlClock = true) {
+  // Sample actual intermediate CSS frames deterministically on busy CI runners.
+  // Freeze fallback timers as well; resume them before checking restored focus.
+  if (controlClock) {
+    await page.clock.install()
+    await page.clock.pauseAt(new Date())
+    controlledClocks.add(page)
+  }
+  await page.evaluate(selector => {
+    document.addEventListener('animationstart', event => {
+      if (event.target instanceof HTMLElement && event.target.matches(selector)) {
+        event.target.getAnimations().forEach(animation => animation.pause())
+      }
+    })
+  }, selector)
+}
+async function finishMotion(page: Page, selector: string) {
+  await page.locator(selector).evaluate(node => node.getAnimations().forEach(animation => animation.finish()))
+  if (controlledClocks.has(page)) await page.clock.runFor(1)
+}
 
 type Story = { id: string; title: string; name: string; type: string }
 const index = JSON.parse(readFileSync(fileURLToPath(new URL('../apps/storybook/storybook-static/index.json', import.meta.url)), 'utf8')) as { entries: Record<string, Story> }
@@ -191,4 +230,162 @@ test('Glass navigation surfaces share the configuration and forced colors remove
   await page.emulateMedia({ forcedColors: 'active' })
   for (const surface of await surfaces.all()) await expect(surface).toHaveCSS('backdrop-filter', 'none')
   await expect(page.getByRole('menu')).toHaveCSS('backdrop-filter', 'none')
+})
+
+for (const [id, trigger, selector] of [
+  ['swiftui-sheet--default', 'Show Sheet', '.sw-sheet'],
+  ['swiftui-alert--default', 'Show Alert', '.sw-alert'],
+  ['swiftui-confirmationdialog--default', 'Show Confirmation Dialog', '.sw-confirmation-dialog'],
+  ['swiftui-menu--default', 'Options', '.sw-menu[role="menu"]'],
+  ['swiftui-popover--default', 'Show Popover', '.sw-popover'],
+] as const) {
+  test(`${id}: entry and exit remain animated, then release the surface`, async ({ page }, info) => {
+    await open(page, id, info.project.name.endsWith('dark'))
+    await armMotion(page, selector)
+    await page.getByRole('button', { name: trigger, exact: true }).click()
+    const enter = await freezeMotion(page, selector)
+    expect(enter.name).toMatch(/sw-(sheet|surface)-in/)
+    expect(enter.duration).toBe('0.32s')
+    if (selector === '.sw-sheet') expect(enter.translate).not.toBe('0px')
+    await finishMotion(page, selector)
+    await page.keyboard.press('Escape')
+    await expect(page.locator(selector)).toHaveAttribute('data-state', 'closed')
+    const exit = await freezeMotion(page, selector)
+    expect(exit.name).toMatch(/sw-(sheet|surface)-out/)
+    expect(exit.duration).toBe('0.2s')
+    expect(await page.locator(selector).count()).toBe(1)
+    await finishMotion(page, selector)
+    await expect(page.locator(selector)).toHaveCount(0)
+    await page.clock.resume()
+    if (selector !== '.sw-popover') await expect(page.getByRole('button', { name: trigger, exact: true })).toBeFocused()
+    await expect(page.locator('body')).not.toHaveAttribute('data-scroll-locked')
+  })
+}
+
+test('Popover: reopen cancels pending removal and restores interaction', async ({ page }, info) => {
+  await open(page, 'swiftui-popover--default', info.project.name.endsWith('dark'))
+  await armMotion(page, '.sw-popover')
+  const trigger = page.getByRole('button', { name: 'Show Popover' })
+  await trigger.click()
+  await page.keyboard.press('Escape')
+  await freezeMotion(page, '.sw-popover')
+  await trigger.click()
+  await finishMotion(page, '.sw-popover')
+  await expect(page.getByRole('dialog')).toBeVisible()
+  expect(await page.locator('.sw-popover').evaluate(node => (node as HTMLElement).inert)).toBe(false)
+})
+
+test('DisclosureGroup expands and collapses its content, preserving the accessible toggle', async ({ page }, info) => {
+  await open(page, 'swiftui-disclosuregroup--default', info.project.name.endsWith('dark'))
+  await armMotion(page, '.sw-disclosuregroup-region')
+  const trigger = page.getByRole('button', { name: 'More Info' })
+  await trigger.click()
+  expect((await freezeMotion(page, '.sw-disclosuregroup-region')).name).toBe('sw-disclosure-in')
+  await finishMotion(page, '.sw-disclosuregroup-region')
+  await expect(page.getByRole('region')).toBeVisible()
+  await trigger.click()
+  expect((await freezeMotion(page, '.sw-disclosuregroup-region')).name).toBe('sw-disclosure-out')
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+  await finishMotion(page, '.sw-disclosuregroup-region')
+  await expect(page.locator('.sw-disclosuregroup-region')).toHaveCount(0)
+})
+
+test('Navigation transition overrides work and disabled motion does not trap the stack', async ({ page }, info) => {
+  await open(page, 'swiftui-navigationstack--transition-types', info.project.name.endsWith('dark'))
+  await armMotion(page, '.sw-page[data-page-status="entering"]', false)
+  for (const type of ['fade', 'scale', 'none', 'view-transition']) {
+    await page.getByRole('button', { name: `Open ${type}`, exact: true }).click()
+    if (type === 'fade' || type === 'scale') {
+      const motion = await freezeMotion(page, '.sw-page[data-page-status="entering"]')
+      expect(motion.name).toBe(type === 'fade' ? 'sw-fade-in' : 'sw-surface-in')
+      expect(motion.duration).toBe('0.45s')
+      // Direction only affects slides; fade/scale must retain their own effect.
+      await page.locator('.sw-page[data-page-status="entering"]').evaluate(node => { (node as HTMLElement).dataset.transitionDirection = 'backwards' })
+      await expect(page.locator('.sw-page[data-page-status="entering"]')).toHaveCSS('animation-name', motion.name)
+      await finishMotion(page, '.sw-page[data-page-status="entering"]')
+    }
+    await expect(page.locator('.sw-navigationstack > .sw-page')).toHaveCount(1)
+    await page.getByRole('button', { name: 'Return home' }).click()
+    await expect(page.getByRole('button', { name: 'Open none', exact: true })).toBeVisible()
+    await expect(page.locator('.sw-navigationstack > .sw-page')).toHaveCount(1)
+  }
+})
+
+test('ContentTransition animates real content updates and cancels on Reduce Motion', async ({ page }, info) => {
+  await open(page, 'swiftui-contenttransition--changing-content', info.project.name.endsWith('dark'))
+  await page.getByRole('button', { name: 'Add item' }).click()
+  const content = page.locator('.sw-contenttransition')
+  await expect(content).toHaveText('1 items')
+  await freezeMotion(page, '.sw-contenttransition')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect.poll(() => content.evaluate(node => node.getAnimations().length)).toBe(0)
+  await page.getByRole('button', { name: 'Add item' }).click()
+  await expect(content).toHaveText('2 items')
+  expect(await content.evaluate(node => node.getAnimations().length)).toBe(0)
+})
+
+test('View Transition requests fall back to a CSS slide when the browser API is unavailable', async ({ page }, info) => {
+  await page.addInitScript(() => Object.defineProperty(document, 'startViewTransition', { value: undefined, configurable: true }))
+  await open(page, 'swiftui-navigationstack--transition-types', info.project.name.endsWith('dark'))
+  await armMotion(page, '.sw-page[data-page-status="entering"]', false)
+  await page.getByRole('button', { name: 'Open view-transition', exact: true }).click()
+  const motion = await freezeMotion(page, '.sw-page[data-page-status="entering"]')
+  expect(motion.name).toBe('sw-page-slide-in')
+  await finishMotion(page, '.sw-page[data-page-status="entering"]')
+  await expect(page.locator('.sw-navigationstack > .sw-page')).toHaveCount(1)
+  await page.getByRole('button', { name: 'Return home' }).click()
+  await expect(page.getByRole('button', { name: 'Open none', exact: true })).toBeVisible()
+  await expect(page.locator('.sw-navigationstack > .sw-page')).toHaveCount(1)
+})
+
+test('Reduce Motion stops loops, pauses sequences and leaves presentation and navigation usable', async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  for (const id of ['swiftui-activityindicator--default', 'swiftui-symboleffect--pulse', 'swiftui-progressview--indeterminate']) {
+    // Indicators keep a static, named status rather than speeding up an infinite loop.
+    await open(page, id, info.project.name.endsWith('dark'))
+    expect(await page.locator('#storybook-root').evaluate(node => node.getAnimations({ subtree: true }).length)).toBe(0)
+  }
+  await open(page, 'swiftui-phaseanimator--automatic', info.project.name.endsWith('dark'))
+  await expect(page.getByText('idle', { exact: true })).toBeVisible()
+  await page.waitForTimeout(1000)
+  await expect(page.getByText('idle', { exact: true })).toBeVisible()
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await expect(page.getByText('pressed', { exact: true })).toBeVisible()
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await open(page, 'swiftui-sheet--default', info.project.name.endsWith('dark'))
+  const opener = page.getByRole('button', { name: 'Show Sheet' })
+  await opener.click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  expect(await page.locator('.sw-sheet').evaluate(node => node.getAnimations().length)).toBe(0)
+  await page.keyboard.press('Escape')
+  await expect(page.locator('.sw-sheet')).toHaveCount(0)
+  await expect(opener).toBeFocused()
+  await open(page, 'swiftui-navigationstack--transition-types', info.project.name.endsWith('dark'))
+  for (const type of ['none', 'slide', 'view-transition']) {
+    await page.getByRole('button', { name: `Open ${type}`, exact: true }).click()
+    await expect(page.getByText('Transition detail')).toBeVisible()
+    await expect(page.locator('.sw-navigationstack > .sw-page')).toHaveCount(1)
+    await page.getByRole('button', { name: 'Return home' }).click()
+    await expect(page.locator('.sw-navigationstack > .sw-page')).toHaveCount(1)
+    await expect(page.getByRole('button', { name: 'Open none', exact: true })).toBeVisible()
+  }
+})
+
+test('SymbolEffect honors an inactive effect without leaving a running loop', async ({ page }, info) => {
+  await open(page, 'swiftui-symboleffect--inactive', info.project.name.endsWith('dark'))
+  await expect(page.locator('.sw-symbol-effect')).toHaveAttribute('data-active', 'false')
+  expect(await page.locator('.sw-symbol-effect').evaluate(node => node.getAnimations().length)).toBe(0)
+})
+
+test('ContextMenu shares paired presentation motion and removes closed items from interaction', async ({ page }, info) => {
+  await open(page, 'swiftui-contextmenu--default', info.project.name.endsWith('dark'))
+  await armMotion(page, '.sw-context-menu')
+  await page.getByText('Right click this card').click({ button: 'right' })
+  expect((await freezeMotion(page, '.sw-context-menu')).name).toBe('sw-surface-in')
+  await finishMotion(page, '.sw-context-menu')
+  await page.keyboard.press('Escape')
+  expect((await freezeMotion(page, '.sw-context-menu')).name).toBe('sw-surface-out')
+  expect(await page.locator('.sw-context-menu').evaluate(node => (node as HTMLElement).inert)).toBe(true)
+  await finishMotion(page, '.sw-context-menu')
+  await expect(page.locator('.sw-context-menu')).toHaveCount(0)
 })

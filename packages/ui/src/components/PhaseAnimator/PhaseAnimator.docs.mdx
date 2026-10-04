@@ -22,3 +22,5 @@ PhaseAnimator sequences a finite set of named phases and re-renders your content
 - `phases` is the ordered sequence of values exposed to the render function
 - `trigger="automatic"` advances on the configured interval
 - `trigger="onDemand"` lets the rendered content advance or reset through controls
+
+- Automatic progression pauses while the system's Reduce Motion setting is enabled; manual controls remain available. Non-repeating sequences stop scheduling after their final value.

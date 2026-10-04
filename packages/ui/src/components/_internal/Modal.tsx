@@ -40,6 +40,8 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal({
       <Dialog.Portal>
         <Dialog.Overlay
           className={overlayClassName}
+          {...(appearance.theme ? { 'data-theme': appearance.theme } : {})}
+          style={themeStyle(appearance)}
           role="presentation"
           onClick={event => {
             if (dismissOnBackdrop && event.target === event.currentTarget) onDismiss?.()
@@ -51,6 +53,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal({
           {...(appearance.theme ? { 'data-theme': appearance.theme } : {})}
           style={{ color: 'var(--sw-color-label-primary)', ...themeStyle(appearance), ...contentAttributes.style }}
           ref={ref}
+          aria-hidden={!open || undefined}
           onOpenAutoFocus={() => { returnFocus.current = document.activeElement as HTMLElement | null }}
           onCloseAutoFocus={event => {
             event.preventDefault()

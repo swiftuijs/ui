@@ -2,7 +2,7 @@
 
 @include component('scrolltransition') {
   display: inline-flex;
-  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+  transition: opacity var(--sw-transition-normal), transform var(--sw-transition-normal), filter var(--sw-transition-normal);
 }
 
 @include component('scrolltransition-identity') {

@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
+import { Button } from '../Button'
 
 import { Text } from '../Text'
 
@@ -28,4 +30,14 @@ export const Scale: Story = {
       <Text>42 items</Text>
     </ContentTransition>
   ),
+}
+
+export const ChangingContent: Story = {
+  render: function ChangingContent() {
+    const [count, setCount] = useState(0)
+    return <div>
+      <ContentTransition transition="scale"><Text>{count} items</Text></ContentTransition>
+      <Button onClick={() => setCount(value => value + 1)}>Add item</Button>
+    </div>
+  },
 }
