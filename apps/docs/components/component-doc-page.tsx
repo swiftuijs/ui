@@ -226,7 +226,10 @@ function ComponentDocShell({
       )}
       {entry.examples[0] && (
         <section className="grid min-w-0 gap-4">
-          <h2 id="example" className="m-0 scroll-mt-24 text-fd-foreground">
+          <h2
+            id="example"
+            className="m-0 scroll-mt-24 text-2xl font-semibold tracking-tight text-fd-foreground"
+          >
             Example
           </h2>
           <p className="m-0 text-sm text-fd-muted-foreground">
@@ -250,7 +253,7 @@ function ComponentDocShell({
         <section className="grid min-w-0 gap-4">
           <h2
             id="more-examples"
-            className="m-0 scroll-mt-24 text-fd-foreground"
+            className="m-0 scroll-mt-24 text-2xl font-semibold tracking-tight text-fd-foreground"
           >
             More examples
           </h2>
@@ -267,7 +270,10 @@ function ComponentDocShell({
       )}
 
       <section className="grid min-w-0 gap-4">
-        <h2 id="api" className="m-0 scroll-mt-24 text-fd-foreground">
+        <h2
+          id="api"
+          className="m-0 scroll-mt-24 text-2xl font-semibold tracking-tight text-fd-foreground"
+        >
           API reference
         </h2>
         {entry.props.length > 0 ? (
@@ -275,10 +281,15 @@ function ComponentDocShell({
             <table className="w-full rounded-xl border-collapse bg-fd-card">
               <thead>
                 <tr>
-                  <th>Prop</th>
-                  <th>Type</th>
-                  <th>Required</th>
-                  <th>Description</th>
+                  {['Prop', 'Type', 'Required', 'Description'].map((label) => (
+                    <th
+                      key={label}
+                      scope="col"
+                      className="border-b border-fd-border px-3.5 py-3 text-left text-sm font-semibold"
+                    >
+                      {label}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>

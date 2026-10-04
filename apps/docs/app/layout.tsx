@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Mono, Space_Grotesk } from 'next/font/google';
+import { IBM_Plex_Mono, Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 
 import { RootProvider } from 'fumadocs-ui/provider/next';
+import { siteInfo } from '@/lib/site-info';
 
 import '@swiftuijs/ui/style/index.css';
 import './global.css';
 
-const sans = Space_Grotesk({
+const sans = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
 });
@@ -19,6 +20,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteInfo.url),
   description:
     'SwiftUI-inspired React components: live examples, clear APIs, responsive layouts, themes and platform limits.',
   title: {
