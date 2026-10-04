@@ -52,7 +52,7 @@
     height: 27px;
     background-color: var(--sw-color-control-thumb);
     border-radius: var(--sw-radius-full);
-    transition: transform var(--sw-transition-fast);
+    transition: transform var(--sw-transition-normal), scale var(--sw-transition-fast);
     box-shadow: var(--sw-shadow-sm);
   }
 

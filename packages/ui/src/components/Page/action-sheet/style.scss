@@ -30,25 +30,25 @@
   &[data-page-type='actionsheet'] {
     top: auto;
     height: 50%;
-    border-radius: var(--sw-radius-sheet);
+    border-radius: var(--sw-radius-sheet) var(--sw-radius-sheet) 0 0;
     background-color: var(--sw-color-background-elevated);
     padding-top: 44px;
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: calc(16px + var(--safe-area-right, env(safe-area-inset-right, 0px)));
+    padding-left: calc(16px + var(--safe-area-left, env(safe-area-inset-left, 0px)));
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 20px;
 
 
     &[data-page-status='entering'] {
-      animation: #{$ns}-actionsheet-slide-up 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      animation: #{$ns}-actionsheet-slide-up var(--sw-page-duration, var(--sw-motion-duration-enter)) var(--sw-page-easing, var(--sw-motion-easing-enter)) both;
     }
 
     &[data-page-status='exiting'] {
       opacity: 0;
-      animation: #{$ns}-actionsheet-slide-down 0.3s cubic-bezier(0, 0.8, 0.5, 1);
+      animation: #{$ns}-actionsheet-slide-down var(--sw-page-duration, var(--sw-motion-duration-exit)) var(--sw-page-easing, var(--sw-motion-easing-exit)) both;
     }
 
     &.animate-height {
-      transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: height var(--sw-transition-slow);
     }
 
     &.hide-dragbar {

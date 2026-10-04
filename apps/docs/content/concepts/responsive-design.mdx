@@ -28,4 +28,8 @@ Both hooks return `null` on the server and during initial hydration. Prefer CSS 
 
 ## Check your composition
 
+`Sheet` fills the width and attaches to the bottom below 768px, including wider touch screens under 500px high (phone landscape). Other wide viewports center page and form sheets with width caps of 600px and 420px. `fullScreen` always fills the viewport. Alert, confirmation dialog and menu content scrolls when the viewport is short.
+
+For edge-to-edge mobile pages, set `viewport-fit=cover` in the viewport meta tag so browsers expose `env(safe-area-inset-*)`. Sheet content and confirmation dialogs account for those insets. Embedded hosts can supply `--safe-area-top`, `--safe-area-right`, `--safe-area-bottom`, and `--safe-area-left` instead. These are Web presentation rules; native SwiftUI adapts by platform, OS version and size class.
+
 Test narrow phones, tablets and desktop containers, including long labels, enlarged text, keyboard navigation and dark mode. Container width can be much smaller than viewport width when a component appears in a sidebar or dialog.

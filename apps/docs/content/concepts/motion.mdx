@@ -1,0 +1,41 @@
+---
+title: Motion
+description: Brief transitions, responsive gestures and reduced-motion behavior.
+---
+
+Motion helps people follow state changes. SwiftUI.js follows [Apple's motion guidance](https://developer.apple.com/design/human-interface-guidelines/motion): keep feedback brief, follow the gesture and make motion optional.
+
+## What moves
+
+| Surface | Behavior |
+| --- | --- |
+| Sheet and confirmation dialog | Enter from the bottom and leave in the same direction; desktop form sheets use a subtle scale and fade |
+| Alert, menu and popover | Subtle scale and fade; closing stays mounted until the transition finishes |
+| Sheet handle | Follows the pointer directly; settles to the selected detent after release |
+| DisclosureGroup | Animates content height and the disclosure chevron in both directions |
+| Toggle and controls | Brief state feedback; native input interactions remain browser-controlled |
+| ContentTransition | Fades changed content; `scale` also settles from 96% to its authored size |
+
+Keep controlled presentations mounted while changing `isPresented`/`isVisible`; conditionally removing the component bypasses its exit. Popover and menu can reopen while closing. Navigation handles canceled, zero-duration and missing animations without waiting indefinitely.
+
+## Customize timing
+
+Defaults use 150–350ms transitions, with a 320ms presentation and a 200ms dismissal. These are web design choices, not Apple's published timing constants. Duration tokens require `ms` or `s` units. Set shared CSS tokens through `UIProvider`:
+
+```tsx
+<UIProvider tokens={{
+  '--sw-motion-duration-enter': '240ms',
+  '--sw-motion-duration-exit': '160ms',
+  '--sw-motion-easing-enter': 'ease-out',
+}}>
+  <App />
+</UIProvider>
+```
+
+Navigation links accept `pageOptions.transition` with `slide`, `fade`, `scale`, `none` or `view-transition`, plus `duration` in milliseconds and a CSS `easing`. View Transitions use browser snapshots and shared CSS motion tokens; unsupported browsers fall back to a CSS slide. Per-page duration/easing apply to CSS page animations.
+
+## Reduce Motion
+
+The system's `prefers-reduced-motion` preference removes component transitions and repeating CSS effects. Loading indicators keep a static accessible status. `PhaseAnimator` and `KeyframeAnimator` pause automatic progression; manual controls remain usable. Preference changes are observed while mounted. The `useReducedMotion()` hook is also exported for application-authored motion.
+
+CSS curves approximate settling. Native SwiftUI spring physics, interpolated text/numbers, scroll-driven modifier behavior and automatic matched-geometry coordination remain outside the current implementation. `ContentTransition` uses opacity for `interpolate` and shows changes immediately when Web Animations are unavailable.

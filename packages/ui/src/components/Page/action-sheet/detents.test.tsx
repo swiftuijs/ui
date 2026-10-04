@@ -43,7 +43,9 @@ describe('action sheet detents', () => {
         act(() => eventBus.emit('test-resize-sheet', height))
         expect(sheet.style.height).toBe(`${expected}px`)
       }
-      fireEvent(sheet, new globalThis.Event('transitionend'))
+      const end = new globalThis.Event('transitionend')
+      Object.defineProperty(end, 'propertyName', { value: 'height' })
+      fireEvent(sheet, end)
       expect(sheet).not.toHaveClass('animate-height')
       vi.stubGlobal('innerHeight', 1000)
       fireEvent(window, new globalThis.Event('resize'))

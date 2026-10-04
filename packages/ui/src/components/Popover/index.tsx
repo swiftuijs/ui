@@ -8,12 +8,15 @@ import {
   type CSSProperties,
   type RefObject,
 } from 'react'
+import { createPortal } from 'react-dom'
 
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
 
+import { useMotionPresence } from '../_internal/use-motion-presence'
 import { useViewportFit } from '../_internal/use-viewport-fit'
-import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
+import { fixedPositionOrigin } from '../_internal/fixed-position-origin'
+import { useUIConfig, themeStyle, useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
 type PopoverRect = {
@@ -23,16 +26,17 @@ type PopoverRect = {
   width: number
 }
 
-function readAnchorRect(anchor: HTMLElement | null): PopoverRect {
+function readAnchorRect(anchor: HTMLElement | null, host?: HTMLElement | null): PopoverRect {
   if (!anchor) {
     return { height: 0, left: 0, top: 0, width: 0 }
   }
 
   const rect = anchor.getBoundingClientRect()
+  const origin = host ? fixedPositionOrigin(host) : { left: 0, top: 0 }
   return {
     height: rect.height,
-    left: rect.left,
-    top: rect.top,
+    left: rect.left - origin.left,
+    top: rect.top - origin.top,
     width: rect.width,
   }
 }
@@ -83,10 +87,17 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
   } = props
 
   const popoverRef = useRef<HTMLDivElement>(null)
+  const present = useMotionPresence(isPresented, popoverRef)
   useImperativeHandle(ref, () => popoverRef.current!, [])
 
   const appearance = useGlassAppearance(glass)
+  const config = useUIConfig()
+  const [portalHost, setPortalHost] = useState<HTMLElement | null>(null)
   const [anchorRect, setAnchorRect] = useState<PopoverRect>(() => readAnchorRect(anchorRef.current))
+
+  useEffect(() => {
+    setPortalHost(anchorRef.current?.closest<HTMLElement>('[role="dialog"], [role="alertdialog"]') ?? document.body)
+  }, [anchorRef, isPresented])
 
   useViewportFit(popoverRef, isPresented, anchorRect)
 
@@ -96,7 +107,7 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
     }
 
     const updatePosition = () => {
-      setAnchorRect(readAnchorRect(anchorRef.current))
+      setAnchorRect(readAnchorRect(anchorRef.current, portalHost))
     }
 
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
@@ -120,18 +131,22 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
     }
 
     updatePosition()
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(updatePosition)
+    if (anchorRef.current) observer?.observe(anchorRef.current)
+    if (portalHost) observer?.observe(portalHost)
     window.addEventListener('resize', updatePosition)
     window.addEventListener('scroll', updatePosition, true)
     window.addEventListener('keydown', handleKeyDown)
     document.addEventListener('mousedown', handlePointerDown)
 
     return () => {
+      observer?.disconnect()
       window.removeEventListener('resize', updatePosition)
       window.removeEventListener('scroll', updatePosition, true)
       window.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousedown', handlePointerDown)
     }
-  }, [anchorRef, isPresented, onDismiss])
+  }, [anchorRef, isPresented, onDismiss, portalHost])
 
   const positionStyle = useMemo(() => {
     const base: CSSProperties = {
@@ -158,7 +173,7 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
     return base
   }, [anchorRect, arrowEdge, matchAnchorWidth])
 
-  if (!isPresented) {
+  if (!present) {
     return null
   }
 
@@ -167,15 +182,18 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
       prefixClass('popover'),
       prefixClass(`popover-${arrowEdge}`),
     ],
-    style: { ...appearance.style, ...positionStyle },
+    style: { ...themeStyle(config), ...appearance.style, ...positionStyle },
   })
 
-  return (
+  const layer = (
     <div className={prefixClass('popover-layer')}>
       <div
         {...appearance}
         {...commonProps}
         {...finalRestProps}
+        {...(config.theme ? { 'data-theme': config.theme } : {})}
+        data-state={isPresented ? 'open' : 'closed'}
+        aria-hidden={!isPresented || undefined}
         aria-label={title}
         aria-modal="false"
         ref={popoverRef}
@@ -185,4 +203,5 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
       </div>
     </div>
   )
+  return portalHost ? createPortal(layer, portalHost) : layer
 })

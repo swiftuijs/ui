@@ -132,3 +132,13 @@ export const Warning: Story = {
   render: () => <WarningAlert />
 }
 
+
+function LongContentAlert() {
+  const [isVisible, setIsVisible] = useState(false)
+  return <>
+    <Button onClick={() => setIsVisible(true)}>Show Long Alert</Button>
+    <Alert title="Review details" message={'Keep these details available when text grows or the screen is short. '.repeat(24)}
+      isVisible={isVisible} onDismiss={() => setIsVisible(false)} />
+  </>
+}
+export const LongContent: Story = { render: () => <LongContentAlert /> }

@@ -15,6 +15,7 @@ These are the priority acceptance surface. “Core” identifies development foc
 | --- | --- | --- |
 | Forms | Native HTML controls; ordinary React events and controlled props | Applications provide validation, labels and persistence |
 | Modals | Portal, focus trap and restoration, background isolation, scroll lock, nested Escape handling | Handle supports pointer dragging, detent snapping and dismissal; content scrolls separately |
+| Motion | Paired modal/menu transitions, sheet detent settling, disclosure expansion, content-update feedback and system Reduce Motion | Web timing curves approximate settling; native physics springs and text/number interpolation are not implemented. [Motion guide](/docs/concepts/motion/) |
 | Adaptive layout | CSS stacks and grids; container-aware `NavigationSplitView` with compact column navigation | Two columns collapse below 768px; three below 1024px; `compact` overrides this |
 | SSR | Client-marked package entries can be prerendered; navigation IDs are stable | Viewport hooks return `null` on the server; portal content appears after mounting |
 | Packaging | Component CSS, strict consumer types and unused JavaScript removal are checked from the packed artifact | Import shared styles once; use component subpaths for the smallest CSS footprint |

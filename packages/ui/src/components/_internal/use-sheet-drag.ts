@@ -21,29 +21,41 @@ export function useSheetDrag({ open, detents, selectedDetent, dismissDisabled, o
   const drag = useRef<{ id: number; startY: number; startHeight: number; height: number;
     panel: HTMLElement; maxHeight: number; moved: boolean } | null>(null)
   const suppressClick = useRef(false)
+  const interactedPanel = useRef<HTMLElement | null>(null)
 
   const reset = () => {
     const current = drag.current
     if (!current) return
-    current.panel.style.removeProperty('height')
+    // Commit the finger's last position before CSS settles to the selected detent.
+    void current.panel.offsetHeight
     delete current.panel.dataset.dragging
+    current.panel.style.removeProperty('height')
     drag.current = null
   }
   useEffect(() => {
-    if (!open) { drag.current = null; suppressClick.current = false }
+    if (!open) {
+      drag.current = null; suppressClick.current = false
+      if (interactedPanel.current) delete interactedPanel.current.dataset.enterInterrupted
+    }
     return () => { drag.current = null }
   }, [open])
   const onPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
     if (event.button !== 0 || drag.current) return
     const panel = event.currentTarget.closest<HTMLElement>('[role="dialog"]')!
+    interactedPanel.current = panel
+    panel.dataset.enterInterrupted = 'true'
     suppressClick.current = false
     const startHeight = panel.getBoundingClientRect().height || detentPixels(selectedDetent, window.innerHeight)
     // Measure the layout cap, including calc()/min() and a centered form sheet.
     // This synchronous change is restored before the browser paints.
     const previousHeight = panel.style.height
+    const previousTransition = panel.style.transition
+    panel.style.transition = 'none'
     panel.style.height = '100dvh'
     const maxHeight = panel.getBoundingClientRect().height || window.innerHeight
     panel.style.height = previousHeight
+    void panel.offsetHeight
+    panel.style.transition = previousTransition
     drag.current = { id: event.pointerId, startY: event.clientY, startHeight, height: startHeight, panel, maxHeight, moved: false }
     event.currentTarget.setPointerCapture?.(event.pointerId)
   }

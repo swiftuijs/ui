@@ -1,7 +1,10 @@
+@use '../../style/mixins/motion.scss' as motion;
 @use '../../style/glass.scss' as *;
 @use '@style/base.scss' as *;
 
 @include component('context-menu') {
+  @include motion.presence;
+  transform-origin: top left;
   position: fixed;
   min-width: 220px;
   padding: var(--sw-spacing-xs, 4px);

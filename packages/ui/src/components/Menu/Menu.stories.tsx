@@ -97,3 +97,13 @@ export const AtViewportEdge: Story = {
   args: { trigger: <Button>Edge menu</Button>, items: [{ label: 'Edit' }, { label: 'Delete', destructive: true }] },
   decorators: [(Story) => <div style={{ display: 'flex', justifyContent: 'flex-end' }}><Story /></div>],
 }
+
+export const LongMenu: Story = {
+  args: {
+    trigger: <Button>Many actions</Button>,
+    items: Array.from({ length: 24 }, (_, i) => ({
+      label: `Action ${i + 1}`,
+      ...(i === 23 ? { submenu: [{ label: 'Final nested action' }] } : {}),
+    })),
+  },
+}

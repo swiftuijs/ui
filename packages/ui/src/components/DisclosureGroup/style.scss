@@ -1,4 +1,5 @@
 @use '@style/base.scss' as *;
+@use '../../style/mixins/motion.scss' as motion;
 
 @include component('disclosuregroup') {
   border: 1px solid var(--sw-color-separator);
@@ -62,5 +63,10 @@
     padding: var(--sw-spacing-md);
     padding-top: 0;
     border-top: 1px solid var(--sw-color-separator);
+  }
+  &-region {
+    overflow: hidden;
+    @include motion.presence(sw-disclosure-in, sw-disclosure-out);
+    &[data-state='open'] { animation-fill-mode: backwards; }
   }
 }

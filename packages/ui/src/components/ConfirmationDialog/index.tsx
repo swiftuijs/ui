@@ -56,9 +56,6 @@ export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfi
   const { title, message, isVisible, onDismiss, actions, ...restProps } = props
 
 
-  if (!isVisible) {
-    return null
-  }
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('confirmation-dialog'),

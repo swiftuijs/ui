@@ -4,6 +4,8 @@ import type { ITransitionConfig } from '@/types/transition'
 
 import { useNaviContext } from '@/contexts'
 import { eventBus } from '@/common'
+import { afterAnimations } from '@/common/motion'
+import { TransitionManager } from '@/common/transition-manager'
 import { StandardPage, type IStandardProps } from './standard-page'
 import { ActionSheet, type IActionSheetProps } from './action-sheet'
 
@@ -41,8 +43,11 @@ export const Page = forwardRef<PageHandle, IPageProps>(function Page(props, ref)
   const { noEnteringAnimation, transition, ...restProps } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const noEnteringAnimationRef = useRef(noEnteringAnimation)
+  const stopAnimation = useRef<() => void>(() => {})
+  const initialTransition = useRef(transition)
   const naviContext = useNaviContext()
   const pageType: IPageType = props.type || 'page'
+  useEffect(() => () => stopAnimation.current(), [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -53,17 +58,14 @@ export const Page = forwardRef<PageHandle, IPageProps>(function Page(props, ref)
       return
     }
 
-    const onAnimationEnd = () => {
-      eventBus.emit(`${naviContext.eventPrefix}.page-entered`, props.id)
-      container.removeEventListener('animationend', onAnimationEnd)
-    }
-
-    container.addEventListener('animationend', onAnimationEnd)
+    TransitionManager.applyTransitionConfig(container, initialTransition.current)
     container.setAttribute('data-page-status', 'entering')
+    stopAnimation.current = afterAnimations(container, () => {
+      container.removeAttribute('data-page-status')
+      eventBus.emit(`${naviContext.eventPrefix}.page-entered`, props.id)
+    })
+    return () => stopAnimation.current()
 
-    return () => {
-      container.removeEventListener('animationend', onAnimationEnd)
-    }
   }, [naviContext.eventPrefix, props.id])
 
   useImperativeHandle(ref, () => ({
@@ -71,13 +73,10 @@ export const Page = forwardRef<PageHandle, IPageProps>(function Page(props, ref)
       const container = containerRef.current
       if (!container) return
 
-      const animationEnd = () => {
-        container.removeEventListener('animationend', animationEnd)
-        callback?.()
-      }
-
-      container.addEventListener('animationend', animationEnd)
+      stopAnimation.current()
       container.setAttribute('data-page-status', 'exiting')
+      stopAnimation.current = afterAnimations(container, () => callback?.())
+
     },
   }), [])
 

@@ -1,3 +1,4 @@
+import { useMotionPresence } from '../_internal/use-motion-presence'
 import {
   cloneElement,
   isValidElement,
@@ -151,6 +152,7 @@ export function Menu(props: IMenuProps) {
 
   const isControlled = controlledIsOpen !== undefined
   const isOpen = isControlled ? controlledIsOpen : internalIsOpen
+  const present = useMotionPresence(isOpen, menuRef)
   useEffect(() => {
     setPortalHost(document.getElementById(triggerId)?.closest<HTMLElement>('[role="dialog"], [role="alertdialog"]') ?? document.body)
   }, [triggerId])
@@ -235,11 +237,22 @@ export function Menu(props: IMenuProps) {
     }
   }, [closeMenu, isOpen, openMenu])
 
+  const enterSubmenu = useCallback((index: number) => {
+    const next = findNextEnabledIndexForItems(items[index]?.submenu ?? [], -1, 1)
+    if (activeSubmenuIndex === index) {
+      focusSubmenuItem(next)
+    } else {
+      pendingSubmenuFocusIndexRef.current = next
+      setActiveSubmenuIndex(index)
+    }
+  }, [activeSubmenuIndex, findNextEnabledIndexForItems, focusSubmenuItem, items])
+
   const handleItemClick = useCallback((item: IMenuItem) => {
     if (item.disabled) {
       return
     }
     if (item.submenu?.length) {
+      enterSubmenu(items.indexOf(item))
       return
     }
     if (item.action) {
@@ -247,7 +260,7 @@ export function Menu(props: IMenuProps) {
     }
 
     closeMenu(true)
-  }, [closeMenu])
+  }, [closeMenu, enterSubmenu, items])
 
   const handleMenuItemKeyDown = (event: KeyboardEvent<MenuButtonElement>, index: number) => {
     const submenu = items[index]?.submenu ?? []
@@ -284,8 +297,7 @@ export function Menu(props: IMenuProps) {
       case ' ': {
         event.preventDefault()
         if (submenu.length > 0) {
-          setActiveSubmenuIndex(index)
-          pendingSubmenuFocusIndexRef.current = findNextEnabledIndexForItems(submenu, -1, 1)
+          enterSubmenu(index)
         } else {
           handleItemClick(items[index])
         }
@@ -294,8 +306,7 @@ export function Menu(props: IMenuProps) {
       case 'ArrowRight': {
         if (submenu.length > 0) {
           event.preventDefault()
-          setActiveSubmenuIndex(index)
-          pendingSubmenuFocusIndexRef.current = findNextEnabledIndexForItems(submenu, -1, 1)
+          enterSubmenu(index)
         }
         break
       }
@@ -412,7 +423,9 @@ export function Menu(props: IMenuProps) {
       return
     }
 
-    const nextFocusIndex = pendingSubmenuFocusIndexRef.current ?? findNextEnabledIndexForItems(activeSubmenuItems, -1, 1)
+    // Hover/focus may reveal a submenu, but only explicit activation enters it.
+    const nextFocusIndex = pendingSubmenuFocusIndexRef.current
+    if (nextFocusIndex === null) return
     pendingSubmenuFocusIndexRef.current = null
     focusSubmenuItem(nextFocusIndex)
   }, [activeSubmenuIndex, activeSubmenuItems, findNextEnabledIndexForItems, focusSubmenuItem, isOpen])
@@ -496,7 +509,7 @@ export function Menu(props: IMenuProps) {
     )
   }
 
-  const menu = isOpen ? (
+  const menu = present ? (
         <div
           {...appearance}
           {...(config.theme ? { 'data-theme': config.theme } : {})}
@@ -504,9 +517,12 @@ export function Menu(props: IMenuProps) {
           id={menuId}
           ref={menuRef}
           className={`${prefixClass('menu')} ${prefixClass(`menu-${placement}`)}`}
+          data-state={isOpen ? 'open' : 'closed'}
+          aria-hidden={!isOpen || undefined}
           role="menu"
           aria-labelledby={triggerId}
         >
+          <div className={prefixClass('menu-items')}>
           {groupedItems.map(({ item, index, showSectionLabel, showSeparator, sectionId }) => (
             <div key={item.id || index} className={prefixClass('menu-entry')}>
               {showSeparator ? <div className={prefixClass('menu-separator')} role="separator" /> : null}
@@ -556,11 +572,13 @@ export function Menu(props: IMenuProps) {
               </button>
             </div>
           ))}
+          </div>
           {activeSubmenuIndex !== null && activeSubmenuItems.length > 0 ? (
             <div
               {...appearance}
               ref={submenuRef}
               className={`${prefixClass('menu')} ${prefixClass('menu-submenu')} ${prefixClass('menu-right')}`}
+              data-state="open"
               role="menu"
               aria-label={items[activeSubmenuIndex]?.label}
             >

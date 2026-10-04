@@ -1,6 +1,7 @@
-import { memo, useId, useState } from 'react'
+import { memo, useId, useState, useRef } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
+import { useMotionPresence } from '../_internal/use-motion-presence'
 
 import './style.scss'
 
@@ -50,6 +51,8 @@ export const DisclosureGroup = memo(function DisclosureGroup(props: IDisclosureG
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
   const isControlled = controlledExpanded !== undefined
   const expanded = isControlled ? controlledExpanded : internalExpanded
+  const contentRef = useRef<HTMLDivElement | null>(null)
+  const present = useMotionPresence(expanded, contentRef)
   const baseId = useId().replace(/:/g, '')
   const buttonId = `${baseId}-disclosure-button`
   const contentId = `${baseId}-disclosure-content`
@@ -81,14 +84,20 @@ export const DisclosureGroup = memo(function DisclosureGroup(props: IDisclosureG
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="m4 2 4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </span>
       </button>
-      {expanded && (
+      {present && (
         <div
+          ref={node => {
+            contentRef.current = node
+            if (node) node.style.setProperty('--sw-disclosure-height', `${node.scrollHeight}px`)
+          }}
           id={contentId}
-          className={prefixClass('disclosuregroup-content')}
+          className={prefixClass('disclosuregroup-region')}
+          data-state={expanded ? 'open' : 'closed'}
+          aria-hidden={!expanded || undefined}
           role="region"
           aria-labelledby={buttonId}
         >
-          {children}
+          <div className={prefixClass('disclosuregroup-content')}>{children}</div>
         </div>
       )}
     </div>

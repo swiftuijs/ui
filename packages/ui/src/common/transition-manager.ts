@@ -48,18 +48,15 @@ export class TransitionManager {
       element.style.viewTransitionName = ''
     }
 
-    // Apply custom duration and easing if provided
-    if (config.duration || config.easing) {
-      const duration = config.duration ? `${config.duration}ms` : undefined
-      const easing = config.easing
-      
-      if (duration || easing) {
-        element.style.transition = [
-          duration ? `all ${duration}` : undefined,
-          easing ? easing : undefined
-        ].filter(Boolean).join(' ')
-      }
-    }
+    // CSS animations, not `transition: all`, perform navigation.
+    if (config.duration !== undefined && Number.isFinite(config.duration)) {
+      element.style.setProperty('--sw-page-duration', `${Math.max(0, config.duration)}ms`)
+    } else element.style.removeProperty('--sw-page-duration')
+    if (config.easing) element.style.setProperty('--sw-page-easing', config.easing)
+    else element.style.removeProperty('--sw-page-easing')
+    if (config.direction && config.direction !== 'auto') element.dataset.transitionDirection = config.direction
+    else delete element.dataset.transitionDirection
+
   }
 
   /**
@@ -71,15 +68,15 @@ export class TransitionManager {
   static getDefaultTransition(pageType: 'page' | 'actionsheet'): ITransitionConfig {
     if (pageType === 'actionsheet') {
       return {
-        type: 'fade',
-        duration: 200,
+        type: 'slide',
+        duration: 320,
       }
     }
     
     return {
       type: 'slide',
-      duration: 300,
-      easing: 'cubic-bezier(0.075, 0.82, 0.165, 1)',
+      duration: 350,
+      easing: 'cubic-bezier(0.32, 0.72, 0, 1)',
     }
   }
 

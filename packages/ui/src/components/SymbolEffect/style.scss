@@ -27,13 +27,17 @@
 }
 
 @include component('symbol-effect-pulse') {
-  animation: sw-symbol-effect-pulse 1s ease-in-out infinite;
+  &.sw-symbol-effect-active { animation: sw-symbol-effect-pulse 1s ease-in-out infinite; }
 }
 
 @include component('symbol-effect-bounce') {
-  animation: sw-symbol-effect-bounce 0.9s ease-in-out infinite;
+  &.sw-symbol-effect-active { animation: sw-symbol-effect-bounce 0.9s ease-in-out infinite; }
 }
 
 @include component('symbol-effect-appear') {
-  animation: sw-symbol-effect-appear 0.24s ease-out both;
+  &.sw-symbol-effect-active { animation: sw-symbol-effect-appear var(--sw-transition-normal) both; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-symbol-effect-active { will-change: auto; }
 }

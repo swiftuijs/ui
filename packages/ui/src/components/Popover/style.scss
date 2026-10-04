@@ -1,3 +1,4 @@
+@use '../../style/mixins/motion.scss' as motion;
 @use '../../style/glass.scss' as *;
 @use '@style/base.scss' as *;
 
@@ -9,6 +10,8 @@
 }
 
 .sw-popover {
+  @include motion.presence;
+  transform-origin: top left;
   min-width: 220px;
   pointer-events: auto;
   position: fixed;
@@ -27,3 +30,6 @@
 
 .sw-popover[data-glass="on"] { border-radius: 24px; @include glass-surface; }
 .sw-popover[data-glass="on"] .sw-popover-content { background: transparent; backdrop-filter: none; border: 0; box-shadow: none; }
+
+.sw-popover-bottom { transform-origin: bottom left; }
+.sw-popover-trailing { transform-origin: top right; }

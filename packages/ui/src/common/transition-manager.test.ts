@@ -21,19 +21,21 @@ describe('transition configuration', () => {
     const element = document.createElement('div')
     Manager.applyTransitionConfig(element, { viewTransitionName: 'article', duration: 250, easing: 'linear' })
     expect(element.style.viewTransitionName).toBe('article')
-    expect(element.style.transition).toBe('all 250ms linear')
+    expect(element.style.getPropertyValue('--sw-page-duration')).toBe('250ms')
+    expect(element.style.getPropertyValue('--sw-page-easing')).toBe('linear')
     Manager.applyTransitionConfig(element, {})
     expect(element.style.viewTransitionName).toBe('')
     Manager.applyTransitionConfig(element)
-    expect(element.style.transition).toBe('all 250ms linear')
+    expect(element.style.getPropertyValue('--sw-page-duration')).toBe('')
   })
   it.each([
-    [{ duration: 400 }, 'all 400ms'],
-    [{ easing: 'ease-in' }, 'ease-in'],
-  ])('allows independent duration and easing overrides', (config, expected) => {
+    [{ duration: 400 }, '--sw-page-duration', '400ms'],
+    [{ duration: 0 }, '--sw-page-duration', '0ms'],
+    [{ easing: 'ease-in' }, '--sw-page-easing', 'ease-in'],
+  ])('allows independent duration and easing overrides', (config, variable, expected) => {
     const element = document.createElement('div')
     Manager.applyTransitionConfig(element, config)
-    expect(element.style.transition).toBe(expected)
+    expect(element.style.getPropertyValue(variable)).toBe(expected)
   })
   it('preserves explicit overrides while retaining page defaults', () => {
     const defaults = Manager.getDefaultTransition('page')
@@ -42,6 +44,6 @@ describe('transition configuration', () => {
     expect(Manager.mergeTransitionConfig(undefined, defaults)).toEqual(defaults)
     expect(Manager.mergeTransitionConfig({ type: 'none' })).toEqual({ type: 'none' })
     expect(Manager.mergeTransitionConfig()).toEqual({ type: 'slide' })
-    expect(Manager.getDefaultTransition('actionsheet')).toEqual({ type: 'fade', duration: 200 })
+    expect(Manager.getDefaultTransition('actionsheet')).toEqual({ type: 'slide', duration: 320 })
   })
 })

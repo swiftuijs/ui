@@ -73,7 +73,6 @@ export const Alert = memo(function Alert(props: IAlertProps) {
   } = props
 
 
-  if (!isVisible) return null
 
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('alert')

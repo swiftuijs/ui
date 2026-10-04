@@ -32,3 +32,7 @@ export const Appear: Story = {
     children: <span style={{ fontSize: 32 }}>♥</span>,
   },
 }
+
+export const Inactive: Story = {
+  args: { effect: 'pulse', isActive: false, children: <span style={{ fontSize: 32 }}>★</span> },
+}

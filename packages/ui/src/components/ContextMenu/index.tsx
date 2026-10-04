@@ -1,3 +1,4 @@
+import { useMotionPresence } from '../_internal/use-motion-presence'
 import {
   cloneElement,
   isValidElement,
@@ -74,6 +75,7 @@ export function ContextMenu(props: IContextMenuProps) {
   const appearance = useGlassAppearance(glass)
   const menuRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
+  const present = useMotionPresence(isOpen, menuRef)
   const [position, setPosition] = useState<MenuPosition>({ left: 0, top: 0 })
   useViewportFit(menuRef, isOpen)
   const menuId = useId().replace(/:/g, '')
@@ -176,13 +178,15 @@ export function ContextMenu(props: IContextMenuProps) {
   return (
     <>
       {trigger}
-      {isOpen ? (
+      {present ? (
         <div
           {...appearance}
           {...commonProps}
           {...finalRestProps}
           id={menuId}
           ref={menuRef}
+          data-state={isOpen ? 'open' : 'closed'}
+          aria-hidden={!isOpen || undefined}
           role="menu"
           onKeyDown={(event) => {
             const currentIndex = itemRefs.current.findIndex((item) => item === document.activeElement)

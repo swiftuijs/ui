@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { useState } from 'react'
-import { VStack, Text, Button } from '../'
+import { useRef, useState } from 'react'
+import { VStack, Text, Button, Menu, Popover } from '../'
 import { Sheet, type ISheetProps } from '.'
 
 const meta: Meta<typeof Sheet> = {
@@ -227,3 +227,22 @@ function InteractiveDismissDisabledSheet() {
 export const InteractiveDismissDisabled: Story = {
   render: () => <InteractiveDismissDisabledSheet />,
 }
+
+function NestedControlsSheet() {
+  const [open, setOpen] = useState(false)
+  const [popoverOpen, setPopoverOpen] = useState(false)
+  const anchor = useRef<HTMLButtonElement>(null)
+  return <>
+    <Button onClick={() => setOpen(true)}>Show Nested Controls</Button>
+    <Sheet title="Nested controls" isPresented={open} onDismiss={() => setOpen(false)}>
+      <VStack spacing={16} alignment="leading">
+        <Menu trigger={<Button>Sheet menu</Button>} items={[{ label: 'Edit details' }]} />
+        <Button ref={anchor} onClick={() => setPopoverOpen(true)}>Sheet popover</Button>
+        <Popover title="Sheet help" anchorRef={anchor} isPresented={popoverOpen} onDismiss={() => setPopoverOpen(false)}>
+          <Text>Help stays beside its control.</Text>
+        </Popover>
+      </VStack>
+    </Sheet>
+  </>
+}
+export const NestedControls: Story = { render: () => <NestedControlsSheet /> }

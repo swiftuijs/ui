@@ -1,26 +1,28 @@
+@use '../../style/mixins/motion.scss' as motion;
 @use '../_internal/modal.scss';
 @use '../_internal/grabber.scss' as *;
 @use '@style/base.scss' as *;
 
 @include component('sheet') {
   position: fixed;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(calc(100% - 16px), 600px);
+  bottom: 0;
+  left: 0;
+  width: 100%;
   height: var(--sw-sheet-height, 90%);
-  max-height: calc(100dvh - 16px);
+  max-height: calc(100dvh - max(16px, var(--safe-area-top, env(safe-area-inset-top, 0px))));
   z-index: var(--sw-z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  @include motion.presence(sw-sheet-in, sw-sheet-out);
+  transition: height var(--sw-transition-slow);
 
   &-backdrop {
     position: fixed;
     inset: 0;
     z-index: var(--sw-z-modal-backdrop);
     background-color: rgba(0, 0, 0, 0.4);
-    animation: #{$ns}-fade-in var(--sw-transition-fast);
+    @include motion.presence(sw-fade-in, sw-fade-out);
   }
 
   &-content {
@@ -29,9 +31,9 @@
     height: 100%;
     max-height: 100%;
     background-color: var(--sw-color-background-elevated);
-    border-radius: var(--sw-sheet-corner-radius, var(--sw-radius-sheet));
+    border-radius: var(--sw-sheet-corner-radius, var(--sw-radius-sheet)) var(--sw-sheet-corner-radius, var(--sw-radius-sheet)) 0 0;
     box-shadow: var(--sw-shadow-lg);
-    animation: #{$ns}-slide-in-bottom var(--sw-transition-normal);
+
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -86,6 +88,10 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--sw-spacing-lg);
+    padding-inline-start: calc(var(--sw-spacing-lg) + var(--safe-area-left, env(safe-area-inset-left, 0px)));
+    padding-inline-end: calc(var(--sw-spacing-lg) + var(--safe-area-right, env(safe-area-inset-right, 0px)));
+    padding-bottom: calc(var(--sw-spacing-lg) + var(--safe-area-bottom, env(safe-area-inset-bottom, 0px)));
+    overflow-wrap: anywhere;
   }
 
   &-footer {
@@ -94,14 +100,30 @@
   }
 }
 
-.sw-sheet-fullScreen { inset: 0; width: 100%; height: 100%; max-height: 100dvh; transform: none; }
-.sw-sheet-fullScreen .sw-sheet-content { border-radius: 0; }
-.sw-sheet-formSheet { width: min(calc(100% - 16px), 420px); }
-@media (min-width: 768px) {
-  .sw-sheet-formSheet { top: 50%; bottom: auto; height: var(--sw-sheet-height, 90%); max-height: min(640px, calc(100dvh - 16px)); transform: translate(-50%, -50%); }
+// Wide touch devices with compact height (phone landscape) keep the bottom
+// sheet. Fine-pointer desktop windows retain their centered presentation.
+@media (min-width: 768px) and (min-height: 500px), (min-width: 768px) and (pointer: fine) {
+  .sw-sheet-pageSheet,
+  .sw-sheet-formSheet {
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+    width: min(calc(100% - 32px), 600px);
+    max-height: calc(100dvh - 32px);
+    transform: translate(-50%, -50%);
+    @include motion.presence;
+  }
+  .sw-sheet-formSheet { width: min(calc(100% - 32px), 420px); max-height: min(640px, calc(100dvh - 32px)); }
+  .sw-sheet-pageSheet .sw-sheet-content,
+  .sw-sheet-formSheet .sw-sheet-content { border-radius: var(--sw-sheet-corner-radius, var(--sw-radius-sheet)); }
 }
 
-.sw-sheet[data-dragging="true"] .sw-sheet-content { animation: none; }
+.sw-sheet-fullScreen { inset: 0; width: 100%; height: 100dvh; max-height: 100dvh; transform: none; }
+.sw-sheet-fullScreen .sw-sheet-content { border-radius: 0; }
+.sw-sheet-fullScreen .sw-sheet-body { padding-top: calc(var(--sw-spacing-lg) + var(--safe-area-top, env(safe-area-inset-top, 0px))); }
+
+.sw-sheet[data-dragging="true"] { transition: none; }
+.sw-sheet[data-state="open"][data-enter-interrupted="true"] { animation: none; }
 .sw-sheet[data-dragging="true"] .sw-sheet-drag-indicator { cursor: grabbing; }
 
 .sw-sheet-fullScreen .sw-sheet-content,

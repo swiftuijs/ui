@@ -2,6 +2,7 @@ import { useEffect, useCallback, useRef, type RefObject } from 'react'
 import type { IPresentationDetent } from '@/types'
 import { eventBus } from '@/common'
 import { useDetents } from './use-detents'
+import { prefersReducedMotion } from '@/common/motion'
 
 export interface IDragBarProps {
   eventToChangeDetent: string
@@ -22,16 +23,24 @@ export function useTransitionHeight(props: IDragBarProps) {
     if (!props.container?.current) return
     const container = props.container.current!
     finishTransition.current()
-    const onTransitionEnd = () => {
+    const finish = () => {
       container.classList.remove('animate-height')
       container.removeEventListener('transitionend', onTransitionEnd)
+      clearTimeout(timer)
     }
-    finishTransition.current = onTransitionEnd
+    const onTransitionEnd = (event: globalThis.TransitionEvent) => {
+      if (event.target === container && event.propertyName === 'height') finish()
+    }
+    let timer: ReturnType<typeof setTimeout>
+    finishTransition.current = finish
     container.addEventListener('transitionend', onTransitionEnd)
     container.classList.add('animate-height')
     const nearestHeight = getNearestHeight(height, detentInfo.sizes)
     detentIndex.current = detentInfo.sizes.indexOf(nearestHeight!)
     container.style.height = `${nearestHeight}px`
+    const duration = getComputedStyle(container).transitionDuration
+    const milliseconds = parseFloat(duration) * (duration.endsWith('ms') ? 1 : 1000) || 0
+    timer = setTimeout(finish, prefersReducedMotion() ? 0 : milliseconds + (milliseconds ? 50 : 0))
   }, [props.container, detentInfo])
 
   // update height when detentIndex changed(resized)
