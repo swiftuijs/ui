@@ -1,5 +1,7 @@
 # SwiftUI.js Foundation Rebuild Design
 
+> **Archived proposal — 2026-04-09.** Retained as historical context for the foundation rebuild. The original proposal below is unchanged; its permission to break APIs, target directory layout and production-readiness goals do not describe current release policy or supported behavior. Use [Contributing](../../CONTRIBUTING.md) for the current structure and compatibility boundaries, and the [capability matrix](https://swiftuijs.evecalm.com/docs/concepts/capability-matrix/) for current support and limitations.
+
 ## Goal
 
 Rebuild SwiftUI.js into a production-ready React component library that aligns its public API, interaction model, visual defaults, and documentation with SwiftUI and Apple's Human Interface Guidelines, while aligning its internal implementation, testing, and tooling with modern React and web best practices.
