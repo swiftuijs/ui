@@ -14,6 +14,7 @@ Use Node 22 and pnpm 10. Install with `pnpm install --frozen-lockfile`.
 | `apps/docs/content` | Guides, navigation and public documentation copy |
 | `apps/docs/lib`, `components`, `app` | Documentation site runtime and page composition |
 | `apps/docs/scripts` | Content, API and preview generation; implementation and tests live in `scripts/lib` |
+| `docs` | Repository documentation index and archived design proposals |
 | `apps/storybook/.storybook` | The active Storybook configuration |
 | `e2e` | Browser acceptance for components, docs and Kitchensink |
 | `scripts/serve-docs.mjs` | Shared static server used by browser checks |
@@ -25,6 +26,8 @@ Split component-private logic into sibling modules, as Menu does with item group
 Only `@swiftuijs/ui` is published. The workspace, docs and Storybook packages stay private.
 
 ## Documentation sources
+
+See the [repository documentation index](docs/README.md) for current sources and historical proposals. Designs in `docs/archive` record earlier decisions; they do not define the current API or authorize breaking changes.
 
 Edit component reference content in `packages/ui/src/components/**/*.docs.mdx` and live examples in sibling stories. Edit guides in `apps/docs/content`. The build generates `apps/docs/generated-content`, `.generated` and `.source`; these directories are ignored and must not be edited or committed.
 
