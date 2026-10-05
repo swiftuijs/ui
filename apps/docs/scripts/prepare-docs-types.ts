@@ -5,7 +5,7 @@ import { promisify } from 'node:util';
 
 import { mkdir } from 'node:fs/promises';
 
-import { generateAndValidateSource } from '../lib/fumadocs-source';
+import { generateAndValidateSource } from './lib/fumadocs-source';
 
 const execFileAsync = promisify(execFile);
 const scriptDir = dirname(fileURLToPath(import.meta.url));

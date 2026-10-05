@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "prepare-ui": "pnpm --dir ../.. --filter @swiftuijs/ui build",
+    "predev": "pnpm run prepare-ui && pnpm run prepare-docs",
+    "prepare-ui": "pnpm --dir ../.. exec turbo run build --filter=@swiftuijs/ui",
     "prepare-content": "pnpm exec tsx ./scripts/generate-docs-content.ts",
     "prepare-docs": "pnpm exec tsx ./scripts/prepare-docs-source.ts",
     "prepare-types": "pnpm exec tsx ./scripts/prepare-docs-types.ts",

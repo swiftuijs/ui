@@ -1,3 +1,3 @@
-import { generateDocsContent } from '../lib/generated-docs-content';
+import { generateDocsContent } from './lib/generated-docs-content';
 
 await generateDocsContent();

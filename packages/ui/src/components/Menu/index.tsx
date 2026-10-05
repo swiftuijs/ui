@@ -21,6 +21,7 @@ import { clsx, standardizeProps, prefixClass } from '@/common'
 import { useViewportFit } from '../_internal/use-viewport-fit'
 import { useMenuAnchor } from '../_internal/use-menu-anchor'
 import { useUIConfig, themeStyle, useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
+import { findNextEnabledIndexForItems, groupMenuItems } from './menu-model'
 import './style.scss'
 
 /**
@@ -159,24 +160,9 @@ export function Menu(props: IMenuProps) {
   useMenuAnchor(menuRef, triggerId, isOpen, portalHost, placement)
   useViewportFit(submenuRef, activeSubmenuIndex !== null, portalHost)
 
-  const findNextEnabledIndexForItems = useCallback((targetItems: IMenuItem[], startIndex: number, direction: 1 | -1) => {
-    if (!targetItems.length) {
-      return -1
-    }
-
-    for (let offset = 1; offset <= targetItems.length; offset += 1) {
-      const nextIndex = (startIndex + direction * offset + targetItems.length) % targetItems.length
-      if (!targetItems[nextIndex]?.disabled) {
-        return nextIndex
-      }
-    }
-
-    return -1
-  }, [])
-
   const findNextEnabledIndex = useCallback((startIndex: number, direction: 1 | -1) => {
     return findNextEnabledIndexForItems(items, startIndex, direction)
-  }, [findNextEnabledIndexForItems, items])
+  }, [items])
 
   const focusItem = useCallback((index: number) => {
     if (index < 0) {
@@ -244,7 +230,7 @@ export function Menu(props: IMenuProps) {
       pendingSubmenuFocusIndexRef.current = next
       setActiveSubmenuIndex(index)
     }
-  }, [activeSubmenuIndex, findNextEnabledIndexForItems, focusSubmenuItem, items])
+  }, [activeSubmenuIndex, focusSubmenuItem, items])
 
   const handleItemClick = useCallback((item: IMenuItem) => {
     if (item.disabled) {
@@ -398,23 +384,7 @@ export function Menu(props: IMenuProps) {
     [activeSubmenuIndex, items],
   )
 
-  const groupedItems = useMemo(() => {
-    let previousSection: string | undefined
-
-    return items.map((item, index) => {
-      const showSectionLabel = item.section !== undefined && item.section !== previousSection
-      const showSeparator = index > 0 && showSectionLabel
-      previousSection = item.section
-
-      return {
-        item,
-        index,
-        showSectionLabel,
-        showSeparator,
-        sectionId: item.section ? `${menuId}-section-${index}` : undefined,
-      }
-    })
-  }, [items, menuId])
+  const groupedItems = useMemo(() => groupMenuItems(items, menuId), [items, menuId])
 
   useEffect(() => {
     if (!isOpen || activeSubmenuIndex === null) {
@@ -427,7 +397,7 @@ export function Menu(props: IMenuProps) {
     if (nextFocusIndex === null) return
     pendingSubmenuFocusIndexRef.current = null
     focusSubmenuItem(nextFocusIndex)
-  }, [activeSubmenuIndex, activeSubmenuItems, findNextEnabledIndexForItems, focusSubmenuItem, isOpen])
+  }, [activeSubmenuIndex, activeSubmenuItems, focusSubmenuItem, isOpen])
 
   const handleSubmenuItemKeyDown = (event: KeyboardEvent<MenuButtonElement>, index: number) => {
     switch (event.key) {

@@ -2,7 +2,7 @@ import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
 import * as ts from 'typescript';
 
-import type { ComponentDoc } from './component-docs';
+import type { ComponentDoc } from '../../lib/component-docs';
 
 export type ComponentExampleDoc = {
   code: string;

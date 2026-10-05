@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
-import { generateAndValidateSource } from '../lib/fumadocs-source';
+import { generateAndValidateSource } from './lib/fumadocs-source';
 
 const execFileAsync = promisify(execFile);
 const scriptDir = dirname(fileURLToPath(import.meta.url));

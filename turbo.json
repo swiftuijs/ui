@@ -1,9 +1,21 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["tsconfig.base.json"],
+  "globalPassThroughEnv": ["HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "http_proxy", "https_proxy", "all_proxy", "no_proxy", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "SSL_CERT_DIR"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "storybook-static/**", ".next/**", "out/**"]
+      "outputs": ["dist/**", "storybook-static/**", ".next/**", "!.next/cache/**", "out/**"]
+    },
+    "@swiftuijs/ui#build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.test.*", "!src/**/*.stories.*", "!src/**/*.docs.mdx"],
+      "outputs": ["dist/**"]
+    },
+    "docs#build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "../../packages/ui/src/**/*.docs.mdx", "../../packages/ui/src/**/*.stories.*"],
+      "outputs": [".next/**", "!.next/cache/**", "out/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -13,6 +25,10 @@
     },
     "typecheck": {
       "dependsOn": ["^typecheck"]
+    },
+    "docs#typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", "../../packages/ui/src/**/*.docs.mdx", "../../packages/ui/src/**/*.stories.*"]
     },
     "dev": {
       "cache": false,
