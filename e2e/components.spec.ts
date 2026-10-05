@@ -524,6 +524,12 @@ test('Sheet nested Menu and Popover stay beside their anchors without scrolling-
   await page.getByRole('button', { name: 'Show Nested Controls' }).click()
   await page.waitForFunction(() => document.getAnimations().every(a => a.playState !== 'running'))
   const sheet = page.getByRole('dialog', { name: 'Nested controls' })
+  const scroller = sheet.locator('.sw-sheet-body')
+  await scroller.evaluate(node => {
+    const before = document.createElement('div'), after = document.createElement('div')
+    before.style.height = '80px'; after.style.height = '1500px'
+    node.prepend(before); node.append(after)
+  })
   const menuTrigger = sheet.getByRole('button', { name: 'Sheet menu' })
   await menuTrigger.click()
   const menu = sheet.getByRole('menu')
@@ -531,6 +537,12 @@ test('Sheet nested Menu and Popover stay beside their anchors without scrolling-
   await page.waitForFunction(() => document.getAnimations().every(a => a.playState !== 'running'))
   let box = (await menu.boundingBox())!, anchor = (await menuTrigger.boundingBox())!
   expect(Math.abs(box.y - anchor.y - anchor.height - 4)).toBeLessThan(1)
+  await scroller.evaluate(node => { node.scrollTop = 40 })
+  await expect.poll(async () => {
+    const surface = (await menu.boundingBox())!, trigger = (await menuTrigger.boundingBox())!
+    return Math.abs(surface.y - trigger.y - trigger.height - 4)
+  }).toBeLessThan(1)
+  expect(await scroller.evaluate(node => node.scrollTop)).toBe(40)
   await page.keyboard.press('Escape')
   await expect(menu).toHaveCount(0)
   const popoverTrigger = sheet.getByRole('button', { name: 'Sheet popover' })
@@ -540,6 +552,11 @@ test('Sheet nested Menu and Popover stay beside their anchors without scrolling-
   await page.waitForFunction(() => document.getAnimations().every(a => a.playState !== 'running'))
   box = (await popover.boundingBox())!; anchor = (await popoverTrigger.boundingBox())!
   expect(Math.abs(box.y - anchor.y - anchor.height - 12)).toBeLessThan(1)
+  await scroller.evaluate(node => { node.scrollTop = 60 })
+  await expect.poll(async () => {
+    const surface = (await popover.boundingBox())!, trigger = (await popoverTrigger.boundingBox())!
+    return Math.abs(surface.y - trigger.y - trigger.height - 12)
+  }).toBeLessThan(1)
   expect(await popover.evaluate(n => n.parentElement?.parentElement?.classList.contains('sw-sheet'))).toBe(true)
   await popover.click()
   await expect(sheet).toBeVisible()

@@ -47,4 +47,4 @@ export function useViewport(): IViewportInfo | null {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }
 
-export const viewportStore = { getStore: getSnapshot, useStore: useViewport }
+export const viewportStore = { getStore: getSnapshot, subscribe, useStore: useViewport }

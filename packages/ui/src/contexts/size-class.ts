@@ -2,7 +2,7 @@
  * SizeClass system for responsive design
  * Similar to SwiftUI's SizeClass concept
  */
-import { useMemo } from 'react'
+import { useMemo, useSyncExternalStore } from 'react'
 import { SIZE_CLASS_REGULAR_MIN } from '@/tokens'
 import { viewportStore, useViewport } from './viewport'
 
@@ -85,6 +85,26 @@ export const sizeClassStore = {
 export function useSizeClass(): ISizeClassInfo | null {
   const viewport = useViewport()
   return useMemo(() => getSizeClassInfo(viewport), [viewport])
+}
+
+const getServerAxis = () => null
+const getHorizontal = () => {
+  const viewport = viewportStore.getStore()
+  return viewport ? resolveAxisSizeClass(viewport.width, SIZE_CLASS_REGULAR_MIN.horizontal) : null
+}
+const getVertical = () => {
+  const viewport = viewportStore.getStore()
+  return viewport ? resolveAxisSizeClass(viewport.height, SIZE_CLASS_REGULAR_MIN.vertical) : null
+}
+
+/** Only re-renders when the horizontal breakpoint changes; null during SSR. */
+export function useHorizontalSizeClass(): SizeClass | null {
+  return useSyncExternalStore(viewportStore.subscribe, getHorizontal, getServerAxis)
+}
+
+/** Only re-renders when the vertical breakpoint changes; null during SSR. */
+export function useVerticalSizeClass(): SizeClass | null {
+  return useSyncExternalStore(viewportStore.subscribe, getVertical, getServerAxis)
 }
 
 export { SIZE_CLASS_REGULAR_MIN }

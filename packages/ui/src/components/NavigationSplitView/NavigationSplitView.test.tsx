@@ -1,10 +1,43 @@
-import { useState } from 'react'
+import { Profiler, useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 
-import { render, screen } from '@/testing/render'
+import { act, render, screen } from '@/testing/render'
 
 import { NavigationSplitView } from './index'
+
+it('only commits automatic layout updates when the container crosses its current breakpoint', () => {
+  let resize: (entries: { contentRect: { width: number } }[]) => void = () => {}
+  vi.stubGlobal('ResizeObserver', class {
+    constructor(callback: typeof resize) { resize = callback }
+    observe() {}
+    disconnect() {}
+  })
+  const committed = vi.fn()
+  const view = (content?: React.ReactNode) => <Profiler id="split" onRender={committed}>
+    <NavigationSplitView sidebar="Sidebar" detail="Detail" content={content} />
+  </Profiler>
+  const { rerender, unmount } = render(view())
+  try {
+    committed.mockClear()
+    act(() => resize([{ contentRect: { width: 900 } }]))
+    act(() => resize([{ contentRect: { width: 910 } }]))
+    expect(committed).not.toHaveBeenCalled()
+    act(() => resize([{ contentRect: { width: 390 } }]))
+    expect(screen.getByRole('navigation', { name: 'Columns' })).toBeInTheDocument()
+    committed.mockClear()
+    act(() => resize([{ contentRect: { width: 400 } }]))
+    expect(committed).not.toHaveBeenCalled()
+    act(() => resize([{ contentRect: { width: 900 } }]))
+    expect(screen.getByRole('complementary')).toHaveTextContent('Sidebar')
+    rerender(view('Content'))
+    act(() => resize([{ contentRect: { width: 900 } }]))
+    expect(screen.getByRole('navigation', { name: 'Columns' })).toBeInTheDocument()
+    rerender(view())
+    act(() => resize([{ contentRect: { width: 900 } }]))
+    expect(screen.getByRole('complementary')).toBeInTheDocument()
+  } finally { unmount(); vi.unstubAllGlobals() }
+})
 
 describe('NavigationSplitView', () => {
   it('renders sidebar and detail regions in regular layouts', () => {

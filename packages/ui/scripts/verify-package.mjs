@@ -39,8 +39,9 @@ try {
     for (const dependency of ['react', 'react-dom', '@types/react', '@types/react-dom']) linkPackage(dependency, join(workspace, 'node_modules', dependency))
   }
   const consumer = join(fixture, 'consumer.tsx')
-  writeFileSync(consumer, `import { Button, Text, NavigationStack, Sheet, NavigationSplitView, LazyVStack, LazyHGrid, UIProvider, Glass } from '@swiftuijs/ui';
+  writeFileSync(consumer, `import { Button, Text, NavigationStack, Sheet, NavigationSplitView, LazyVStack, LazyHGrid, UIProvider, Glass, useHorizontalSizeClass, useVerticalSizeClass } from '@swiftuijs/ui';
 import { Button as DirectButton } from '@swiftuijs/ui/components/Button';
+export function Axes() { return <span>{useHorizontalSizeClass()}:{useVerticalSizeClass()}</span>; }
 export const view = <UIProvider theme="system" glass={{ enabled: true, intensity: 0.6 }} tokens={{ "--sw-radius-sheet": "28px" }}><Glass glass={false}>Controls</Glass><NavigationStack><Text aria-label="Greeting">Hello</Text><Button onClick={event => event.currentTarget.focus()}>Save</Button><DirectButton>Direct</DirectButton><LazyVStack estimatedItemHeight={40} overscan={3}><Text>Row</Text></LazyVStack><LazyHGrid rows={2} estimatedItemWidth={80}><Text>Cell</Text></LazyHGrid><Sheet title="Editor" isPresented={false} /><NavigationSplitView sidebar="Menu" detail="Details" /></NavigationStack></UIProvider>;`)
   const typeInputs = [consumer]
   if (reactVersion) {
@@ -55,12 +56,17 @@ export const view = <UIProvider theme="system" glass={{ enabled: true, intensity
     assert.match(readFileSync(join(fixture, 'package/dist', entry), 'utf8'), /^['"]use client['"];?/)
   }
   const bundles = []
-  for (const entry of ['@swiftuijs/ui', '@swiftuijs/ui/components/Button']) {
-    const result = await esbuild.build({ stdin: { contents: `import { Button } from '${entry}'; console.log(Button);`, resolveDir: fixture }, bundle: true, platform: 'browser', format: 'esm', minify: true, write: false, outdir: join(fixture, 'bundle'), metafile: true, external: ['react', 'react-dom', 'react/jsx-runtime'] })
+  for (const entry of ['@swiftuijs/ui', '@swiftuijs/ui/components/Button', 'Button with shared styles']) {
+    const source = entry === 'Button with shared styles'
+      ? `import '@swiftuijs/ui/style/index.css'; import { Button } from '@swiftuijs/ui/components/Button'; console.log(Button);`
+      : `import { Button } from '${entry}'; console.log(Button);`
+    const result = await esbuild.build({ stdin: { contents: source, resolveDir: fixture }, bundle: true, platform: 'browser', format: 'esm', minify: true, write: false, outdir: join(fixture, 'bundle'), metafile: true, external: ['react', 'react-dom', 'react/jsx-runtime'] })
     const js = result.outputFiles.find(file => file.path.endsWith('.js'))
     const css = result.outputFiles.find(file => file.path.endsWith('.css'))
     assert.ok(gzipSync(js.contents).length < 2048, `${entry}: Button exceeds 2 KiB gzipped JS`)
     assert.ok(css && css.contents.length > 0, 'Component CSS must survive tree shaking')
+    const cssBudget = entry === '@swiftuijs/ui' ? 16_000 : entry === 'Button with shared styles' ? 3500 : 1000
+    assert.ok(gzipSync(css.contents).length <= cssBudget, `${entry}: CSS exceeds ${cssBudget} bytes gzip`)
     assert.ok(!Object.entries(result.metafile.outputs).filter(([file]) => file.endsWith('.js')).some(([, output]) => Object.entries(output.inputs).some(([file, input]) => input.bytesInOutput > 0 && /components\/(Chart|Map|Sheet|NavigationStack|LazyVStack|LazyHStack|LazyVGrid|LazyHGrid)\//.test(file))), 'Unused components must be removed')
     bundles.push({ entry, jsGzip: gzipSync(js.contents).length, cssGzip: gzipSync(css.contents).length })
   }

@@ -2,10 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 import {
   Button, Glass, LazyVStack, Menu, NavigationLink, NavigationStack,
   Popover, Sheet, Slider, TextField, Toggle, UIProvider,
+  useHorizontalSizeClass, useVerticalSizeClass,
 } from '@swiftuijs/ui'
 
 function Detail() {
   return <><h2>Detail page</h2><NavigationLink dismiss>Go back</NavigationLink></>
+}
+
+function AxisInfo() {
+  const horizontal = useHorizontalSizeClass(), vertical = useVerticalSizeClass()
+  return <output aria-label="Size classes">{horizontal ?? 'unknown'}:{vertical ?? 'unknown'}</output>
 }
 
 export function App() {
@@ -28,6 +34,7 @@ export function App() {
     <Glass ref={glassRef} style={{ flexDirection: 'column', alignItems: 'stretch', gap: 8, padding: 16 }}>
       <h1>React compatibility</h1>
       <output aria-label="Forwarded refs">{refsReady ? 'Ready' : 'Waiting'}</output>
+      <AxisInfo />
       <Toggle aria-label="Notifications" isOn={enabled} onChange={setEnabled} />
       <output aria-label="Notification state">{enabled ? 'On' : 'Off'}</output>
       <TextField aria-label="Name" value={name} onChange={event => setName(event.target.value)} />
