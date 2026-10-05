@@ -16,6 +16,7 @@ import type { IBaseComponent } from '@/types'
 import { useMotionPresence } from '../_internal/use-motion-presence'
 import { useViewportFit } from '../_internal/use-viewport-fit'
 import { fixedPositionOrigin } from '../_internal/fixed-position-origin'
+import { createFrameUpdate } from '../_internal/frame-update'
 import { useUIConfig, themeStyle, useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
 
@@ -107,8 +108,28 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
     }
 
     const updatePosition = () => {
-      setAnchorRect(readAnchorRect(anchorRef.current, portalHost))
+      const next = readAnchorRect(anchorRef.current, portalHost)
+      setAnchorRect(current => current.height === next.height && current.left === next.left
+        && current.top === next.top && current.width === next.width ? current : next)
     }
+
+    const { schedule, cancel } = createFrameUpdate(updatePosition)
+    updatePosition()
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(schedule)
+    if (anchorRef.current) observer?.observe(anchorRef.current)
+    if (portalHost) observer?.observe(portalHost)
+    window.addEventListener('resize', schedule, { passive: true })
+    window.addEventListener('scroll', schedule, { capture: true, passive: true })
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', schedule)
+      window.removeEventListener('scroll', schedule, true)
+      cancel()
+    }
+  }, [anchorRef, isPresented, portalHost])
+
+  useEffect(() => {
+    if (!isPresented) return
 
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -130,23 +151,14 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
       onDismiss?.()
     }
 
-    updatePosition()
-    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(updatePosition)
-    if (anchorRef.current) observer?.observe(anchorRef.current)
-    if (portalHost) observer?.observe(portalHost)
-    window.addEventListener('resize', updatePosition)
-    window.addEventListener('scroll', updatePosition, true)
     window.addEventListener('keydown', handleKeyDown)
     document.addEventListener('mousedown', handlePointerDown)
 
     return () => {
-      observer?.disconnect()
-      window.removeEventListener('resize', updatePosition)
-      window.removeEventListener('scroll', updatePosition, true)
       window.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousedown', handlePointerDown)
     }
-  }, [anchorRef, isPresented, onDismiss, portalHost])
+  }, [anchorRef, isPresented, onDismiss])
 
   const positionStyle = useMemo(() => {
     const base: CSSProperties = {

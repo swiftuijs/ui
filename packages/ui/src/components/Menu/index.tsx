@@ -158,7 +158,6 @@ export function Menu(props: IMenuProps) {
     setPortalHost(document.getElementById(triggerId)?.closest<HTMLElement>('[role="dialog"], [role="alertdialog"]') ?? document.body)
   }, [triggerId])
   useMenuAnchor(menuRef, triggerId, isOpen, portalHost, placement)
-  useViewportFit(menuRef, isOpen, portalHost)
   useViewportFit(submenuRef, activeSubmenuIndex !== null, portalHost)
 
   const findNextEnabledIndex = useCallback((startIndex: number, direction: 1 | -1) => {

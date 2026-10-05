@@ -7,6 +7,11 @@ import {
 } from '@/common'
 import { LayoutContext } from '@/contexts'
 
+const layoutValues = {
+  row: { boxDirection: 'row' as const },
+  column: { boxDirection: 'column' as const },
+}
+
 export interface IBaseStackProps extends IBaseComponent {
   /**
    * The direction of the stack.
@@ -71,7 +76,7 @@ export function BaseStack(props: IBaseStackProps) {
   // Only wrap with LayoutContext if direction is specified (HStack/VStack)
   if (direction) {
     return (
-      <LayoutContext.Provider value={{ boxDirection: direction }}>
+      <LayoutContext.Provider value={layoutValues[direction]}>
         {content}
       </LayoutContext.Provider>
     )

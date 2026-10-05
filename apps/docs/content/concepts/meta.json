@@ -5,6 +5,7 @@
     "responsive-design",
     "capability-matrix",
     "theming",
-    "motion"
+    "motion",
+    "performance"
   ]
 }

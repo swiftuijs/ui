@@ -41,6 +41,7 @@ export async function verifyReactRuntime({ fixture, esbuild, workspace }) {
       await page.addScriptTag({ path: browserFile })
       await expect(page).toHaveTitle(`React ${version} compatibility`)
       await expect(page.getByRole('heading', { name: 'React compatibility' })).toBeVisible()
+      await expect(page.getByLabel('Size classes')).toHaveText(`${width < 768 ? 'compact' : 'regular'}:regular`)
       await expect(page.getByLabel('Forwarded refs')).toHaveText('Ready')
       assert.deepEqual(await page.evaluate(() => window.hydrationErrors), [], 'Hydration must not recover from mismatched markup')
       assert.ok(await page.locator('[data-lazy-item]').count() < 30, 'Lazy hydration must stay bounded')

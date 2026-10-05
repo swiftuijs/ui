@@ -41,6 +41,8 @@ For the smallest CSS footprint, use component subpaths:
 import { Button } from '@swiftuijs/ui/components/Button';
 ```
 
+Keep the shared-style import above. Mixing in root-entry imports still loads the library-wide component CSS. For breakpoint decisions, `useHorizontalSizeClass` and `useVerticalSizeClass` update only when their selected axis changes; `useViewport` and `useSizeClass` retain pixel dimensions. See the [performance guide](https://swiftuijs.evecalm.com/docs/concepts/performance/).
+
 ## Appearance and platform limits
 
 - `UIProvider` scopes light/dark/system appearance, accent color and CSS tokens. Glass is opt-in, with intensity and per-surface overrides; it is a CSS material rather than native optical refraction.

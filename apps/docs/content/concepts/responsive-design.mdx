@@ -22,9 +22,21 @@ Stacks and grids use CSS layout. Give containers room to shrink, wrap long text,
 
 ## Viewport hooks
 
-`useViewport` and `useSizeClass` share one resize subscription, removed when the last subscriber unmounts. A viewport narrower than 768px is horizontally compact. These are web breakpoints, not Apple's device classification rules.
+`useViewport`, `useSizeClass`, `useHorizontalSizeClass` and `useVerticalSizeClass` share one resize subscription, removed when the last subscriber unmounts. A viewport narrower than 768px is horizontally compact; below 667px high it is vertically compact. These are web breakpoints, not Apple's device classification rules.
 
-Both hooks return `null` on the server and during initial hydration. Prefer CSS for visual adaptation; when rendering depends on a hook, provide a stable fallback for `null`.
+All four hooks return `null` on the server and during initial hydration. Prefer CSS for visual adaptation; when rendering depends on a hook, provide a stable fallback for `null`.
+
+Use an axis hook when you only need a breakpoint. It updates when that axis crosses the breakpoint; `useSizeClass` and `useViewport` also update their pixel dimensions during resizing.
+
+```tsx
+import { useHorizontalSizeClass } from '@swiftuijs/ui/contexts/size-class';
+
+function AdaptiveContent() {
+  const horizontal = useHorizontalSizeClass();
+  if (horizontal === null) return <LoadingLayout />;
+  return horizontal === 'compact' ? <CompactLayout /> : <WideLayout />;
+}
+```
 
 ## Check your composition
 

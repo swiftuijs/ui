@@ -1,5 +1,7 @@
 import { useEffect, type RefObject } from 'react'
 import { fixedPositionOrigin } from './fixed-position-origin'
+import { createFrameUpdate } from './frame-update'
+import { fitToViewport } from './fit-to-viewport'
 
 /** A portaled menu follows its trigger without inheriting a scroll pane's clipping. */
 export function useMenuAnchor(ref: RefObject<HTMLElement | null>, triggerId: string,
@@ -18,16 +20,21 @@ export function useMenuAnchor(ref: RefObject<HTMLElement | null>, triggerId: str
         right: 'auto', bottom: 'auto', margin: '0',
         transform: placement === 'top' ? 'translateY(-100%)' : placement === 'left' ? 'translateX(-100%)' : 'none',
       })
+      fitToViewport(node)
     }
+    const { schedule, cancel } = createFrameUpdate(update)
     update()
-    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(update)
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(schedule)
     observer?.observe(trigger)
-    window.addEventListener('resize', update)
-    window.addEventListener('scroll', update, true)
+    observer?.observe(node)
+    observer?.observe(host)
+    window.addEventListener('resize', schedule, { passive: true })
+    window.addEventListener('scroll', schedule, { capture: true, passive: true })
     return () => {
       observer?.disconnect()
-      window.removeEventListener('resize', update)
-      window.removeEventListener('scroll', update, true)
+      window.removeEventListener('resize', schedule)
+      window.removeEventListener('scroll', schedule, true)
+      cancel()
     }
   }, [ref, triggerId, open, host, placement])
 }
