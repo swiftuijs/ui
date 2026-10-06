@@ -52,4 +52,8 @@ Keep the shared-style import above. Mixing in root-entry imports still loads the
 
 Read the [getting started guide](https://swiftuijs.evecalm.com/docs/getting-started/), [component reference](https://swiftuijs.evecalm.com/docs/components/), [capability matrix](https://swiftuijs.evecalm.com/docs/concepts/capability-matrix/), and [theming guide](https://swiftuijs.evecalm.com/docs/concepts/theming/).
 
+## Related project: Twill
+
+[Twill](https://twill.evecalm.com/) is our sibling Swift-inspired language for JavaScript and TypeScript. Follow its [React integration guide](https://twill.evecalm.com/frameworks#react-with-vite-8) to write SwiftUI.js views in `.twillx`, keeping ordinary component props, React state and shared styles. SwiftUI.js also works with standard TypeScript and JSX. See the [Twill repository](https://github.com/swiftuijs/twill) for the compiler and tooling.
+
 MIT licensed.

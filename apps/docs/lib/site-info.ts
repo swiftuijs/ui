@@ -14,4 +14,5 @@ export const projectLinks = [
   { label: 'Releases', href: `${siteInfo.repository}/releases` },
   { label: 'Issues', href: `${siteInfo.repository}/issues` },
   { label: 'MIT license', href: `${siteInfo.repository}/blob/main/LICENSE` },
+  { label: 'Twill', href: 'https://twill.evecalm.com/' },
 ];

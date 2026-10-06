@@ -22,6 +22,10 @@ import { Button, Text, VStack } from '@swiftuijs/ui';
 
 Component subpaths reduce the CSS footprint: `@swiftuijs/ui/components/Button`. Published entries include Next.js client boundaries. State and event handlers belong in your application's client components; viewport hooks return `null` during SSR. Customize with standard props and CSS variables. Tailwind is optional for consuming applications.
 
+## Related project: Twill
+
+[Twill](https://twill.evecalm.com/) is our sibling Swift-inspired language for JavaScript and TypeScript. Follow its [React integration guide](https://twill.evecalm.com/frameworks#react-with-vite-8) to write SwiftUI.js views in `.twillx`, keeping ordinary component props, React state and shared styles. SwiftUI.js also works with standard TypeScript and JSX. See the [Twill repository](https://github.com/swiftuijs/twill) for the compiler and tooling.
+
 ## Develop
 
 Node 22 and pnpm 10 are required.

@@ -44,6 +44,10 @@ import { Button } from '@swiftuijs/ui/components/Button';
 
 Import shared styles in `app/layout.tsx`. Published component entries declare their client boundary, so server components can import them. Put state and event handlers in your own `'use client'` component. Viewport hooks initially return `null`; handle that state without reading `window` during rendering. Modal content uses portals and appears after mounting.
 
+## Use with Twill
+
+You can also write SwiftUI.js views in [Twill](https://twill.evecalm.com/), our sibling Swift-inspired language for JavaScript and TypeScript. Follow [Twill's React integration guide](https://twill.evecalm.com/frameworks#react-with-vite-8) to configure `.twillx` compilation. Component imports, React state, props and the shared-style import above stay the same.
+
 ## Make it yours
 
 Pass `className`, `style`, HTML attributes and `aria-*` props. Override CSS variables at an application root or theme boundary; Tailwind can style your application without becoming a dependency of the component library.
