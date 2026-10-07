@@ -1,4 +1,5 @@
 import { useMotionPresence } from '../_internal/use-motion-presence'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 import {
   cloneElement,
   isValidElement,
@@ -221,6 +222,7 @@ export function ContextMenu(props: IContextMenuProps) {
             }
           }}
         >
+          <GlassBackdrop appearance={appearance} />
           {items.map((item, index) => (
             <button
               key={`${item.label}-${index}`}

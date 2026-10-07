@@ -5,9 +5,11 @@ import { useReducedMotion } from '../../dist/hooks/use-reduced-motion.js'
 import { LayoutContext } from '../../dist/contexts/layout-context.js'
 import { HStack } from '../../dist/components/HStack/index.js'
 import { Popover } from '../../dist/components/Popover/index.js'
+import { Glass } from '../../dist/components/Glass/index.js'
+import { UIProvider } from '../../dist/components/UIProvider/index.js'
 import '../../dist/style/index.css'
 
-const counts = { sizeRenders: 0, layoutRenders: 0, mediaActive: 0, anchorReads: 0, floatingReads: 0 }
+const counts = { sizeRenders: 0, layoutRenders: 0, mediaActive: 0, anchorReads: 0, floatingReads: 0, glassEncodes: 0, glassRenders: 0, observers: 0 }
 const match = window.matchMedia.bind(window)
 window.matchMedia = query => {
   const media = match(query)
@@ -15,6 +17,18 @@ window.matchMedia = query => {
   media.addEventListener = (type, ...args) => { if (type === 'change') counts.mediaActive++; return add(type, ...args) }
   media.removeEventListener = (type, ...args) => { if (type === 'change') counts.mediaActive--; return remove(type, ...args) }
   return media
+}
+const encode = HTMLCanvasElement.prototype.toDataURL
+HTMLCanvasElement.prototype.toDataURL = function (...args) { counts.glassEncodes++; return encode.apply(this, args) }
+const NativeObserver = window.ResizeObserver
+window.ResizeObserver = class extends NativeObserver {
+  private targets = new Set<Element>()
+  observe(...args: Parameters<ResizeObserver['observe']>) {
+    if (!this.targets.has(args[0])) { this.targets.add(args[0]); counts.observers++ }
+    return super.observe(...args)
+  }
+  unobserve(target: Element) { if (this.targets.delete(target)) counts.observers--; return super.unobserve(target) }
+  disconnect() { counts.observers -= this.targets.size; this.targets.clear(); return super.disconnect() }
 }
 const rect = Element.prototype.getBoundingClientRect
 Element.prototype.getBoundingClientRect = function () {
@@ -37,6 +51,12 @@ function LayoutCase() {
   return <><button id="tick" onClick={() => setTick(n => n + 1)}>Update parent</button>
     <HStack data-tick={tick}>{layoutChildren}</HStack></>
 }
+function GlassContent() { counts.glassRenders++; return <button>Sharp control</button> }
+function GlassCase({ enabled, renderer = 'auto' }: { enabled: boolean; renderer?: 'auto' | 'css' }) {
+  return <UIProvider glass={{ enabled, renderer, variant: 'clear' }}>
+    {Array.from({ length: 40 }, (_, i) => <Glass key={i} style={{ width: 160, height: 80, borderRadius: 24 }}><GlassContent /></Glass>)}
+  </UIProvider>
+}
 const anchor = { current: document.getElementById('anchor') }
 const root = createRoot(document.getElementById('root')!)
 const mount = (mode: string) => root.render(
@@ -44,6 +64,9 @@ const mount = (mode: string) => root.render(
     : mode === 'full-size' ? Array.from({ length: 100 }, (_, i) => <FullSizeProbe key={i} />)
     : mode === 'motion' ? Array.from({ length: 100 }, (_, i) => <MotionProbe key={i} />)
     : mode === 'layout' ? <LayoutCase />
+    : mode === 'glass' ? <GlassCase enabled />
+    : mode === 'glass-off' ? <GlassCase enabled={false} />
+    : mode === 'glass-css' ? <GlassCase enabled renderer="css" />
     : mode === 'popover' ? <Popover anchorRef={anchor} isPresented title="Performance popover">Measured surface</Popover>
     : <p>Unmounted</p>,
 )

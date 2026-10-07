@@ -3,6 +3,7 @@ import { memo } from 'react'
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
 import { Modal, ModalTitle, ModalDescription } from '../_internal/Modal'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 import { useGlassAppearance, type GlassPreference } from '@/contexts/ui-config'
 
 import './style.scss'
@@ -75,6 +76,7 @@ export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfi
         role="dialog"
       >
         <div {...appearance} className={prefixClass('confirmation-dialog-content')}>
+          <GlassBackdrop appearance={appearance} />
           {(title || message) ? (
             <div className={prefixClass('confirmation-dialog-header')}>
               {title ? (

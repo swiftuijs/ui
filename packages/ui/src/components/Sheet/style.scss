@@ -135,10 +135,7 @@
 .sw-sheet-content { @include glass-surface; }
 // Taller presentations prioritize the task over the content behind the sheet.
 .sw-sheet[data-selected-detent='large'] .sw-sheet-content[data-glass='on'] {
-  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    background-color: color-mix(in srgb, var(--sw-color-background-elevated) 94%, transparent);
-  }
-  @include opaque-material-fallback;
+  --sw-glass-surface-opacity: 94%;
 }
 .sw-sheet-thinMaterial .sw-sheet-content,
 .sw-sheet-regularMaterial .sw-sheet-content,

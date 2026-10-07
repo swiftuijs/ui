@@ -14,6 +14,7 @@ import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
 
 import { useMotionPresence } from '../_internal/use-motion-presence'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 import { useViewportFit } from '../_internal/use-viewport-fit'
 import { fixedPositionOrigin } from '../_internal/fixed-position-origin'
 import { createFrameUpdate } from '../_internal/frame-update'
@@ -211,6 +212,7 @@ export const Popover = forwardRef<HTMLDivElement, IPopoverProps>(function Popove
         ref={popoverRef}
         role="dialog"
       >
+        <GlassBackdrop appearance={appearance} />
         <div className={prefixClass('popover-content')}>{children}</div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { test as base, expect, type Locator, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { expectRefraction } from './glass.js'
 
 const test = base.extend<{ healthyPage: Page }>({
   healthyPage: async ({ page }, use) => {
@@ -104,13 +105,13 @@ test('appearance options update glass, theme and portal surfaces independently o
   await page.getByRole('switch', { name: 'Liquid Glass', exact: true }).check()
   const header = page.locator('.kitchen-header')
   await expect(header).toHaveAttribute('data-glass', 'on')
-  await expect(header).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.46)')
+  await expectRefraction(header, 20)
   const preview = page.getByRole('group', { name: 'Glass material preview' })
   await expect(preview.getByText('Regular material', { exact: true })).toBeVisible()
   await page.getByLabel('Material', { exact: true }).selectOption('clear')
   await expect(header).toHaveAttribute('data-glass-variant', 'clear')
   await expect(preview.getByText('Clear material', { exact: true })).toBeVisible()
-  await expect(header).toHaveCSS('backdrop-filter', 'blur(8px) saturate(1.22)')
+  await expectRefraction(header, 2)
   await expect(page.getByRole('status')).toHaveText('Everything is up to date.')
   await accessible(page)
   if (process.env.UI_AUDIT_CAPTURE) await page.screenshot({ path: `${process.env.UI_AUDIT_CAPTURE}/kitchensink-glass-dark-${info.project.name}.png`, fullPage: true, animations: 'disabled' })
@@ -118,7 +119,7 @@ test('appearance options update glass, theme and portal surfaces independently o
   await expect(sheet).toHaveAttribute('data-theme', 'dark')
   await expect(sheet.locator('.sw-sheet-content')).toHaveAttribute('data-glass', 'on')
   await expect(sheet.locator('.sw-sheet-content')).toHaveAttribute('data-glass-variant', 'regular')
-  await expect(sheet.locator('.sw-sheet-content')).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.46)')
+  await expectRefraction(sheet.locator('.sw-sheet-content'), 20)
   await accessible(page)
   await page.keyboard.press('Escape')
   await page.getByRole('slider', { name: 'Glass intensity' }).focus()

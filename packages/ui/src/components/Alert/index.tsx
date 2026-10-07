@@ -2,6 +2,7 @@ import { memo } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 import { Modal, ModalTitle, ModalDescription } from '../_internal/Modal'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 import { useGlassAppearance, type GlassPreference } from '@/contexts/ui-config'
 
 import './style.scss'
@@ -92,6 +93,7 @@ export const Alert = memo(function Alert(props: IAlertProps) {
         hasDescription={Boolean(message)}
       >
         <div {...appearance} className={prefixClass('alert-content')}>
+          <GlassBackdrop appearance={appearance} />
           <ModalTitle asChild><div className={prefixClass('alert-title')}>{title}</div></ModalTitle>
           {message && <ModalDescription asChild><div className={prefixClass('alert-message')}>{message}</div></ModalDescription>}
           <div className={prefixClass('alert-actions')}>

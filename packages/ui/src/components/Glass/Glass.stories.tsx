@@ -53,3 +53,39 @@ function PresentationMaterials() {
 }
 
 export const Presentations: Story = { render: () => <PresentationMaterials /> }
+
+function OpticalComparison() {
+  const [renderer, setRenderer] = useState<'auto' | 'css'>('auto')
+  const [shape, setShape] = useState<'rounded' | 'capsule' | 'circle'>('rounded')
+  const [compact, setCompact] = useState(false)
+  const [sharpCorners, setSharpCorners] = useState(false)
+  const [count, setCount] = useState(0)
+  const width = compact ? 220 : 280
+  return <UIProvider theme="system">
+    <div style={{ padding: 16, color: 'var(--sw-color-label-primary)', background: 'var(--sw-color-background-secondary)' }}>
+      <HStack spacing={8} style={{ flexWrap: 'wrap', marginBottom: 16 }}>
+        <Button onClick={() => setRenderer(renderer === 'auto' ? 'css' : 'auto')}>{renderer === 'auto' ? 'Use CSS fallback' : 'Use refraction'}</Button>
+        <Button onClick={() => setCompact(!compact)}>Resize glass</Button>
+        <Button onClick={() => setSharpCorners(!sharpCorners)}>Change radius</Button>
+        <label>Shape <select aria-label="Glass shape" value={shape} onChange={event => setShape(event.target.value as typeof shape)}>
+          <option value="rounded">Rounded rectangle</option><option value="capsule">Capsule</option><option value="circle">Circle</option>
+        </select></label>
+        <output>{count} activations</output>
+      </HStack>
+      <div className="glass-optics-scene" style={{ position: 'relative', height: 440, borderRadius: 20, overflow: 'hidden',
+        background: 'repeating-linear-gradient(0deg, transparent 0 23px, #ffffff70 23px 24px), repeating-linear-gradient(90deg, transparent 0 23px, #ffffff70 23px 24px), linear-gradient(110deg, #0369a1, #4338ca 45%, #be185d)' }}>
+        <div aria-hidden="true" style={{ position: 'absolute', left: 24, top: 80, color: '#ffffffbb', font: 'bold 72px system-ui', whiteSpace: 'nowrap' }}>Aa 0123</div>
+        <div aria-hidden="true" style={{ position: 'absolute', left: 16, right: 16, top: 260, height: 12, background: '#fde68a', transform: 'rotate(-12deg)' }} />
+        <Glass aria-label="Optical material" glass={{ enabled: true, renderer, variant: 'clear', intensity: 0.8 }}
+          style={{ position: 'absolute', left: '50%', top: 85, transform: 'translateX(-50%)', width, maxWidth: 'calc(100% - 32px)',
+            height: shape === 'circle' ? width : shape === 'capsule' ? 80 : 190, justifyContent: 'center',
+            borderRadius: shape === 'rounded' ? (sharpCorners ? 8 : 54) : shape === 'circle' ? '50%' : 999 }}>
+          <Button buttonStyle="borderedProminent" onClick={() => setCount(value => value + 1)}>Test foreground</Button>
+        </Glass>
+      </div>
+      <Text style={{ marginTop: 12 }}>The rim bends the grid; the foreground stays sharp. CSS fallback softens the background.</Text>
+    </div>
+  </UIProvider>
+}
+
+export const Optics: Story = { render: () => <OpticalComparison /> }

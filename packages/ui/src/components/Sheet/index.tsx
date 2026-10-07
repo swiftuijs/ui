@@ -3,6 +3,7 @@ import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 import type { IPresentationDetent } from '@/types'
 import { Modal } from '../_internal/Modal'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 import { useSheetDrag } from '../_internal/use-sheet-drag'
 import { useGlassAppearance, type GlassPreference } from '@/contexts/ui-config'
 
@@ -236,6 +237,7 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
         ref={ref}
       >
         <div {...appearance} className={prefixClass('sheet-content')}>
+        <GlassBackdrop appearance={appearance} />
         {showDragIndicator && presentationStyle !== 'fullScreen' && (
           <button
             aria-label="Adjust sheet height"

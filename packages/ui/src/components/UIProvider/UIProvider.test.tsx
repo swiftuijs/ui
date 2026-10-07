@@ -28,15 +28,20 @@ describe('scoped UI configuration', () => {
     const markup = renderToString(<UIProvider theme="system" glass><Glass>Controls</Glass></UIProvider>)
     expect(markup).toContain('data-theme="system"')
     expect(markup).toContain('data-glass="on"')
+    expect(markup).toContain('data-ready="false"')
+    expect(markup).not.toContain('<feDisplacementMap')
     expect(markup).toBe(renderToString(<UIProvider theme="system" glass><Glass>Controls</Glass></UIProvider>))
   })
   it('supports component overrides, zero intensity, and custom inline styles', () => {
-    render(<UIProvider glass><Glass glass={false}>Off</Glass><Glass glass={{ intensity: 0 }}>Zero</Glass>
-      <Glass glass={{ intensity: 2, variant: 'clear' }} style={{ padding: 5 }}>Strong</Glass></UIProvider>)
+    render(<UIProvider glass={{ renderer: 'css' }}><Glass glass={false}>Off</Glass><Glass glass={{ intensity: 0 }}>Zero</Glass>
+      <Glass glass={{ intensity: 2, variant: 'clear', renderer: 'auto' }} style={{ padding: 5 }}>Strong</Glass></UIProvider>)
     expect(screen.getByText('Off')).toHaveAttribute('data-glass', 'off')
     expect(screen.getByText('Zero')).toHaveAttribute('data-glass', 'off')
     expect(screen.getByText('Strong')).toHaveAttribute('data-glass', 'on')
-    expect(screen.getByText('Strong')).toHaveStyle({ padding: '5px', '--sw-glass-blur': '12px' })
+    expect(screen.getByText('Strong')).toHaveStyle({ padding: '5px', '--sw-glass-blur': '3px' })
+    expect(screen.getByText('Zero')).toHaveAttribute('data-glass-renderer', 'css')
+    expect(screen.getByText('Strong')).toHaveAttribute('data-glass-renderer', 'auto')
+    expect(screen.getByText('Off').querySelector('.sw-glass-backdrop')).toBeNull()
   })
   it('propagates a scoped theme and tokens into portaled dialogs', () => {
     render(<UIProvider theme="dark" accentColor="#7652aa" tokens={{ '--sw-radius-sheet': '24px' }}>
@@ -88,6 +93,6 @@ it('normalizes glass preferences and theme overrides', () => {
   expect(resolveGlass({ intensity: -1 })).toMatchObject({ enabled: true, intensity: 0 })
   expect(resolveGlass({ intensity: NaN })).toMatchObject({ intensity: 0.5 })
   expect(resolveGlass(true, { enabled: false, intensity: 0.7, variant: 'clear' })).toMatchObject({ enabled: true, intensity: 0.7, variant: 'clear' })
-  expect(resolveGlass({ variant: undefined }, { enabled: false, intensity: 0.7, variant: 'clear' })).toEqual({ enabled: true, intensity: 0.7, variant: 'clear' })
+  expect(resolveGlass({ variant: undefined }, { enabled: false, intensity: 0.7, variant: 'clear' })).toEqual({ enabled: true, intensity: 0.7, variant: 'clear', renderer: 'auto' })
   expect(themeStyle({ tokens: { '--sw-accent-color': '#123456' }, glass: defaultGlass, accentColor: '#abcdef' })).toMatchObject({ '--sw-accent-color': '#123456', '--sw-color-action-fill': '#abcdef' })
 })
