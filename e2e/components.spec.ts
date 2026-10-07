@@ -187,7 +187,8 @@ test('Scoped themes, inherited glass and portal tokens update together', async (
   await expect(dialog).toHaveAttribute('data-theme', 'dark')
   await expect(dialog).toHaveCSS('--sw-accent-color', '#C4B5FD')
   await expect(dialog.getByRole('heading', { name: 'Sheet preferences' })).toHaveCSS('color', 'rgb(255, 255, 255)')
-  await expect(dialog.locator('.sw-sheet-content')).toHaveCSS('background-color', 'rgb(28, 28, 30)')
+  await expect(dialog.locator('.sw-sheet-content')).toHaveAttribute('data-glass', 'on')
+  await expect(dialog.locator('.sw-sheet-content')).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.46)')
   await dialog.getByRole('button', { name: 'Sheet actions' }).click()
   const nestedItem = dialog.getByRole('menuitem', { name: 'Edit preferences' })
   await expect(nestedItem).toBeFocused()
@@ -234,6 +235,69 @@ test('Glass navigation surfaces share the configuration and forced colors remove
   await page.emulateMedia({ forcedColors: 'active' })
   for (const surface of await surfaces.all()) await expect(surface).toHaveCSS('backdrop-filter', 'none')
   await expect(page.getByRole('menu')).toHaveCSS('backdrop-filter', 'none')
+})
+
+test('Clear glass transmits more background and preserves more detail than regular', async ({ page }, info) => {
+  await open(page, 'swiftui-glass--default', info.project.name.endsWith('dark'))
+  const samples = await page.locator('.sw-glass[data-glass="on"]').evaluateAll(nodes => nodes.map(node => {
+    const style = getComputedStyle(node)
+    return { variant: node.getAttribute('data-glass-variant'),
+      alpha: Number(style.backgroundColor.match(/\/\s*([\d.]+)\s*\)/)?.[1] ?? 1),
+      blur: Number(style.backdropFilter.match(/blur\(([\d.]+)px\)/)?.[1] ?? 0) }
+  }))
+  const regular = samples.find(sample => sample.variant === 'regular')!
+  const clear = samples.find(sample => sample.variant === 'clear')!
+  expect(regular.alpha).toBeGreaterThan(0.6)
+  expect(clear.alpha).toBeLessThan(regular.alpha / 2)
+  expect(clear.blur).toBeLessThan(regular.blur)
+  if (process.env.UI_AUDIT_CAPTURE) await page.screenshot({ path: `${process.env.UI_AUDIT_CAPTURE}/material-variants-${info.project.name}.png` })
+})
+
+for (const [trigger, role, title, selector] of [
+  ['Open material sheet', 'dialog', 'Material sheet', '.sw-sheet-content'],
+  ['Open material alert', 'alertdialog', 'Material alert', '.sw-alert-content'],
+  ['Open material actions', 'dialog', 'Material actions', '.sw-confirmation-dialog-content'],
+] as const) {
+  test(`${title}: portal inherits regular glass and remains opaque with accessibility preferences`, async ({ page }, info) => {
+    const dark = info.project.name.endsWith('dark')
+    await open(page, 'swiftui-glass--presentations', dark)
+    await page.getByRole('button', { name: trigger, exact: true }).click()
+    const dialog = page.getByRole(role, { name: title })
+    const surface = dialog.locator(selector)
+    await expect(surface).toHaveAttribute('data-glass', 'on')
+    await expect(surface).toHaveAttribute('data-glass-variant', 'regular')
+    await expect(surface).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.46)')
+    if (title === 'Material sheet') {
+      const medium = await surface.evaluate(node => getComputedStyle(node).backgroundColor)
+      await dialog.getByRole('button', { name: 'Adjust sheet height' }).click()
+      await expect(dialog).toHaveAttribute('data-selected-detent', 'large')
+      await expect(surface).not.toHaveCSS('background-color', medium)
+    }
+    if (process.env.UI_AUDIT_CAPTURE) await page.screenshot({ path: `${process.env.UI_AUDIT_CAPTURE}/${title.replaceAll(' ', '-')}-${info.project.name}.png`, animations: 'disabled' })
+    await page.emulateMedia({ contrast: 'more' })
+    await expect(surface).toHaveCSS('backdrop-filter', 'none')
+    await expect(surface).toHaveCSS('background-color', dark ? 'rgb(28, 28, 30)' : 'rgb(255, 255, 255)')
+    const accessibility = await new AxeBuilder({ page }).include(selector).withTags(['wcag2a', 'wcag2aa']).analyze()
+    expect(accessibility.violations).toEqual([])
+    await page.emulateMedia({ contrast: 'no-preference', forcedColors: 'active' })
+    await expect(surface).toHaveCSS('backdrop-filter', 'none')
+  })
+}
+
+test('Standard presentation materials respect reduced transparency in both content wrappers and sheets', async ({ page }, info) => {
+  await open(page, 'swiftui-presentationbackground--materials', info.project.name.endsWith('dark'))
+  const cdp = await page.context().newCDPSession(page)
+  await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] })
+  expect(await page.evaluate(() => matchMedia('(prefers-reduced-transparency: reduce)').matches)).toBe(true)
+  for (const surface of await page.locator('.sw-presentationbackground').all()) {
+    await expect(surface).toHaveCSS('backdrop-filter', 'none')
+    await expect(surface).toHaveCSS('background-color', info.project.name.endsWith('dark') ? 'rgb(28, 28, 30)' : 'rgb(255, 255, 255)')
+  }
+  await open(page, 'swiftui-sheet--material', info.project.name.endsWith('dark'))
+  await page.getByRole('button', { name: 'Show Material Sheet' }).click()
+  await expect(page.locator('.sw-sheet-content')).toHaveCSS('backdrop-filter', 'none')
+  await expect(page.locator('.sw-sheet-content')).toHaveCSS('background-color', info.project.name.endsWith('dark') ? 'rgb(28, 28, 30)' : 'rgb(255, 255, 255)')
+  await cdp.detach()
 })
 
 for (const [id, trigger, selector] of [

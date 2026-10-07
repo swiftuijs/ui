@@ -4,6 +4,7 @@ import { standardizeProps, prefixClass } from '@/common'
 import type { IPresentationDetent } from '@/types'
 import { Modal } from '../_internal/Modal'
 import { useSheetDrag } from '../_internal/use-sheet-drag'
+import { useGlassAppearance, type GlassPreference } from '@/contexts/ui-config'
 
 import './style.scss'
 
@@ -11,6 +12,8 @@ import './style.scss'
  * Props for Sheet component
  */
 export interface ISheetProps extends IBaseComponent {
+  /** Optional material override. Inherits UIProvider for automatic, non-full-screen sheets. */
+  glass?: GlassPreference
   /** Accessible name for the sheet. */
   title?: string
   /**
@@ -132,6 +135,7 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     showDragIndicator = true,
     backgroundInteraction = 'dismiss',
     backgroundStyle = 'automatic',
+    glass,
     cornerRadius,
     presentationDetents = DEFAULT_DETENTS,
     selectedDetent,
@@ -141,6 +145,11 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
     children,
     ...restProps
   } = props
+
+  const appearance = useGlassAppearance(
+    backgroundStyle === 'automatic' && presentationStyle !== 'fullScreen' ? glass : false,
+    'regular',
+  )
 
   const [internalSelectedDetent, setInternalSelectedDetent] = useState<IPresentationDetent>(() => {
     return resolveAvailableDetent(defaultSelectedDetent ?? selectedDetent, presentationDetents)
@@ -226,7 +235,7 @@ export const Sheet = forwardRef<HTMLDivElement, ISheetProps>(function Sheet(
         data-selected-detent={resolvedDetent == null ? undefined : String(resolvedDetent)}
         ref={ref}
       >
-        <div className={prefixClass('sheet-content')}>
+        <div {...appearance} className={prefixClass('sheet-content')}>
         {showDragIndicator && presentationStyle !== 'fullScreen' && (
           <button
             aria-label="Adjust sheet height"

@@ -2,6 +2,7 @@ import { memo } from 'react'
 import type { IBaseComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
 import { Modal, ModalTitle, ModalDescription } from '../_internal/Modal'
+import { useGlassAppearance, type GlassPreference } from '@/contexts/ui-config'
 
 import './style.scss'
 
@@ -40,6 +41,8 @@ export interface IAlertButton {
 }
 
 export interface IAlertProps extends IBaseComponent {
+  /** Optional material override; inherits UIProvider with the legible regular variant. */
+  glass?: GlassPreference
   /**
    * The title of the alert.
    */
@@ -68,12 +71,11 @@ export const Alert = memo(function Alert(props: IAlertProps) {
     message,
     isVisible,
     onDismiss,
+    glass,
     buttons = [{ label: 'OK', action: onDismiss }],
     ...restProps
   } = props
-
-
-
+  const appearance = useGlassAppearance(glass, 'regular')
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('alert')
   })
@@ -89,7 +91,7 @@ export const Alert = memo(function Alert(props: IAlertProps) {
         aria-modal="true"
         hasDescription={Boolean(message)}
       >
-        <div className={prefixClass('alert-content')}>
+        <div {...appearance} className={prefixClass('alert-content')}>
           <ModalTitle asChild><div className={prefixClass('alert-title')}>{title}</div></ModalTitle>
           {message && <ModalDescription asChild><div className={prefixClass('alert-message')}>{message}</div></ModalDescription>}
           <div className={prefixClass('alert-actions')}>

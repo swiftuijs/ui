@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Button, HStack, Menu, NavigationBar, TabView, Text, Toolbar, UIProvider, VStack } from '../'
+import { useState } from 'react'
+import { Alert, Button, ConfirmationDialog, HStack, Menu, NavigationBar, Sheet, TabView, Text, Toolbar, UIProvider, VStack } from '../'
 import { Glass } from '.'
 const meta: Meta<typeof Glass> = { title: 'SwiftUI/Glass', component: Glass, tags: ['autodocs'] }
 export default meta
 type Story = StoryObj<typeof Glass>
 export const Default: Story = {
   render: () => <UIProvider glass theme="system">
-    <VStack spacing={20} style={{ padding: 32, borderRadius: 24, background: 'linear-gradient(135deg, #bfdbfe, #ddd6fe, #fbcfe8)' }}>
+    <VStack spacing={20} style={{ padding: 32, borderRadius: 24, background: 'linear-gradient(135deg, color-mix(in srgb, var(--sw-color-background-primary) 35%, #2563eb), color-mix(in srgb, var(--sw-color-background-primary) 35%, #7c3aed), color-mix(in srgb, var(--sw-color-background-primary) 35%, #db2777))' }}>
       <Glass><HStack><Text>Regular material</Text><Button>Done</Button></HStack></Glass>
       <Glass glass={{ variant: 'clear', intensity: 0.8 }}><Text>Clear material over a rich background</Text></Glass>
       <Glass glass={false}><Text>Effects disabled</Text></Glass>
@@ -33,3 +34,22 @@ export const NavigationSurfaces: Story = {
     </div>
   </UIProvider>,
 }
+
+function PresentationMaterials() {
+  const [presentation, setPresentation] = useState<'sheet' | 'alert' | 'actions' | null>(null)
+  return <UIProvider glass={{ enabled: true, intensity: 0.6, variant: 'clear' }} theme="system">
+    <VStack spacing={16} style={{ padding: 32, minHeight: 500, borderRadius: 24, background: 'linear-gradient(135deg, var(--sw-color-background-secondary), color-mix(in srgb, var(--sw-color-background-primary) 50%, #7c3aed))' }}>
+      <Text>Presentations favor regular material, even when controls use clear.</Text>
+      <Button onClick={() => setPresentation('sheet')}>Open material sheet</Button>
+      <Button onClick={() => setPresentation('alert')}>Open material alert</Button>
+      <Button onClick={() => setPresentation('actions')}>Open material actions</Button>
+    </VStack>
+    <Sheet title="Material sheet" isPresented={presentation === 'sheet'} onDismiss={() => setPresentation(null)} presentationDetents={['medium', 'large']}>
+      <VStack spacing={16}><Text>Keep the task readable above the background.</Text><Button onClick={() => setPresentation(null)}>Close sheet</Button></VStack>
+    </Sheet>
+    <Alert title="Material alert" message="A short, legible message." isVisible={presentation === 'alert'} onDismiss={() => setPresentation(null)} />
+    <ConfirmationDialog title="Material actions" message="Choose an action." isVisible={presentation === 'actions'} onDismiss={() => setPresentation(null)} actions={[{ label: 'Continue' }, { label: 'Cancel', style: 'cancel' }]} />
+  </UIProvider>
+}
+
+export const Presentations: Story = { render: () => <PresentationMaterials /> }

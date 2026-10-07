@@ -1,6 +1,7 @@
 @use '../../style/mixins/motion.scss' as motion;
 @use '../_internal/modal.scss';
 @use '@style/base.scss' as *;
+@use '../../style/glass.scss' as *;
 
 @include component('alert') {
   // alert-backdrop
@@ -119,3 +120,5 @@
     }
   }
 }
+
+.sw-alert-content { @include glass-surface; }

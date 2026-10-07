@@ -4,6 +4,8 @@ import { render, screen } from '@/testing/render'
 import { UIProvider, useUIConfig } from '.'
 import { Glass } from '../Glass'
 import { Sheet } from '../Sheet'
+import { Alert } from '../Alert'
+import { ConfirmationDialog } from '../ConfirmationDialog'
 import { Menu } from '../Menu'
 import { Toolbar } from '../Toolbar'
 import { TabView } from '../TabView'
@@ -34,7 +36,7 @@ describe('scoped UI configuration', () => {
     expect(screen.getByText('Off')).toHaveAttribute('data-glass', 'off')
     expect(screen.getByText('Zero')).toHaveAttribute('data-glass', 'off')
     expect(screen.getByText('Strong')).toHaveAttribute('data-glass', 'on')
-    expect(screen.getByText('Strong')).toHaveStyle({ padding: '5px', '--sw-glass-blur': '28px' })
+    expect(screen.getByText('Strong')).toHaveStyle({ padding: '5px', '--sw-glass-blur': '12px' })
   })
   it('propagates a scoped theme and tokens into portaled dialogs', () => {
     render(<UIProvider theme="dark" accentColor="#7652aa" tokens={{ '--sw-radius-sheet': '24px' }}>
@@ -55,6 +57,30 @@ describe('scoped UI configuration', () => {
     expect(screen.getByRole('tablist')).toHaveAttribute('data-glass', 'on')
     expect(container.querySelector('.sw-toolbar-group')).toHaveAttribute('data-glass', 'on')
     expect(screen.getByRole('tabpanel')).not.toHaveAttribute('data-glass')
+  })
+  it.each([
+    ['Sheet', '.sw-sheet-content', <Sheet title="Material sheet" isPresented>Content</Sheet>],
+    ['Alert', '.sw-alert-content', <Alert title="Material alert" isVisible onDismiss={vi.fn()} />],
+    ['ConfirmationDialog', '.sw-confirmation-dialog-content', <ConfirmationDialog title="Material actions" isVisible onDismiss={vi.fn()} actions={[{ label: 'Cancel' }]} />],
+  ])('%s inherits the toggle in its portal and defaults to regular over a clear global preference', (_name, selector, component) => {
+    const { rerender } = render(<UIProvider glass={{ enabled: true, variant: 'clear' }}>{component}</UIProvider>)
+    const surface = document.querySelector(selector)!
+    expect(surface).toHaveAttribute('data-glass', 'on')
+    expect(surface).toHaveAttribute('data-glass-variant', 'regular')
+    rerender(<UIProvider glass={false}>{component}</UIProvider>)
+    expect(surface).toHaveAttribute('data-glass', 'off')
+  })
+  it('respects local presentation overrides and keeps full-screen or explicit sheet backgrounds independent', () => {
+    const { rerender } = render(<UIProvider glass>
+      <Sheet title="Overridden" isPresented glass={false}>Content</Sheet>
+    </UIProvider>)
+    expect(document.querySelector('.sw-sheet-content')).toHaveAttribute('data-glass', 'off')
+    rerender(<UIProvider glass><Sheet title="Overridden" isPresented presentationStyle="fullScreen" glass>Content</Sheet></UIProvider>)
+    expect(document.querySelector('.sw-sheet-content')).toHaveAttribute('data-glass', 'off')
+    rerender(<UIProvider glass><Sheet title="Overridden" isPresented backgroundStyle="thinMaterial">Content</Sheet></UIProvider>)
+    expect(document.querySelector('.sw-sheet-content')).toHaveAttribute('data-glass', 'off')
+    rerender(<UIProvider glass><Alert title="Explicit clear" isVisible onDismiss={vi.fn()} glass={{ variant: 'clear' }} /></UIProvider>)
+    expect(document.querySelector('.sw-alert-content')).toHaveAttribute('data-glass-variant', 'clear')
   })
 })
 it('normalizes glass preferences and theme overrides', () => {

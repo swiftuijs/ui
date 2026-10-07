@@ -41,17 +41,19 @@ export function themeStyle(config: UIConfiguration): CSSProperties {
     ...config.tokens,
   } as CSSProperties
 }
-export function useGlassAppearance(preference?: GlassPreference) {
+export function useGlassAppearance(preference?: GlassPreference, defaultVariant?: GlassOptions['variant']) {
   const config = useUIConfig()
-  const options = resolveGlass(preference, config.glass)
+  const inherited = defaultVariant ? { ...config.glass, variant: defaultVariant } : config.glass
+  const options = resolveGlass(preference, inherited)
   const enabled = options.enabled && options.intensity > 0
-  const opacity = options.variant === 'regular' ? 0.96 - options.intensity * 0.12 : 0.88 - options.intensity * 0.16
+  const clear = options.variant === 'clear'
+  const opacity = clear ? 0.32 - options.intensity * 0.18 : 0.84 - options.intensity * 0.22
   return {
     'data-glass': enabled ? 'on' : 'off',
     'data-glass-variant': options.variant,
     style: {
-      '--sw-glass-blur': `${8 + options.intensity * 20}px`,
-      '--sw-glass-saturation': `${110 + options.intensity * 60}%`,
+      '--sw-glass-blur': `${clear ? 2 + options.intensity * 10 : 8 + options.intensity * 20}px`,
+      '--sw-glass-saturation': `${clear ? 110 + options.intensity * 20 : 110 + options.intensity * 60}%`,
       '--sw-glass-opacity': `${opacity * 100}%`,
       '--sw-glass-highlight': `${0.08 + options.intensity * 0.12}`,
     } as CSSProperties,

@@ -27,10 +27,14 @@ const items = [{ label: 'Edit' }, { label: 'Delete', destructive: true }];
 
 ## Glass configuration
 
-Liquid Glass is off by default. `glass` accepts a boolean or `{ enabled, intensity, variant }`; intensity is clamped to 0–1 and zero disables the effect. The preference applies to `Glass`, menu/context menu/popover surfaces, navigation controls, toolbar groups and tab bars. Each supports a local `glass` override. Content regions, cards and sheet bodies remain opaque; use standard `Sheet.backgroundStyle` materials for content separation.
+Liquid Glass is off by default. `glass` accepts a boolean or `{ enabled, intensity, variant }`; intensity is clamped to 0–1 and zero disables the effect. The preference applies to `Glass`, menus, context menus, popovers, navigation controls, toolbar groups, tab bars, alerts, confirmation dialogs and automatic sheets. Each supports a local `glass` override. Keep forms and content cards opaque.
+
+Presentations default to regular material for legibility, even with a global clear preference. An automatic sheet becomes more opaque at its large detent; full-screen sheets stay opaque. Explicit `Sheet.backgroundStyle` values take precedence over glass preferences and continue to support opaque accessibility fallbacks.
 
 ## Requirements and fallbacks
 
-The regular variant favors legibility. Use clear only over visually rich backgrounds and verify contrast. This is a CSS material with blur, saturation, highlights and depth; native optical refraction and system vibrancy are not reproduced. It adds no graphics engine or continuously running animation.
+The regular variant softens background detail and favors legibility. Clear uses less blur and a much lighter tint so the background stays visible. Use clear only over visually rich backgrounds and verify contrast; bright media may need a dimming layer behind the control. This is a CSS material with blur, saturation, rim highlights and depth; native optical refraction and system vibrancy are not reproduced. It adds no graphics engine or continuously running animation.
 
 Reduced transparency, increased contrast and forced colors fall back to an opaque surface. Browsers without backdrop-filter also retain an opaque background. Test the material with your actual content, and use `glass={false}` for surfaces where effects are unnecessary.
+
+See Apple's [material guidelines](https://developer.apple.com/design/human-interface-guidelines/materials) for the distinction between the functional glass layer and standard content materials.

@@ -1,6 +1,7 @@
 @use '../../style/mixins/motion.scss' as motion;
 @use '../_internal/modal.scss';
 @use '@style/base.scss' as *;
+@use '../../style/glass.scss' as *;
 
 .sw-confirmation-dialog-backdrop {
   position: fixed;
@@ -108,3 +109,4 @@
 .sw-confirmation-dialog-header { border: 0; background: transparent; backdrop-filter: none; }
 .sw-confirmation-dialog-actions { border: 0; background: transparent; backdrop-filter: none; gap: 8px; }
 .sw-confirmation-dialog-button { border: 0; border-radius: var(--sw-radius-full); background: var(--sw-color-control-fill); }
+.sw-confirmation-dialog-content { @include glass-surface; }
