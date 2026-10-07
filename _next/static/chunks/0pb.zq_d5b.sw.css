@@ -1,0 +1,1 @@
+.sw-link{color:var(--sw-accent-color);cursor:pointer;transition:opacity var(--sw-transition-fast);-webkit-tap-highlight-color:transparent;text-decoration:none}.sw-link:hover{opacity:.8}.sw-link:active{opacity:.6}.sw-link:visited{color:var(--sw-accent-color)}
