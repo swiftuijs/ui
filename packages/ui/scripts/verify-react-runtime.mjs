@@ -43,6 +43,8 @@ export async function verifyReactRuntime({ fixture, esbuild, workspace }) {
       await expect(page.getByRole('heading', { name: 'React compatibility' })).toBeVisible()
       await expect(page.getByLabel('Size classes')).toHaveText(`${width < 768 ? 'compact' : 'regular'}:regular`)
       await expect(page.getByLabel('Forwarded refs')).toHaveText('Ready')
+      await expect(page.locator('.sw-glass > .sw-glass-backdrop')).toHaveAttribute('data-ready', 'true')
+      await expect(page.locator('.sw-glass')).toHaveCSS('backdrop-filter', 'none')
       assert.deepEqual(await page.evaluate(() => window.hydrationErrors), [], 'Hydration must not recover from mismatched markup')
       assert.ok(await page.locator('[data-lazy-item]').count() < 30, 'Lazy hydration must stay bounded')
 

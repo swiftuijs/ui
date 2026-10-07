@@ -34,6 +34,11 @@
 .kitchen-project { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 48px; padding: 8px 16px; border-bottom: 1px solid var(--sw-color-separator); }
 
 .kitchen-header.sw-glass { width: 100%; }
+.kitchen-navigation { position: sticky; top: max(12px, env(safe-area-inset-top, 0px)); z-index: 20; }
 .kitchen-appearance { margin-bottom: 24px; }
 .kitchen-appearance-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 12px 24px; align-items: center; }
 .kitchen-appearance-controls > .sw-toggle { justify-self: end; }
+.kitchen-appearance-controls > .sw-picker { width: 100%; min-width: 0; }
+.kitchen-material-preview { display: grid; place-items: center; margin-top: 20px; padding: 28px 16px; border-radius: 12px; background: repeating-linear-gradient(90deg, transparent 0 23px, rgb(255 255 255 / 0.28) 23px 24px), linear-gradient(130deg, color-mix(in srgb, var(--sw-color-background-primary) 35%, #2563eb), color-mix(in srgb, var(--sw-color-background-primary) 35%, #7c3aed), color-mix(in srgb, var(--sw-color-background-primary) 35%, #db2777)); }
+.kitchen-material-surface { width: min(100%, 480px); justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; }
+.kitchen-material-surface a { color: var(--sw-color-label-primary); text-decoration: underline; text-underline-offset: 3px; }

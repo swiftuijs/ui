@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { expectRefraction } from './glass.js'
 const controlledClocks = new WeakSet<Page>()
 
 async function freezeMotion(page: Page, selector: string) {
@@ -178,7 +179,7 @@ test('Scoped themes, inherited glass and portal tokens update together', async (
   await open(page, 'swiftui-uiprovider--default', info.project.name.endsWith('dark'))
   const surface = page.locator('.sw-glass[data-glass="on"]').first()
   await expect(surface).toBeVisible()
-  await expect(surface).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.46)')
+  await expectRefraction(surface, 20)
   await page.getByRole('switch', { name: 'Dark theme' }).check()
   await expect(page.locator('.sw-ui-provider').first()).toHaveAttribute('data-theme', 'dark')
   if (process.env.UI_AUDIT_CAPTURE) await page.screenshot({ path: `${process.env.UI_AUDIT_CAPTURE}/theme-dark-${info.project.name}.png`, animations: 'disabled' })
@@ -187,7 +188,8 @@ test('Scoped themes, inherited glass and portal tokens update together', async (
   await expect(dialog).toHaveAttribute('data-theme', 'dark')
   await expect(dialog).toHaveCSS('--sw-accent-color', '#C4B5FD')
   await expect(dialog.getByRole('heading', { name: 'Sheet preferences' })).toHaveCSS('color', 'rgb(255, 255, 255)')
-  await expect(dialog.locator('.sw-sheet-content')).toHaveCSS('background-color', 'rgb(28, 28, 30)')
+  await expect(dialog.locator('.sw-sheet-content')).toHaveAttribute('data-glass', 'on')
+  await expectRefraction(dialog.locator('.sw-sheet-content'), 20)
   await dialog.getByRole('button', { name: 'Sheet actions' }).click()
   const nestedItem = dialog.getByRole('menuitem', { name: 'Edit preferences' })
   await expect(nestedItem).toBeFocused()
@@ -221,9 +223,9 @@ test('Glass navigation surfaces share the configuration and forced colors remove
   await open(page, 'swiftui-glass--navigation-surfaces', info.project.name.endsWith('dark'))
   const surfaces = page.locator('.sw-navigation-bar-leading, .sw-navigation-bar-trailing, .sw-tab-bar, .sw-toolbar-group:not(.sw-toolbar-group-center)')
   expect(await surfaces.count()).toBe(5)
-  for (const surface of await surfaces.all()) await expect(surface).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.46)')
+  for (const surface of await surfaces.all()) await expectRefraction(surface, 20)
   await page.getByRole('button', { name: 'Document actions' }).click()
-  await expect(page.getByRole('menu')).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.46)')
+  await expectRefraction(page.getByRole('menu'), 20)
   const lastItem = page.getByRole('menuitem', { name: 'Duplicate' })
   await expect(lastItem).toBeVisible()
   expect(await lastItem.evaluate(node => {
@@ -234,6 +236,70 @@ test('Glass navigation surfaces share the configuration and forced colors remove
   await page.emulateMedia({ forcedColors: 'active' })
   for (const surface of await surfaces.all()) await expect(surface).toHaveCSS('backdrop-filter', 'none')
   await expect(page.getByRole('menu')).toHaveCSS('backdrop-filter', 'none')
+})
+
+test('Clear glass transmits more background and preserves more detail than regular', async ({ page }, info) => {
+  await open(page, 'swiftui-glass--default', info.project.name.endsWith('dark'))
+  for (const surface of await page.locator('.sw-glass[data-glass="on"]').all()) await expect(surface.locator('.sw-glass-backdrop')).toHaveAttribute('data-ready', 'true')
+  const samples = await page.locator('.sw-glass[data-glass="on"]').evaluateAll(nodes => nodes.map(node => {
+    const style = getComputedStyle(node.querySelector('.sw-glass-optics')!)
+    return { variant: node.getAttribute('data-glass-variant'),
+      alpha: Number(style.backgroundColor.match(/\/\s*([\d.]+)\s*\)/)?.[1] ?? 1),
+      blur: Number(node.querySelector('feGaussianBlur')!.getAttribute('stdDeviation')) }
+  }))
+  const regular = samples.find(sample => sample.variant === 'regular')!
+  const clear = samples.find(sample => sample.variant === 'clear')!
+  expect(regular.alpha).toBeGreaterThan(0.6)
+  expect(clear.alpha).toBeLessThan(regular.alpha / 2)
+  expect(clear.blur).toBeLessThan(regular.blur)
+  if (process.env.UI_AUDIT_CAPTURE) await page.screenshot({ path: `${process.env.UI_AUDIT_CAPTURE}/material-variants-${info.project.name}.png` })
+})
+
+for (const [trigger, role, title, selector] of [
+  ['Open material sheet', 'dialog', 'Material sheet', '.sw-sheet-content'],
+  ['Open material alert', 'alertdialog', 'Material alert', '.sw-alert-content'],
+  ['Open material actions', 'dialog', 'Material actions', '.sw-confirmation-dialog-content'],
+] as const) {
+  test(`${title}: portal inherits regular glass and remains opaque with accessibility preferences`, async ({ page }, info) => {
+    const dark = info.project.name.endsWith('dark')
+    await open(page, 'swiftui-glass--presentations', dark)
+    await page.getByRole('button', { name: trigger, exact: true }).click()
+    const dialog = page.getByRole(role, { name: title })
+    const surface = dialog.locator(selector)
+    await expect(surface).toHaveAttribute('data-glass', 'on')
+    await expect(surface).toHaveAttribute('data-glass-variant', 'regular')
+    await expectRefraction(surface, 20)
+    if (title === 'Material sheet') {
+      const medium = await surface.locator('.sw-glass-optics').evaluate(node => getComputedStyle(node).backgroundColor)
+      await dialog.getByRole('button', { name: 'Adjust sheet height' }).click()
+      await expect(dialog).toHaveAttribute('data-selected-detent', 'large')
+      await expect(surface.locator('.sw-glass-optics')).not.toHaveCSS('background-color', medium)
+    }
+    if (process.env.UI_AUDIT_CAPTURE) await page.screenshot({ path: `${process.env.UI_AUDIT_CAPTURE}/${title.replaceAll(' ', '-')}-${info.project.name}.png`, animations: 'disabled' })
+    await page.emulateMedia({ contrast: 'more' })
+    await expect(surface).toHaveCSS('backdrop-filter', 'none')
+    await expect(surface).toHaveCSS('background-color', dark ? 'rgb(28, 28, 30)' : 'rgb(255, 255, 255)')
+    const accessibility = await new AxeBuilder({ page }).include(selector).withTags(['wcag2a', 'wcag2aa']).analyze()
+    expect(accessibility.violations).toEqual([])
+    await page.emulateMedia({ contrast: 'no-preference', forcedColors: 'active' })
+    await expect(surface).toHaveCSS('backdrop-filter', 'none')
+  })
+}
+
+test('Standard presentation materials respect reduced transparency in both content wrappers and sheets', async ({ page }, info) => {
+  await open(page, 'swiftui-presentationbackground--materials', info.project.name.endsWith('dark'))
+  const cdp = await page.context().newCDPSession(page)
+  await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] })
+  expect(await page.evaluate(() => matchMedia('(prefers-reduced-transparency: reduce)').matches)).toBe(true)
+  for (const surface of await page.locator('.sw-presentationbackground').all()) {
+    await expect(surface).toHaveCSS('backdrop-filter', 'none')
+    await expect(surface).toHaveCSS('background-color', info.project.name.endsWith('dark') ? 'rgb(28, 28, 30)' : 'rgb(255, 255, 255)')
+  }
+  await open(page, 'swiftui-sheet--material', info.project.name.endsWith('dark'))
+  await page.getByRole('button', { name: 'Show Material Sheet' }).click()
+  await expect(page.locator('.sw-sheet-content')).toHaveCSS('backdrop-filter', 'none')
+  await expect(page.locator('.sw-sheet-content')).toHaveCSS('background-color', info.project.name.endsWith('dark') ? 'rgb(28, 28, 30)' : 'rgb(255, 255, 255)')
+  await cdp.detach()
 })
 
 for (const [id, trigger, selector] of [
@@ -563,4 +629,104 @@ test('Sheet nested Menu and Popover stay beside their anchors without scrolling-
   await page.keyboard.press('Escape')
   await expect(popover).toHaveCount(0)
   await expect(sheet).toBeVisible()
+})
+
+test('Glass optics bend actual backdrop pixels while keeping the foreground sharp', async ({ page }, info) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  await open(page, 'swiftui-glass--optics', info.project.name.endsWith('dark'))
+  const surface = page.getByLabel('Optical material'), button = page.getByRole('button', { name: 'Test foreground' })
+  await expectRefraction(surface, 2.5)
+  const refracted = await surface.screenshot({ animations: 'disabled' })
+  // Disable displacement alone: identical tint, blur, rim and geometry ensure
+  // a pixel difference proves refraction rather than a cosmetic CSS change.
+  await surface.evaluate(node => {
+    // Chromium caches referenced backdrop filters. A fresh reference ensures
+    // it samples the changed filter rather than reusing an earlier paint.
+    const filter = node.querySelector('filter')!.cloneNode(true) as SVGFilterElement
+    filter.id = 'sw-test-undisplaced'
+    filter.querySelector('feDisplacementMap')!.setAttribute('scale', '0')
+    node.querySelector('defs')!.append(filter)
+    const optics = node.querySelector<HTMLElement>('.sw-glass-optics')!
+    optics.style.backdropFilter = 'url("#sw-test-undisplaced") saturate(var(--sw-glass-saturation))'
+  })
+  const undisplaced = await surface.screenshot({ animations: 'disabled' })
+  // Rounded transparent button corners show the changing backdrop; compare
+  // the opaque text area itself to verify the foreground is never filtered.
+  const buttonBox = (await button.boundingBox())!
+  const foregroundClip = { x: buttonBox.x + 16, y: buttonBox.y + 8, width: buttonBox.width - 32, height: buttonBox.height - 16 }
+  const sharp = await page.screenshot({ clip: foregroundClip, animations: 'disabled' })
+  await page.getByRole('button', { name: 'Use CSS fallback' }).click()
+  await expect(surface.locator('.sw-glass-backdrop')).toHaveCount(0)
+  expect((await page.screenshot({ clip: foregroundClip, animations: 'disabled' })).equals(sharp)).toBe(true)
+  const changed = await page.evaluate(async ({ before, after }) => {
+    const pixels = async (base64: string) => {
+      const image = new Image(); image.src = `data:image/png;base64,${base64}`; await image.decode()
+      const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height
+      const context = canvas.getContext('2d')!; context.drawImage(image, 0, 0)
+      return { data: context.getImageData(0, 0, image.width, image.height).data, width: image.width, height: image.height }
+    }
+    const a = await pixels(before), b = await pixels(after)
+    let count = 0, total = 0
+    // Sample the upper rim, including curved corners and the outer optical edge;
+    // the foreground button is well below this region.
+    for (let y = 1; y < 24; y++) for (let x = 16; x < a.width - 16; x++) {
+      const i = (y * a.width + x) * 4; total++
+      if (Math.abs(a.data[i] - b.data[i]) + Math.abs(a.data[i+1] - b.data[i+1]) + Math.abs(a.data[i+2] - b.data[i+2]) > 12) count++
+    }
+    return count / total
+  }, { before: refracted.toString('base64'), after: undisplaced.toString('base64') })
+  expect(changed).toBeGreaterThan(0.01)
+  await page.getByRole('button', { name: 'Use refraction' }).click()
+  await expectRefraction(surface, 2.5)
+  await button.click(); await expect(page.getByText('1 activations', { exact: true })).toBeVisible()
+  const source = () => surface.locator('feImage').getAttribute('href')
+  const initial = await source()
+  await page.getByRole('button', { name: 'Change radius' }).click()
+  await expect.poll(source).not.toBe(initial)
+  await page.getByRole('button', { name: 'Resize glass' }).click()
+  await expect(surface.locator('feImage')).toHaveAttribute('width', '218')
+  for (const shape of ['capsule', 'circle']) {
+    const previous = await source()
+    await page.getByLabel('Glass shape').selectOption(shape)
+    await expect.poll(source).not.toBe(previous)
+    await expectRefraction(surface, 2.5)
+  }
+  const still = await surface.screenshot({ animations: 'disabled' }), currentMap = await source()
+  await page.locator('.glass-optics-scene').evaluate(node => { (node as HTMLElement).style.backgroundPosition = '13px 7px' })
+  expect((await surface.screenshot({ animations: 'disabled' })).equals(still)).toBe(false)
+  expect(await source()).toBe(currentMap)
+  if (process.env.UI_AUDIT_CAPTURE) await page.screenshot({ path: `${process.env.UI_AUDIT_CAPTURE}/glass-optics-${info.project.name}.png`, animations: 'disabled' })
+  expect(errors).toEqual([])
+})
+
+for (const userAgent of ['Mozilla/5.0 Version/18.0 Safari/605.1.15', 'Mozilla/5.0 Firefox/140.0', 'Mozilla/5.0 CriOS/140.0 Mobile Safari/604.1']) {
+  test(`Glass browser routing uses CSS for ${userAgent}`, async ({ browser }, info) => {
+    // This checks routing in Chromium; it does not simulate those rendering engines.
+    const context = await browser.newContext({ userAgent, baseURL: 'http://127.0.0.1:3104' })
+    const page = await context.newPage()
+    await open(page, 'swiftui-glass--optics', info.project.name.endsWith('dark'))
+    const surface = page.getByLabel('Optical material')
+    await expect(surface).toHaveCSS('backdrop-filter', 'blur(2.5px) saturate(1.26)')
+    await expect(surface.locator('.sw-glass-optics')).toHaveCount(0)
+    await page.getByRole('button', { name: 'Test foreground' }).click()
+    await expect(page.getByText('1 activations', { exact: true })).toBeVisible()
+    await context.close()
+  })
+}
+
+test('Glass blocked data images keep the usable CSS fallback', async ({ page }, info) => {
+  await page.addInitScript(() => {
+    const meta = document.createElement('meta'); meta.httpEquiv = 'Content-Security-Policy'; meta.content = "img-src 'self'"
+    const observer = new MutationObserver(() => { if (document.head) { document.head.append(meta); observer.disconnect() } })
+    observer.observe(document, { childList: true, subtree: true })
+  })
+  await open(page, 'swiftui-glass--optics', info.project.name.endsWith('dark'))
+  const surface = page.getByLabel('Optical material')
+  await expect(surface).toHaveCSS('backdrop-filter', 'blur(2.5px) saturate(1.26)')
+  // Allow optional import, map encoding and failed image decoding to complete.
+  await page.waitForTimeout(300)
+  await expect(surface.locator('.sw-glass-optics')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Test foreground' }).click()
+  await expect(page.getByText('1 activations', { exact: true })).toBeVisible()
 })

@@ -2,6 +2,7 @@
 @use '../_internal/modal.scss';
 @use '../_internal/grabber.scss' as *;
 @use '@style/base.scss' as *;
+@use '../../style/glass.scss' as *;
 
 @include component('sheet') {
   position: fixed;
@@ -42,11 +43,13 @@
 
   &-thinMaterial .#{$ns}-sheet-content {
     background-color: color-mix(in srgb, var(--sw-color-background-primary) 82%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
     backdrop-filter: blur(16px) saturate(140%);
   }
 
   &-regularMaterial .#{$ns}-sheet-content {
     background-color: color-mix(in srgb, var(--sw-color-background-primary) 92%, transparent);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
     backdrop-filter: blur(10px) saturate(120%);
   }
 
@@ -128,3 +131,12 @@
 
 .sw-sheet-fullScreen .sw-sheet-content,
 .sw-sheet-content:not(:has(.sw-sheet-drag-indicator)) { padding-top: 0; }
+
+.sw-sheet-content { @include glass-surface; }
+// Taller presentations prioritize the task over the content behind the sheet.
+.sw-sheet[data-selected-detent='large'] .sw-sheet-content[data-glass='on'] {
+  --sw-glass-surface-opacity: 94%;
+}
+.sw-sheet-thinMaterial .sw-sheet-content,
+.sw-sheet-regularMaterial .sw-sheet-content,
+.sw-sheet-clear .sw-sheet-content { @include opaque-material-fallback; }

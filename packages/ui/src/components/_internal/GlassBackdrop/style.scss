@@ -1,0 +1,37 @@
+.sw-glass-backdrop { display: none; pointer-events: none; }
+// The isolated stacking context keeps a negative decorative layer behind the
+// content, without filtering the host or making it a backdrop root.
+@media (prefers-reduced-transparency: no-preference) and (prefers-contrast: no-preference) and (forced-colors: none) {
+  // Outrank compound fallback selectors regardless of import order.
+  [data-glass='on'][data-glass-variant][data-glass-renderer='auto']:has(> .sw-glass-backdrop[data-ready='true']) {
+    isolation: isolate;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  :where(.sw-glass, .sw-navigation-bar-leading, .sw-navigation-bar-trailing, .sw-toolbar-group, .sw-tab-bar, .sw-alert-content, .sw-confirmation-dialog-content):has(> .sw-glass-backdrop[data-ready='true']) { position: relative; }
+  .sw-glass-backdrop[data-ready='true'] {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+  .sw-glass-optics {
+    position: absolute;
+    inset: 0;
+    background-color: color-mix(in srgb, var(--sw-color-background-elevated) var(--sw-glass-surface-opacity, var(--sw-glass-opacity)), transparent);
+    border-radius: inherit;
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgb(255 255 255 / 0.7), transparent 38%, rgb(255 255 255 / 0.06) 68%, rgb(255 255 255 / 0.3));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+    }
+  }
+}

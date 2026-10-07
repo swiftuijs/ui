@@ -3,6 +3,7 @@ import { prefixClass } from '@/common'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
 import { Text } from '../Text'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 
 import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
@@ -63,6 +64,7 @@ export const NavigationBar = memo(function NavigationBar(props: INavigationBarPr
     <div className={prefixClass('navigation-bar')}>
       {/* Back Button or Spacer */}
       <div {...appearance} className={prefixClass('navigation-bar-leading')}>
+        {showBackButton ? <GlassBackdrop appearance={appearance} /> : null}
         {showBackButton ? (
           <Button
             className={prefixClass('navigation-bar-back')}
@@ -101,6 +103,7 @@ export const NavigationBar = memo(function NavigationBar(props: INavigationBarPr
 
       {/* Toolbar Items */}
       <div {...appearance} className={prefixClass('navigation-bar-trailing')}>
+        {toolbarItems ? <GlassBackdrop appearance={appearance} /> : null}
         {toolbarItems}
       </div>
     </div>

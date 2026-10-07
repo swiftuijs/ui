@@ -1,6 +1,7 @@
 import { memo, useEffect, useId, useRef, useState, type ComponentRef, type KeyboardEvent, type ReactNode } from 'react'
 import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 
 import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
@@ -214,6 +215,7 @@ export const TabView = memo(function TabView(props: ITabViewProps) {
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledby}
     >
+      <GlassBackdrop appearance={appearance} />
       {normalizedItems.map((item, index) => {
         const isActive = index === activeIndex
         const tabId = `${baseId}-tab-${index}`

@@ -19,6 +19,7 @@ import type { IBaseComponent } from '@/types'
 import { clsx, standardizeProps, prefixClass } from '@/common'
 
 import { useViewportFit } from '../_internal/use-viewport-fit'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 import { useMenuAnchor } from '../_internal/use-menu-anchor'
 import { useUIConfig, themeStyle, useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import { findNextEnabledIndexForItems, groupMenuItems } from './menu-model'
@@ -491,6 +492,7 @@ export function Menu(props: IMenuProps) {
           role="menu"
           aria-labelledby={triggerId}
         >
+          <GlassBackdrop appearance={appearance} />
           <div className={prefixClass('menu-items')}>
           {groupedItems.map(({ item, index, showSectionLabel, showSeparator, sectionId }) => (
             <div key={item.id || index} className={prefixClass('menu-entry')}>
@@ -551,6 +553,7 @@ export function Menu(props: IMenuProps) {
               role="menu"
               aria-label={items[activeSubmenuIndex]?.label}
             >
+              <GlassBackdrop appearance={appearance} />
               {activeSubmenuItems.map((item, index) => (
                 <button
                   key={item.id || `${activeSubmenuIndex}-${index}`}

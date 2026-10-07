@@ -4,6 +4,8 @@ import { render, screen } from '@/testing/render'
 import { UIProvider, useUIConfig } from '.'
 import { Glass } from '../Glass'
 import { Sheet } from '../Sheet'
+import { Alert } from '../Alert'
+import { ConfirmationDialog } from '../ConfirmationDialog'
 import { Menu } from '../Menu'
 import { Toolbar } from '../Toolbar'
 import { TabView } from '../TabView'
@@ -26,15 +28,20 @@ describe('scoped UI configuration', () => {
     const markup = renderToString(<UIProvider theme="system" glass><Glass>Controls</Glass></UIProvider>)
     expect(markup).toContain('data-theme="system"')
     expect(markup).toContain('data-glass="on"')
+    expect(markup).toContain('data-ready="false"')
+    expect(markup).not.toContain('<feDisplacementMap')
     expect(markup).toBe(renderToString(<UIProvider theme="system" glass><Glass>Controls</Glass></UIProvider>))
   })
   it('supports component overrides, zero intensity, and custom inline styles', () => {
-    render(<UIProvider glass><Glass glass={false}>Off</Glass><Glass glass={{ intensity: 0 }}>Zero</Glass>
-      <Glass glass={{ intensity: 2, variant: 'clear' }} style={{ padding: 5 }}>Strong</Glass></UIProvider>)
+    render(<UIProvider glass={{ renderer: 'css' }}><Glass glass={false}>Off</Glass><Glass glass={{ intensity: 0 }}>Zero</Glass>
+      <Glass glass={{ intensity: 2, variant: 'clear', renderer: 'auto' }} style={{ padding: 5 }}>Strong</Glass></UIProvider>)
     expect(screen.getByText('Off')).toHaveAttribute('data-glass', 'off')
     expect(screen.getByText('Zero')).toHaveAttribute('data-glass', 'off')
     expect(screen.getByText('Strong')).toHaveAttribute('data-glass', 'on')
-    expect(screen.getByText('Strong')).toHaveStyle({ padding: '5px', '--sw-glass-blur': '28px' })
+    expect(screen.getByText('Strong')).toHaveStyle({ padding: '5px', '--sw-glass-blur': '3px' })
+    expect(screen.getByText('Zero')).toHaveAttribute('data-glass-renderer', 'css')
+    expect(screen.getByText('Strong')).toHaveAttribute('data-glass-renderer', 'auto')
+    expect(screen.getByText('Off').querySelector('.sw-glass-backdrop')).toBeNull()
   })
   it('propagates a scoped theme and tokens into portaled dialogs', () => {
     render(<UIProvider theme="dark" accentColor="#7652aa" tokens={{ '--sw-radius-sheet': '24px' }}>
@@ -56,12 +63,36 @@ describe('scoped UI configuration', () => {
     expect(container.querySelector('.sw-toolbar-group')).toHaveAttribute('data-glass', 'on')
     expect(screen.getByRole('tabpanel')).not.toHaveAttribute('data-glass')
   })
+  it.each([
+    ['Sheet', '.sw-sheet-content', <Sheet title="Material sheet" isPresented>Content</Sheet>],
+    ['Alert', '.sw-alert-content', <Alert title="Material alert" isVisible onDismiss={vi.fn()} />],
+    ['ConfirmationDialog', '.sw-confirmation-dialog-content', <ConfirmationDialog title="Material actions" isVisible onDismiss={vi.fn()} actions={[{ label: 'Cancel' }]} />],
+  ])('%s inherits the toggle in its portal and defaults to regular over a clear global preference', (_name, selector, component) => {
+    const { rerender } = render(<UIProvider glass={{ enabled: true, variant: 'clear' }}>{component}</UIProvider>)
+    const surface = document.querySelector(selector)!
+    expect(surface).toHaveAttribute('data-glass', 'on')
+    expect(surface).toHaveAttribute('data-glass-variant', 'regular')
+    rerender(<UIProvider glass={false}>{component}</UIProvider>)
+    expect(surface).toHaveAttribute('data-glass', 'off')
+  })
+  it('respects local presentation overrides and keeps full-screen or explicit sheet backgrounds independent', () => {
+    const { rerender } = render(<UIProvider glass>
+      <Sheet title="Overridden" isPresented glass={false}>Content</Sheet>
+    </UIProvider>)
+    expect(document.querySelector('.sw-sheet-content')).toHaveAttribute('data-glass', 'off')
+    rerender(<UIProvider glass><Sheet title="Overridden" isPresented presentationStyle="fullScreen" glass>Content</Sheet></UIProvider>)
+    expect(document.querySelector('.sw-sheet-content')).toHaveAttribute('data-glass', 'off')
+    rerender(<UIProvider glass><Sheet title="Overridden" isPresented backgroundStyle="thinMaterial">Content</Sheet></UIProvider>)
+    expect(document.querySelector('.sw-sheet-content')).toHaveAttribute('data-glass', 'off')
+    rerender(<UIProvider glass><Alert title="Explicit clear" isVisible onDismiss={vi.fn()} glass={{ variant: 'clear' }} /></UIProvider>)
+    expect(document.querySelector('.sw-alert-content')).toHaveAttribute('data-glass-variant', 'clear')
+  })
 })
 it('normalizes glass preferences and theme overrides', () => {
   expect(resolveGlass(undefined)).toEqual(defaultGlass)
   expect(resolveGlass({ intensity: -1 })).toMatchObject({ enabled: true, intensity: 0 })
   expect(resolveGlass({ intensity: NaN })).toMatchObject({ intensity: 0.5 })
   expect(resolveGlass(true, { enabled: false, intensity: 0.7, variant: 'clear' })).toMatchObject({ enabled: true, intensity: 0.7, variant: 'clear' })
-  expect(resolveGlass({ variant: undefined }, { enabled: false, intensity: 0.7, variant: 'clear' })).toEqual({ enabled: true, intensity: 0.7, variant: 'clear' })
+  expect(resolveGlass({ variant: undefined }, { enabled: false, intensity: 0.7, variant: 'clear' })).toEqual({ enabled: true, intensity: 0.7, variant: 'clear', renderer: 'auto' })
   expect(themeStyle({ tokens: { '--sw-accent-color': '#123456' }, glass: defaultGlass, accentColor: '#abcdef' })).toMatchObject({ '--sw-accent-color': '#123456', '--sw-color-action-fill': '#abcdef' })
 })

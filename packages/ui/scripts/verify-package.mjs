@@ -77,6 +77,8 @@ export const view = <UIProvider theme="system" glass={{ enabled: true, intensity
   assert.equal(server, freshClientProcess, 'SSR IDs must remain deterministic in separate processes')
   assert.match(server, /data-theme="system"/, 'Scoped appearance must survive SSR')
   assert.match(server, /data-glass="on"/, 'Material options must survive SSR')
+  assert.match(server, /data-ready="false"/, 'SSR must render a stable CSS glass fallback')
+  assert.ok(!server.includes('<feDisplacementMap'), 'SSR must not generate browser-only optical maps')
   assert.match(server, /role="menu"/, 'An open menu must have a deterministic server fallback')
   assert.match(server, /\[null,null\]/, 'Viewport hooks must return a stable server snapshot')
   assert.ok((server.match(/data-lazy-item=/g) ?? []).length < 30, 'SSR lazy list must emit a bounded window')

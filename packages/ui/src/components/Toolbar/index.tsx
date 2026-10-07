@@ -1,6 +1,7 @@
 import { memo, type ReactNode } from 'react'
 import type { IBaseElementComponent } from '@/types'
 import { standardizeProps, prefixClass } from '@/common'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
 
 import { useGlassAppearance, type GlassSurfaceProps } from '@/contexts/ui-config'
 import './style.scss'
@@ -84,6 +85,7 @@ export const Toolbar = memo(function Toolbar(props: IToolbarProps) {
 
     return (
       <div {...appearance} className={[prefixClass('toolbar-group'), className].filter(Boolean).join(' ')} data-placement={placement}>
+        {placement !== 'principal' ? <GlassBackdrop appearance={appearance} /> : null}
         {placementItems.map((item, index) => (
           <div
             key={item.id || `${placement}-${index}`}

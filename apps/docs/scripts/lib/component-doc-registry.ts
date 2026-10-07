@@ -787,7 +787,7 @@ function extractPropsFromComponentSource(
   if (inherited?.includes('GlassSurfaceProps')) {
     props.push({
       name: 'glass',
-      type: "boolean | { enabled?: boolean; intensity?: number; variant?: 'regular' | 'clear' }",
+      type: "boolean | { enabled?: boolean; intensity?: number; variant?: 'regular' | 'clear'; renderer?: 'auto' | 'css' }",
       required: false,
       defaultValue: 'Inherited from UIProvider; off without a provider',
       description:

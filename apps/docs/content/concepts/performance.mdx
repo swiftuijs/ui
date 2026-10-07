@@ -25,7 +25,7 @@ Layout contexts keep a stable value until their direction changes. React can ski
 
 Lazy stacks and grids virtualize mounted rows. Keep editable state outside rows, use stable keys and choose an estimate close to the real item size. `List` and `Table` render all their children or rows. Lazy layouts still receive the complete `children` collection: creating those React elements can remain expensive for very large data sets.
 
-Floating controls coalesce scroll, resize and observer bursts into animation frames. Their opening position is measured immediately; closing removes pending work. Large glass surfaces, blur and height-changing animations can still cost layout or painting time. Glass is opt-in; measure realistic content and device sizes before increasing its intensity or repeating it throughout a page.
+Floating controls coalesce scroll, resize and observer bursts into animation frames. Their opening position is measured immediately; closing removes pending work. Large glass surfaces, blur and height-changing animations can still cost layout or painting time. Glass is opt-in. Refraction maps are cached (24 geometries), capped at 131,072 pixels and regenerated after a 120 ms resize pause; CSS is used while resizing. Repeated surfaces still add browser compositing cost, so measure realistic content and device sizes before increasing its intensity or repeating it throughout a page.
 
 ## Validate your application
 

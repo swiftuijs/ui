@@ -16,7 +16,8 @@ export function KitchensinkClient() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
   const [glassEnabled, setGlassEnabled] = useState(false);
   const [glassIntensity, setGlassIntensity] = useState(0.6);
-  const glass = useMemo(() => ({ enabled: glassEnabled, intensity: glassIntensity }), [glassEnabled, glassIntensity]);
+  const [glassVariant, setGlassVariant] = useState<'regular' | 'clear'>('regular');
+  const glass = useMemo(() => ({ enabled: glassEnabled, intensity: glassIntensity, variant: glassVariant }), [glassEnabled, glassIntensity, glassVariant]);
   const [preferences, setPreferences] = useState(initialPreferences);
   const [saved, setSaved] = useState(initialPreferences);
   const [reviewing, setReviewing] = useState(false);
@@ -45,7 +46,7 @@ export function KitchensinkClient() {
 
   return (
     <UIProvider theme={theme} glass={glass}><div className="kitchen-workspace">
-      <header><Glass className="kitchen-header">
+      <header className="kitchen-navigation"><Glass className="kitchen-header">
         <Link href="/">SwiftUI.js</Link>
         <HStack spacing={16}><Link href="/docs/getting-started/">Get started</Link><Link href="/docs/concepts/capability-matrix/">Capabilities</Link></HStack>
       </Glass></header>
@@ -61,8 +62,16 @@ export function KitchensinkClient() {
             <Picker id={`${fieldId}-theme`} selection={theme} onSelectionChange={value => setTheme(value as typeof theme)} options={[{ label: 'System', value: 'system' }, { label: 'Light', value: 'light' }, { label: 'Dark', value: 'dark' }]} />
             <label htmlFor={`${fieldId}-glass`}>Liquid Glass</label>
             <Toggle id={`${fieldId}-glass`} isOn={glassEnabled} onChange={setGlassEnabled} />
+            <label htmlFor={`${fieldId}-glass-variant`}>Material</label>
+            <Picker id={`${fieldId}-glass-variant`} selection={glassVariant} disabled={!glassEnabled} onSelectionChange={value => setGlassVariant(value as typeof glassVariant)} options={[{ label: 'Regular', value: 'regular' }, { label: 'Clear', value: 'clear' }]} />
             <label htmlFor={`${fieldId}-glass-intensity`}>Glass intensity</label>
             <Slider id={`${fieldId}-glass-intensity`} min={0} max={1} step={0.1} value={glassIntensity} disabled={!glassEnabled} onValueChange={setGlassIntensity} />
+          </div>
+          <div className="kitchen-material-preview" role="group" aria-label="Glass material preview">
+            <Glass className="kitchen-material-surface">
+              <span>{glassEnabled && glassIntensity > 0 ? `${glassVariant === 'regular' ? 'Regular' : 'Clear'} material` : 'Solid surface'}</span>
+              <Link href="/docs/concepts/theming/">Material guide →</Link>
+            </Glass>
           </div>
         </DisclosureGroup>
       </section>

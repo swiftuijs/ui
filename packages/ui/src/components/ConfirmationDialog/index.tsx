@@ -3,6 +3,8 @@ import { memo } from 'react'
 import { prefixClass, standardizeProps } from '@/common'
 import type { IBaseComponent } from '@/types'
 import { Modal, ModalTitle, ModalDescription } from '../_internal/Modal'
+import { GlassBackdrop } from '../_internal/GlassBackdrop'
+import { useGlassAppearance, type GlassPreference } from '@/contexts/ui-config'
 
 import './style.scss'
 
@@ -24,6 +26,8 @@ export interface IConfirmationDialogAction {
 }
 
 export interface IConfirmationDialogProps extends IBaseComponent {
+  /** Optional material override; inherits UIProvider with the legible regular variant. */
+  glass?: GlassPreference
   /**
    * Optional title shown above the actions.
    */
@@ -53,10 +57,8 @@ export interface IConfirmationDialogProps extends IBaseComponent {
  * a stacked list of actions with cancel and destructive affordances.
  */
 export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfirmationDialogProps) {
-  const { title, message, isVisible, onDismiss, actions, ...restProps } = props
-
-
-
+  const { title, message, isVisible, onDismiss, actions, glass, ...restProps } = props
+  const appearance = useGlassAppearance(glass, 'regular')
   const { commonProps, restProps: finalRestProps } = standardizeProps(restProps, {
     className: prefixClass('confirmation-dialog'),
   })
@@ -73,7 +75,8 @@ export const ConfirmationDialog = memo(function ConfirmationDialog(props: IConfi
         aria-modal="true"
         role="dialog"
       >
-        <div className={prefixClass('confirmation-dialog-content')}>
+        <div {...appearance} className={prefixClass('confirmation-dialog-content')}>
+          <GlassBackdrop appearance={appearance} />
           {(title || message) ? (
             <div className={prefixClass('confirmation-dialog-header')}>
               {title ? (

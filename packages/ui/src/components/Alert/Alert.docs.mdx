@@ -32,6 +32,7 @@ Alert without a message:
 ## Usage and limitations
 
 - Control visibility with `isVisible` and close from `onDismiss`.
+- Inherits the `UIProvider` glass toggle and intensity with regular material for legibility. Use `glass={false}` for an opaque local override. Accessibility preferences and unsupported browsers restore an opaque surface.
 - Buttons support `default`, `cancel`, and `destructive` styles. Use descriptive labels and mark dangerous actions as destructive.
 - The shared modal traps focus, isolates the background and restores focus on closing. Check keyboard dismissal and labeling in your composition.
 - The alert stays inside the available viewport and scrolls when text grows or the screen is short. Keep messages concise; use a Sheet for longer tasks.
